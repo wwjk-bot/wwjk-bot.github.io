@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Sessionly — confirmed</title>
+  <style>
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:#0b0f14;color:#e8eef7;display:grid;place-items:center;min-height:100vh}
+    .card{max-width:520px;width:92%;border:1px solid #22304a;border-radius:18px;padding:18px;background:rgba(255,255,255,.03)}
+    h1{margin:0 0 8px;font-size:20px}
+    p{margin:0;color:#a8b3c5;line-height:1.4}
+    .small{margin-top:10px;font-size:12px}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>email confirmed ✅</h1>
+    <p>taking you to the trade logger</p>
+    <p class="small">if nothing happens <a href="/app/">click here</a></p>
+  </div>
+
+  <script>
+    // if supabase adds params/hash, keep them so auth can complete if needed
+    const qs = window.location.search || "";
+    const hash = window.location.hash || "";
+    setTimeout(() => {
+      window.location.replace("/app/" + qs + hash);
+    }, 1200);
+  </script>
+</body>
+</html>
