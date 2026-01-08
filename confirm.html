@@ -1,30 +1,105 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Email confirmed</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Sessionly • confirming</title>
   <style>
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #0b1220;
-      color: #e5e7eb;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      text-align: center;
+    :root{--bg:#0b0f14;--text:#e8eef7;--muted:#9fb0c4;--card:#101826;--line:#22304a}
+    body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;background:var(--bg);color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+    .card{width:min(640px,100%);background:rgba(16,24,38,.75);border:1px solid var(--line);border-radius:16px;padding:18px 18px 14px}
+    h1{font-size:18px;margin:0 0 8px}
+    p{margin:0 0 10px;color:var(--muted);line-height:1.4}
+    .small{font-size:12px;opacity:.9}
+    .ok{color:#37e38f}
+    .err{color:#ff6b6b;white-space:pre-wrap}
+    .spinner{width:14px;height:14px;border:2px solid #2c3b57;border-top-color:#37e38f;border-radius:50%;display:inline-block;vertical-align:-2px;animation:spin 1s linear infinite;margin-right:8px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1><span class="spinner"></span>confirming your email…</h1>
+    <p id="msg">please wait, redirecting to the app</p>
+    <p class="small" id="debug"></p>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = "https://oucikdsngvdhimquclcz.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_gMETcAB_TRLGd8hqx48KRA_yXxE7U6v";
+
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const msgEl = document.getElementById("msg");
+    const debugEl = document.getElementById("debug");
+
+    function goApp() {
+      // always go here after we successfully store session
+      window.location.replace("https://wwjk-bot.github.io/app/");
     }
 
-    .box {
-      max-width: 420px;
-      padding: 32px;
-      border-radius: 16px;
-      background: rgba(255, 255, 255, 0.04);
-      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    function parseHashParams() {
+      // for flows that return tokens in the URL hash
+      const hash = window.location.hash.startsWith("#") ? window.location.hash.slice(1) : window.location.hash;
+      const params = new URLSearchParams(hash);
+      return {
+        access_token: params.get("access_token"),
+        refresh_token: params.get("refresh_token"),
+        type: params.get("type"),
+        error: params.get("error"),
+        error_description: params.get("error_description"),
+      };
     }
 
-    h1 {
-      margin-bottom: 12px;
+    async function run() {
+      try {
+        // 1) show where we are
+        debugEl.textContent = "url: " + window.location.href;
+
+        // 2) if supabase sent an error
+        const h = parseHashParams();
+        if (h.error) {
+          msgEl.className = "err";
+          msgEl.textContent = "confirmation error: " + (h.error_description || h.error);
+          return;
+        }
+
+        // 3) new PKCE flow uses ?code=...
+        const code = new URLSearchParams(window.location.search).get("code");
+        if (code) {
+          msgEl.textContent = "finalizing session…";
+          const { error } = await supabaseClient.auth.exchangeCodeForSession(code);
+          if (error) throw error;
+          msgEl.innerHTML = '<span class="ok">email confirmed</span> redirecting…';
+          setTimeout(goApp, 800);
+          return;
+        }
+
+        // 4) older flow uses #access_token=...&refresh_token=...
+        if (h.access_token && h.refresh_token) {
+          msgEl.textContent = "saving session…";
+          const { error } = await supabaseClient.auth.setSession({
+            access_token: h.access_token,
+            refresh_token: h.refresh_token
+          });
+          if (error) throw error;
+          msgEl.innerHTML = '<span class="ok">email confirmed</span> redirecting…';
+          setTimeout(goApp, 800);
+          return;
+        }
+
+        // 5) if nothing came back, still send them to app (but tell them)
+        msgEl.textContent = "no tokens found, sending you to the app…";
+        setTimeout(goApp, 1200);
+
+      } catch (e) {
+        msgEl.className = "err";
+        msgEl.textContent = "confirm failed: " + (e?.message || String(e));
+      }
+    }
+
+    run();
+  </script>
+</body>
+</html>
