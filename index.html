@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>tradehabit — journal + habits for day traders</title>
+  <meta name="description" content="A mobile-first trading journal that tracks your habits, rules, and performance — and tells you what to fix next." />
+  <style>
+    :root{--bg:#0b0f14;--card:#111826;--text:#e8eef7;--muted:#a8b3c5;--accent:#3ddc97;--line:#22304a;}
+    *{box-sizing:border-box} body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;background:radial-gradient(1200px 600px at 20% 0%, #18233a 0%, var(--bg) 60%);color:var(--text)}
+    a{color:inherit}
+    .wrap{max-width:980px;margin:0 auto;padding:28px}
+    .nav{display:flex;justify-content:space-between;align-items:center;gap:16px}
+    .brand{font-weight:800;letter-spacing:.2px}
+    .pill{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);padding:10px 14px;border-radius:999px;color:var(--muted);text-decoration:none}
+    .hero{padding:54px 0 28px;display:grid;grid-template-columns:1.2fr .8fr;gap:22px;align-items:start}
+    .h1{font-size:44px;line-height:1.05;margin:0 0 12px}
+    .sub{color:var(--muted);font-size:18px;line-height:1.5;margin:0 0 18px}
+    .cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
+    .btn{border:0;border-radius:12px;padding:12px 16px;font-weight:700;cursor:pointer}
+    .btn.primary{background:var(--accent);color:#062015}
+    .btn.ghost{background:transparent;color:var(--text);border:1px solid var(--line)}
+    .card{background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));border:1px solid var(--line);border-radius:18px;padding:16px}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+    .k{font-weight:800;margin:0 0 6px}
+    .p{margin:0;color:var(--muted);font-size:14px;line-height:1.4}
+    .demo{border-radius:16px;overflow:hidden;border:1px solid var(--line)}
+    .demo img{display:block;width:100%;height:auto;background:#0f1522}
+    .section{padding:26px 0}
+    .section h2{margin:0 0 10px}
+    .list{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+    .item{padding:14px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.02)}
+    .item b{display:block;margin-bottom:6px}
+    .footer{padding:30px 0;color:var(--muted);font-size:13px;border-top:1px solid var(--line);margin-top:26px}
+    form{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    input{flex:1;min-width:220px;padding:12px 12px;border-radius:12px;border:1px solid var(--line);background:#0f1522;color:var(--text)}
+    small{color:var(--muted)}
+    @media (max-width:860px){.hero{grid-template-columns:1fr}.h1{font-size:38px}.grid{grid-template-columns:1fr}.list{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="nav">
+      <div class="brand">tradehabit</div>
+      <a class="pill" href="#waitlist">join waitlist</a>
+    </div>
+
+    <div class="hero">
+      <div class="card">
+        <h1 class="h1">journal trades. track habits. get consistent.</h1>
+        <p class="sub">a mobile-first performance system for day traders. log trades fast, tag mistakes, track rules, and get a weekly “what to fix next” report.</p>
+
+        <div class="cta">
+          <a class="btn primary" href="#waitlist" style="text-decoration:none;display:inline-block;">join the waitlist</a>
+          <a class="btn ghost" href="#features" style="text-decoration:none;display:inline-block;">see features</a>
+        </div>
+
+        <div class="grid">
+          <div class="item">
+            <p class="k">1-minute logging</p>
+            <p class="p">tap-to-log trades with presets, screenshots, and strategy tags.</p>
+          </div>
+          <div class="item">
+            <p class="k">mistake patterns</p>
+            <p class="p">spot what’s killing pnl: revenge trades, fomo, breaking rules.</p>
+          </div>
+          <div class="item">
+            <p class="k">weekly coach report</p>
+            <p class="p">a clear summary of what worked, what didn’t, and what to do next.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="demo card" aria-label="App preview">
+        <!-- Replace this with your own screenshot later -->
+        <img src="https://via.placeholder.com/640x780.png?text=Your+App+Screenshot" alt="App preview" />
+      </div>
+    </div>
+
+    <div id="features" class="section">
+      <h2>what it includes</h2>
+      <div class="list">
+        <div class="item"><b>trade journal</b><small>symbol, direction, size, entry/exit, rr, pnl, screenshots</small></div>
+        <div class="item"><b>strategy templates</b><small>track results per setup to find your real edge</small></div>
+        <div class="item"><b>mistake tracking</b><small>tag rule breaks and patterns behind red days</small></div>
+        <div class="item"><b>session stats</b><small>london/ny/time-of-day performance breakdown</small></div>
+        <div class="item"><b>habits + goals</b><small>sleep, workout, prep routine, risk rules, daily goals</small></div>
+        <div class="item"><b>weekly report</b><small>simple summary + one focus for next week</small></div>
+      </div>
+    </div>
+
+    <div id="waitlist" class="section card">
+      <h2>join the waitlist</h2>
+      <p class="sub" style="margin-bottom:0">get early access and launch pricing</p>
+
+      <!-- This form uses Formspree (free). Replace YOUR_ID after you create it -->
+      <form action="https://formspree.io/f/YOUR_ID" method="POST">
+        <input name="email" type="email" placeholder="your email" required />
+        <button class="btn primary" type="submit">notify me</button>
+      </form>
+      <small>free setup: create a form at formspree, paste your form id above. no backend needed.</small>
+    </div>
+
+    <div class="footer">
+      © <span id="y"></span> tradehabit • built for day traders
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("y").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
