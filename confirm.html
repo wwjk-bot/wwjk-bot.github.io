@@ -10,6 +10,7 @@
     h1{margin:0 0 8px;font-size:20px}
     p{margin:0;color:#a8b3c5;line-height:1.4}
     .small{margin-top:10px;font-size:12px}
+    a{color:#2fe59a}
   </style>
 </head>
 <body>
@@ -20,7 +21,7 @@
   </div>
 
   <script>
-    // if supabase adds params/hash, keep them so auth can complete if needed
+    // keep query/hash in case Supabase appends them
     const qs = window.location.search || "";
     const hash = window.location.hash || "";
     setTimeout(() => {
