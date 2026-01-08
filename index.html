@@ -3,299 +3,450 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Sessionly — performance system for day traders</title>
-  <meta name="description" content="Sessionly is a mobile-first trading journal + habits system for day traders. Log trades fast, tag mistakes, track sessions, and get a weekly ‘what to fix next’ report." />
-
+  <title>Sessionly — app</title>
+  <meta name="description" content="Sessionly app: log trades, track sessions, improve performance." />
   <style>
     :root{
       --bg:#0b0f14;
-      --card:#111826;
+      --card:#101826;
       --text:#e8eef7;
       --muted:#a8b3c5;
       --accent:#3ddc97;
+      --danger:#ff5b5b;
       --line:#22304a;
+      --shadow: 0 20px 60px rgba(0,0,0,.35);
+      --radius:18px;
     }
     *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-      background:radial-gradient(1100px 700px at 20% 0%, #18233a 0%, var(--bg) 60%);
+    body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helveticaica,Arial;background:
+      radial-gradient(1100px 700px at 15% -10%, rgba(61,220,151,.15), transparent 55%),
+      radial-gradient(900px 600px at 85% 10%, rgba(80,120,255,.14), transparent 60%),
+      radial-gradient(800px 600px at 50% 120%, rgba(61,220,151,.08), transparent 55%),
+      var(--bg);
       color:var(--text);
+      min-height:100vh;
     }
     a{color:inherit}
-    .wrap{max-width:1040px;margin:0 auto;padding:28px}
-    .nav{display:flex;justify-content:space-between;align-items:center;gap:16px}
-    .brand{display:flex;align-items:center;gap:10px;font-weight:900;letter-spacing:.2px}
-    .dot{width:10px;height:10px;border-radius:999px;background:var(--accent);box-shadow:0 0 18px rgba(61,220,151,.35)}
-    .pill{
-      display:inline-flex;align-items:center;gap:8px;
-      border:1px solid var(--line);
-      padding:10px 14px;border-radius:999px;
-      color:var(--muted);
-      text-decoration:none;
-      background:rgba(255,255,255,.02);
+    .wrap{max-width:1100px;margin:0 auto;padding:28px}
+    .nav{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.2px}
+    .dot{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 16px rgba(61,220,151,.55)}
+    .pill{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);padding:10px 14px;border-radius:999px;color:var(--muted);background:rgba(16,24,38,.6)}
+    .btn{border:1px solid var(--line);background:rgba(16,24,38,.7);color:var(--text);padding:10px 14px;border-radius:12px;cursor:pointer;font-weight:700}
+    .btn:hover{border-color:rgba(61,220,151,.5)}
+    .btn.primary{background:var(--accent);border-color:transparent;color:#052014}
+    .btn.danger{background:rgba(255,91,91,.14);border-color:rgba(255,91,91,.35);color:#ffd6d6}
+    .grid{display:grid;grid-template-columns:1fr;gap:18px}
+    @media(min-width:980px){.grid{grid-template-columns: 420px 1fr}}
+    .card{background:linear-gradient(180deg, rgba(16,24,38,.85), rgba(16,24,38,.65));
+      border:1px solid rgba(34,48,74,.9);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
     }
-    .hero{padding:54px 0 18px;display:grid;grid-template-columns:1.15fr .85fr;gap:18px;align-items:start}
-    .card{
-      background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));
-      border:1px solid var(--line);
-      border-radius:18px;
-      padding:18px;
+    .card h2{margin:0 0 10px;font-size:18px}
+    .card .inner{padding:18px}
+    .muted{color:var(--muted)}
+    .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+    .field{display:flex;flex-direction:column;gap:6px;min-width:180px;flex:1}
+    label{font-size:12px;color:var(--muted)}
+    input, select, textarea{
+      width:100%;
+      background:rgba(11,15,20,.55);
+      border:1px solid rgba(34,48,74,.9);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:12px;
+      outline:none;
     }
-    .h1{font-size:46px;line-height:1.02;margin:0 0 12px}
-    .sub{color:var(--muted);font-size:18px;line-height:1.55;margin:0 0 14px}
-    .tagrow{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0 8px}
-    .tag{
-      font-size:12px;
-      color:var(--muted);
-      border:1px solid var(--line);
-      padding:8px 10px;border-radius:999px;
-      background:rgba(255,255,255,.02);
-    }
-    .cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
-    .btn{
-      border:0;border-radius:12px;
-      padding:12px 16px;font-weight:800;
-      cursor:pointer;
-      display:inline-flex;align-items:center;justify-content:center;
-      text-decoration:none;
-    }
-    .btn.primary{background:var(--accent);color:#062015}
-    .btn.ghost{background:transparent;color:var(--text);border:1px solid var(--line)}
-    .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
-    .k{font-weight:900;margin:0 0 6px}
-    .p{margin:0;color:var(--muted);font-size:14px;line-height:1.45}
-    .demo{border-radius:16px;overflow:hidden;border:1px solid var(--line)}
-    .demo img{display:block;width:100%;height:auto;background:#0f1522}
-    .section{padding:22px 0}
-    .section h2{margin:0 0 10px;font-size:22px}
-    .list{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
-    .item{
-      padding:14px;border-radius:16px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.02);
-    }
-    .item b{display:block;margin-bottom:6px}
-    .divider{height:1px;background:var(--line);margin:18px 0;border-radius:2px;opacity:.8}
-    .pricing{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}
-    .price{
-      padding:16px;border-radius:18px;border:1px solid var(--line);
-      background:rgba(255,255,255,.02);
-    }
-    .price .name{font-weight:900;font-size:16px;margin:0 0 6px}
-    .price .cost{font-weight:900;font-size:26px;margin:0 0 6px}
-    .price .note{color:var(--muted);font-size:13px;margin:0 0 10px;line-height:1.35}
-    .ul{margin:0;padding-left:18px;color:var(--muted);font-size:13px;line-height:1.5}
-    .ul li{margin:6px 0}
-    form{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-    input{
-      flex:1;min-width:220px;
-      padding:12px 12px;border-radius:12px;
-      border:1px solid var(--line);
-      background:#0f1522;color:var(--text);
-    }
-    small{color:var(--muted)}
-    .faq{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
-    .footer{
-      padding:28px 0;color:var(--muted);
-      font-size:13px;border-top:1px solid var(--line);margin-top:22px
-    }
-    @media (max-width:900px){
-      .hero{grid-template-columns:1fr}
-      .h1{font-size:38px}
-      .grid3{grid-template-columns:1fr}
-      .list{grid-template-columns:1fr}
-      .pricing{grid-template-columns:1fr}
-      .faq{grid-template-columns:1fr}
-    }
+    textarea{min-height:88px;resize:vertical}
+    input:focus,select:focus,textarea:focus{border-color:rgba(61,220,151,.5);box-shadow:0 0 0 3px rgba(61,220,151,.12)}
+    .hr{height:1px;background:rgba(34,48,74,.9);margin:14px 0}
+    .kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+    @media(min-width:980px){.kpis{grid-template-columns:repeat(4,1fr)}}
+    .kpi{padding:12px;border:1px solid rgba(34,48,74,.9);border-radius:14px;background:rgba(11,15,20,.35)}
+    .kpi .big{font-size:20px;font-weight:900}
+    table{width:100%;border-collapse:collapse}
+    th, td{padding:10px 10px;border-bottom:1px solid rgba(34,48,74,.7);text-align:left;font-size:13px}
+    th{color:var(--muted);font-weight:700}
+    .tag{display:inline-flex;align-items:center;border:1px solid rgba(34,48,74,.9);padding:5px 9px;border-radius:999px;color:var(--muted);background:rgba(11,15,20,.35);font-size:12px}
+    .right{margin-left:auto}
+    .msg{margin-top:10px;font-size:13px}
+    .ok{color:#bff3dc}
+    .err{color:#ffd0d0}
+    .hidden{display:none !important}
   </style>
 </head>
-
 <body>
   <div class="wrap">
     <div class="nav">
-      <div class="brand">
-        <span class="dot"></span>
-        <span>Sessionly</span>
-      </div>
-      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-        <a class="pill" href="#features">features</a>
-        <a class="pill" href="#pricing">pricing</a>
-        <a class="pill" href="#waitlist">join waitlist</a>
+      <div class="brand"><span class="dot"></span> Sessionly <span class="pill">app</span></div>
+      <div class="row">
+        <span id="userPill" class="pill hidden"></span>
+        <button id="logoutBtn" class="btn danger hidden">log out</button>
       </div>
     </div>
 
-    <div class="hero">
+    <div class="grid">
+      <!-- AUTH / ADD TRADE -->
       <div class="card">
-        <h1 class="h1">trade your best hours not your whole day</h1>
-        <p class="sub">
-          Sessionly is a performance system for day traders
-          log trades fast tag mistakes track sessions and get a weekly “what to fix next” report
-        </p>
+        <div class="inner">
+          <div id="authBox">
+            <h2>login</h2>
+            <div class="row">
+              <div class="field">
+                <label>email</label>
+                <input id="email" type="email" placeholder="you@email.com" autocomplete="email" />
+              </div>
+              <div class="field">
+                <label>password</label>
+                <input id="password" type="password" placeholder="min 6 characters" autocomplete="current-password" />
+              </div>
+            </div>
+            <div class="row" style="margin-top:12px">
+              <button id="loginBtn" class="btn primary">login</button>
+              <button id="signupBtn" class="btn">create account</button>
+            </div>
+            <div class="msg muted">accounts are free for now</div>
+            <div id="authMsg" class="msg"></div>
 
-        <div class="tagrow">
-          <span class="tag">mobile first</span>
-          <span class="tag">session stats</span>
-          <span class="tag">mistake patterns</span>
-          <span class="tag">weekly coach report</span>
-        </div>
-
-        <div class="cta">
-          <a class="btn primary" href="#waitlist">join the waitlist</a>
-          <a class="btn ghost" href="#features">see what it does</a>
-        </div>
-
-        <div class="grid3">
-          <div class="item">
-            <p class="k">1 minute trade logging</p>
-            <p class="p">tap to log symbol direction rr pnl screenshots and notes with presets</p>
+            <div class="hr"></div>
+            <div class="muted" style="font-size:12px">
+              if you just signed up, check your email and confirm. after confirming you can come back here and log in.
+            </div>
           </div>
-          <div class="item">
-            <p class="k">session and time breakdown</p>
-            <p class="p">see what happens in london ny and your best and worst hours</p>
-          </div>
-          <div class="item">
-            <p class="k">weekly plan</p>
-            <p class="p">a simple summary plus one clear focus for next week</p>
+
+          <div id="tradeBox" class="hidden">
+            <h2>add trade</h2>
+            <div class="row">
+              <div class="field">
+                <label>date</label>
+                <input id="trade_date" type="date" />
+              </div>
+              <div class="field">
+                <label>symbol</label>
+                <input id="symbol" placeholder="XAUUSD" />
+              </div>
+              <div class="field">
+                <label>direction</label>
+                <select id="direction">
+                  <option value="long">long</option>
+                  <option value="short">short</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="row" style="margin-top:10px">
+              <div class="field">
+                <label>rr</label>
+                <input id="rr" type="number" step="0.01" placeholder="2.0" />
+              </div>
+              <div class="field">
+                <label>pnl ($)</label>
+                <input id="pnl" type="number" step="0.01" placeholder="100" />
+              </div>
+              <div class="field">
+                <label>session</label>
+                <select id="session">
+                  <option value="london">london</option>
+                  <option value="newyork">new york</option>
+                  <option value="asia">asia</option>
+                  <option value="other">other</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="row" style="margin-top:10px">
+              <div class="field">
+                <label>mistake tags (comma separated)</label>
+                <input id="tags" placeholder="overtrade,fomo,bad entry" />
+              </div>
+            </div>
+
+            <div class="row" style="margin-top:10px">
+              <div class="field">
+                <label>notes</label>
+                <textarea id="notes" placeholder="what happened, what to fix next time"></textarea>
+              </div>
+            </div>
+
+            <div class="row" style="margin-top:12px">
+              <button id="addTradeBtn" class="btn primary">save trade</button>
+              <span id="tradeMsg" class="msg muted right"></span>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="card demo" aria-label="app preview">
-        <!-- replace this later with your real app screenshot -->
-        <img src="https://placehold.co/640x780?text=sessionly+app+preview" alt="sessionly app preview" />
-      </div>
-    </div>
-
-    <div id="features" class="section">
-      <h2>what it includes</h2>
-      <div class="list">
-        <div class="item">
-          <b>trade journal made for day traders</b>
-          <small>symbol direction size entry exit rr pnl screenshots notes</small>
-        </div>
-        <div class="item">
-          <b>strategy templates</b>
-          <small>track results per setup so you know what actually works</small>
-        </div>
-        <div class="item">
-          <b>mistake tagging</b>
-          <small>fomo late entry early exit broke plan overtrading revenge trades</small>
-        </div>
-        <div class="item">
-          <b>session and time stats</b>
-          <small>london ny time of day and day of week breakdown</small>
-        </div>
-        <div class="item">
-          <b>habits and rules</b>
-          <small>pre market routine sleep workouts risk rules and daily goals</small>
-        </div>
-        <div class="item">
-          <b>weekly report</b>
-          <small>best setup biggest leak and one focus for next week</small>
-        </div>
-      </div>
-
-      <div class="divider"></div>
-
+      <!-- DASHBOARD -->
       <div class="card">
-        <h2 style="margin:0 0 8px">why Sessionly</h2>
-        <p class="sub" style="margin:0">
-          most traders don’t lose because they lack strategy
-          they lose because they trade too long break rules and repeat the same mistakes
-          Sessionly makes that obvious fast
-        </p>
-      </div>
-    </div>
+        <div class="inner">
+          <div class="row">
+            <h2 style="margin:0">dashboard</h2>
+            <span id="dashStatus" class="msg muted right"></span>
+          </div>
 
-    <div id="pricing" class="section">
-      <h2>pricing</h2>
-      <p class="sub" style="margin-top:0">start free upgrade when you want deeper stats and coaching</p>
+          <div class="kpis" style="margin-top:12px">
+            <div class="kpi">
+              <div class="muted">trades</div>
+              <div id="k_trades" class="big">0</div>
+            </div>
+            <div class="kpi">
+              <div class="muted">win rate</div>
+              <div id="k_wr" class="big">0%</div>
+            </div>
+            <div class="kpi">
+              <div class="muted">total pnl</div>
+              <div id="k_pnl" class="big">$0</div>
+            </div>
+            <div class="kpi">
+              <div class="muted">best session</div>
+              <div id="k_best" class="big">—</div>
+            </div>
+          </div>
 
-      <div class="pricing">
-        <div class="price">
-          <p class="name">free</p>
-          <p class="cost">$0</p>
-          <p class="note">try the workflow and build the habit</p>
-          <ul class="ul">
-            <li>limited trade logs per month</li>
-            <li>basic habits and goals</li>
-            <li>simple weekly summary</li>
-          </ul>
-        </div>
+          <div class="hr"></div>
 
-        <div class="price" style="border-color:rgba(61,220,151,.55)">
-          <p class="name">pro</p>
-          <p class="cost">$9.99/mo</p>
-          <p class="note">for consistent day traders who want clean stats</p>
-          <ul class="ul">
-            <li>unlimited trade logs</li>
-            <li>strategy stats and filters</li>
-            <li>mistake patterns and rule tracking</li>
-            <li>session and time breakdown</li>
-            <li>export</li>
-          </ul>
-        </div>
+          <div class="row" style="margin-bottom:10px">
+            <span class="tag">latest trades</span>
+            <span class="muted right" style="font-size:12px">only you can see your data</span>
+          </div>
 
-        <div class="price">
-          <p class="name">elite</p>
-          <p class="cost">$19.99/mo</p>
-          <p class="note">ai weekly coach and deeper pattern detection</p>
-          <ul class="ul">
-            <li>everything in pro</li>
-            <li>ai weekly coach report</li>
-            <li>pattern alerts for overtrading and revenge trading</li>
-            <li>recommended focus for next week</li>
-          </ul>
-        </div>
-      </div>
+          <div style="overflow:auto">
+            <table>
+              <thead>
+                <tr>
+                  <th>date</th>
+                  <th>symbol</th>
+                  <th>dir</th>
+                  <th>session</th>
+                  <th>rr</th>
+                  <th>pnl</th>
+                  <th>tags</th>
+                </tr>
+              </thead>
+              <tbody id="rows"></tbody>
+            </table>
+          </div>
 
-      <small>you can change prices anytime this is just a strong starting point</small>
-    </div>
-
-    <div id="waitlist" class="section card">
-      <h2 style="margin:0 0 8px">join the waitlist</h2>
-      <p class="sub" style="margin:0">get early access and launch pricing</p>
-
-      <!-- IMPORTANT: replace YOUR_ID after you create a free form at formspree -->
-      <!-- example: https://formspree.io/f/abcdwxyz -->
-      <form action="https://formspree.io/f/YOUR_ID" method="POST">
-        <input name="email" type="email" placeholder="your email" required />
-        <button class="btn primary" type="submit">notify me</button>
-      </form>
-
-      <small>create a free form at formspree then paste your form id into the action link</small>
-    </div>
-
-    <div class="section">
-      <h2>faq</h2>
-      <div class="faq">
-        <div class="item">
-          <b>who is this for</b>
-          <small>day traders who want structure consistency and fewer mistakes</small>
-        </div>
-        <div class="item">
-          <b>what markets</b>
-          <small>stocks futures forex or crypto the journal is flexible</small>
-        </div>
-        <div class="item">
-          <b>does it connect to my broker</b>
-          <small>not in v1 manual logging is faster and avoids bugs we can add later</small>
-        </div>
-        <div class="item">
-          <b>what makes it different</b>
-          <small>session stats + mistake patterns + weekly plan in plain language</small>
+          <div id="dashMsg" class="msg muted" style="margin-top:10px"></div>
         </div>
       </div>
-    </div>
-
-    <div class="footer">
-      © <span id="y"></span> Sessionly • built for day traders
     </div>
   </div>
 
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    document.getElementById("y").textContent = new Date().getFullYear();
+    // ====== CONFIG ======
+    const SUPABASE_URL = "https://oucikdsngvdhimquclcz.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_gMETcAB_TRLGd8hqx48KRA_yXxE7U6v";
+
+    // IMPORTANT: confirmation redirect target
+    const CONFIRM_REDIRECT = "https://wwjk-bot.github.io/confirm.html";
+
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // ====== UI HELPERS ======
+    const el = (id) => document.getElementById(id);
+    const setMsg = (id, text, type="") => {
+      const node = el(id);
+      node.textContent = text || "";
+      node.className = "msg " + (type === "ok" ? "ok" : type === "err" ? "err" : "");
+    };
+    const show = (id) => el(id).classList.remove("hidden");
+    const hide = (id) => el(id).classList.add("hidden");
+
+    // ====== AUTH ======
+    async function refreshSession() {
+      const { data: { session } } = await supabaseClient.auth.getSession();
+
+      if (!session) {
+        hide("userPill");
+        hide("logoutBtn");
+        show("authBox");
+        hide("tradeBox");
+        el("rows").innerHTML = "";
+        el("k_trades").textContent = "0";
+        el("k_wr").textContent = "0%";
+        el("k_pnl").textContent = "$0";
+        el("k_best").textContent = "—";
+        setMsg("dashMsg", "log in to see your trades");
+        return;
+      }
+
+      el("userPill").textContent = session.user.email;
+      show("userPill");
+      show("logoutBtn");
+      hide("authBox");
+      show("tradeBox");
+
+      await loadTrades();
+    }
+
+    el("loginBtn").addEventListener("click", async () => {
+      setMsg("authMsg", "logging in...");
+      const email = el("email").value.trim();
+      const password = el("password").value;
+
+      const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+      if (error) { setMsg("authMsg", error.message, "err"); return; }
+
+      setMsg("authMsg", "logged in", "ok");
+      await refreshSession();
+    });
+
+    el("signupBtn").addEventListener("click", async () => {
+      setMsg("authMsg", "creating account...");
+      const email = el("email").value.trim();
+      const password = el("password").value;
+
+      const { error } = await supabaseClient.auth.signUp({
+        email,
+        password,
+        options: {
+          // THIS IS THE KEY PART (STEP 2)
+          emailRedirectTo: CONFIRM_REDIRECT
+        }
+      });
+
+      if (error) { setMsg("authMsg", error.message, "err"); return; }
+
+      setMsg("authMsg", "check your email to confirm, then come back and log in", "ok");
+    });
+
+    el("logoutBtn").addEventListener("click", async () => {
+      await supabaseClient.auth.signOut();
+      await refreshSession();
+    });
+
+    // ====== TRADES ======
+    function computeStats(trades) {
+      const n = trades.length;
+      el("k_trades").textContent = String(n);
+
+      if (!n) {
+        el("k_wr").textContent = "0%";
+        el("k_pnl").textContent = "$0";
+        el("k_best").textContent = "—";
+        return;
+      }
+
+      let wins = 0;
+      let totalPnl = 0;
+
+      const bySession = {};
+      for (const t of trades) {
+        const pnl = Number(t.pnl || 0);
+        totalPnl += pnl;
+        if (pnl > 0) wins++;
+
+        const s = t.session || "other";
+        bySession[s] = (bySession[s] || 0) + pnl;
+      }
+
+      const wr = Math.round((wins / n) * 100);
+      el("k_wr").textContent = wr + "%";
+      el("k_pnl").textContent = (totalPnl >= 0 ? "$" : "-$") + Math.abs(totalPnl).toFixed(2);
+
+      let best = "—";
+      let bestVal = -Infinity;
+      for (const k in bySession) {
+        if (bySession[k] > bestVal) { bestVal = bySession[k]; best = k; }
+      }
+      el("k_best").textContent = best;
+    }
+
+    function renderTrades(trades) {
+      const rows = el("rows");
+      rows.innerHTML = "";
+
+      for (const t of trades) {
+        const tr = document.createElement("tr");
+
+        const tags = Array.isArray(t.tags) ? t.tags.join(", ") : (t.tags || "");
+        const rr = (t.rr === null || t.rr === undefined || t.rr === "") ? "" : Number(t.rr).toFixed(2);
+        const pnl = (t.pnl === null || t.pnl === undefined || t.pnl === "") ? "" : Number(t.pnl).toFixed(2);
+
+        tr.innerHTML = `
+          <td>${t.trade_date || ""}</td>
+          <td>${escapeHtml(t.symbol || "")}</td>
+          <td>${escapeHtml(t.direction || "")}</td>
+          <td>${escapeHtml(t.session || "")}</td>
+          <td>${rr}</td>
+          <td>${pnl}</td>
+          <td>${escapeHtml(tags)}</td>
+        `;
+        rows.appendChild(tr);
+      }
+    }
+
+    function escapeHtml(s){
+      return String(s).replace(/[&<>"']/g, (c)=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+    }
+
+    async function loadTrades() {
+      setMsg("dashStatus", "loading...");
+      const { data, error } = await supabaseClient
+        .from("trades")
+        .select("*")
+        .order("trade_date", { ascending: false })
+        .order("created_at", { ascending: false })
+        .limit(50);
+
+      if (error) {
+        setMsg("dashStatus", "");
+        setMsg("dashMsg", error.message, "err");
+        return;
+      }
+
+      computeStats(data || []);
+      renderTrades(data || []);
+      setMsg("dashStatus", "");
+      setMsg("dashMsg", (data && data.length) ? "" : "no trades yet, add your first trade on the left");
+    }
+
+    el("addTradeBtn").addEventListener("click", async () => {
+      setMsg("tradeMsg", "saving...");
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      if (!session) { setMsg("tradeMsg", "please log in first", "err"); return; }
+
+      const tagsRaw = el("tags").value.trim();
+      const tags = tagsRaw ? tagsRaw.split(",").map(x => x.trim()).filter(Boolean) : [];
+
+      const payload = {
+        user_id: session.user.id,
+        trade_date: el("trade_date").value || null,
+        symbol: el("symbol").value.trim() || null,
+        direction: el("direction").value,
+        rr: el("rr").value === "" ? null : Number(el("rr").value),
+        pnl: el("pnl").value === "" ? null : Number(el("pnl").value),
+        session: el("session").value,
+        tags,
+        notes: el("notes").value.trim() || null
+      };
+
+      const { error } = await supabaseClient.from("trades").insert(payload);
+      if (error) { setMsg("tradeMsg", error.message, "err"); return; }
+
+      setMsg("tradeMsg", "saved", "ok");
+
+      // reset light
+      el("symbol").value = "";
+      el("rr").value = "";
+      el("pnl").value = "";
+      el("tags").value = "";
+      el("notes").value = "";
+
+      await loadTrades();
+      setTimeout(()=>setMsg("tradeMsg",""), 1500);
+    });
+
+    // react to auth changes
+    supabaseClient.auth.onAuthStateChange(() => refreshSession());
+
+    // initial
+    refreshSession();
   </script>
 </body>
 </html>
