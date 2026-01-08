@@ -3,422 +3,483 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Sessionly — app</title>
-  <meta name="description" content="Sessionly web app for day traders." />
+  <title>Sessionly — trade logger</title>
+  <meta name="description" content="Sessionly trade logger for day traders." />
 
   <style>
     :root{
-      --bg:#0b0f14;--card:#111826;--text:#e8eef7;--muted:#a8b3c5;--accent:#3ddc97;--line:#22304a;--danger:#ff5b5b;
+      --bg:#0b0f14;
+      --card:#0f1726;
+      --card2:#0c1423;
+      --text:#e8eef7;
+      --muted:#a8b3c5;
+      --line:#22304a;
+      --accent:#2fe59a;
+      --danger:#ff5b6e;
+      --warn:#ffcc66;
+      --shadow: 0 20px 60px rgba(0,0,0,.35);
+      --radius:18px;
     }
     *{box-sizing:border-box}
     body{
       margin:0;
-      font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-      background:radial-gradient(1100px 700px at 20% 0%, #18233a 0%, var(--bg) 60%);
-      color:var(--text)
+      font-family: ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial;
+      background:
+        radial-gradient(900px 500px at 20% 0%, rgba(46,229,154,.18), transparent 60%),
+        radial-gradient(700px 500px at 85% 10%, rgba(61,220,151,.10), transparent 60%),
+        linear-gradient(180deg, #07101b 0%, #070b12 60%, #060912 100%);
+      color:var(--text);
+      min-height:100vh;
     }
     a{color:inherit}
-    .wrap{max-width:1100px;margin:0 auto;padding:22px}
-    .top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
-    .brand{display:flex;align-items:center;gap:10px;font-weight:900}
-    .dot{width:10px;height:10px;border-radius:999px;background:var(--accent);box-shadow:0 0 18px rgba(61,220,151,.35)}
-    .pill{border:1px solid var(--line);padding:10px 14px;border-radius:999px;background:rgba(255,255,255,.02);color:var(--muted);cursor:pointer}
-    .grid{display:grid;grid-template-columns:360px 1fr;gap:12px;margin-top:14px}
-    .card{
-      background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));
-      border:1px solid var(--line);
-      border-radius:18px;
-      padding:16px
+    .wrap{max-width:1100px;margin:0 auto;padding:24px}
+    .topbar{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      padding:10px 0 18px;
     }
-    h2{font-size:16px;margin:0 0 10px}
-    .muted{color:var(--muted);font-size:13px;line-height:1.4}
-    label{display:block;font-size:12px;color:var(--muted);margin:10px 0 6px}
-    input,select,textarea{
-      width:100%;
-      padding:11px 11px;
-      border-radius:12px;
-      border:1px solid var(--line);
-      background:#0f1522;
-      color:var(--text);
-      outline:none
+    .brand{
+      display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.2px
     }
-    textarea{min-height:84px;resize:vertical}
-    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .btn{border:0;border-radius:12px;padding:12px 14px;font-weight:900;cursor:pointer}
-    .btn.primary{background:var(--accent);color:#062015}
-    .btn.ghost{background:transparent;border:1px solid var(--line);color:var(--text)}
-    .btn.danger{background:transparent;border:1px solid rgba(255,91,91,.6);color:var(--danger)}
-    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-    .stat{border:1px solid var(--line);border-radius:16px;padding:12px;background:rgba(255,255,255,.02)}
-    .stat .n{font-weight:900;font-size:20px;margin:0 0 4px}
-    .stat .t{color:var(--muted);font-size:12px;margin:0}
-    .table{margin-top:12px;border:1px solid var(--line);border-radius:16px;overflow:hidden}
-    table{width:100%;border-collapse:collapse}
-    th,td{padding:10px 10px;border-bottom:1px solid rgba(34,48,74,.7);font-size:13px;vertical-align:top}
-    th{color:var(--muted);text-align:left;background:rgba(255,255,255,.02);font-weight:800}
-    tr:last-child td{border-bottom:0}
-    .chip{
-      display:inline-flex;align-items:center;
+    .dot{width:10px;height:10px;border-radius:999px;background:var(--accent);box-shadow:0 0 20px rgba(47,229,154,.45)}
+    .pill{
+      display:inline-flex;align-items:center;gap:8px;
       border:1px solid var(--line);
-      border-radius:999px;
-      padding:5px 8px;
-      font-size:12px;
-      color:var(--muted);
-      margin:3px 6px 0 0;
-      background:rgba(255,255,255,.02)
+      padding:8px 12px;border-radius:999px;color:var(--muted);
+      background:rgba(255,255,255,.02);
     }
-    .rightActions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-    .hide{display:none}
-    .note{font-size:12px;color:var(--muted);margin-top:10px}
-    @media (max-width:980px){
+    .grid{
+      display:grid;grid-template-columns: 1.1fr .9fr;gap:16px;align-items:start;
+    }
+    @media(max-width: 980px){
       .grid{grid-template-columns:1fr}
-      .stats{grid-template-columns:1fr 1fr}
     }
+    .card{
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .card h2{margin:0;font-size:16px;letter-spacing:.2px}
+    .card .head{
+      padding:16px 16px 12px;
+      border-bottom:1px solid rgba(34,48,74,.65);
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+    }
+    .card .body{padding:16px}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    @media(max-width:700px){.row{grid-template-columns:1fr}}
+    label{display:block;color:var(--muted);font-size:12px;margin:0 0 6px}
+    input, select, textarea{
+      width:100%;
+      background:rgba(10,18,31,.85);
+      border:1px solid rgba(34,48,74,.85);
+      color:var(--text);
+      padding:10px 12px;border-radius:12px;
+      outline:none;
+    }
+    textarea{min-height:90px;resize:vertical}
+    input:focus, select:focus, textarea:focus{border-color:rgba(47,229,154,.8);box-shadow:0 0 0 3px rgba(47,229,154,.12)}
+    .btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+    .btn{
+      border:1px solid rgba(34,48,74,.9);
+      background:rgba(255,255,255,.03);
+      color:var(--text);
+      padding:10px 14px;border-radius:12px;
+      cursor:pointer;font-weight:700;
+    }
+    .btn.primary{
+      background:rgba(47,229,154,.95);
+      color:#07101b;
+      border-color:rgba(47,229,154,.95);
+    }
+    .btn.danger{
+      background:rgba(255,91,110,.12);
+      border-color:rgba(255,91,110,.55);
+      color:#ffd7dc;
+    }
+    .muted{color:var(--muted)}
+    .msg{margin-top:10px;color:var(--muted);font-size:13px}
+    .msg.err{color:#ffb3bd}
+    .stats{
+      display:grid;grid-template-columns:repeat(4,1fr);gap:10px
+    }
+    @media(max-width:900px){.stats{grid-template-columns:repeat(2,1fr)}}
+    .stat{
+      border:1px solid rgba(34,48,74,.7);
+      background:rgba(255,255,255,.02);
+      border-radius:14px;
+      padding:12px;
+    }
+    .stat .k{color:var(--muted);font-size:12px}
+    .stat .v{font-size:18px;font-weight:900;margin-top:4px}
+    table{width:100%;border-collapse:collapse}
+    th, td{padding:10px 8px;border-bottom:1px solid rgba(34,48,74,.55);text-align:left;font-size:13px}
+    th{color:var(--muted);font-weight:700}
+    .tag{
+      display:inline-flex;align-items:center;
+      padding:4px 10px;border-radius:999px;
+      border:1px solid rgba(34,48,74,.8);
+      background:rgba(255,255,255,.02);
+      color:var(--muted);
+      font-size:12px;
+    }
+    .hide{display:none !important}
+    .small{font-size:12px;color:var(--muted)}
+    .split{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+    .hr{height:1px;background:rgba(34,48,74,.55);margin:12px 0}
   </style>
-
-  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 </head>
 
 <body>
   <div class="wrap">
-    <div class="top">
-      <div class="brand"><span class="dot"></span><span>Sessionly</span></div>
-      <div class="rightActions">
-        <span id="userEmail" class="pill hide"></span>
-        <button id="logoutBtn" class="pill hide">logout</button>
+    <div class="topbar">
+      <div class="brand"><span class="dot"></span> Sessionly</div>
+      <div class="pill" id="statusPill">not signed in</div>
+    </div>
+
+    <!-- AUTH -->
+    <div class="card" id="authCard">
+      <div class="head">
+        <h2>login</h2>
+        <span class="tag">accounts are free for now</span>
+      </div>
+      <div class="body">
+        <div class="row">
+          <div>
+            <label>email</label>
+            <input id="email" type="email" placeholder="you@email.com" autocomplete="email" />
+          </div>
+          <div>
+            <label>password</label>
+            <input id="password" type="password" placeholder="min 6 characters" autocomplete="current-password" />
+          </div>
+        </div>
+
+        <div class="btns">
+          <button class="btn primary" id="btnLogin">login</button>
+          <button class="btn" id="btnSignup">create account</button>
+        </div>
+
+        <div class="msg" id="authMsg"></div>
+        <div class="small" style="margin-top:10px">
+          after signup you will get a confirmation email, after confirming you’ll land in the app
+        </div>
       </div>
     </div>
 
-    <!-- auth -->
-    <div id="authCard" class="card" style="margin-top:14px">
-      <h2>login</h2>
-      <div class="row">
-        <div>
-          <label>email</label>
-          <input id="email" type="email" placeholder="you@email.com" />
-        </div>
-        <div>
-          <label>password</label>
-          <input id="password" type="password" placeholder="min 6 characters" />
-        </div>
-      </div>
-      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
-        <button id="loginBtn" class="btn primary">login</button>
-        <button id="signupBtn" class="btn ghost">create account</button>
-      </div>
-      <div id="authMsg" class="note"></div>
-      <div class="note">accounts are free for now</div>
-    </div>
-
-    <!-- app -->
-    <div id="app" class="grid hide">
-      <div class="card">
-        <h2>add trade</h2>
-
-        <label>trade date</label>
-        <input id="trade_date" type="date" />
-
-        <div class="row">
-          <div>
-            <label>symbol</label>
-            <input id="symbol" placeholder="NQ, ES, AAPL, BTC..." />
-          </div>
-          <div>
-            <label>market</label>
-            <select id="market">
-              <option value="futures">futures</option>
-              <option value="stocks">stocks</option>
-              <option value="forex">forex</option>
-              <option value="crypto">crypto</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="row">
-          <div>
-            <label>direction</label>
-            <select id="direction">
-              <option value="long">long</option>
-              <option value="short">short</option>
-            </select>
-          </div>
-          <div>
-            <label>session</label>
-            <select id="session">
-              <option value="ny">ny</option>
-              <option value="london">london</option>
-              <option value="asia">asia</option>
-            </select>
-          </div>
-        </div>
-
-        <label>strategy</label>
-        <input id="strategy" placeholder="fvg pullback, opening range, breakout..." />
-
-        <label>R result</label>
-        <input id="r_multiple" type="number" step="0.1" placeholder="example 1.5 or -1" />
-
-        <label>mistakes (comma separated)</label>
-        <input id="mistakes" placeholder="fomo, revenge, early exit, broke plan" />
-
-        <label>notes</label>
-        <textarea id="notes" placeholder="what happened what you did right what to fix"></textarea>
-
-        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
-          <button id="saveTradeBtn" class="btn primary">save trade</button>
-          <button id="resetBtn" class="btn ghost" type="button">clear</button>
-        </div>
-
-        <div id="saveMsg" class="note"></div>
-      </div>
+    <!-- APP -->
+    <div class="grid hide" id="appGrid">
 
       <div class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+        <div class="head">
+          <h2>log a trade</h2>
+          <div class="split">
+            <span class="tag" id="userTag">user</span>
+            <button class="btn danger" id="btnLogout">logout</button>
+          </div>
+        </div>
+        <div class="body">
+          <div class="row">
+            <div>
+              <label>trade date</label>
+              <input id="trade_date" type="date" />
+            </div>
+            <div>
+              <label>direction</label>
+              <select id="direction">
+                <option value="Long">Long</option>
+                <option value="Short">Short</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row" style="margin-top:10px">
+            <div>
+              <label>symbol</label>
+              <input id="symbol" placeholder="e.g. NQ, ES, SPY, XAUUSD" />
+            </div>
+            <div>
+              <label>market</label>
+              <select id="market">
+                <option value="">select</option>
+                <option value="Nasdaq">Nasdaq</option>
+                <option value="S&P 500">S&P 500</option>
+                <option value="Forex">Forex</option>
+                <option value="Crypto">Crypto</option>
+                <option value="Stocks">Stocks</option>
+                <option value="Gold">Gold</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row" style="margin-top:10px">
+            <div>
+              <label>session</label>
+              <select id="session">
+                <option value="">select</option>
+                <option value="London">London</option>
+                <option value="New York">New York</option>
+                <option value="Asia">Asia</option>
+              </select>
+            </div>
+            <div>
+              <label>strategy</label>
+              <select id="strategy">
+                <option value="">select</option>
+                <option value="Breakout">Breakout</option>
+                <option value="Pullback">Pullback</option>
+                <option value="FVG">FVG</option>
+                <option value="Scalp">Scalp</option>
+                <option value="Trend">Trend</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row" style="margin-top:10px">
+            <div>
+              <label>mistakes (comma separated)</label>
+              <input id="mistakes" placeholder="e.g. revenge, overtrade, late entry" />
+            </div>
+            <div>
+              <label>R multiple (optional)</label>
+              <input id="r_multiple" type="number" step="0.01" placeholder="e.g. 1.5 or -1" />
+            </div>
+          </div>
+
+          <div style="margin-top:10px">
+            <label>notes</label>
+            <textarea id="notes" placeholder="what happened, what you’ll do next time"></textarea>
+          </div>
+
+          <div class="btns">
+            <button class="btn primary" id="btnSave">save trade</button>
+            <button class="btn" id="btnClear">clear</button>
+          </div>
+
+          <div class="msg" id="formMsg"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="head">
           <h2>dashboard</h2>
-          <button id="refreshBtn" class="pill">refresh</button>
+          <span class="tag" id="dashTag">last 50 trades</span>
         </div>
+        <div class="body">
+          <div class="stats">
+            <div class="stat"><div class="k">trades</div><div class="v" id="sTrades">0</div></div>
+            <div class="stat"><div class="k">win rate</div><div class="v" id="sWin">0%</div></div>
+            <div class="stat"><div class="k">avg R</div><div class="v" id="sAvgR">0</div></div>
+            <div class="stat"><div class="k">total R</div><div class="v" id="sTotR">0</div></div>
+          </div>
 
-        <div class="stats" style="margin-top:10px">
-          <div class="stat"><p class="n" id="statTrades">0</p><p class="t">trades</p></div>
-          <div class="stat"><p class="n" id="statWin">0%</p><p class="t">win rate</p></div>
-          <div class="stat"><p class="n" id="statAvgR">0.00</p><p class="t">avg R</p></div>
-          <div class="stat"><p class="n" id="statBestSession">-</p><p class="t">best session</p></div>
+          <div class="hr"></div>
+
+          <div class="msg" id="dashMsg">loading…</div>
+
+          <div style="overflow:auto;margin-top:8px">
+            <table>
+              <thead>
+                <tr>
+                  <th>date</th>
+                  <th>symbol</th>
+                  <th>dir</th>
+                  <th>session</th>
+                  <th>strategy</th>
+                  <th>R</th>
+                </tr>
+              </thead>
+              <tbody id="tradeRows"></tbody>
+            </table>
+          </div>
         </div>
-
-        <div style="height:1px;background:var(--line);margin:14px 0;border-radius:2px;opacity:.8"></div>
-
-        <h2 style="margin:0 0 8px">latest trades</h2>
-        <div class="muted">log the R and the mistake pattern becomes obvious fast</div>
-
-        <div class="table">
-          <table>
-            <thead>
-              <tr>
-                <th style="width:110px">date</th>
-                <th>trade</th>
-                <th style="width:90px">R</th>
-                <th style="width:170px">tags</th>
-                <th style="width:120px">actions</th>
-              </tr>
-            </thead>
-            <tbody id="tradeRows"></tbody>
-          </table>
-        </div>
-
-        <div class="note" id="dashMsg"></div>
       </div>
+
     </div>
   </div>
 
+  <!-- Supabase JS v2 -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    // paste your supabase keys here
-    const SUPABASE_URL = "https://oucikdsngvdhimquclcz.supabase.co";
-    const SUPABASE_ANON_KEY = "sb_publishable_gMETcAB_TRLGd8hqx48KRA_yXxE7U6v";
+    // ========= 1) PUT YOUR SUPABASE KEYS HERE =========
+    // Supabase dashboard:
+    // Settings -> Data API -> Project URL
+    // Settings -> API Keys -> Publishable key
+    const SUPABASE_URL = "PASTE_YOUR_PROJECT_URL_HERE";
+    const SUPABASE_KEY = "PASTE_YOUR_PUBLISHABLE_KEY_HERE";
 
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+    // ========= UI helpers =========
     const $ = (id) => document.getElementById(id);
-    const show = (id) => $(id).classList.remove("hide");
-    const hide = (id) => $(id).classList.add("hide");
-    const setMsg = (id, txt) => { $(id).textContent = txt || ""; };
-
-    function todayISO(){
-      const d = new Date();
-      const off = d.getTimezoneOffset();
-      const local = new Date(d.getTime() - off * 60000);
-      return local.toISOString().slice(0,10);
+    function setMsg(id, text, isErr=false){
+      const el = $(id);
+      el.textContent = text || "";
+      el.className = "msg" + (isErr ? " err" : "");
     }
-    function safeNum(n){ const x = Number(n); return Number.isFinite(x) ? x : 0; }
-    function parseMistakes(str){
-      if(!str) return [];
-      return str.split(",").map(s=>s.trim()).filter(Boolean).slice(0,12);
-    }
-    function escapeHtml(str){
-      return String(str).replace(/[&<>"']/g, (m) => ({
-        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-      }[m]));
-    }
-    function formatTradeTitle(t){
-      return `${t.symbol} • ${t.market} • ${t.direction} • ${t.session}`;
+    function showApp(show){
+      $("authCard").classList.toggle("hide", show);
+      $("appGrid").classList.toggle("hide", !show);
+      $("statusPill").textContent = show ? "signed in" : "not signed in";
     }
 
-    $("trade_date").value = todayISO();
-
+    // ========= Auth =========
     async function refreshSession(){
-      const { data: { session } } = await supabaseClient.auth.getSession();
-      if(session?.user){
-        hide("authCard"); show("app"); show("logoutBtn"); show("userEmail");
-        $("userEmail").textContent = session.user.email;
+      const { data } = await supabaseClient.auth.getSession();
+      const session = data.session;
+      if(session && session.user){
+        $("userTag").textContent = session.user.email || "signed in";
+        showApp(true);
         await loadTrades();
-      }else{
-        show("authCard"); hide("app"); hide("logoutBtn"); hide("userEmail");
+      } else {
+        showApp(false);
       }
     }
 
-    $("loginBtn").addEventListener("click", async () => {
-      setMsg("authMsg", "");
+    async function login(){
+      setMsg("authMsg","logging in…");
       const email = $("email").value.trim();
       const password = $("password").value;
+
       const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
-      if(error) return setMsg("authMsg", error.message);
+      if(error){ setMsg("authMsg", error.message, true); return; }
+      setMsg("authMsg","");
       await refreshSession();
-    });
+    }
 
-    $("signupBtn").addEventListener("click", async () => {
-      setMsg("authMsg", "");
+    async function signup(){
+      setMsg("authMsg","creating account…");
       const email = $("email").value.trim();
       const password = $("password").value;
-      const { error } = await supabaseClient.auth.signUp({ email, password });
-      if(error) return setMsg("authMsg", error.message);
-      setMsg("authMsg", "account created. if confirmation is on, check email then login.");
-    });
 
-    $("logoutBtn").addEventListener("click", async () => {
+      const { error } = await supabaseClient.auth.signUp({
+        email,
+        password,
+        options: {
+          // ✅ THIS IS THE IMPORTANT PART
+          emailRedirectTo: "https://wwjk-bot.github.io/confirm.html"
+        }
+      });
+
+      if(error){ setMsg("authMsg", error.message, true); return; }
+
+      setMsg("authMsg","check your email to confirm. after confirming you’ll be sent into the app.");
+    }
+
+    async function logout(){
       await supabaseClient.auth.signOut();
-      await refreshSession();
-    });
+      showApp(false);
+    }
 
-    $("resetBtn").addEventListener("click", () => {
-      $("trade_date").value = todayISO();
-      $("symbol").value = "";
-      $("market").value = "futures";
-      $("direction").value = "long";
-      $("session").value = "ny";
-      $("strategy").value = "";
-      $("r_multiple").value = "";
-      $("mistakes").value = "";
-      $("notes").value = "";
-      setMsg("saveMsg", "");
-    });
+    // ========= Trades =========
+    function parseMistakes(str){
+      const s = (str || "").trim();
+      if(!s) return [];
+      return s.split(",").map(x => x.trim()).filter(Boolean).slice(0, 12);
+    }
 
-    $("refreshBtn").addEventListener("click", loadTrades);
-
-    $("saveTradeBtn").addEventListener("click", async () => {
-      setMsg("saveMsg", "");
-      const { data: { session } } = await supabaseClient.auth.getSession();
-      if(!session?.user) return setMsg("saveMsg", "please login again");
+    async function saveTrade(){
+      setMsg("formMsg","saving…");
+      const { data } = await supabaseClient.auth.getUser();
+      const user = data.user;
+      if(!user){ setMsg("formMsg","not signed in", true); return; }
 
       const payload = {
-        user_id: session.user.id,
-        trade_date: $("trade_date").value || todayISO(),
-        symbol: ($("symbol").value || "").trim().toUpperCase(),
-        market: $("market").value,
-        direction: $("direction").value,
-        session: $("session").value,
-        strategy: ($("strategy").value || "default").trim() || "default",
+        user_id: user.id,
+        trade_date: $("trade_date").value || new Date().toISOString().slice(0,10),
+        symbol: ($("symbol").value || "").trim(),
+        market: $("market").value || null,
+        direction: $("direction").value || null,
+        session: $("session").value || null,
+        strategy: $("strategy").value || null,
         mistakes: parseMistakes($("mistakes").value),
-        r_multiple: safeNum($("r_multiple").value),
-        notes: ($("notes").value || "").trim()
+        r_multiple: $("r_multiple").value ? Number($("r_multiple").value) : null,
+        notes: ($("notes").value || "").trim() || null
       };
 
-      if(!payload.symbol) return setMsg("saveMsg", "symbol is required");
+      if(!payload.symbol){
+        setMsg("formMsg","symbol is required", true);
+        return;
+      }
 
       const { error } = await supabaseClient.from("trades").insert(payload);
-      if(error) return setMsg("saveMsg", error.message);
+      if(error){ setMsg("formMsg", error.message, true); return; }
 
-      setMsg("saveMsg", "saved ✅");
-      $("resetBtn").click();
-      await loadTrades();
-    });
-
-    async function deleteTrade(id){
-      if(!confirm("delete this trade")) return;
-      const { error } = await supabaseClient.from("trades").delete().eq("id", id);
-      if(error) alert(error.message);
+      setMsg("formMsg","saved ✅");
       await loadTrades();
     }
 
-    function computeStats(trades){
-      const total = trades.length;
-      const wins = trades.filter(t => Number(t.r_multiple) > 0).length;
-      const winRate = total ? Math.round((wins/total)*100) : 0;
-      const avgR = total ? (trades.reduce((s,t)=>s+Number(t.r_multiple||0),0)/total) : 0;
-
-      const bySession = {};
-      for(const t of trades){
-        const s = t.session || "na";
-        bySession[s] = bySession[s] || { sum:0, n:0 };
-        bySession[s].sum += Number(t.r_multiple||0);
-        bySession[s].n += 1;
-      }
-      let best = "-"; let bestVal = -Infinity;
-      for(const [s,v] of Object.entries(bySession)){
-        const mean = v.n ? v.sum/v.n : -Infinity;
-        if(mean > bestVal){ bestVal = mean; best = s; }
-      }
-
-      $("statTrades").textContent = String(total);
-      $("statWin").textContent = `${winRate}%`;
-      $("statAvgR").textContent = avgR.toFixed(2);
-      $("statBestSession").textContent = best;
+    function clearForm(){
+      $("symbol").value = "";
+      $("market").value = "";
+      $("session").value = "";
+      $("strategy").value = "";
+      $("mistakes").value = "";
+      $("r_multiple").value = "";
+      $("notes").value = "";
+      setMsg("formMsg","");
     }
 
-    function renderTrades(trades){
-      const rows = $("tradeRows");
-      rows.innerHTML = "";
+    function computeStats(rows){
+      const rVals = rows.map(r => (r.r_multiple === null || r.r_multiple === undefined) ? null : Number(r.r_multiple));
+      const rClean = rVals.filter(v => typeof v === "number" && !Number.isNaN(v));
+      const wins = rClean.filter(v => v > 0).length;
+      const trades = rows.length;
+      const winRate = rClean.length ? Math.round((wins / rClean.length) * 100) : 0;
+      const avgR = rClean.length ? (rClean.reduce((a,b)=>a+b,0) / rClean.length) : 0;
+      const totR = rClean.length ? rClean.reduce((a,b)=>a+b,0) : 0;
 
-      for(const t of trades){
+      $("sTrades").textContent = trades;
+      $("sWin").textContent = winRate + "%";
+      $("sAvgR").textContent = (Math.round(avgR*100)/100).toFixed(2);
+      $("sTotR").textContent = (Math.round(totR*100)/100).toFixed(2);
+    }
+
+    function renderTrades(rows){
+      const body = $("tradeRows");
+      body.innerHTML = "";
+      for(const r of rows){
         const tr = document.createElement("tr");
-
-        const dateTd = document.createElement("td");
-        dateTd.textContent = (t.trade_date || "").toString();
-        tr.appendChild(dateTd);
-
-        const tradeTd = document.createElement("td");
-        const title = document.createElement("div");
-        title.style.fontWeight = "900";
-        title.textContent = formatTradeTitle(t);
-        const meta = document.createElement("div");
-        meta.className = "muted";
-        meta.textContent = (t.strategy || "default") + (t.notes ? " • " + t.notes.slice(0, 80) : "");
-        tradeTd.appendChild(title);
-        tradeTd.appendChild(meta);
-        tr.appendChild(tradeTd);
-
-        const rTd = document.createElement("td");
-        const r = Number(t.r_multiple || 0);
-        rTd.textContent = r.toFixed(2);
-        rTd.style.fontWeight = "900";
-        rTd.style.color = r >= 0 ? "var(--accent)" : "var(--danger)";
-        tr.appendChild(rTd);
-
-        const tagTd = document.createElement("td");
-        const tags = [];
-        if(t.strategy) tags.push("strategy: " + t.strategy);
-        if(Array.isArray(t.mistakes)) tags.push(...t.mistakes.map(m => "mistake: " + m));
-        if(tags.length === 0) tags.push("no tags");
-        tagTd.innerHTML = tags.slice(0,4).map(x => `<span class="chip">${escapeHtml(x)}</span>`).join("");
-        tr.appendChild(tagTd);
-
-        const actTd = document.createElement("td");
-        const delBtn = document.createElement("button");
-        delBtn.className = "btn danger";
-        delBtn.style.padding = "10px 12px";
-        delBtn.textContent = "delete";
-        delBtn.onclick = () => deleteTrade(t.id);
-        actTd.appendChild(delBtn);
-        tr.appendChild(actTd);
-
-        rows.appendChild(tr);
+        tr.innerHTML = `
+          <td>${r.trade_date || ""}</td>
+          <td>${(r.symbol || "").toUpperCase()}</td>
+          <td>${r.direction || ""}</td>
+          <td>${r.session || ""}</td>
+          <td>${r.strategy || ""}</td>
+          <td>${(r.r_multiple === null || r.r_multiple === undefined) ? "" : Number(r.r_multiple).toFixed(2)}</td>
+        `;
+        body.appendChild(tr);
       }
     }
 
     async function loadTrades(){
-      setMsg("dashMsg", "loading...");
+      setMsg("dashMsg","loading…");
       const { data, error } = await supabaseClient
         .from("trades")
         .select("*")
-        .order("trade_date", { ascending: false })
-        .order("created_at", { ascending: false })
+        .order("trade_date", { ascending:false })
+        .order("created_at", { ascending:false })
         .limit(50);
 
-      if(error){ setMsg("dashMsg", error.message); return; }
+      if(error){ setMsg("dashMsg", error.message, true); return; }
 
       computeStats(data || []);
       renderTrades(data || []);
       setMsg("dashMsg", (data && data.length) ? "" : "no trades yet. add your first trade on the left.");
     }
 
+    // ========= Wire up =========
+    $("btnLogin").addEventListener("click", login);
+    $("btnSignup").addEventListener("click", signup);
+    $("btnLogout").addEventListener("click", logout);
+    $("btnSave").addEventListener("click", saveTrade);
+    $("btnClear").addEventListener("click", clearForm);
+
+    // set default date
+    $("trade_date").value = new Date().toISOString().slice(0,10);
+
+    // session changes
     supabaseClient.auth.onAuthStateChange(() => refreshSession());
     refreshSession();
   </script>
