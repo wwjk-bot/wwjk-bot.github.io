@@ -41,33 +41,83 @@
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-    const supabaseUrl = "https://oucikdsngvdhimquclcz.supabase.co";
-    const supabaseKey = "sb_publishable_gMETcAB_TRLGd8hqx48KRA_yXxE7U6v";
-    const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const supabaseUrl = "https://oucikdsngvdhimquclcz.supabase.co";
+  const supabaseKey = "sb_publishable_gMETcAB_TRLGd8hqx48KRA_yXxE7U6v";
 
-    async function kickToDashboardIfLoggedIn() {
-      const { data } = await sb.auth.getSession();
+  const msg = document.getElementById("msg");
+  const btn = document.getElementById("loginBtn");
+
+  // show any unexpected errors on the page
+  window.addEventListener("error", (e) => {
+    msg.textContent = "error: " + (e.message || "unknown error");
+  });
+
+  // make sure the library loaded
+  if (!window.supabase) {
+    msg.textContent = "error: supabase library did not load (cdn blocked)";
+  }
+
+  const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+  async function kickToDashboardIfLoggedIn() {
+    try {
+      const { data, error } = await sb.auth.getSession();
+      if (error) {
+        msg.textContent = "session error: " + error.message;
+        return;
+      }
       if (data && data.session) window.location.href = "./dashboard.html";
+    } catch (e) {
+      msg.textContent = "session crash: " + (e.message || e);
     }
-    kickToDashboardIfLoggedIn();
+  }
+  kickToDashboardIfLoggedIn();
 
-    const msg = document.getElementById("msg");
-    document.getElementById("loginBtn").addEventListener("click", async () => {
-      msg.textContent = "logging in...";
+  btn.addEventListener("click", async (e) => {
+    e.preventDefault();
+    btn.disabled = true;
+    msg.textContent = "logging in...";
+
+    try {
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value;
 
-      const { error } = await sb.auth.signInWithPassword({ email, password });
+      if (!email || !password) {
+        msg.textContent = "please enter email and password";
+        btn.disabled = false;
+        return;
+      }
+
+      // add a timeout so it can’t hang forever
+      const loginPromise = sb.auth.signInWithPassword({ email, password });
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("login timed out (network blocked)")), 12000)
+      );
+
+      const { data, error } = await Promise.race([loginPromise, timeoutPromise]);
 
       if (error) {
-        msg.textContent = error.message;
+        msg.textContent = "login error: " + error.message;
+        btn.disabled = false;
+        return;
+      }
+
+      // confirm session exists before redirect
+      const { data: sData, error: sErr } = await sb.auth.getSession();
+      if (sErr || !sData.session) {
+        msg.textContent = "logged in but no session saved, try hard refresh";
+        btn.disabled = false;
         return;
       }
 
       window.location.href = "./dashboard.html";
-    });
-  </script>
+    } catch (e2) {
+      msg.textContent = "login crash: " + (e2.message || e2);
+      btn.disabled = false;
+    }
+  });
+</script>
 </body>
 </html>
