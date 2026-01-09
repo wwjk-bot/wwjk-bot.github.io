@@ -13,18 +13,21 @@
   <script>
     const supabaseUrl = "https://oucikdsngvdhimquclcz.supabase.co";
     const supabaseKey = "sb_publishable_gMETcAB_TRLGd8hqx48KRA_yXxE7U6v";
-    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-    async function checkUser() {
-      const { data } = await supabase.auth.getUser();
+    // IMPORTANT: use window.supabase so we don’t overwrite the name
+    const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-      if (!data.user) {
-        // not logged in → send back to login page
-        window.location.href = "index.html";
+    async function protectDashboard() {
+      const { data, error } = await sb.auth.getSession();
+
+      // no session = not logged in
+      if (error || !data.session) {
+        window.location.href = "./index.html";
+        return;
       }
     }
 
-    checkUser();
+    protectDashboard();
   </script>
 
 </body>
