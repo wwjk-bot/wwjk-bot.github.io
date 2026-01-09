@@ -8,16 +8,19 @@
   <style>
     :root{
       --bg:#0b0f14;
+      --panel:#0f1521;
       --card:#111826;
       --text:#e8eef7;
       --muted:#a8b3c5;
-      --accent:#7a3df0; /* purple */
+      --accent:#7a3df0;
       --line:#22304a;
       --shadow: 0 20px 60px rgba(0,0,0,.45);
+      --radius:18px;
     }
 
     html[data-theme="light"]{
       --bg:#f6f7fb;
+      --panel:#ffffff;
       --card:#ffffff;
       --text:#0b0f14;
       --muted:#4b5567;
@@ -35,71 +38,233 @@
         radial-gradient(900px 500px at 85% 20%, rgba(122,61,240,.07), transparent 60%),
         var(--bg);
       color:var(--text);
-      padding:24px;
     }
 
-    .wrap{max-width:1100px;margin:0 auto;}
-    .top{
-      display:flex;align-items:center;justify-content:space-between;gap:12px;
-      margin-bottom:18px;
+    a{color:inherit;text-decoration:none}
+    button{font-family:inherit}
+
+    .app{
+      display:grid;
+      grid-template-columns: 260px 1fr;
+      min-height:100vh;
     }
-    .brand{display:flex;align-items:center;gap:10px;font-weight:900;letter-spacing:.2px;}
+    @media (max-width: 980px){
+      .app{grid-template-columns:1fr;}
+    }
+
+    /* sidebar */
+    .sidebar{
+      background: color-mix(in srgb, var(--panel) 92%, transparent);
+      border-right:1px solid color-mix(in srgb, var(--line) 90%, transparent);
+      padding:18px;
+      position:sticky;
+      top:0;
+      height:100vh;
+    }
+    @media (max-width: 980px){
+      .sidebar{
+        position:relative;
+        height:auto;
+        border-right:none;
+        border-bottom:1px solid color-mix(in srgb, var(--line) 90%, transparent);
+      }
+    }
+
+    .brand{
+      display:flex; align-items:center; gap:10px;
+      font-weight:950;
+      letter-spacing:.2px;
+      margin-bottom:16px;
+    }
     .dot{
       width:10px;height:10px;border-radius:999px;background:var(--accent);
       box-shadow:0 0 0 6px color-mix(in srgb, var(--accent) 18%, transparent);
     }
 
-    .actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+    .who{
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.35;
+      margin:0 0 14px 0;
+      min-height:16px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .nav{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      margin-top:8px;
+    }
+
+    .navbtn{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid transparent;
+      background: transparent;
+      color:var(--text);
+      cursor:pointer;
+      font-weight:900;
+      letter-spacing:.1px;
+    }
+
+    .navbtn:hover{
+      background: color-mix(in srgb, var(--bg) 55%, transparent);
+      border-color: color-mix(in srgb, var(--line) 70%, transparent);
+    }
+
+    .navbtn.active{
+      background: color-mix(in srgb, var(--accent) 14%, transparent);
+      border-color: color-mix(in srgb, var(--accent) 35%, var(--line));
+    }
+
+    .badge{
+      font-size:11px;
+      font-weight:950;
+      color:var(--muted);
+      padding:4px 8px;
+      border-radius:999px;
+      border:1px solid color-mix(in srgb, var(--line) 90%, transparent);
+      background: color-mix(in srgb, var(--bg) 55%, transparent);
+    }
+
+    .sideActions{
+      display:flex;
+      gap:10px;
+      margin-top:16px;
+      flex-wrap:wrap;
+    }
+
     .btn{
-      appearance:none;border:1px solid color-mix(in srgb, var(--line) 90%, transparent);
+      appearance:none;
+      border:1px solid color-mix(in srgb, var(--line) 90%, transparent);
       background: color-mix(in srgb, var(--bg) 55%, transparent);
       color:var(--text);
-      padding:10px 12px;border-radius:14px;font-weight:900;cursor:pointer;
+      padding:10px 12px;
+      border-radius:14px;
+      font-weight:950;
+      cursor:pointer;
+      flex:1;
+      min-width:110px;
     }
-    .btn.primary{background:var(--accent);color:#fff;border-color:transparent;}
-    .btn.ghost{background:transparent;}
+    .btn.primary{
+      background:var(--accent);
+      color:#fff;
+      border-color:transparent;
+    }
     .btn:disabled{opacity:.6;cursor:not-allowed;}
 
-    .grid{
-      display:grid;
-      grid-template-columns: 1.2fr .8fr;
-      gap:14px;
-      align-items:start;
+    .sideFooter{
+      margin-top:14px;
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.4;
     }
-    @media (max-width: 980px){ .grid{grid-template-columns:1fr;} }
+
+    /* main */
+    .main{
+      padding:22px;
+    }
+
+    .wrap{
+      max-width:1120px;
+      margin:0 auto;
+    }
 
     .card{
       background: color-mix(in srgb, var(--card) 92%, transparent);
       border:1px solid color-mix(in srgb, var(--line) 90%, transparent);
-      border-radius:18px;
+      border-radius:var(--radius);
       padding:18px;
-      box-shadow: var(--shadow);
+      box-shadow:var(--shadow);
     }
 
-    .headline{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+    .toprow{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom:14px;
+    }
+
     h1{margin:0;font-size:26px;letter-spacing:-.2px;}
-    .sub{margin-top:6px;color:var(--muted);line-height:1.45;font-size:14px;}
+    .sub{color:var(--muted);font-size:14px;line-height:1.45;margin-top:6px;}
 
     .stats{
       display:grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap:12px;
       margin-top:14px;
     }
-    @media (max-width: 780px){ .stats{grid-template-columns:1fr;} }
+    @media (max-width: 980px){ .stats{grid-template-columns: repeat(2, 1fr);} }
+    @media (max-width: 560px){ .stats{grid-template-columns:1fr;} }
 
     .stat{
-      background: color-mix(in srgb, var(--card) 92%, transparent);
       border:1px solid color-mix(in srgb, var(--line) 90%, transparent);
       border-radius:16px;
       padding:14px;
+      background: color-mix(in srgb, var(--card) 92%, transparent);
     }
-    .label{color:var(--muted);font-weight:800;font-size:12px;letter-spacing:.4px;text-transform:uppercase;}
-    .value{margin-top:8px;font-size:28px;font-weight:950;letter-spacing:-.3px;}
-    .hint{margin-top:6px;color:var(--muted);font-size:12px;line-height:1.35;}
+    .label{
+      color:var(--muted);
+      font-weight:950;
+      font-size:11px;
+      letter-spacing:.4px;
+      text-transform:uppercase;
+    }
+    .value{
+      margin-top:8px;
+      font-size:26px;
+      font-weight:980;
+      letter-spacing:-.3px;
+    }
+    .hint{
+      margin-top:6px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.35;
+    }
 
-    .sectionTitle{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:6px;}
-    .sectionTitle h2{margin:0;font-size:16px;}
+    .twoCol{
+      display:grid;
+      grid-template-columns: 1.25fr .75fr;
+      gap:14px;
+      margin-top:14px;
+      align-items:start;
+    }
+    @media (max-width: 980px){ .twoCol{grid-template-columns:1fr;} }
+
+    .sectionTitle{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-top:6px;
+    }
+    .sectionTitle h2{margin:0;font-size:15px;}
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:6px 10px;
+      border-radius:999px;
+      font-weight:950;
+      font-size:12px;
+      border:1px solid color-mix(in srgb, var(--line) 90%, transparent);
+      background: color-mix(in srgb, var(--bg) 55%, transparent);
+      color:var(--text);
+    }
+    .pill.green{border-color: color-mix(in srgb, #16a34a 35%, var(--line));}
+    .pill.red{border-color: color-mix(in srgb, #ef4444 35%, var(--line));}
+
     .table{
       width:100%;
       border-collapse:collapse;
@@ -113,118 +278,352 @@
       border-bottom:1px solid color-mix(in srgb, var(--line) 90%, transparent);
       font-size:13px;
     }
-    .table th{color:var(--muted);font-weight:900;text-transform:uppercase;letter-spacing:.35px;font-size:11px;}
-    .pill{
-      display:inline-flex;align-items:center;gap:6px;
-      padding:6px 10px;border-radius:999px;font-weight:900;font-size:12px;
+    .table th{
+      color:var(--muted);
+      font-weight:950;
+      text-transform:uppercase;
+      letter-spacing:.35px;
+      font-size:11px;
+    }
+
+    .focusBox{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .focusText{
+      margin:0;
+      color:var(--text);
+      font-size:14px;
+      line-height:1.55;
+    }
+    .mutedNote{
+      margin:0;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.5;
+    }
+
+    .chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:6px;
+    }
+    .chip{
+      padding:7px 10px;
+      border-radius:999px;
+      font-weight:950;
+      font-size:12px;
       border:1px solid color-mix(in srgb, var(--line) 90%, transparent);
       background: color-mix(in srgb, var(--bg) 55%, transparent);
+      color:var(--muted);
     }
-    .pill.green{border-color: color-mix(in srgb, #16a34a 35%, var(--line));}
-    .pill.red{border-color: color-mix(in srgb, #ef4444 35%, var(--line));}
+    .chip strong{color:var(--text)}
 
-    .rightCol .card + .card{margin-top:14px;}
-    .bigCta{
-      display:flex;flex-direction:column;gap:10px;
-      align-items:stretch;
-    }
-    .bigCta p{margin:0;color:var(--muted);line-height:1.45;font-size:14px;}
-    .note{
+    .toast{
       margin-top:10px;
       color:var(--muted);
       font-size:12px;
-      line-height:1.45;
+      min-height:18px;
+      white-space:pre-wrap;
     }
 
-    .toast{margin-top:10px;color:var(--muted);font-size:12px;min-height:18px;white-space:pre-wrap;}
+    /* views */
+    .view{display:none;}
+    .view.active{display:block;}
+
+    /* analytics placeholders */
+    .anaGrid{
+      display:grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap:14px;
+      margin-top:14px;
+    }
+    @media (max-width: 980px){ .anaGrid{grid-template-columns:1fr;} }
+
+    .chartBox{
+      border:1px solid color-mix(in srgb, var(--line) 90%, transparent);
+      border-radius:16px;
+      padding:14px;
+      background: color-mix(in srgb, var(--card) 92%, transparent);
+      min-height:220px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .chartTitle{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .chartTitle h3{
+      margin:0;
+      font-size:14px;
+      letter-spacing:-.1px;
+    }
+    .fakeChart{
+      flex:1;
+      border-radius:14px;
+      border:1px dashed color-mix(in srgb, var(--line) 90%, transparent);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:color-mix(in srgb, var(--muted) 80%, transparent);
+      font-weight:950;
+      font-size:12px;
+    }
+
+    .smallRow{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:12px;
+      margin-top:14px;
+    }
+    @media (max-width: 980px){ .smallRow{grid-template-columns:1fr;} }
+
   </style>
 </head>
 
 <body>
-  <div class="wrap">
+  <div class="app">
 
-    <div class="top">
+    <!-- sidebar -->
+    <aside class="sidebar">
       <div class="brand">
         <span class="dot"></span>
         Sessionly
       </div>
 
-      <div class="actions">
-        <button class="btn ghost" id="themeBtn" type="button">toggle theme</button>
+      <div class="who" id="whoami">checking session...</div>
+
+      <nav class="nav" aria-label="dashboard navigation">
+        <button class="navbtn active" data-view="focus" type="button">
+          focus
+          <span class="badge">daily</span>
+        </button>
+
+        <button class="navbtn" data-view="analytics" type="button">
+          analytics
+          <span class="badge">charts</span>
+        </button>
+
+        <button class="navbtn" data-view="trades" type="button">
+          trades
+          <span class="badge">table</span>
+        </button>
+
+        <button class="navbtn" data-view="journal" type="button">
+          journal
+          <span class="badge">notes</span>
+        </button>
+      </nav>
+
+      <div class="sideActions">
+        <button class="btn" id="themeBtn" type="button">toggle theme</button>
         <button class="btn" id="logoutBtn" type="button">log out</button>
       </div>
-    </div>
 
-    <div class="grid">
-      <!-- left -->
-      <div class="leftCol">
-        <div class="card">
-          <div class="headline">
-            <div>
-              <h1>dashboard</h1>
-              <div class="sub" id="whoami">checking session...</div>
+      <p class="sideFooter">
+        calm by default, deep when you want it
+      </p>
+    </aside>
+
+    <!-- main -->
+    <main class="main">
+      <div class="wrap">
+
+        <!-- focus view -->
+        <section class="view active" id="view-focus">
+          <div class="card">
+            <div class="toprow">
+              <div>
+                <h1>focus</h1>
+                <div class="sub">your daily view, clean and calm</div>
+              </div>
+              <button class="btn primary" id="addTradeBtn" type="button">+ add trade</button>
             </div>
-            <button class="btn primary" id="addTradeBtn" type="button">+ add trade</button>
+
+            <div class="stats">
+              <div class="stat">
+                <div class="label">recent trades loaded</div>
+                <div class="value" id="statTrades">—</div>
+                <div class="hint">this will become “total trades” by date range later</div>
+              </div>
+              <div class="stat">
+                <div class="label">win rate</div>
+                <div class="value" id="statWinrate">—</div>
+                <div class="hint">wins / trades in the list</div>
+              </div>
+              <div class="stat">
+                <div class="label">total pnl</div>
+                <div class="value" id="statPnl">—</div>
+                <div class="hint">sum pnl in the list</div>
+              </div>
+              <div class="stat">
+                <div class="label">avg rr</div>
+                <div class="value" id="statAvgRr">—</div>
+                <div class="hint">average rr in the list</div>
+              </div>
+            </div>
+
+            <div class="twoCol">
+              <div class="card" style="box-shadow:none;">
+                <div class="sectionTitle">
+                  <h2>recent trades</h2>
+                  <span class="pill" id="statusPill">loading</span>
+                </div>
+
+                <table class="table" aria-label="recent trades">
+                  <thead>
+                    <tr>
+                      <th>date</th>
+                      <th>symbol</th>
+                      <th>dir</th>
+                      <th>rr</th>
+                      <th>pnl</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tradesTbody">
+                    <tr><td colspan="5" style="color:var(--muted);">loading your trades...</td></tr>
+                  </tbody>
+                </table>
+
+                <div class="toast" id="toast"></div>
+              </div>
+
+              <div class="card focusBox" style="box-shadow:none;">
+                <div class="sectionTitle">
+                  <h2>today’s focus</h2>
+                  <span class="pill green">coach</span>
+                </div>
+
+                <p class="focusText" id="focusText">
+                  log the next trade immediately after closing it, and write one sentence on why you entered
+                </p>
+
+                <div class="chips">
+                  <div class="chip"><strong>session</strong> ny</div>
+                  <div class="chip"><strong>rule</strong> max 3 trades</div>
+                  <div class="chip"><strong>goal</strong> no revenge</div>
+                </div>
+
+                <p class="mutedNote">
+                  next we’ll generate this from your real patterns and mistakes, for now it’s a placeholder
+                </p>
+
+                <button class="btn" id="refreshBtn" type="button">refresh stats</button>
+              </div>
+            </div>
           </div>
+        </section>
 
-          <div class="stats">
-            <div class="stat">
-              <div class="label">total trades</div>
-              <div class="value" id="statTrades">—</div>
-              <div class="hint">count of trades logged</div>
+        <!-- analytics view -->
+        <section class="view" id="view-analytics">
+          <div class="card">
+            <div class="toprow">
+              <div>
+                <h1>analytics</h1>
+                <div class="sub">deep data lives here, focus stays clean</div>
+              </div>
+              <span class="pill">coming next</span>
             </div>
-            <div class="stat">
-              <div class="label">win rate</div>
-              <div class="value" id="statWinrate">—</div>
-              <div class="hint">wins / total trades</div>
+
+            <div class="smallRow">
+              <div class="stat">
+                <div class="label">profit factor</div>
+                <div class="value">—</div>
+                <div class="hint">will calculate from wins/losses</div>
+              </div>
+              <div class="stat">
+                <div class="label">avg win vs avg loss</div>
+                <div class="value">—</div>
+                <div class="hint">shows edge and risk control</div>
+              </div>
+              <div class="stat">
+                <div class="label">best hour</div>
+                <div class="value">—</div>
+                <div class="hint">your top performing hour</div>
+              </div>
             </div>
-            <div class="stat">
-              <div class="label">total pnl</div>
-              <div class="value" id="statPnl">—</div>
-              <div class="hint">sum of pnl</div>
+
+            <div class="anaGrid">
+              <div class="chartBox">
+                <div class="chartTitle">
+                  <h3>pnl by day (calendar)</h3>
+                  <span class="badge">visual</span>
+                </div>
+                <div class="fakeChart">calendar view placeholder</div>
+              </div>
+
+              <div class="chartBox">
+                <div class="chartTitle">
+                  <h3>hourly performance</h3>
+                  <span class="badge">sessionly</span>
+                </div>
+                <div class="fakeChart">bar chart placeholder</div>
+              </div>
+
+              <div class="chartBox">
+                <div class="chartTitle">
+                  <h3>win vs loss distribution</h3>
+                  <span class="badge">edge</span>
+                </div>
+                <div class="fakeChart">distribution placeholder</div>
+              </div>
+
+              <div class="chartBox">
+                <div class="chartTitle">
+                  <h3>equity curve</h3>
+                  <span class="badge">trend</span>
+                </div>
+                <div class="fakeChart">line chart placeholder</div>
+              </div>
+            </div>
+
+            <p class="mutedNote" style="margin-top:14px;">
+              we’ll build these charts after add trade is finished and your dataset starts filling up
+            </p>
+          </div>
+        </section>
+
+        <!-- trades view -->
+        <section class="view" id="view-trades">
+          <div class="card">
+            <div class="toprow">
+              <div>
+                <h1>trades</h1>
+                <div class="sub">filters and full history will live here</div>
+              </div>
+              <button class="btn primary" type="button" id="addTradeBtn2">+ add trade</button>
+            </div>
+
+            <div class="fakeChart" style="min-height:260px;">
+              full trades table placeholder (next after add trade)
             </div>
           </div>
+        </section>
 
-          <div class="sectionTitle" style="margin-top:18px;">
-            <h2>recent trades</h2>
-            <span class="pill" id="statusPill">loading</span>
+        <!-- journal view -->
+        <section class="view" id="view-journal">
+          <div class="card">
+            <div class="toprow">
+              <div>
+                <h1>journal</h1>
+                <div class="sub">notes, lessons, and weekly review</div>
+              </div>
+              <span class="pill">soon</span>
+            </div>
+
+            <div class="fakeChart" style="min-height:260px;">
+              journal editor placeholder
+            </div>
           </div>
+        </section>
 
-          <table class="table" aria-label="recent trades">
-            <thead>
-              <tr>
-                <th>date</th>
-                <th>symbol</th>
-                <th>dir</th>
-                <th>rr</th>
-                <th>pnl</th>
-              </tr>
-            </thead>
-            <tbody id="tradesTbody">
-              <tr><td colspan="5" style="color:var(--muted);">loading your trades...</td></tr>
-            </tbody>
-          </table>
-
-          <div class="toast" id="toast"></div>
-        </div>
       </div>
-
-      <!-- right -->
-      <div class="rightCol">
-        <div class="card bigCta">
-          <h2 style="margin:0;font-size:16px;">today’s focus</h2>
-          <p id="focusText">log your next 5 trades with one clear mistake tag, then review your win rate by session</p>
-          <div class="note">this will become your weekly report later, for now it’s a placeholder</div>
-        </div>
-
-        <div class="card">
-          <h2 style="margin:0 0 10px 0;font-size:16px;">quick actions</h2>
-          <button class="btn" id="refreshBtn" type="button" style="width:100%;">refresh stats</button>
-          <div class="note">next we’ll wire add trade, then show real stats</div>
-        </div>
-      </div>
-    </div>
-
+    </main>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -233,7 +632,10 @@
     const supabaseKey = "sb_publishable_gMETcAB_TRLGd8hqx48KRA_yXxE7U6v";
     const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-    const toast = (t) => document.getElementById("toast").textContent = t || "";
+    const toast = (t) => {
+      const el = document.getElementById("toast");
+      if (el) el.textContent = t || "";
+    };
 
     function setTheme(theme){
       document.documentElement.setAttribute("data-theme", theme);
@@ -242,11 +644,8 @@
 
     function initTheme(){
       const saved = localStorage.getItem("sessionly_theme");
-      if (saved === "light" || saved === "dark") {
-        setTheme(saved);
-      } else {
-        setTheme("dark");
-      }
+      if (saved === "light" || saved === "dark") setTheme(saved);
+      else setTheme("dark");
     }
 
     function toggleTheme(){
@@ -275,6 +674,7 @@
 
     function setStatus(text, tone){
       const pill = document.getElementById("statusPill");
+      if (!pill) return;
       pill.textContent = text;
       pill.className = "pill" + (tone ? " " + tone : "");
     }
@@ -291,11 +691,9 @@
     async function loadUser(){
       const { data } = await sb.auth.getUser();
       const who = document.getElementById("whoami");
-      if (data && data.user && data.user.email) {
-        who.textContent = "signed in as " + data.user.email;
-      } else {
-        who.textContent = "signed in";
-      }
+      if (!who) return;
+      if (data && data.user && data.user.email) who.textContent = "signed in as " + data.user.email;
+      else who.textContent = "signed in";
     }
 
     async function fetchTrades(){
@@ -320,6 +718,8 @@
 
     function renderTrades(rows){
       const tb = document.getElementById("tradesTbody");
+      if (!tb) return;
+
       if (!rows.length) {
         tb.innerHTML = `<tr><td colspan="5" style="color:var(--muted);">no trades yet, add your first one</td></tr>`;
         return;
@@ -328,16 +728,18 @@
       tb.innerHTML = rows.map(r => {
         const dir = (r.direction || "").toLowerCase();
         const dirText = dir ? dir : "—";
-        const rr = (r.rr === null || r.rr === undefined) ? "—" : fmtNum(Number(r.rr));
+        const rrNum = (r.rr === null || r.rr === undefined) ? null : Number(r.rr);
+        const rrText = rrNum === null || Number.isNaN(rrNum) ? "—" : fmtNum(rrNum);
+
         const pnlNum = (r.pnl === null || r.pnl === undefined) ? null : Number(r.pnl);
-        const pnlText = pnlNum === null ? "—" : fmtNum(pnlNum);
+        const pnlText = pnlNum === null || Number.isNaN(pnlNum) ? "—" : fmtNum(pnlNum);
 
         return `
           <tr>
             <td>${fmtDate(r.trade_date)}</td>
             <td>${(r.symbol || "—").toUpperCase()}</td>
             <td>${dirText}</td>
-            <td>${rr}</td>
+            <td>${rrText}</td>
             <td>${pnlText}</td>
           </tr>
         `;
@@ -349,18 +751,30 @@
 
       let wins = 0;
       let pnlSum = 0;
+      let rrSum = 0;
+      let rrCount = 0;
 
       for (const r of rows){
-        const pnl = (r.pnl === null || r.pnl === undefined) ? 0 : Number(r.pnl);
-        if (!Number.isNaN(pnl)) pnlSum += pnl;
-        if (pnl > 0) wins += 1;
+        const pnl = (r.pnl === null || r.pnl === undefined) ? NaN : Number(r.pnl);
+        if (!Number.isNaN(pnl)) {
+          pnlSum += pnl;
+          if (pnl > 0) wins += 1;
+        }
+
+        const rr = (r.rr === null || r.rr === undefined) ? NaN : Number(r.rr);
+        if (!Number.isNaN(rr)) {
+          rrSum += rr;
+          rrCount += 1;
+        }
       }
 
       const winrate = total ? (wins / total) : NaN;
+      const avgRr = rrCount ? (rrSum / rrCount) : NaN;
 
-      document.getElementById("statTrades").textContent = total ? String(total) : "0";
+      document.getElementById("statTrades").textContent = String(total || 0);
       document.getElementById("statWinrate").textContent = total ? fmtPct(winrate) : "—";
       document.getElementById("statPnl").textContent = total ? fmtNum(pnlSum) : "—";
+      document.getElementById("statAvgRr").textContent = rrCount ? fmtNum(avgRr) : "—";
     }
 
     async function refreshAll(){
@@ -370,31 +784,70 @@
     }
 
     async function logout(){
-      document.getElementById("logoutBtn").disabled = true;
+      const btn = document.getElementById("logoutBtn");
+      if (btn) btn.disabled = true;
       toast("logging out...");
+
       const { error } = await sb.auth.signOut();
+
       if (error) {
         toast("logout error: " + error.message);
-        document.getElementById("logoutBtn").disabled = false;
+        if (btn) btn.disabled = false;
         return;
       }
+
       window.location.href = "./login.html";
     }
 
-    // wire buttons
+    function showView(name){
+      document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+      const el = document.getElementById("view-" + name);
+      if (el) el.classList.add("active");
+
+      document.querySelectorAll(".navbtn").forEach(b => b.classList.remove("active"));
+      const activeBtn = document.querySelector(`.navbtn[data-view="${name}"]`);
+      if (activeBtn) activeBtn.classList.add("active");
+
+      // remember choice
+      localStorage.setItem("sessionly_view", name);
+
+      // keep url clean but reflect state
+      history.replaceState(null, "", "#"+name);
+    }
+
+    function bootNav(){
+      // click handlers
+      document.querySelectorAll(".navbtn").forEach(btn => {
+        btn.addEventListener("click", () => showView(btn.getAttribute("data-view")));
+      });
+
+      // initial view from hash or saved
+      const hash = (location.hash || "").replace("#","").trim();
+      const saved = localStorage.getItem("sessionly_view");
+      const initial = hash || saved || "focus";
+      showView(initial);
+    }
+
+    // buttons
     document.getElementById("themeBtn").addEventListener("click", toggleTheme);
     document.getElementById("logoutBtn").addEventListener("click", logout);
     document.getElementById("refreshBtn").addEventListener("click", refreshAll);
 
-    document.getElementById("addTradeBtn").addEventListener("click", () => {
-      toast("next step: add trade form (we’ll build it next)");
-    });
+    function addTradePlaceholder(){
+      toast("next step: add trade modal (we build it next)");
+      showView("focus");
+    }
+    document.getElementById("addTradeBtn").addEventListener("click", addTradePlaceholder);
+    document.getElementById("addTradeBtn2").addEventListener("click", addTradePlaceholder);
 
     // boot
     (async () => {
       initTheme();
+      bootNav();
+
       const session = await protectDashboard();
       if (!session) return;
+
       await loadUser();
       await refreshAll();
     })();
