@@ -9,5 +9,23 @@
   <h1>Welcome to Sessionly</h1>
   <p>This is your dashboard.</p>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const supabaseUrl = "https://oucikdsngvdhimquclcz.supabase.co";
+    const supabaseKey = "sb_publishable_gMETcAB_TRLGd8hqx48KRA_yXxE7U6v";
+    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+    async function checkUser() {
+      const { data } = await supabase.auth.getUser();
+
+      if (!data.user) {
+        // not logged in → send back to login page
+        window.location.href = "index.html";
+      }
+    }
+
+    checkUser();
+  </script>
+
 </body>
 </html>
