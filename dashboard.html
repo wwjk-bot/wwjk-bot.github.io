@@ -702,7 +702,7 @@
 
       const { data, error } = await sb
         .from("trades")
-        .select("trade_date,symbol,direction,rr,pnl")
+        .select("trade_date,symbol,direction,rr,r_multiple")
         .order("trade_date", { ascending: false })
         .limit(8);
 
@@ -731,7 +731,10 @@
         const rrNum = (r.rr === null || r.rr === undefined) ? null : Number(r.rr);
         const rrText = rrNum === null || Number.isNaN(rrNum) ? "—" : fmtNum(rrNum);
 
-        const pnlNum = (r.pnl === null || r.pnl === undefined) ? null : Number(r.pnl);
+        const pnlNum = (r.r_multiple === null || r.r_multiple === undefined)
+          ? null
+          : Number(r.r_multiple);
+
         const pnlText = pnlNum === null || Number.isNaN(pnlNum) ? "—" : fmtNum(pnlNum);
 
         return `
@@ -755,7 +758,9 @@
       let rrCount = 0;
 
       for (const r of rows){
-        const pnl = (r.pnl === null || r.pnl === undefined) ? NaN : Number(r.pnl);
+        const pnl = (r.r_multiple === null || r.r_multiple === undefined)
+          ? NaN
+          : Number(r.r_multiple);
         if (!Number.isNaN(pnl)) {
           pnlSum += pnl;
           if (pnl > 0) wins += 1;
