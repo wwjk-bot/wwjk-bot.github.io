@@ -1106,37 +1106,44 @@
     }
 
     // === RENDER: TRADES TABLE ===
-    function renderTradesTable(){
-      const body = document.getElementById("allTradesBody");
-      document.getElementById("tradesCountBadge").textContent = String(trades.length);
+function renderTradesTable(){
+  const body = document.getElementById("allTradesBody");
+  document.getElementById("tradesCountBadge").textContent = String(trades.length);
 
-      if (!trades.length){
-        body.innerHTML = `<tr><td class="emptyRow" colspan="7">no trades yet</td></tr>`;
-        return;
-      }
+  if (!trades.length){
+    body.innerHTML = `<tr><td class="emptyRow" colspan="8">no trades yet</td></tr>`;
+    return;
+  }
 
-      body.innerHTML = trades.map(row=>{
-        const date = row.dt ? fmtDateTime(row.dt) : "—";
-        const sym = escapeHtml(row.symbol || "—");
-        const dir = escapeHtml(row.direction || "—");
-        const rr = row.rr === null ? "—" : formatNumber(row.rr);
-        const r = row.r_multiple === null ? "—" : formatNumber(row.r_multiple);
-        const session = escapeHtml(row.session || "—");
-        const strategy = escapeHtml(row.strategy || "—");
+  body.innerHTML = trades.map(row=>{
+    const date = row.dt ? fmtDateTime(row.dt) : "—";
+    const sym = escapeHtml(row.symbol || "—");
+    const dir = escapeHtml(row.direction || "—");
+    const rr = row.rr === null ? "—" : formatNumber(row.rr);
+    const r = row.r_multiple === null ? "—" : formatNumber(row.r_multiple);
+    const session = escapeHtml(row.session || "—");
+    const strategy = escapeHtml(row.strategy || "—");
 
-        return `
-          <tr>
-            <td>${date}</td>
-            <td>${sym}</td>
-            <td>${dir}</td>
-            <td>${rr}</td>
-            <td>${r}</td>
-            <td>${session}</td>
-            <td>${strategy}</td>
-          </tr>
-        `;
-      }).join("");
-    }
+    return `
+      <tr>
+        <td>${date}</td>
+        <td>${sym}</td>
+        <td>${dir}</td>
+        <td>${rr}</td>
+        <td>${r}</td>
+        <td>${session}</td>
+        <td>${strategy}</td>
+        <td style="text-align:right;">
+          <button class="dangerBtn" data-del="${row.id}">delete</button>
+        </td>
+      </tr>
+    `;
+  }).join("");
+
+  body.querySelectorAll("button[data-del]").forEach(btn=>{
+    btn.addEventListener("click", ()=> deleteTrade(btn.getAttribute("data-del")));
+  });
+}
 
     // === RENDER: ANALYTICS ===
     function renderAnalytics(){
