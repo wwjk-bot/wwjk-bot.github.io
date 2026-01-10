@@ -1,42 +1,54 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Sessionly - dashboard</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Sessionly dashboard</title>
   <meta name="description" content="Sessionly dashboard" />
   <style>
     :root{
-      --bg:#070a10;
-      --panel:#0b1220;
-      --panel2:#0a1324;
-      --card: rgba(14,22,38,.92);
-      --card2: rgba(10,18,32,.75);
-      --text:#e8eef7;
-      --muted:#a8b3c5;
-      --line: rgba(70,90,135,.32);
-      --line2: rgba(70,90,135,.20);
+      --bg:#070a12;
+      --panel:#0b1020;
+      --card:rgba(15,22,42,.78);
+      --card2:rgba(12,18,36,.72);
+      --stroke:rgba(120,140,190,.20);
+      --stroke2:rgba(120,140,190,.28);
+      --text:#eaf0ff;
+      --muted:#aab6d2;
 
-      --accent:#7c4dff;
-      --accent2:#3ddc97;
+      --accent:#7c3aed;        /* purple */
+      --accent2:#22c55e;       /* green */
+      --danger:#ef4444;        /* red */
+      --warn:#f59e0b;
 
-      --shadow: 0 18px 70px rgba(0,0,0,.55);
+      --sidebarText:#e8eef7;
+      --sidebarMuted:#a8b3c5;
+
+      --shadow: 0 20px 80px rgba(0,0,0,.55);
+      --shadow2: 0 12px 40px rgba(0,0,0,.38);
+
       --radius:18px;
-      --radius2:14px;
+      --radius2:22px;
     }
 
-    /* light theme overrides */
     [data-theme="light"]{
       --bg:#f5f7ff;
-      --panel:#ffffff;
-      --panel2:#f6f8ff;
-      --card: rgba(255,255,255,.92);
-      --card2: rgba(255,255,255,.76);
-      --text:#0b1220;
-      --muted:#4d5b72;
-      --line: rgba(20,40,80,.14);
-      --line2: rgba(20,40,80,.10);
-      --shadow: 0 18px 70px rgba(10,20,60,.14);
+      --panel:#eef2ff;
+      --card:rgba(255,255,255,.82);
+      --card2:rgba(255,255,255,.74);
+      --stroke:rgba(40,55,120,.16);
+      --stroke2:rgba(40,55,120,.22);
+      --text:#0b1222;
+      --muted:#44506a;
+
+      --accent:#5b21b6;
+      --accent2:#16a34a;
+
+      --sidebarText:#2f1f7a;
+      --sidebarMuted:#4d5b72;
+
+      --shadow: 0 18px 70px rgba(25,35,80,.12);
+      --shadow2: 0 10px 30px rgba(25,35,80,.10);
     }
 
     *{box-sizing:border-box}
@@ -45,285 +57,372 @@
       margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
       color:var(--text);
+      overflow-x:hidden;
       background:
-        radial-gradient(1200px 700px at 18% 0%, color-mix(in srgb, var(--accent) 20%, transparent), transparent 60%),
-        radial-gradient(900px 520px at 78% 14%, color-mix(in srgb, var(--accent2) 12%, transparent), transparent 60%),
-        radial-gradient(1100px 700px at 50% 100%, rgba(0,0,0,.25), transparent 65%),
-        var(--bg);
+        radial-gradient(1100px 640px at 18% -6%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 62%),
+        radial-gradient(900px 540px at 84% 8%, color-mix(in srgb, var(--accent2) 12%, transparent), transparent 66%),
+        linear-gradient(180deg, var(--bg) 0%, color-mix(in srgb, var(--bg) 92%, #000 8%) 100%);
     }
 
-    a{color:inherit}
-    .layout{
+    [data-theme="light"] body{
+      background:
+        radial-gradient(900px 500px at 16% 0%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 62%),
+        radial-gradient(800px 420px at 86% 8%, color-mix(in srgb, var(--accent2) 7%, transparent), transparent 64%),
+        linear-gradient(180deg, #f7f8ff 0%, #f1f4ff 100%);
+    }
+
+    .app{
       min-height:100vh;
       display:grid;
       grid-template-columns: 280px 1fr;
     }
+
     @media (max-width: 980px){
-      .layout{grid-template-columns:1fr;}
-      .sidebar{position:sticky; top:0; z-index:30;}
+      .app{grid-template-columns: 1fr;}
+      .sidebar{position:sticky; top:0; z-index:50}
     }
 
+    /* sidebar */
     .sidebar{
-      padding:18px 16px;
-      background: linear-gradient(180deg, color-mix(in srgb, var(--panel) 92%, transparent), color-mix(in srgb, var(--panel) 78%, transparent));
-      border-right: 1px solid var(--line2);
-      backdrop-filter: blur(10px);
+      padding:22px 18px;
+      border-right:1px solid var(--stroke);
+      background:
+        linear-gradient(180deg, rgba(8,10,16,.72), rgba(8,10,16,.42));
+      backdrop-filter: blur(14px);
+    }
+    [data-theme="light"] .sidebar{
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.78), rgba(255,255,255,.52));
     }
 
-    .brandRow{display:flex; align-items:center; gap:10px; margin-bottom:12px;}
+    .sidebar,.sidebar *{color:var(--sidebarText)}
+    .signed,.slogan{color:var(--sidebarMuted)}
+    .logoRow{display:flex; align-items:center; gap:10px; font-weight:900; letter-spacing:.2px; margin-bottom:10px;}
     .logoDot{
       width:12px; height:12px; border-radius:999px;
-      background: var(--accent);
+      background: radial-gradient(circle at 30% 30%, #fff 0%, color-mix(in srgb, var(--accent) 85%, #000 15%) 40%, color-mix(in srgb, var(--accent) 90%, #000 10%) 100%);
       box-shadow: 0 0 0 7px color-mix(in srgb, var(--accent) 18%, transparent);
     }
-    .brand{font-weight:900; letter-spacing:.2px;}
-    .signed{color:var(--muted); font-size:13px; margin:6px 0 16px 0; line-height:1.35;}
-    .nav{
-      display:flex; flex-direction:column; gap:8px;
-      margin-bottom:14px;
-    }
-
+    .signed{font-size:13px; opacity:.95; margin:6px 0 14px 0;}
+    .navGroup{display:flex; flex-direction:column; gap:10px; margin-top:10px;}
     .navBtn{
+      width:100%;
       display:flex; align-items:center; justify-content:space-between;
+      gap:12px;
       padding:12px 12px;
-      border-radius: 14px;
-      border: 1px solid var(--line2);
-      background: color-mix(in srgb, var(--panel2) 78%, transparent);
-      text-decoration:none;
-      font-weight:800;
-      letter-spacing:.2px;
+      border-radius:16px;
+      border:1px solid color-mix(in srgb, var(--stroke) 100%, transparent);
+      background: rgba(255,255,255,0);
       cursor:pointer;
-      transition: transform .12s ease, background .12s ease, border-color .12s ease;
+      font-weight:850;
+      transition: transform .08s ease, background .18s ease, border-color .18s ease;
     }
-    .navBtn:hover{ transform: translateY(-1px); border-color: var(--line); }
+    .navBtn:hover{
+      transform: translateY(-1px);
+      background: color-mix(in srgb, var(--accent) 8%, transparent);
+      border-color: color-mix(in srgb, var(--accent) 26%, var(--stroke) 74%);
+    }
     .navBtn.active{
-      background: color-mix(in srgb, var(--accent) 18%, var(--panel2));
-      border-color: color-mix(in srgb, var(--accent) 40%, var(--line));
-      box-shadow: 0 10px 30px rgba(0,0,0,.20);
+      background: color-mix(in srgb, var(--accent) 14%, transparent);
+      border-color: color-mix(in srgb, var(--accent) 38%, var(--stroke) 62%);
+      box-shadow: 0 10px 30px color-mix(in srgb, var(--accent) 14%, transparent);
     }
     .tag{
       font-size:12px;
-      padding:6px 10px;
+      padding:5px 10px;
       border-radius:999px;
-      border:1px solid var(--line2);
-      color: color-mix(in srgb, var(--text) 85%, var(--muted));
-      background: color-mix(in srgb, var(--bg) 40%, transparent);
-      font-weight:800;
+      border:1px solid color-mix(in srgb, var(--stroke) 100%, transparent);
+      background: color-mix(in srgb, var(--panel) 55%, transparent);
+      opacity:.95;
     }
-
-    .sideActions{display:flex; flex-direction:column; gap:10px; margin-top:10px;}
-    .sideAction{
-      width:100%;
-      border-radius: 14px;
-      padding:12px 12px;
-      font-weight:900;
-      border:1px solid var(--line2);
-      background: transparent;
-      color: var(--text);
-      cursor:pointer;
-      transition: transform .12s ease, border-color .12s ease, background .12s ease;
-    }
-    .sideAction:hover{ transform: translateY(-1px); border-color: var(--line); background: color-mix(in srgb, var(--panel2) 35%, transparent); }
-
-    .slogan{margin-top:14px; color:var(--muted); font-size:13px; line-height:1.4;}
-
-    .main{
-      padding:22px 22px 40px 22px;
+    .sidebarActions{
+      margin-top:18px;
       display:flex;
-      justify-content:center;
-      align-items:flex-start;
+      flex-direction:column;
+      gap:10px;
+    }
+    .ghostBtn{
+      width:100%;
+      padding:12px 12px;
+      border-radius:16px;
+      border:1px solid var(--stroke);
+      background: color-mix(in srgb, var(--panel) 28%, transparent);
+      font-weight:900;
+      cursor:pointer;
+      transition: transform .08s ease, background .18s ease, border-color .18s ease;
+    }
+    .ghostBtn:hover{
+      transform: translateY(-1px);
+      background: color-mix(in srgb, var(--accent) 10%, transparent);
+      border-color: color-mix(in srgb, var(--accent) 26%, var(--stroke) 74%);
+    }
+    .slogan{
+      margin-top:14px;
+      font-size:13px;
+      line-height:1.35;
+      opacity:.9;
     }
 
-    .shell{
-      width:min(1120px, 100%);
-      border-radius: 22px;
-      background: linear-gradient(180deg, color-mix(in srgb, var(--panel) 84%, transparent), color-mix(in srgb, var(--panel) 66%, transparent));
-      border: 1px solid var(--line2);
+    /* main */
+    .main{
+      padding:28px 26px 44px 26px;
+    }
+    .wrap{
+      max-width: 1140px;
+      margin:0 auto;
+    }
+
+    .panel{
+      border:1px solid var(--stroke);
+      border-radius: var(--radius2);
+      background: linear-gradient(180deg, var(--card) 0%, var(--card2) 100%);
       box-shadow: var(--shadow);
-      padding:20px;
-      backdrop-filter: blur(12px);
+      overflow:hidden;
+      position:relative;
     }
 
-    .pageHead{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px;}
-    .titleWrap h1{margin:0; font-size:34px; letter-spacing:-.6px;}
-    .titleWrap p{margin:6px 0 0 0; color:var(--muted); font-weight:700; font-size:14px;}
-    .pill{
-      border:1px solid var(--line2);
-      background: color-mix(in srgb, var(--panel2) 58%, transparent);
-      padding:7px 12px;
+    .panel::before{
+      content:"";
+      position:absolute; inset:-2px;
+      background:
+        radial-gradient(800px 320px at 18% 0%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 60%),
+        radial-gradient(700px 320px at 84% 6%, color-mix(in srgb, var(--accent2) 12%, transparent), transparent 62%);
+      opacity:.65;
+      pointer-events:none;
+      filter: blur(0px);
+    }
+
+    .panelInner{position:relative; padding:22px;}
+    .panelHeader{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:14px;
+      margin-bottom:14px;
+    }
+    .title{
+      font-size:34px;
+      font-weight:950;
+      letter-spacing:-.6px;
+      margin:0;
+      line-height:1.05;
+    }
+    .subtitle{
+      margin-top:6px;
+      color:var(--muted);
+      font-weight:650;
+      font-size:14px;
+    }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:7px 10px;
       border-radius:999px;
+      border:1px solid var(--stroke);
+      background: color-mix(in srgb, var(--panel) 34%, transparent);
       font-weight:900;
       font-size:12px;
-      color: color-mix(in srgb, var(--text) 86%, var(--muted));
       white-space:nowrap;
     }
-
-    .ctaBar{
-      margin-top:10px;
-      display:flex; gap:10px; align-items:center;
-      padding:12px;
-      border-radius: 999px;
-      border:1px solid var(--line2);
-      background: color-mix(in srgb, var(--panel2) 70%, transparent);
+    .badgeDot{
+      width:8px; height:8px; border-radius:999px;
+      background: var(--accent2);
+      box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent2) 16%, transparent);
     }
-    .ctaBtn{
-      flex:1;
-      padding:12px 14px;
-      border-radius:999px;
+
+    .ctaRow{
+      margin-top:12px;
+      display:flex;
+      gap:12px;
+      align-items:center;
+    }
+
+    .cta{
+      width:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:14px 14px;
+      border-radius: 16px;
+      border:1px solid color-mix(in srgb, var(--accent) 34%, transparent);
+      background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 85%, #000 15%), color-mix(in srgb, var(--accent) 55%, #000 45%));
+      color:#fff;
       font-weight:950;
-      border:1px solid transparent;
-      background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 90%, #000), color-mix(in srgb, var(--accent) 65%, var(--accent2)));
-      color:white;
       cursor:pointer;
-      letter-spacing:.2px;
+      transition: transform .08s ease, filter .18s ease;
+      box-shadow: 0 14px 40px color-mix(in srgb, var(--accent) 20%, transparent);
     }
-    .ctaBtn:hover{ filter:brightness(1.05); }
-    .ctaHint{color:var(--muted); font-size:13px; font-weight:800; padding:0 10px;}
+    .cta:hover{transform: translateY(-1px); filter: brightness(1.04);}
+    .cta:active{transform: translateY(0px);}
 
-    .grid4{
+    .gridStats{
+      margin-top:14px;
       display:grid;
       grid-template-columns: repeat(4, 1fr);
       gap:12px;
-      margin-top:14px;
     }
-    @media (max-width: 980px){ .grid4{grid-template-columns:1fr 1fr;} }
-    @media (max-width: 560px){ .grid4{grid-template-columns:1fr;} }
+    @media (max-width: 1040px){ .gridStats{grid-template-columns: repeat(2, 1fr);} }
+    @media (max-width: 560px){ .gridStats{grid-template-columns: 1fr;} }
+
+    .statCard{
+      border:1px solid var(--stroke);
+      background: color-mix(in srgb, var(--panel) 34%, transparent);
+      border-radius: var(--radius);
+      padding:14px 14px;
+      box-shadow: var(--shadow2);
+      position:relative;
+      overflow:hidden;
+    }
+    .statCard::after{
+      content:"";
+      position:absolute; inset:-2px;
+      background:
+        radial-gradient(260px 120px at 10% 0%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 70%);
+      opacity:.65;
+      pointer-events:none;
+    }
+    .statLabel{position:relative; font-size:12px; font-weight:950; letter-spacing:.4px; opacity:.85; text-transform:uppercase;}
+    .statValue{position:relative; margin-top:8px; font-size:28px; font-weight:980; letter-spacing:-.6px;}
+    .statHint{position:relative; margin-top:4px; font-size:12px; color:var(--muted); font-weight:650;}
+
+    .gridMain{
+      margin-top:12px;
+      display:grid;
+      grid-template-columns: 1.35fr .85fr;
+      gap:12px;
+      align-items:start;
+    }
+    @media (max-width: 980px){ .gridMain{grid-template-columns: 1fr;} }
 
     .card{
-      border-radius: var(--radius);
-      border: 1px solid var(--line2);
-      background: var(--card);
+      border:1px solid var(--stroke);
+      background: color-mix(in srgb, var(--panel) 34%, transparent);
+      border-radius: var(--radius2);
       padding:16px;
+      box-shadow: var(--shadow2);
     }
-    .statLabel{
-      font-size:12px;
-      color: color-mix(in srgb, var(--muted) 85%, var(--text));
-      font-weight:950;
-      letter-spacing:.8px;
-      text-transform:uppercase;
-    }
-    .statValue{
-      font-size:28px;
-      font-weight:980;
-      margin-top:6px;
-      letter-spacing:-.6px;
-    }
-    .statSub{
-      margin-top:2px;
-      color:var(--muted);
-      font-size:13px;
-      font-weight:750;
-    }
-
-    .row2{
-      display:grid;
-      grid-template-columns: 1.2fr .8fr;
-      gap:12px;
-      margin-top:12px;
-    }
-    @media (max-width: 980px){ .row2{grid-template-columns:1fr;} }
-
     .cardHead{
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
       margin-bottom:10px;
     }
     .cardTitle{
       font-size:18px;
       font-weight:950;
+      letter-spacing:-.2px;
       margin:0;
     }
-
-    table{
-      width:100%;
-      border-collapse: collapse;
-      font-size:14px;
-    }
-    th,td{
-      text-align:left;
-      padding:10px 8px;
-      border-bottom:1px solid var(--line2);
-    }
-    th{
-      color: color-mix(in srgb, var(--muted) 85%, var(--text));
-      font-weight:950;
+    .pill{
       font-size:12px;
-      letter-spacing:.8px;
-      text-transform:uppercase;
+      font-weight:950;
+      border:1px solid var(--stroke);
+      background: color-mix(in srgb, var(--panel) 34%, transparent);
+      padding:6px 10px;
+      border-radius:999px;
+      opacity:.95;
+      white-space:nowrap;
     }
-    td{font-weight:750;}
-    .muted{color:var(--muted); font-weight:750;}
+    .pill.ok{border-color: color-mix(in srgb, var(--accent2) 36%, var(--stroke) 64%); }
+    .pill.warn{border-color: color-mix(in srgb, var(--warn) 42%, var(--stroke) 58%); }
+    .pill.live{border-color: color-mix(in srgb, var(--accent) 42%, var(--stroke) 58%); }
 
-    .chips{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px;}
+    /* table */
+    table{width:100%; border-collapse:collapse;}
+    th,td{padding:10px 10px; border-bottom:1px solid var(--stroke); text-align:left; font-size:14px;}
+    th{font-size:12px; text-transform:uppercase; letter-spacing:.4px; opacity:.75;}
+    .emptyRow{
+      color:var(--muted);
+      font-weight:650;
+      padding:14px 10px;
+    }
+
+    /* coach card */
+    .coachText{
+      color:var(--text);
+      font-weight:800;
+      line-height:1.45;
+      margin:6px 0 12px 0;
+    }
+    .chips{display:flex; flex-wrap:wrap; gap:10px; margin:10px 0 12px 0;}
     .chip{
+      font-size:13px;
+      font-weight:900;
+      border:1px solid var(--stroke);
+      background: color-mix(in srgb, var(--panel) 32%, transparent);
       padding:8px 12px;
       border-radius:999px;
-      border:1px solid var(--line2);
-      background: color-mix(in srgb, var(--panel2) 55%, transparent);
-      font-weight:900;
-      font-size:13px;
+      opacity:.98;
+      transition: transform .08s ease, background .18s ease, border-color .18s ease;
+      cursor:default;
     }
-
-    .ghostBtn{
+    .chip:hover{
+      transform: translateY(-1px);
+      background: color-mix(in srgb, var(--accent) 10%, transparent);
+      border-color: color-mix(in srgb, var(--accent) 30%, var(--stroke) 70%);
+    }
+    .mutedLine{color:var(--muted); font-weight:650; font-size:13px; line-height:1.35;}
+    .miniBtn{
       width:100%;
       margin-top:12px;
-      padding:12px 14px;
-      border-radius: 14px;
-      border:1px solid var(--line2);
-      background: transparent;
-      color:var(--text);
+      padding:12px 12px;
+      border-radius:16px;
+      border:1px solid var(--stroke);
+      background: color-mix(in srgb, var(--panel) 34%, transparent);
       font-weight:950;
       cursor:pointer;
+      transition: transform .08s ease, background .18s ease, border-color .18s ease;
     }
-    .ghostBtn:hover{ background: color-mix(in srgb, var(--panel2) 35%, transparent); }
+    .miniBtn:hover{
+      transform: translateY(-1px);
+      background: color-mix(in srgb, var(--accent2) 10%, transparent);
+      border-color: color-mix(in srgb, var(--accent2) 24%, var(--stroke) 76%);
+    }
 
     /* analytics layout */
-    .anaTop{
+    .gridAnalyticsTop{
+      margin-top:12px;
       display:grid;
       grid-template-columns: 1fr 1fr 1fr;
       gap:12px;
-      margin-top:14px;
     }
-    @media (max-width: 980px){ .anaTop{grid-template-columns:1fr;} }
+    @media (max-width: 980px){ .gridAnalyticsTop{grid-template-columns: 1fr;} }
 
-    .anaGrid{
+    .gridCharts{
       margin-top:12px;
       display:grid;
       grid-template-columns: 1fr 1fr;
       gap:12px;
     }
-    @media (max-width: 980px){ .anaGrid{grid-template-columns:1fr;} }
+    @media (max-width: 980px){ .gridCharts{grid-template-columns: 1fr;} }
 
-    .fakeChart{
-      min-height:240px;
-      border-radius: var(--radius);
-      border:1px dashed var(--line2);
-      background: color-mix(in srgb, var(--card2) 60%, transparent);
+    .chartBox{
+      border:1px dashed color-mix(in srgb, var(--stroke2) 100%, transparent);
+      border-radius:18px;
+      height:240px;
       display:flex;
       align-items:center;
       justify-content:center;
-      color: color-mix(in srgb, var(--muted) 92%, var(--text));
-      font-weight:900;
       position:relative;
       overflow:hidden;
     }
-    .chartTag{
+    canvas{display:block; width:100%; height:100%;}
+    .chartHint{
       position:absolute;
-      top:12px;
-      right:12px;
-      padding:6px 10px;
-      border-radius:999px;
-      border:1px solid var(--line2);
-      background: color-mix(in srgb, var(--bg) 45%, transparent);
+      inset:auto 12px 12px 12px;
       font-size:12px;
-      font-weight:950;
-      color: color-mix(in srgb, var(--text) 86%, var(--muted));
+      color:var(--muted);
+      font-weight:700;
+      opacity:.9;
     }
 
     /* modal */
-    .backdrop{
-      position:fixed;
-      inset:0;
+    .modalBackdrop{
+      position:fixed; inset:0;
       background: rgba(0,0,0,.55);
+      backdrop-filter: blur(10px);
       display:none;
       align-items:center;
       justify-content:center;
@@ -331,410 +430,373 @@
       z-index:999;
     }
     .modal{
-      width:min(720px, 100%);
-      border-radius: 20px;
-      border:1px solid var(--line2);
-      background: color-mix(in srgb, var(--panel) 92%, transparent);
+      width:min(760px, 100%);
+      border-radius: 22px;
+      border:1px solid var(--stroke);
+      background: linear-gradient(180deg, var(--card) 0%, var(--card2) 100%);
       box-shadow: var(--shadow);
-      padding:16px;
-      backdrop-filter: blur(12px);
+      overflow:hidden;
+      position:relative;
     }
-    .modalHead{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px;}
-    .modalHead h2{margin:0; font-size:18px; font-weight:980;}
-    .xBtn{
-      border:1px solid var(--line2);
-      background: transparent;
-      color:var(--text);
-      border-radius: 12px;
-      padding:8px 10px;
+    .modal::before{
+      content:"";
+      position:absolute; inset:-2px;
+      background:
+        radial-gradient(680px 220px at 10% 0%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 70%),
+        radial-gradient(640px 220px at 90% 0%, color-mix(in srgb, var(--accent2) 12%, transparent), transparent 72%);
+      opacity:.7;
+      pointer-events:none;
+    }
+    .modalInner{position:relative; padding:18px;}
+    .modalHead{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:10px;
+    }
+    .modalTitle{margin:0; font-size:20px; font-weight:980; letter-spacing:-.2px;}
+    .closeBtn{
+      border:1px solid var(--stroke);
+      background: color-mix(in srgb, var(--panel) 34%, transparent);
+      border-radius: 14px;
+      padding:10px 12px;
+      font-weight:950;
       cursor:pointer;
-      font-weight:980;
     }
-
     .formGrid{
+      margin-top:10px;
       display:grid;
       grid-template-columns: 1fr 1fr;
       gap:12px;
     }
-    @media (max-width: 720px){ .formGrid{grid-template-columns:1fr;} }
-
-    label{display:block; font-size:12px; font-weight:950; letter-spacing:.7px; text-transform:uppercase; color: color-mix(in srgb, var(--muted) 85%, var(--text)); margin:8px 0 6px;}
-    input, select, textarea{
+    @media (max-width: 720px){ .formGrid{grid-template-columns: 1fr;} }
+    label{
+      display:block;
+      font-size:12px;
+      font-weight:950;
+      text-transform:uppercase;
+      letter-spacing:.35px;
+      opacity:.8;
+      margin:0 0 6px 2px;
+    }
+    input,select,textarea{
       width:100%;
       padding:12px 12px;
-      border-radius: 14px;
-      border:1px solid var(--line2);
-      background: color-mix(in srgb, var(--bg) 18%, transparent);
+      border-radius:16px;
+      border:1px solid var(--stroke);
+      background: color-mix(in srgb, var(--panel) 34%, transparent);
       color:var(--text);
       font-weight:800;
       outline:none;
     }
-    textarea{min-height:92px; resize:vertical;}
+    textarea{min-height:96px; resize:vertical;}
 
-    .modalFoot{
-      display:flex; gap:10px; align-items:center; justify-content:flex-end;
-      margin-top:12px;
+    input[type="datetime-local"]{
+      border-radius:16px;
+      padding:14px 14px;
     }
-    .btn{
+    input[type="datetime-local"]::-webkit-calendar-picker-indicator{
+      opacity:.75;
+      cursor:pointer;
+      filter: drop-shadow(0 0 10px color-mix(in srgb, var(--accent) 35%, transparent));
+    }
+
+    .modalActions{
+      margin-top:12px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:flex-end;
+    }
+    .saveBtn{
       padding:12px 14px;
-      border-radius: 14px;
-      border:1px solid var(--line2);
-      background: transparent;
-      color:var(--text);
+      border-radius:16px;
+      border:1px solid color-mix(in srgb, var(--accent2) 34%, transparent);
+      background: linear-gradient(90deg, color-mix(in srgb, var(--accent2) 85%, #000 15%), color-mix(in srgb, var(--accent2) 58%, #000 42%));
+      color:#fff;
       font-weight:980;
       cursor:pointer;
     }
-    .btn.primary{
-      border-color: transparent;
-      background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 90%, #000), color-mix(in srgb, var(--accent) 65%, var(--accent2)));
-      color:white;
-    }
-    .msg{margin-top:10px; font-weight:900; color:var(--muted); min-height:18px;}
-
-    /* WOW: subtle motion + chart glow */
-    @keyframes drawLine { from { stroke-dashoffset: var(--dash); } to { stroke-dashoffset: 0; } }
-    @keyframes pulseLive { 0%{transform:scale(1);opacity:.55} 50%{transform:scale(1.25);opacity:.25} 100%{transform:scale(1);opacity:.55} }
-
-    .pill.liveDot{position:relative; padding-left:26px;}
-    .pill.liveDot::before{
-      content:"";
-      position:absolute;
-      left:10px; top:50%;
-      width:8px; height:8px;
-      transform:translateY(-50%);
-      border-radius:999px;
-      background:var(--accent2);
-      box-shadow:0 0 0 6px color-mix(in srgb, var(--accent2) 18%, transparent);
-    }
-    .pill.liveDot::after{
-      content:"";
-      position:absolute;
-      left:10px; top:50%;
-      width:8px; height:8px;
-      transform:translateY(-50%);
-      border-radius:999px;
-      background:var(--accent2);
-      animation:pulseLive 1.6s ease-in-out infinite;
-      filter:blur(.2px);
+    .msg{
+      margin-top:10px;
+      min-height:20px;
+      font-size:13px;
+      color:var(--muted);
+      font-weight:750;
     }
 
-    .fakeChart.hasSvg{
-      border-style:solid;
-      border-color: color-mix(in srgb, var(--line) 65%, transparent);
-      position:relative;
-      overflow:hidden;
-    }
-    .fakeChart.hasSvg::before{
-      content:"";
-      position:absolute;
-      inset:-40%;
-      background:
-        radial-gradient(900px 400px at 20% 10%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 60%),
-        radial-gradient(700px 360px at 80% 30%, color-mix(in srgb, var(--accent2) 12%, transparent), transparent 60%);
-      opacity:.55;
-      pointer-events:none;
-    }
-
-    svg .gridline{ stroke: currentColor; opacity:.12; }
-    svg .baseline{ stroke: currentColor; opacity:.20; }
-    svg .bar{ fill: currentColor; opacity:.92; }
-    svg .bar.dim{ opacity:.18; }
-    svg .bar.best{ filter: drop-shadow(0 0 12px color-mix(in srgb, var(--accent2) 75%, transparent)); }
-    svg .equity{
-      fill:none;
-      stroke:currentColor;
-      stroke-width:2.8;
-      opacity:.94;
-      stroke-linecap:round;
-      stroke-linejoin:round;
-    }
-    svg .equityBg{
-      fill:none;
-      stroke:currentColor;
-      stroke-width:6;
-      opacity:.10;
-      stroke-linecap:round;
-      stroke-linejoin:round;
-    }
-
-    /* small utility */
-    .hide{display:none !important;}
+    /* pages */
+    .page{display:none;}
+    .page.active{display:block;}
   </style>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
 <body>
-  <div class="layout">
-    <!-- SIDEBAR -->
+  <div class="app">
     <aside class="sidebar">
-      <div class="brandRow">
-        <span class="logoDot"></span>
-        <div class="brand">Sessionly</div>
-      </div>
-      <div class="signed">
-        signed in as <span id="userEmail">—</span>
-      </div>
+      <div class="logoRow"><span class="logoDot"></span><span>Sessionly</span></div>
+      <div class="signed">signed in as <span id="userEmail">...</span></div>
 
-      <nav class="nav">
+      <div class="navGroup">
         <button class="navBtn" data-route="focus">
-          <span>focus</span>
-          <span class="tag">daily</span>
+          <span>focus</span><span class="tag">daily</span>
         </button>
         <button class="navBtn" data-route="analytics">
-          <span>analytics</span>
-          <span class="tag">charts</span>
+          <span>analytics</span><span class="tag">charts</span>
         </button>
         <button class="navBtn" data-route="trades">
-          <span>trades</span>
-          <span class="tag">table</span>
+          <span>trades</span><span class="tag">table</span>
         </button>
         <button class="navBtn" data-route="journal">
-          <span>journal</span>
-          <span class="tag">notes</span>
+          <span>journal</span><span class="tag">notes</span>
         </button>
-      </nav>
+      </div>
 
-      <div class="sideActions">
-        <button class="sideAction" id="toggleThemeBtn">toggle theme</button>
-        <button class="sideAction" id="logoutBtn">log out</button>
+      <div class="sidebarActions">
+        <button class="ghostBtn" id="toggleThemeBtn">toggle theme</button>
+        <button class="ghostBtn" id="logoutBtn">log out</button>
       </div>
 
       <div class="slogan">calm by default, deep when you want it</div>
     </aside>
 
-    <!-- MAIN -->
     <main class="main">
-      <div class="shell">
+      <div class="wrap">
 
-        <!-- FOCUS PAGE -->
-        <section id="page-focus" class="page">
-          <div class="pageHead">
-            <div class="titleWrap">
-              <h1>focus</h1>
-              <p>your daily view, clean and calm</p>
-
-              <div class="ctaBar">
-                <button class="ctaBtn" id="addTradeBtn1">+ add trade</button>
-                <div class="ctaHint">log fast, review later</div>
-              </div>
-            </div>
-            <span class="pill" id="focusStatusPill">ready</span>
-          </div>
-
-          <div class="grid4">
-            <div class="card">
-              <div class="statLabel">recent trades loaded</div>
-              <div class="statValue" id="focusTradesCount">—</div>
-              <div class="statSub" id="focusTradesSub">last 8 trades</div>
-            </div>
-            <div class="card">
-              <div class="statLabel">win rate</div>
-              <div class="statValue" id="focusWinRate">—</div>
-              <div class="statSub">wins / last 8 trades</div>
-            </div>
-            <div class="card">
-              <div class="statLabel">total r</div>
-              <div class="statValue" id="focusTotalR">—</div>
-              <div class="statSub">sum r multiple</div>
-            </div>
-            <div class="card">
-              <div class="statLabel">avg rr</div>
-              <div class="statValue" id="focusAvgRR">—</div>
-              <div class="statSub">average rr</div>
-            </div>
-          </div>
-
-          <div class="row2">
-            <div class="card">
-              <div class="cardHead">
-                <h3 class="cardTitle">recent trades</h3>
-                <span class="pill" id="focusTradesPill">ready</span>
+        <!-- focus page -->
+        <section class="page" id="page-focus">
+          <div class="panel">
+            <div class="panelInner">
+              <div class="panelHeader">
+                <div>
+                  <h1 class="title">focus</h1>
+                  <div class="subtitle">your daily view, clean and calm</div>
+                </div>
+                <div class="badge"><span class="badgeDot"></span><span id="focusStatus">ready</span></div>
               </div>
 
-              <div class="muted" id="focusTradesMsg" style="margin:0 0 10px 0;"></div>
-
-              <table>
-                <thead>
-                  <tr>
-                    <th>date</th>
-                    <th>symbol</th>
-                    <th>dir</th>
-                    <th>rr</th>
-                    <th>r</th>
-                  </tr>
-                </thead>
-                <tbody id="focusTradesBody">
-                  <tr><td colspan="5" class="muted">no trades yet, add your first one</td></tr>
-                </tbody>
-              </table>
-            </div>
-
-            <div class="card">
-              <div class="cardHead">
-                <h3 class="cardTitle">today’s focus</h3>
-                <span class="pill">coach</span>
-              </div>
-              <div style="font-weight:900; line-height:1.45;">
-                log the next trade immediately after closing it, and write one sentence on why you entered
+              <div class="ctaRow">
+                <button class="cta" id="addTradeBtn">+ add trade</button>
               </div>
 
-              <div class="chips">
-                <span class="chip">session ny</span>
-                <span class="chip">rule max 3 trades</span>
-                <span class="chip">goal no revenge</span>
+              <div class="gridStats">
+                <div class="statCard">
+                  <div class="statLabel">recent trades loaded</div>
+                  <div class="statValue" id="s_loaded">—</div>
+                  <div class="statHint" id="s_loaded_hint">last 8 trades</div>
+                </div>
+                <div class="statCard">
+                  <div class="statLabel">win rate</div>
+                  <div class="statValue" id="s_winrate">—</div>
+                  <div class="statHint" id="s_winrate_hint">wins / last 8 trades</div>
+                </div>
+                <div class="statCard">
+                  <div class="statLabel">total r</div>
+                  <div class="statValue" id="s_totalr">—</div>
+                  <div class="statHint">sum r multiple</div>
+                </div>
+                <div class="statCard">
+                  <div class="statLabel">avg rr</div>
+                  <div class="statValue" id="s_avgrr">—</div>
+                  <div class="statHint">average rr</div>
+                </div>
               </div>
 
-              <div class="muted" style="margin-top:10px; font-weight:800;">
-                next we’ll generate this from your real patterns and mistakes, for now it’s a placeholder
+              <div class="gridMain">
+                <div class="card">
+                  <div class="cardHead">
+                    <h3 class="cardTitle">recent trades</h3>
+                    <span class="pill ok" id="recentPill">ready</span>
+                  </div>
+
+                  <div style="overflow:auto;">
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>date</th>
+                          <th>symbol</th>
+                          <th>dir</th>
+                          <th>rr</th>
+                          <th>r</th>
+                        </tr>
+                      </thead>
+                      <tbody id="recentBody">
+                        <tr><td class="emptyRow" colspan="5">loading…</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div class="cardHead">
+                    <h3 class="cardTitle">today’s focus</h3>
+                    <span class="pill live">coach</span>
+                  </div>
+                  <div class="coachText">log the next trade immediately after closing it, and write one sentence on why you entered</div>
+                  <div class="chips">
+                    <div class="chip">session ny</div>
+                    <div class="chip">rule max 3 trades</div>
+                    <div class="chip">goal no revenge</div>
+                  </div>
+                  <div class="mutedLine">next we’ll generate this from your real patterns and mistakes, for now it’s a placeholder</div>
+                  <button class="miniBtn" id="refreshBtn">refresh stats</button>
+                </div>
               </div>
 
-              <button class="ghostBtn" id="refreshBtn1">refresh stats</button>
             </div>
           </div>
         </section>
 
-        <!-- ANALYTICS PAGE -->
-        <section id="page-analytics" class="page hide">
-          <div class="pageHead">
-            <div class="titleWrap">
-              <h1>analytics</h1>
-              <p>deep data lives here, focus stays clean</p>
-            </div>
-            <span class="pill liveDot">live</span>
-          </div>
-
-          <div class="anaTop">
-            <div class="card">
-              <div class="statLabel">profit factor</div>
-              <div class="statValue" id="anaPF">—</div>
-              <div class="statSub" id="anaPFSub">from 0 trades</div>
-            </div>
-            <div class="card">
-              <div class="statLabel">avg win vs avg loss</div>
-              <div class="statValue" id="anaWinLoss">—</div>
-              <div class="statSub">avg win r vs avg loss r</div>
-            </div>
-            <div class="card">
-              <div class="statLabel">best hour</div>
-              <div class="statValue" id="anaBestHour">—</div>
-              <div class="statSub" id="anaBestHourSub">avg r —</div>
-            </div>
-          </div>
-
-          <div class="anaGrid">
-            <div class="card">
-              <div class="cardHead">
-                <h3 class="cardTitle">pnl by day (calendar)</h3>
-                <span class="pill">visual</span>
+        <!-- analytics page -->
+        <section class="page" id="page-analytics">
+          <div class="panel">
+            <div class="panelInner">
+              <div class="panelHeader">
+                <div>
+                  <h1 class="title">analytics</h1>
+                  <div class="subtitle">deep data lives here, focus stays clean</div>
+                </div>
+                <div class="badge"><span class="badgeDot"></span><span>live</span></div>
               </div>
-              <div class="fakeChart" id="calendarChart">
-                calendar view placeholder
+
+              <div class="gridAnalyticsTop">
+                <div class="statCard">
+                  <div class="statLabel">profit factor</div>
+                  <div class="statValue" id="a_pf">—</div>
+                  <div class="statHint" id="a_pf_hint">from r multiple</div>
+                </div>
+                <div class="statCard">
+                  <div class="statLabel">avg win vs avg loss</div>
+                  <div class="statValue" id="a_awal">—</div>
+                  <div class="statHint">avg win r vs avg loss r</div>
+                </div>
+                <div class="statCard">
+                  <div class="statLabel">best hour</div>
+                  <div class="statValue" id="a_besthour">—</div>
+                  <div class="statHint" id="a_besthour_hint">avg r</div>
+                </div>
               </div>
+
+              <div class="gridCharts">
+                <div class="card">
+                  <div class="cardHead">
+                    <h3 class="cardTitle">hourly performance</h3>
+                    <span class="pill">sessionly</span>
+                  </div>
+                  <div class="chartBox">
+                    <canvas id="hourlyCanvas"></canvas>
+                    <div class="chartHint">bars = total r per hour</div>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div class="cardHead">
+                    <h3 class="cardTitle">equity curve</h3>
+                    <span class="pill">trend</span>
+                  </div>
+                  <div class="chartBox">
+                    <canvas id="equityCanvas"></canvas>
+                    <div class="chartHint">line = cumulative r over time</div>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div class="cardHead">
+                    <h3 class="cardTitle">win vs loss distribution</h3>
+                    <span class="pill">edge</span>
+                  </div>
+                  <div class="chartBox">
+                    <canvas id="donutCanvas"></canvas>
+                    <div class="chartHint">donut = win loss breakeven</div>
+                  </div>
+                </div>
+
+                <div class="card">
+                  <div class="cardHead">
+                    <h3 class="cardTitle">pnl by day</h3>
+                    <span class="pill">calendar</span>
+                  </div>
+                  <div class="chartBox">
+                    <canvas id="calendarCanvas"></canvas>
+                    <div class="chartHint">heat = total r per day</div>
+                  </div>
+                </div>
+              </div>
+
+              <div style="margin-top:10px;color:var(--muted);font-weight:700;font-size:13px;">
+                log trades and the charts will update instantly
+              </div>
+
             </div>
-
-            <div class="card">
-              <div class="cardHead">
-                <h3 class="cardTitle">hourly performance</h3>
-                <span class="pill">sessionly</span>
-              </div>
-              <div class="fakeChart hasSvg" id="hourlyChart">
-                bar chart placeholder
-              </div>
-            </div>
-
-            <div class="card">
-              <div class="cardHead">
-                <h3 class="cardTitle">win vs loss distribution</h3>
-                <span class="pill">edge</span>
-              </div>
-              <div class="fakeChart" id="distChart">
-                distribution placeholder
-              </div>
-            </div>
-
-            <div class="card">
-              <div class="cardHead">
-                <h3 class="cardTitle">equity curve</h3>
-                <span class="pill">trend</span>
-              </div>
-              <div class="fakeChart hasSvg" id="equityChart">
-                equity curve will appear after 2+ trades
-              </div>
-            </div>
-          </div>
-
-          <div class="muted" style="margin-top:10px; font-weight:800;">
-            once you log trades here, we’ll build real charts from your dataset
-          </div>
-
-          <button class="ghostBtn" id="refreshBtn2">refresh stats</button>
-        </section>
-
-        <!-- TRADES PAGE -->
-        <section id="page-trades" class="page hide">
-          <div class="pageHead">
-            <div class="titleWrap">
-              <h1>trades</h1>
-              <p>your full table, filter later</p>
-              <div class="ctaBar">
-                <button class="ctaBtn" id="addTradeBtn2">+ add trade</button>
-                <div class="ctaHint">every trade is a data point</div>
-              </div>
-            </div>
-            <span class="pill" id="tradesCountPill">—</span>
-          </div>
-
-          <div class="card">
-            <div class="cardHead">
-              <h3 class="cardTitle">all trades</h3>
-              <span class="pill">table</span>
-            </div>
-
-            <div class="muted" id="tradesMsg" style="margin:0 0 10px 0;"></div>
-
-            <table>
-              <thead>
-                <tr>
-                  <th>date</th>
-                  <th>symbol</th>
-                  <th>dir</th>
-                  <th>session</th>
-                  <th>strategy</th>
-                  <th>rr</th>
-                  <th>r</th>
-                </tr>
-              </thead>
-              <tbody id="tradesBody">
-                <tr><td colspan="7" class="muted">loading…</td></tr>
-              </tbody>
-            </table>
           </div>
         </section>
 
-        <!-- JOURNAL PAGE -->
-        <section id="page-journal" class="page hide">
-          <div class="pageHead">
-            <div class="titleWrap">
-              <h1>journal</h1>
-              <p>notes that turn into rules</p>
+        <!-- trades page -->
+        <section class="page" id="page-trades">
+          <div class="panel">
+            <div class="panelInner">
+              <div class="panelHeader">
+                <div>
+                  <h1 class="title">trades</h1>
+                  <div class="subtitle">your full list, searchable next</div>
+                </div>
+                <div class="badge"><span class="badgeDot"></span><span id="tradesCountBadge">0</span></div>
+              </div>
+
+              <div class="card">
+                <div class="cardHead">
+                  <h3 class="cardTitle">all trades</h3>
+                  <span class="pill">table</span>
+                </div>
+
+                <div style="overflow:auto;">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>date</th>
+                        <th>symbol</th>
+                        <th>dir</th>
+                        <th>rr</th>
+                        <th>r</th>
+                        <th>session</th>
+                        <th>strategy</th>
+                      </tr>
+                    </thead>
+                    <tbody id="allTradesBody">
+                      <tr><td class="emptyRow" colspan="7">loading…</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+
+              </div>
             </div>
-            <span class="pill">coming next</span>
           </div>
+        </section>
 
-          <div class="card">
-            <div class="cardHead">
-              <h3 class="cardTitle">quick note</h3>
-              <span class="pill">placeholder</span>
-            </div>
-            <div class="muted" style="font-weight:800; line-height:1.5;">
-              this is where your daily notes, rules, and “what I learned” will live
-            </div>
+        <!-- journal page -->
+        <section class="page" id="page-journal">
+          <div class="panel">
+            <div class="panelInner">
+              <div class="panelHeader">
+                <div>
+                  <h1 class="title">journal</h1>
+                  <div class="subtitle">notes and patterns, coming next</div>
+                </div>
+                <div class="badge"><span class="badgeDot"></span><span>soon</span></div>
+              </div>
 
-            <label style="margin-top:12px;">today’s note</label>
-            <textarea id="journalNote" placeholder="write one thing you’ll do differently next session…"></textarea>
-            <button class="ghostBtn" id="journalSaveBtn">save (local only for now)</button>
-            <div class="msg" id="journalMsg"></div>
+              <div class="card">
+                <div class="cardHead">
+                  <h3 class="cardTitle">quick note</h3>
+                  <span class="pill warn">placeholder</span>
+                </div>
+                <div class="mutedLine">
+                  next we’ll save daily notes and auto surface your repeating mistakes and best setups
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -742,80 +804,108 @@
     </main>
   </div>
 
-  <!-- ADD TRADE MODAL -->
-  <div class="backdrop" id="tradeBackdrop">
-    <div class="modal">
-      <div class="modalHead">
-        <h2>add trade</h2>
-        <button class="xBtn" id="closeTradeModal">close</button>
+  <!-- modal -->
+  <div class="modalBackdrop" id="modalBackdrop">
+    <div class="modal" role="dialog" aria-modal="true" aria-label="add trade">
+      <div class="modalInner">
+        <div class="modalHead">
+          <div>
+            <h3 class="modalTitle">add trade</h3>
+            <div class="subtitle" style="margin-top:4px;">fast logging, clean data</div>
+          </div>
+          <button class="closeBtn" id="closeModalBtn">close</button>
+        </div>
+
+        <div class="formGrid">
+          <div>
+            <label>date and time</label>
+            <input id="t_date" type="datetime-local" />
+          </div>
+
+          <div>
+            <label>symbol</label>
+            <input id="t_symbol" placeholder="xauusd / nasdaq / btc" />
+          </div>
+
+          <div>
+            <label>direction</label>
+            <select id="t_direction">
+              <option value="long">long</option>
+              <option value="short">short</option>
+            </select>
+          </div>
+
+          <div>
+            <label>result</label>
+            <select id="t_result">
+              <option value="win">win</option>
+              <option value="loss">loss</option>
+              <option value="be">breakeven</option>
+            </select>
+          </div>
+
+          <div>
+            <label>rr (optional)</label>
+            <input id="t_rr" type="number" step="0.01" placeholder="1.0" />
+          </div>
+
+          <div>
+            <label>r multiple (enter absolute)</label>
+            <input id="t_r" type="number" step="0.01" placeholder="1.3" />
+          </div>
+
+          <div>
+            <label>session (optional)</label>
+            <select id="t_session">
+              <option value="">—</option>
+              <option value="asia">asia</option>
+              <option value="london">london</option>
+              <option value="ny">ny</option>
+              <option value="overlap">overlap</option>
+            </select>
+          </div>
+
+          <div>
+            <label>strategy (optional)</label>
+            <input id="t_strategy" placeholder="fvg / breakout / mean reversion" />
+          </div>
+
+          <div style="grid-column: 1 / -1;">
+            <label>mistakes (optional, comma separated)</label>
+            <input id="t_mistakes" placeholder="late entry, revenge, no stop" />
+          </div>
+
+          <div style="grid-column: 1 / -1;">
+            <label>notes (optional)</label>
+            <textarea id="t_notes" placeholder="why you entered, what you’ll fix next"></textarea>
+          </div>
+        </div>
+
+        <div class="modalActions">
+          <button class="ghostBtn" id="clearBtn" style="width:auto;">clear</button>
+          <button class="saveBtn" id="saveBtn">save trade</button>
+        </div>
+
+        <div class="msg" id="modalMsg"></div>
       </div>
-
-      <div class="formGrid">
-        <div>
-          <label>date</label>
-          <input id="t_date" type="datetime-local" />
-        </div>
-        <div>
-          <label>symbol</label>
-          <input id="t_symbol" placeholder="XAUUSD / NASDAQ / ES" />
-        </div>
-
-        <div>
-          <label>direction</label>
-          <select id="t_direction">
-            <option value="long">long</option>
-            <option value="short">short</option>
-          </select>
-        </div>
-        <div>
-          <label>session</label>
-          <select id="t_session">
-            <option value="">—</option>
-            <option value="asia">asia</option>
-            <option value="london">london</option>
-            <option value="ny">ny</option>
-          </select>
-        </div>
-
-        <div>
-          <label>rr</label>
-          <input id="t_rr" type="number" step="0.01" placeholder="1.5" />
-        </div>
-        <div>
-          <label>r multiple</label>
-          <input id="t_r" type="number" step="0.01" placeholder="1.0 (or -1.0)" />
-        </div>
-
-        <div>
-          <label>strategy</label>
-          <input id="t_strategy" placeholder="fvg / breakout / etc" />
-        </div>
-        <div>
-          <label>mistakes (comma separated)</label>
-          <input id="t_mistakes" placeholder="revenge, late entry, overtrade" />
-        </div>
-
-        <div style="grid-column:1/-1;">
-          <label>notes</label>
-          <textarea id="t_notes" placeholder="one sentence why you entered…"></textarea>
-        </div>
-      </div>
-
-      <div class="modalFoot">
-        <button class="btn" id="cancelTradeBtn">cancel</button>
-        <button class="btn primary" id="saveTradeBtn">save trade</button>
-      </div>
-      <div class="msg" id="tradeMsg"></div>
     </div>
   </div>
 
+  <!-- supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <script>
-    // ====== CONFIG ======
+    // === CONFIG ===
     const SUPABASE_URL = "https://oucikdsngvdhimquclcz.supabase.co";
     const SUPABASE_ANON_KEY = "sb_publishable_gMETcAB_TRLGd8hqx48KRA_yXxE7U6v";
+
     const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // ====== THEME ======
+    // === STATE ===
+    let user = null;
+    let trades = []; // full list for analytics + tables
+
+    // === THEME ===
     function applyTheme(theme){
       document.documentElement.setAttribute("data-theme", theme);
       localStorage.setItem("sessionly_theme", theme);
@@ -825,485 +915,778 @@
       applyTheme(saved || "dark");
     }
 
-    // ====== ROUTING ======
-    const pages = ["focus","analytics","trades","journal"];
-    function setRoute(route){
-      if (!pages.includes(route)) route = "focus";
-      location.hash = route;
-      renderRoute();
-    }
-    function renderRoute(){
-      const route = (location.hash || "#focus").replace("#","");
-      pages.forEach(p=>{
-        document.getElementById("page-"+p).classList.toggle("hide", p !== route);
+    // === ROUTING ===
+    const routes = ["focus","analytics","trades","journal"];
+
+    function setActiveRoute(route){
+      if (!routes.includes(route)) route = "focus";
+
+      // show/hide pages
+      routes.forEach(r=>{
+        const page = document.getElementById(`page-${r}`);
+        if (page) page.classList.toggle("active", r === route);
       });
+
+      // sidebar active
       document.querySelectorAll(".navBtn").forEach(btn=>{
         btn.classList.toggle("active", btn.dataset.route === route);
       });
+
+      // update hash without jump
+      if (location.hash.replace("#","") !== route){
+        history.replaceState(null, "", `#${route}`);
+      }
+
+      // repaint charts when analytics visible
+      if (route === "analytics"){
+        renderAnalytics();
+      }
+      if (route === "trades"){
+        renderTradesTable();
+      }
     }
 
-    // ====== UTIL ======
-    function fmtDate(d){
-      try{
-        const dt = new Date(d);
-        return dt.toLocaleDateString(undefined, {year:"numeric", month:"short", day:"2-digit"});
-      }catch(e){ return "—"; }
-    }
-    function fmtHourLabel(h){
-      const hh = String(h).padStart(2,"0");
-      return `${hh}:00`;
-    }
-    function setText(id, v){
-      const el = document.getElementById(id);
-      if (el) el.textContent = v;
-    }
-    function safeNum(x){
-      const n = Number(x);
-      return Number.isFinite(n) ? n : 0;
+    function initRouting(){
+      const fromHash = location.hash.replace("#","").trim();
+      setActiveRoute(fromHash || "focus");
+
+      window.addEventListener("hashchange", ()=>{
+        const r = location.hash.replace("#","").trim();
+        setActiveRoute(r || "focus");
+      });
+
+      document.querySelectorAll(".navBtn").forEach(btn=>{
+        btn.addEventListener("click", ()=>{
+          setActiveRoute(btn.dataset.route);
+        });
+      });
     }
 
-    // ====== DATA ======
-    let user = null;
-    let trades = []; // normalized: {trade_date, symbol, direction, rr, r, session, strategy, notes, created_at}
-
+    // === AUTH GUARD ===
     async function requireAuth(){
-      const { data } = await sb.auth.getSession();
-      const session = data.session;
+      const { data, error } = await sb.auth.getSession();
+      if (error) {
+        console.error(error);
+      }
+      const session = data?.session;
       if (!session){
-        // send to login page
+        // redirect to login page you already have
         window.location.href = "login.html";
-        return null;
+        return false;
       }
       user = session.user;
-      setText("userEmail", user.email || "—");
-      return user;
+      document.getElementById("userEmail").textContent = user.email || "signed in";
+      return true;
     }
 
-    async function loadTrades(){
-      if (!user) return [];
+    // === MODAL ===
+    const modalBackdrop = document.getElementById("modalBackdrop");
+    const modalMsg = document.getElementById("modalMsg");
 
-      // IMPORTANT: your DB uses columns like rr, r_multiple (or maybe r_multiple + rr)
-      // We'll try to select both rr + r_multiple and also r (fallback), session, strategy, mistakes, notes.
-      const { data, error } = await sb
-        .from("trades")
-        .select("id, trade_date, symbol, direction, rr, r_multiple, session, strategy, mistakes, notes, created_at")
-        .order("trade_date", { ascending: false });
-
-      if (error){
-        console.log("loadTrades error", error);
-        return [];
-      }
-
-      return (data || []).map(t => ({
-        id: t.id,
-        trade_date: t.trade_date,
-        symbol: t.symbol || "—",
-        direction: t.direction || "—",
-        rr: t.rr,
-        r: (t.r_multiple ?? null),
-        session: t.session || "",
-        strategy: t.strategy || "",
-        mistakes: t.mistakes || [],
-        notes: t.notes || "",
-        created_at: t.created_at
-      }));
-    }
-
-    // ====== STATS ======
-    function computeAnalytics(all){
-      const clean = (all || []).map(t => ({
-        date: t.trade_date,
-        rr: safeNum(t.rr),
-        r: safeNum(t.r),
-        hour: (()=>{ try{ return new Date(t.trade_date).getHours(); }catch(e){ return null; } })()
-      }));
-
-      const wins = clean.filter(t => t.r > 0);
-      const losses = clean.filter(t => t.r < 0);
-
-      const sumWin = wins.reduce((a,b)=>a + b.r, 0);
-      const sumLossAbs = losses.reduce((a,b)=>a + Math.abs(b.r), 0);
-
-      const pf = (sumLossAbs === 0) ? Infinity : (sumWin / sumLossAbs);
-
-      const avgWin = wins.length ? (sumWin / wins.length) : NaN;
-      const avgLoss = losses.length ? (sumLossAbs / losses.length) : NaN;
-
-      // hourly bucket avg r
-      const byHour = new Map();
-      clean.forEach(t=>{
-        if (t.hour === null) return;
-        const o = byHour.get(t.hour) || { sum:0, n:0 };
-        o.sum += t.r;
-        o.n += 1;
-        byHour.set(t.hour, o);
-      });
-
-      // best hour by avg r
-      let bestHour = null;
-      let bestHourAvg = -Infinity;
-      byHour.forEach((o, h)=>{
-        const avg = o.sum / o.n;
-        if (avg > bestHourAvg){
-          bestHourAvg = avg;
-          bestHour = h;
-        }
-      });
-
-      // equity points (cumulative r in chronological order)
-      const chrono = [...clean].sort((a,b)=> new Date(a.date) - new Date(b.date));
-      let cum = 0;
-      const points = chrono.map((t, i)=>{
-        cum += t.r;
-        return { x: i, y: cum };
-      });
-
-      return { clean, wins, losses, pf, avgWin, avgLoss, byHour, bestHour, bestHourAvg, points };
-    }
-
-    function refreshFocus(){
-      // focus uses last 8 trades
-      const last = trades.slice(0, 8);
-      const a = computeAnalytics(last);
-
-      setText("focusTradesCount", String(last.length));
-      setText("focusTradesSub", "last 8 trades");
-
-      const winRate = last.length ? (a.wins.length / last.length) * 100 : NaN;
-      setText("focusWinRate", last.length ? `${winRate.toFixed(1)}%` : "—");
-
-      const totalR = a.clean.reduce((s,t)=>s+t.r,0);
-      setText("focusTotalR", last.length ? totalR.toFixed(1) : "—");
-
-      const avgRR = last.length ? (a.clean.reduce((s,t)=>s+t.rr,0) / last.length) : NaN;
-      setText("focusAvgRR", last.length ? (Number.isFinite(avgRR) ? avgRR.toFixed(2) : "—") : "—");
-
-      // table
-      const body = document.getElementById("focusTradesBody");
-      const msg = document.getElementById("focusTradesMsg");
-      body.innerHTML = "";
-
-      if (!last.length){
-        body.innerHTML = `<tr><td colspan="5" class="muted">no trades yet, add your first one</td></tr>`;
-        msg.textContent = "";
-        return;
-      }
-
-      msg.textContent = "";
-      last.forEach(t=>{
-        body.insertAdjacentHTML("beforeend", `
-          <tr>
-            <td>${fmtDate(t.trade_date)}</td>
-            <td>${escapeHtml(t.symbol)}</td>
-            <td>${escapeHtml(t.direction)}</td>
-            <td>${Number.isFinite(Number(t.rr)) ? Number(t.rr).toFixed(2) : "—"}</td>
-            <td>${Number.isFinite(Number(t.r)) ? Number(t.r).toFixed(2) : "—"}</td>
-          </tr>
-        `);
-      });
-    }
-
-    function refreshTradesTable(){
-      const pill = document.getElementById("tradesCountPill");
-      pill.textContent = `${trades.length} trades`;
-
-      const body = document.getElementById("tradesBody");
-      const msg = document.getElementById("tradesMsg");
-      body.innerHTML = "";
-
-      if (!trades.length){
-        body.innerHTML = `<tr><td colspan="7" class="muted">no trades yet, add your first one</td></tr>`;
-        msg.textContent = "";
-        return;
-      }
-
-      msg.textContent = "";
-      trades.forEach(t=>{
-        body.insertAdjacentHTML("beforeend", `
-          <tr>
-            <td>${fmtDate(t.trade_date)}</td>
-            <td>${escapeHtml(t.symbol)}</td>
-            <td>${escapeHtml(t.direction)}</td>
-            <td>${escapeHtml(t.session || "—")}</td>
-            <td>${escapeHtml(t.strategy || "—")}</td>
-            <td>${Number.isFinite(Number(t.rr)) ? Number(t.rr).toFixed(2) : "—"}</td>
-            <td>${Number.isFinite(Number(t.r)) ? Number(t.r).toFixed(2) : "—"}</td>
-          </tr>
-        `);
-      });
-    }
-
-    function refreshAnalytics(){
-      const a = computeAnalytics(trades);
-
-      // profit factor (no ∞)
-      const hasWin = a.clean.some(x => x.r > 0);
-      const hasLoss = a.clean.some(x => x.r < 0);
-      const pfText = (hasWin && hasLoss && !Number.isNaN(a.pf) && Number.isFinite(a.pf)) ? a.pf.toFixed(2) : "—";
-      setText("anaPF", pfText);
-      setText("anaPFSub", `from ${trades.length} trades`);
-
-      // avg win vs avg loss
-      if (hasWin && hasLoss){
-        const wl = `${a.avgWin.toFixed(2)} vs ${a.avgLoss.toFixed(2)}`;
-        setText("anaWinLoss", wl);
-      } else {
-        setText("anaWinLoss", "—");
-      }
-
-      // best hour
-      if (a.bestHour !== null && Number.isFinite(a.bestHourAvg)){
-        setText("anaBestHour", fmtHourLabel(a.bestHour));
-        setText("anaBestHourSub", `avg r ${a.bestHourAvg.toFixed(2)}`);
-      } else {
-        setText("anaBestHour", "—");
-        setText("anaBestHourSub", "avg r —");
-      }
-
-      // draw charts
-      drawHourlyBars(a.byHour);
-      drawEquitySVG(a.points);
-    }
-
-    // ====== WOW CHARTS ======
-    function drawEquitySVG(points){
-      const el = document.getElementById("equityChart");
-      if (!el) return;
-
-      if (!points || points.length < 2){
-        el.classList.remove("hasSvg");
-        el.textContent = "equity curve will appear after 2+ trades";
-        return;
-      }
-
-      const w = 640, h = 220, pad = 18;
-
-      const ys = points.map(p => p.y);
-      const minY = Math.min(...ys);
-      const maxY = Math.max(...ys);
-      const span = (maxY - minY) || 1;
-
-      const toX = (i) => pad + (i * (w - pad*2) / (points.length - 1));
-      const toY = (y) => pad + ((maxY - y) * (h - pad*2) / span);
-
-      let d = `M ${toX(0)} ${toY(points[0].y)}`;
-      for (let i=1;i<points.length;i++) d += ` L ${toX(i)} ${toY(points[i].y)}`;
-
-      el.classList.add("hasSvg");
-      el.innerHTML = `
-        <svg viewBox="0 0 ${w} ${h}" width="100%" height="100%" preserveAspectRatio="none">
-          ${[0.25,0.5,0.75].map(t=>{
-            const y = pad + t*(h-pad*2);
-            return `<line class="gridline" x1="${pad}" y1="${y}" x2="${w-pad}" y2="${y}"></line>`;
-          }).join("")}
-          <path class="equityBg" d="${d}"></path>
-          <path class="equity" id="equityPath" d="${d}"></path>
-        </svg>
-      `;
-      el.style.color = "var(--accent2)";
-
-      const path = document.getElementById("equityPath");
-      if (!path) return;
-
-      const len = path.getTotalLength();
-      path.style.setProperty("--dash", len);
-      path.style.strokeDasharray = String(len);
-      path.style.strokeDashoffset = String(len);
-      path.style.animation = "drawLine 900ms cubic-bezier(.2,.9,.2,1) forwards";
-    }
-
-    function drawHourlyBars(byHour){
-      const el = document.getElementById("hourlyChart");
-      if (!el) return;
-
-      const hours = Array.from({length:24}, (_,i)=>i);
-      const vals = hours.map(h=>{
-        const o = byHour.get(h);
-        return o ? (o.sum / o.n) : 0;
-      });
-
-      const hasAny = vals.some(v => v !== 0);
-      if (!hasAny){
-        el.classList.remove("hasSvg");
-        el.textContent = "hourly performance will appear after you have trades across hours";
-        return;
-      }
-
-      const w = 640, h = 220, pad = 18;
-      const maxAbs = Math.max(...vals.map(v=>Math.abs(v))) || 1;
-      const barW = (w - pad*2) / 24;
-      const midY = h/2;
-
-      let bestIdx = 0;
-      let bestScore = -Infinity;
-      vals.forEach((v,i)=>{
-        const score = Math.abs(v);
-        if (score > bestScore){ bestScore = score; bestIdx = i; }
-      });
-
-      const bars = vals.map((v, i)=>{
-        const x = pad + i*barW + 2;
-        const bw = Math.max(2, barW - 4);
-        const bh = (Math.abs(v) / maxAbs) * (h/2 - pad);
-        const cls = [
-          "bar",
-          (v === 0 ? "dim" : ""),
-          (i === bestIdx ? "best" : "")
-        ].join(" ").trim();
-
-        return `<rect class="${cls}" data-bh="${bh}" data-v="${v}" x="${x}" y="${midY}" width="${bw}" height="0" rx="4"></rect>`;
-      }).join("");
-
-      el.classList.add("hasSvg");
-      el.innerHTML = `
-        <svg viewBox="0 0 ${w} ${h}" width="100%" height="100%" preserveAspectRatio="none">
-          ${[0.25,0.5,0.75].map(t=>{
-            const y = pad + t*(h-pad*2);
-            return `<line class="gridline" x1="${pad}" y1="${y}" x2="${w-pad}" y2="${y}"></line>`;
-          }).join("")}
-          <line class="baseline" x1="${pad}" y1="${midY}" x2="${w-pad}" y2="${midY}"></line>
-          <g id="bars">${bars}</g>
-        </svg>
-      `;
-      el.style.color = "var(--accent)";
-
-      const rects = el.querySelectorAll("rect.bar");
-      const start = performance.now();
-      const dur = 700;
-      function easeOutCubic(t){ return 1 - Math.pow(1 - t, 3); }
-
-      function tick(now){
-        const t = Math.min(1, (now - start) / dur);
-        const k = easeOutCubic(t);
-
-        rects.forEach(r=>{
-          const bh = Number(r.getAttribute("data-bh")) || 0;
-          const v = Number(r.getAttribute("data-v")) || 0;
-          const targetH = bh * k;
-
-          if (v >= 0){
-            r.setAttribute("y", String(midY - targetH));
-            r.setAttribute("height", String(targetH));
-          } else {
-            r.setAttribute("y", String(midY));
-            r.setAttribute("height", String(targetH));
-          }
-        });
-
-        if (t < 1) requestAnimationFrame(tick);
-      }
-      requestAnimationFrame(tick);
-    }
-
-    // ====== INSERT TRADE ======
     function openTradeModal(){
-      const bd = document.getElementById("tradeBackdrop");
-      bd.style.display = "flex";
-      setText("tradeMsg", "");
+      modalMsg.textContent = "";
 
-      // default date = now
       const now = new Date();
       const iso = new Date(now.getTime() - now.getTimezoneOffset()*60000).toISOString().slice(0,16);
-      document.getElementById("t_date").value = iso;
-      document.getElementById("t_symbol").focus();
+
+      const dateEl = document.getElementById("t_date");
+      dateEl.value = iso;
+      dateEl.max = iso; // prevents future dates in picker
+
+      document.getElementById("t_symbol").value = "";
+      document.getElementById("t_direction").value = "long";
+      document.getElementById("t_result").value = "win";
+      document.getElementById("t_rr").value = "";
+      document.getElementById("t_r").value = "";
+      document.getElementById("t_session").value = "";
+      document.getElementById("t_strategy").value = "";
+      document.getElementById("t_mistakes").value = "";
+      document.getElementById("t_notes").value = "";
+
+      modalBackdrop.style.display = "flex";
     }
+
     function closeTradeModal(){
-      document.getElementById("tradeBackdrop").style.display = "none";
+      modalBackdrop.style.display = "none";
     }
 
-    async function saveTrade(){
-      const msg = document.getElementById("tradeMsg");
-      msg.textContent = "saving…";
+    // === DATA LOAD ===
+    async function loadTrades(){
+      if (!user) return;
 
-      const trade_date = document.getElementById("t_date").value;
-      const symbol = document.getElementById("t_symbol").value.trim();
-      const direction = document.getElementById("t_direction").value;
-      const session = document.getElementById("t_session").value;
-      const rr = document.getElementById("t_rr").value;
-      const r_multiple = document.getElementById("t_r").value;
-      const strategy = document.getElementById("t_strategy").value.trim();
-      const mistakesRaw = document.getElementById("t_mistakes").value.trim();
-      const notes = document.getElementById("t_notes").value.trim();
+      // load recent 500 trades (enough for charts right now)
+      const { data, error } = await sb
+        .from("trades")
+        .select("id, trade_date, symbol, direction, rr, r_multiple, notes, session, strategy, mistakes, created_at")
+        .eq("user_id", user.id)
+        .order("trade_date", { ascending: false })
+        .limit(500);
 
-      if (!trade_date){
-        msg.textContent = "please choose a date";
-        return;
-      }
-      if (!symbol){
-        msg.textContent = "please add a symbol";
-        return;
-      }
-
-      const mistakes = mistakesRaw
-        ? mistakesRaw.split(",").map(s=>s.trim()).filter(Boolean)
-        : [];
-
-      const payload = {
-        user_id: user.id,
-        trade_date: new Date(trade_date).toISOString(),
-        symbol,
-        direction,
-        session: session || null,
-        strategy: strategy || null,
-        mistakes: mistakes.length ? mistakes : null,
-        rr: rr === "" ? null : Number(rr),
-        r_multiple: r_multiple === "" ? null : Number(r_multiple),
-        notes: notes || null
-      };
-
-      const { error } = await sb.from("trades").insert(payload);
       if (error){
-        console.log("insert error", error);
-        msg.textContent = "error saving trade: " + (error.message || "unknown");
+        console.error(error);
+        document.getElementById("recentPill").classList.remove("ok");
+        document.getElementById("recentPill").classList.add("warn");
+        document.getElementById("recentPill").textContent = "error";
+        document.getElementById("recentBody").innerHTML =
+          `<tr><td class="emptyRow" colspan="5">error loading trades: ${escapeHtml(error.message)}</td></tr>`;
         return;
       }
 
-      msg.textContent = "saved";
-      closeTradeModal();
-      await fullRefresh();
+      trades = (data || []).map(normalizeTrade);
+      renderFocus();
+      renderAnalytics();
+      renderTradesTable();
     }
 
-    // ====== JOURNAL LOCAL ======
-    function loadJournal(){
-      const saved = localStorage.getItem("sessionly_journal_note") || "";
-      document.getElementById("journalNote").value = saved;
-    }
-    function saveJournal(){
-      const v = document.getElementById("journalNote").value;
-      localStorage.setItem("sessionly_journal_note", v);
-      document.getElementById("journalMsg").textContent = "saved";
-      setTimeout(()=> document.getElementById("journalMsg").textContent = "", 1200);
-    }
-
-    // ====== ESCAPE ======
-    function escapeHtml(str){
-      return String(str ?? "").replace(/[&<>"']/g, s => ({
-        "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"
-      }[s]));
+    function normalizeTrade(t){
+      const dt = t.trade_date ? new Date(t.trade_date) : null;
+      return {
+        id: t.id,
+        trade_date: t.trade_date,
+        dt,
+        symbol: t.symbol || "",
+        direction: t.direction || "",
+        rr: (t.rr === null || t.rr === undefined) ? null : Number(t.rr),
+        r_multiple: (t.r_multiple === null || t.r_multiple === undefined) ? null : Number(t.r_multiple),
+        notes: t.notes || "",
+        session: t.session || "",
+        strategy: t.strategy || "",
+        mistakes: Array.isArray(t.mistakes) ? t.mistakes : (t.mistakes ? [String(t.mistakes)] : []),
+      };
     }
 
-    // ====== REFRESH ======
-    async function fullRefresh(){
-      trades = await loadTrades();
+    // === RENDER: FOCUS ===
+    function renderFocus(){
+      const recent = trades.slice(0, 8);
 
-      refreshFocus();
-      refreshAnalytics();
-      refreshTradesTable();
+      // stats
+      document.getElementById("s_loaded").textContent = String(recent.length);
+      const wins = recent.filter(x => (x.r_multiple ?? 0) > 0).length;
+      const decided = recent.filter(x => (x.r_multiple ?? 0) !== 0 && x.r_multiple !== null).length;
+      const winRate = decided ? (wins / decided) : 0;
+
+      document.getElementById("s_winrate").textContent = decided ? `${(winRate*100).toFixed(1)}%` : "—";
+
+      const totalR = recent.reduce((a,x)=> a + (Number.isFinite(x.r_multiple) ? x.r_multiple : 0), 0);
+      document.getElementById("s_totalr").textContent = formatNumber(totalR);
+
+      const rrVals = recent.map(x => x.rr).filter(v => Number.isFinite(v));
+      const avgRR = rrVals.length ? rrVals.reduce((a,b)=>a+b,0)/rrVals.length : null;
+      document.getElementById("s_avgrr").textContent = avgRR === null ? "—" : formatNumber(avgRR);
+
+      // table
+      const body = document.getElementById("recentBody");
+      if (!recent.length){
+        body.innerHTML = `<tr><td class="emptyRow" colspan="5">no trades yet, add your first one</td></tr>`;
+      } else {
+        body.innerHTML = recent.map(row=>{
+          const date = row.dt ? fmtDate(row.dt) : "—";
+          const sym = escapeHtml(row.symbol || "—");
+          const dir = escapeHtml(row.direction || "—");
+          const rr = row.rr === null ? "—" : formatNumber(row.rr);
+          const r = row.r_multiple === null ? "—" : formatNumber(row.r_multiple);
+          return `
+            <tr>
+              <td>${date}</td>
+              <td>${sym}</td>
+              <td>${dir}</td>
+              <td>${rr}</td>
+              <td>${r}</td>
+            </tr>
+          `;
+        }).join("");
+      }
+
+      // pills
+      document.getElementById("recentPill").textContent = "ready";
+      document.getElementById("focusStatus").textContent = "ready";
     }
 
-    // ====== INIT ======
-    async function init(){
-      initTheme();
+    // === RENDER: TRADES TABLE ===
+    function renderTradesTable(){
+      const body = document.getElementById("allTradesBody");
+      document.getElementById("tradesCountBadge").textContent = String(trades.length);
 
-      // nav
-      document.querySelectorAll(".navBtn").forEach(btn=>{
-        btn.addEventListener("click", ()=> setRoute(btn.dataset.route));
+      if (!trades.length){
+        body.innerHTML = `<tr><td class="emptyRow" colspan="7">no trades yet</td></tr>`;
+        return;
+      }
+
+      body.innerHTML = trades.map(row=>{
+        const date = row.dt ? fmtDateTime(row.dt) : "—";
+        const sym = escapeHtml(row.symbol || "—");
+        const dir = escapeHtml(row.direction || "—");
+        const rr = row.rr === null ? "—" : formatNumber(row.rr);
+        const r = row.r_multiple === null ? "—" : formatNumber(row.r_multiple);
+        const session = escapeHtml(row.session || "—");
+        const strategy = escapeHtml(row.strategy || "—");
+
+        return `
+          <tr>
+            <td>${date}</td>
+            <td>${sym}</td>
+            <td>${dir}</td>
+            <td>${rr}</td>
+            <td>${r}</td>
+            <td>${session}</td>
+            <td>${strategy}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    // === RENDER: ANALYTICS ===
+    function renderAnalytics(){
+      // profit factor from r_multiple
+      const rVals = trades
+        .map(t => t.r_multiple)
+        .filter(v => Number.isFinite(v));
+
+      const wins = rVals.filter(v => v > 0);
+      const losses = rVals.filter(v => v < 0);
+      const bes = rVals.filter(v => v === 0);
+
+      const sumWins = wins.reduce((a,b)=>a+b,0);
+      const sumLossAbs = Math.abs(losses.reduce((a,b)=>a+b,0));
+      const pf = (sumLossAbs > 0) ? (sumWins / sumLossAbs) : (wins.length ? Infinity : null);
+
+      document.getElementById("a_pf").textContent = pf === null ? "—" : (pf === Infinity ? "∞" : formatNumber(pf));
+      document.getElementById("a_pf_hint").textContent = `from ${rVals.length} trades`;
+
+      const avgWin = wins.length ? (sumWins / wins.length) : null;
+      const avgLoss = losses.length ? (Math.abs(losses.reduce((a,b)=>a+b,0)) / losses.length) : null;
+      document.getElementById("a_awal").textContent =
+        (avgWin === null || avgLoss === null) ? "—" : `${formatNumber(avgWin)} / ${formatNumber(avgLoss)}`;
+
+      // best hour by avg r
+      const byHour = new Map(); // hour -> {sum,count}
+      trades.forEach(t=>{
+        if (!t.dt || !Number.isFinite(t.r_multiple)) return;
+        const h = t.dt.getHours();
+        const cur = byHour.get(h) || {sum:0,count:0};
+        cur.sum += t.r_multiple;
+        cur.count += 1;
+        byHour.set(h, cur);
       });
-      window.addEventListener("hashchange", renderRoute);
+
+      let bestHour = null;
+      let bestAvg = -Infinity;
+      for (const [h, v] of byHour.entries()){
+        const avg = v.sum / Math.max(1, v.count);
+        if (avg > bestAvg){
+          bestAvg = avg;
+          bestHour = h;
+        }
+      }
+      document.getElementById("a_besthour").textContent = bestHour === null ? "—" : `${String(bestHour).padStart(2,"0")}:00`;
+      document.getElementById("a_besthour_hint").textContent = bestHour === null ? "avg r" : `avg r ${formatNumber(bestAvg)}`;
+
+      // charts
+      drawHourlyCanvas(byHour);
+      drawEquityCanvas();
+      drawDonutCanvas(wins.length, losses.length, bes.length);
+      drawCalendarCanvas();
+    }
+
+    // === CHART HELPERS (no external libs) ===
+    function prepCanvas(id){
+      const c = document.getElementById(id);
+      if (!c) return null;
+      const rect = c.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      c.width = Math.max(1, Math.floor(rect.width * dpr));
+      c.height = Math.max(1, Math.floor(rect.height * dpr));
+      const ctx = c.getContext("2d");
+      ctx.setTransform(dpr,0,0,dpr,0,0);
+      return {c, ctx, w: rect.width, h: rect.height};
+    }
+
+    function colorVar(name){
+      return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    }
+
+    function drawGlassGrid(ctx, w, h){
+      ctx.save();
+      ctx.globalAlpha = 0.35;
+      ctx.strokeStyle = colorMix(colorVar("--stroke"), "transparent", 0.0);
+      ctx.lineWidth = 1;
+
+      const step = 28;
+      for (let x=0; x<=w; x+=step){
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, h);
+        ctx.stroke();
+      }
+      for (let y=0; y<=h; y+=step){
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(w, y);
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    function drawHourlyCanvas(byHour){
+      const pack = prepCanvas("hourlyCanvas");
+      if (!pack) return;
+      const {ctx,w,h} = pack;
+
+      ctx.clearRect(0,0,w,h);
+      drawGlassGrid(ctx,w,h);
+
+      // bars (sum r per hour)
+      const arr = [];
+      for (let i=0;i<24;i++){
+        const v = byHour.get(i);
+        arr.push({h:i, val: v ? v.sum : 0});
+      }
+
+      const maxAbs = Math.max(1, ...arr.map(x => Math.abs(x.val)));
+      const pad = 18;
+      const baseY = h/2;
+      const innerW = w - pad*2;
+      const barW = innerW / 24;
+
+      // axis line
+      ctx.save();
+      ctx.strokeStyle = colorVar("--stroke2");
+      ctx.globalAlpha = 0.9;
+      ctx.beginPath();
+      ctx.moveTo(pad, baseY);
+      ctx.lineTo(w-pad, baseY);
+      ctx.stroke();
+      ctx.restore();
+
+      arr.forEach((b, i)=>{
+        const x = pad + i*barW + barW*0.22;
+        const bw = barW*0.56;
+        const norm = b.val / maxAbs;
+        const barH = norm * (h*0.34);
+
+        const y = baseY - Math.max(0, barH);
+        const hh = Math.abs(barH);
+
+        const isPos = b.val >= 0;
+        const col = isPos ? colorVar("--accent") : colorVar("--danger");
+
+        // bar
+        roundRect(ctx, x, y, bw, hh, 8);
+        const grad = ctx.createLinearGradient(x,y,x,y+hh);
+        grad.addColorStop(0, colorMix(col, "#ffffff", 0.12));
+        grad.addColorStop(1, colorMix(col, "#000000", 0.22));
+        ctx.fillStyle = grad;
+        ctx.globalAlpha = 0.92;
+        ctx.fill();
+
+        // glow
+        ctx.globalAlpha = 0.20;
+        ctx.shadowColor = col;
+        ctx.shadowBlur = 18;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+        ctx.globalAlpha = 1;
+      });
+    }
+
+    function drawEquityCanvas(){
+      const pack = prepCanvas("equityCanvas");
+      if (!pack) return;
+      const {ctx,w,h} = pack;
+
+      ctx.clearRect(0,0,w,h);
+      drawGlassGrid(ctx,w,h);
+
+      // sort by date asc
+      const sorted = [...trades]
+        .filter(t => t.dt && Number.isFinite(t.r_multiple))
+        .sort((a,b)=> a.dt - b.dt);
+
+      const pad = 18;
+      const innerW = w - pad*2;
+      const innerH = h - pad*2;
+
+      if (sorted.length < 2){
+        ctx.save();
+        ctx.fillStyle = colorVar("--muted");
+        ctx.globalAlpha = 0.9;
+        ctx.font = "700 13px ui-sans-serif, system-ui";
+        ctx.fillText("equity curve will appear after 2+ trades", pad, h/2);
+        ctx.restore();
+        return;
+      }
+
+      let cum = 0;
+      const pts = sorted.map(t=>{
+        cum += t.r_multiple;
+        return {x:0, y:cum};
+      });
+
+      const minY = Math.min(...pts.map(p=>p.y));
+      const maxY = Math.max(...pts.map(p=>p.y));
+      const span = Math.max(1e-9, maxY - minY);
+
+      pts.forEach((p,i)=>{
+        p.x = pad + (i/(pts.length-1))*innerW;
+        p.y = pad + (1 - ((p.y - minY)/span))*innerH;
+      });
+
+      // axis baseline subtle
+      ctx.save();
+      ctx.strokeStyle = colorVar("--stroke2");
+      ctx.globalAlpha = 0.85;
+      ctx.beginPath();
+      ctx.moveTo(pad, pad + innerH);
+      ctx.lineTo(pad + innerW, pad + innerH);
+      ctx.stroke();
+      ctx.restore();
+
+      // gradient fill under line
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(pts[0].x, pts[0].y);
+      for (let i=1;i<pts.length;i++) ctx.lineTo(pts[i].x, pts[i].y);
+      ctx.lineTo(pts[pts.length-1].x, pad + innerH);
+      ctx.lineTo(pts[0].x, pad + innerH);
+      ctx.closePath();
+
+      const fillGrad = ctx.createLinearGradient(0,pad,0,pad+innerH);
+      fillGrad.addColorStop(0, colorMix(colorVar("--accent2"), "transparent", 0.70));
+      fillGrad.addColorStop(1, "transparent");
+      ctx.fillStyle = fillGrad;
+      ctx.globalAlpha = 0.55;
+      ctx.fill();
+      ctx.restore();
+
+      // line
+      ctx.save();
+      ctx.lineWidth = 3;
+      ctx.lineJoin = "round";
+      ctx.lineCap = "round";
+      const lineGrad = ctx.createLinearGradient(pad,0,pad+innerW,0);
+      lineGrad.addColorStop(0, colorVar("--accent"));
+      lineGrad.addColorStop(1, colorVar("--accent2"));
+      ctx.strokeStyle = lineGrad;
+      ctx.globalAlpha = 0.95;
+
+      ctx.beginPath();
+      ctx.moveTo(pts[0].x, pts[0].y);
+      for (let i=1;i<pts.length;i++) ctx.lineTo(pts[i].x, pts[i].y);
+      ctx.stroke();
+
+      // glow
+      ctx.shadowColor = colorVar("--accent");
+      ctx.shadowBlur = 16;
+      ctx.stroke();
+      ctx.restore();
+
+      // last point
+      const last = pts[pts.length-1];
+      ctx.save();
+      ctx.fillStyle = colorVar("--accent2");
+      ctx.globalAlpha = 0.95;
+      ctx.beginPath();
+      ctx.arc(last.x, last.y, 4.5, 0, Math.PI*2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function drawDonutCanvas(winCount, lossCount, beCount){
+      const pack = prepCanvas("donutCanvas");
+      if (!pack) return;
+      const {ctx,w,h} = pack;
+
+      ctx.clearRect(0,0,w,h);
+      drawGlassGrid(ctx,w,h);
+
+      const total = Math.max(1, winCount + lossCount + beCount);
+      const cx = w/2, cy = h/2;
+      const r = Math.min(w,h)*0.30;
+      const thick = Math.max(10, r*0.28);
+
+      const arcs = [
+        {label:"win", val: winCount, color: colorVar("--accent2")},
+        {label:"loss", val: lossCount, color: colorVar("--danger")},
+        {label:"be", val: beCount, color: colorVar("--accent")}
+      ];
+
+      // base ring
+      ctx.save();
+      ctx.strokeStyle = colorVar("--stroke2");
+      ctx.globalAlpha = 0.9;
+      ctx.lineWidth = thick;
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI*2);
+      ctx.stroke();
+      ctx.restore();
+
+      let start = -Math.PI/2;
+      arcs.forEach(seg=>{
+        const ang = (seg.val / total) * Math.PI*2;
+        if (ang <= 0) return;
+
+        ctx.save();
+        ctx.lineWidth = thick;
+        ctx.lineCap = "round";
+        ctx.strokeStyle = seg.color;
+        ctx.globalAlpha = 0.92;
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, start, start + ang);
+        ctx.stroke();
+
+        // glow
+        ctx.shadowColor = seg.color;
+        ctx.shadowBlur = 14;
+        ctx.stroke();
+
+        ctx.restore();
+        start += ang;
+      });
+
+      // center text
+      ctx.save();
+      ctx.fillStyle = colorVar("--text");
+      ctx.globalAlpha = 0.92;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.font = "980 22px ui-sans-serif, system-ui";
+      ctx.fillText(`${winCount}/${total}`, cx, cy - 8);
+      ctx.fillStyle = colorVar("--muted");
+      ctx.font = "800 12px ui-sans-serif, system-ui";
+      ctx.fillText("wins / trades", cx, cy + 14);
+      ctx.restore();
+    }
+
+    function drawCalendarCanvas(){
+      const pack = prepCanvas("calendarCanvas");
+      if (!pack) return;
+      const {ctx,w,h} = pack;
+
+      ctx.clearRect(0,0,w,h);
+      drawGlassGrid(ctx,w,h);
+
+      // build totals per day (YYYY-MM-DD) from r_multiple
+      const map = new Map();
+      trades.forEach(t=>{
+        if (!t.dt || !Number.isFinite(t.r_multiple)) return;
+        const key = `${t.dt.getFullYear()}-${String(t.dt.getMonth()+1).padStart(2,"0")}-${String(t.dt.getDate()).padStart(2,"0")}`;
+        map.set(key, (map.get(key)||0) + t.r_multiple);
+      });
+
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = now.getMonth();
+      const first = new Date(year, month, 1);
+      const last = new Date(year, month+1, 0);
+
+      const pad = 16;
+      const cols = 7;
+      const rows = 6;
+
+      const cellGap = 8;
+      const cellW = (w - pad*2 - cellGap*(cols-1)) / cols;
+      const cellH = (h - pad*2 - cellGap*(rows-1)) / rows;
+
+      // max abs for heat scaling
+      let maxAbs = 1;
+      for (let d=1; d<=last.getDate(); d++){
+        const dt = new Date(year, month, d);
+        const key = `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,"0")}-${String(dt.getDate()).padStart(2,"0")}`;
+        const val = map.get(key) || 0;
+        maxAbs = Math.max(maxAbs, Math.abs(val));
+      }
+
+      // day of week offset (0 sun)
+      const offset = first.getDay();
+
+      for (let i=0;i<rows*cols;i++){
+        const r = Math.floor(i/cols);
+        const c = i%cols;
+        const x = pad + c*(cellW+cellGap);
+        const y = pad + r*(cellH+cellGap);
+
+        const dayNum = i - offset + 1;
+        const inMonth = dayNum >= 1 && dayNum <= last.getDate();
+
+        // cell bg
+        const base = colorMix(colorVar("--panel"), "transparent", 0.35);
+        ctx.save();
+        roundRect(ctx, x, y, cellW, cellH, 14);
+        ctx.fillStyle = base;
+        ctx.globalAlpha = 0.85;
+        ctx.fill();
+
+        // stroke
+        ctx.globalAlpha = 0.85;
+        ctx.strokeStyle = colorVar("--stroke");
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        ctx.restore();
+
+        if (!inMonth) continue;
+
+        const dt = new Date(year, month, dayNum);
+        const key = `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,"0")}-${String(dt.getDate()).padStart(2,"0")}`;
+        const val = map.get(key) || 0;
+
+        // heat overlay
+        const strength = Math.min(1, Math.abs(val)/maxAbs);
+        if (strength > 0){
+          const col = val >= 0 ? colorVar("--accent2") : colorVar("--danger");
+          ctx.save();
+          roundRect(ctx, x, y, cellW, cellH, 14);
+          ctx.fillStyle = colorMix(col, "transparent", 0.65);
+          ctx.globalAlpha = 0.55 + strength*0.25;
+          ctx.fill();
+          ctx.restore();
+        }
+
+        // day label
+        ctx.save();
+        ctx.fillStyle = colorVar("--text");
+        ctx.globalAlpha = 0.90;
+        ctx.font = "900 12px ui-sans-serif, system-ui";
+        ctx.fillText(String(dayNum), x + 10, y + 18);
+        ctx.restore();
+
+        // value
+        if (val !== 0){
+          ctx.save();
+          ctx.fillStyle = colorVar("--text");
+          ctx.globalAlpha = 0.88;
+          ctx.font = "900 12px ui-sans-serif, system-ui";
+          const txt = (val > 0 ? "+" : "") + formatNumber(val);
+          ctx.fillText(txt, x + 10, y + cellH - 12);
+          ctx.restore();
+        }
+      }
+    }
+
+    // === SAVE TRADE ===
+    async function saveTrade(){
+      modalMsg.textContent = "";
+      const btn = document.getElementById("saveBtn");
+      btn.disabled = true;
+      btn.textContent = "saving…";
+
+      try{
+        const trade_date = document.getElementById("t_date").value;
+        const symbol = document.getElementById("t_symbol").value.trim();
+        const direction = document.getElementById("t_direction").value;
+        const result = document.getElementById("t_result").value;
+
+        const rrRaw = document.getElementById("t_rr").value;
+        const rRaw = document.getElementById("t_r").value;
+
+        const session = document.getElementById("t_session").value.trim();
+        const strategy = document.getElementById("t_strategy").value.trim();
+        const mistakesRaw = document.getElementById("t_mistakes").value.trim();
+        const notes = document.getElementById("t_notes").value.trim();
+
+        if (!trade_date){
+          modalMsg.textContent = "please choose a date";
+          return;
+        }
+
+        // block future dates
+        const chosen = new Date(trade_date).getTime();
+        const now = Date.now();
+        if (chosen > now){
+          modalMsg.textContent = "you can’t log a trade in the future";
+          return;
+        }
+
+        if (!symbol){
+          modalMsg.textContent = "please enter a symbol";
+          return;
+        }
+
+        const rr = rrRaw === "" ? null : Number(rrRaw);
+        if (rr !== null && !Number.isFinite(rr)){
+          modalMsg.textContent = "rr must be a number";
+          return;
+        }
+
+        let r_multiple = (rRaw === "" ? null : Number(rRaw));
+        if (r_multiple !== null && !Number.isFinite(r_multiple)){
+          modalMsg.textContent = "r multiple must be a number";
+          return;
+        }
+
+        // apply result to sign (user enters absolute)
+        if (r_multiple !== null && Number.isFinite(r_multiple)){
+          const absR = Math.abs(r_multiple);
+          if (result === "win") r_multiple = absR;
+          if (result === "loss") r_multiple = -absR;
+          if (result === "be") r_multiple = 0;
+        }
+
+        const mistakes = mistakesRaw
+          ? mistakesRaw.split(",").map(s=>s.trim()).filter(Boolean)
+          : [];
+
+        const payload = {
+          user_id: user.id,
+          trade_date: new Date(trade_date).toISOString(),
+          symbol,
+          direction,
+          rr,
+          r_multiple,
+          session: session || null,
+          strategy: strategy || null,
+          mistakes: mistakes.length ? mistakes : null,
+          notes: notes || null
+        };
+
+        const { error } = await sb.from("trades").insert(payload);
+        if (error){
+          modalMsg.textContent = `save failed: ${error.message}`;
+          return;
+        }
+
+        modalMsg.textContent = "saved";
+        closeTradeModal();
+
+        await loadTrades();
+        // make sure analytics updates if user is on it
+        renderAnalytics();
+
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "save trade";
+      }
+    }
+
+    // === UI WIRING ===
+    function wireUI(){
+      document.getElementById("addTradeBtn").addEventListener("click", openTradeModal);
+      document.getElementById("closeModalBtn").addEventListener("click", closeTradeModal);
+      document.getElementById("modalBackdrop").addEventListener("click", (e)=>{
+        if (e.target === modalBackdrop) closeTradeModal();
+      });
+
+      document.getElementById("saveBtn").addEventListener("click", saveTrade);
+
+      document.getElementById("clearBtn").addEventListener("click", ()=>{
+        modalMsg.textContent = "";
+        document.getElementById("t_symbol").value = "";
+        document.getElementById("t_rr").value = "";
+        document.getElementById("t_r").value = "";
+        document.getElementById("t_session").value = "";
+        document.getElementById("t_strategy").value = "";
+        document.getElementById("t_mistakes").value = "";
+        document.getElementById("t_notes").value = "";
+      });
+
+      document.getElementById("refreshBtn").addEventListener("click", async ()=>{
+        await loadTrades();
+      });
 
       document.getElementById("toggleThemeBtn").addEventListener("click", ()=>{
         const cur = document.documentElement.getAttribute("data-theme") || "dark";
         applyTheme(cur === "dark" ? "light" : "dark");
+        // rerender charts after theme change
+        renderAnalytics();
       });
 
       document.getElementById("logoutBtn").addEventListener("click", async ()=>{
@@ -1311,36 +1694,130 @@
         window.location.href = "login.html";
       });
 
-      // add trade buttons
-      document.getElementById("addTradeBtn1").addEventListener("click", openTradeModal);
-      document.getElementById("addTradeBtn2").addEventListener("click", openTradeModal);
-      document.getElementById("closeTradeModal").addEventListener("click", closeTradeModal);
-      document.getElementById("cancelTradeBtn").addEventListener("click", closeTradeModal);
-      document.getElementById("tradeBackdrop").addEventListener("click", (e)=>{
-        if (e.target.id === "tradeBackdrop") closeTradeModal();
+      // rerender charts on resize
+      window.addEventListener("resize", ()=>{
+        if (document.getElementById("page-analytics").classList.contains("active")){
+          renderAnalytics();
+        }
       });
-      document.getElementById("saveTradeBtn").addEventListener("click", saveTrade);
-
-      // refresh buttons
-      document.getElementById("refreshBtn1").addEventListener("click", fullRefresh);
-      document.getElementById("refreshBtn2").addEventListener("click", fullRefresh);
-
-      // journal
-      loadJournal();
-      document.getElementById("journalSaveBtn").addEventListener("click", saveJournal);
-
-      // auth
-      const u = await requireAuth();
-      if (!u) return;
-
-      // route default
-      if (!location.hash) location.hash = "focus";
-      renderRoute();
-
-      await fullRefresh();
     }
 
-    init();
+    // === HELPERS ===
+    function fmtDate(d){
+      const opts = { day:"2-digit", month:"short", year:"numeric" };
+      return d.toLocaleDateString(undefined, opts);
+    }
+    function fmtDateTime(d){
+      const date = fmtDate(d);
+      const hh = String(d.getHours()).padStart(2,"0");
+      const mm = String(d.getMinutes()).padStart(2,"0");
+      return `${date} ${hh}:${mm}`;
+    }
+    function formatNumber(n){
+      if (!Number.isFinite(n)) return "—";
+      const abs = Math.abs(n);
+      if (abs >= 100) return n.toFixed(0);
+      if (abs >= 10) return n.toFixed(1);
+      return n.toFixed(2);
+    }
+    function escapeHtml(s){
+      return String(s)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    function roundRect(ctx, x, y, w, h, r){
+      const rr = Math.min(r, w/2, h/2);
+      ctx.beginPath();
+      ctx.moveTo(x+rr, y);
+      ctx.arcTo(x+w, y, x+w, y+h, rr);
+      ctx.arcTo(x+w, y+h, x, y+h, rr);
+      ctx.arcTo(x, y+h, x, y, rr);
+      ctx.arcTo(x, y, x+w, y, rr);
+      ctx.closePath();
+    }
+
+    // very small color mixing utility (expects hex or rgba or css color from computed vars)
+    function colorMix(c1, c2, t){
+      // fallback simple: return c1 if parsing fails
+      const a = parseColor(c1);
+      const b = parseColor(c2);
+      if (!a || !b) return c1;
+      const r = Math.round(a.r + (b.r - a.r) * t);
+      const g = Math.round(a.g + (b.g - a.g) * t);
+      const b2 = Math.round(a.b + (b.b - a.b) * t);
+      const aa = (a.a + (b.a - a.a) * t);
+      return `rgba(${r},${g},${b2},${aa})`;
+    }
+
+    function parseColor(c){
+      c = String(c).trim();
+      if (!c) return null;
+
+      // hex
+      if (c[0] === "#"){
+        const hex = c.slice(1);
+        if (hex.length === 3){
+          const r = parseInt(hex[0]+hex[0],16);
+          const g = parseInt(hex[1]+hex[1],16);
+          const b = parseInt(hex[2]+hex[2],16);
+          return {r,g,b,a:1};
+        }
+        if (hex.length === 6){
+          const r = parseInt(hex.slice(0,2),16);
+          const g = parseInt(hex.slice(2,4),16);
+          const b = parseInt(hex.slice(4,6),16);
+          return {r,g,b,a:1};
+        }
+      }
+
+      // rgba/ rgb
+      const m = c.match(/rgba?\(([^)]+)\)/i);
+      if (m){
+        const parts = m[1].split(",").map(x=>x.trim());
+        const r = Number(parts[0]);
+        const g = Number(parts[1]);
+        const b = Number(parts[2]);
+        const a = parts[3] !== undefined ? Number(parts[3]) : 1;
+        if ([r,g,b,a].some(x=>Number.isNaN(x))) return null;
+        return {r,g,b,a};
+      }
+
+      // try computed via canvas
+      try{
+        const tmp = document.createElement("canvas").getContext("2d");
+        tmp.fillStyle = c;
+        const v = tmp.fillStyle;
+        const mm = v.match(/rgba?\(([^)]+)\)/i);
+        if (mm){
+          const parts = mm[1].split(",").map(x=>x.trim());
+          const r = Number(parts[0]);
+          const g = Number(parts[1]);
+          const b = Number(parts[2]);
+          const a = parts[3] !== undefined ? Number(parts[3]) : 1;
+          if ([r,g,b,a].some(x=>Number.isNaN(x))) return null;
+          return {r,g,b,a};
+        }
+      } catch(e){}
+
+      return null;
+    }
+
+    // === INIT ===
+    (async function init(){
+      initTheme();
+      initRouting();
+      wireUI();
+
+      const ok = await requireAuth();
+      if (!ok) return;
+
+      await loadTrades();
+      setActiveRoute(location.hash.replace("#","") || "focus");
+    })();
   </script>
 </body>
 </html>
