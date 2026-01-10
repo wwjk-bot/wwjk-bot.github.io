@@ -16,9 +16,9 @@
       --text:#eaf0ff;
       --muted:#aab6d2;
 
-      --accent:#7c3aed;        /* purple */
-      --accent2:#22c55e;       /* green */
-      --danger:#ef4444;        /* red */
+      --accent:#7c3aed;
+      --accent2:#22c55e;
+      --danger:#ef4444;
       --warn:#f59e0b;
 
       --sidebarText:#e8eef7;
@@ -339,6 +339,22 @@
       padding:14px 10px;
     }
 
+    .dangerBtn{
+      padding:8px 10px;
+      border-radius:12px;
+      border:1px solid color-mix(in srgb, var(--danger) 40%, var(--stroke) 60%);
+      background: color-mix(in srgb, var(--danger) 16%, transparent);
+      color:var(--text);
+      font-weight:950;
+      cursor:pointer;
+      transition: transform .08s ease, background .18s ease, border-color .18s ease;
+    }
+    .dangerBtn:hover{
+      transform: translateY(-1px);
+      background: color-mix(in srgb, var(--danger) 22%, transparent);
+      border-color: color-mix(in srgb, var(--danger) 55%, var(--stroke) 45%);
+    }
+
     /* coach card */
     .coachText{
       color:var(--text);
@@ -625,7 +641,7 @@
                           <th></th>
                         </tr>
                       </thead>
-                      <tbody id="allTradesBody">
+                      <tbody id="recentBody">
                         <tr><td class="emptyRow" colspan="8">loading…</td></tr>
                       </tbody>
                     </table>
@@ -765,10 +781,11 @@
                         <th>r</th>
                         <th>session</th>
                         <th>strategy</th>
+                        <th></th>
                       </tr>
                     </thead>
                     <tbody id="allTradesBody">
-                      <tr><td class="emptyRow" colspan="7">loading…</td></tr>
+                      <tr><td class="emptyRow" colspan="8">loading…</td></tr>
                     </tbody>
                   </table>
                 </div>
@@ -901,12 +918,11 @@
     // === CONFIG ===
     const SUPABASE_URL = "https://oucikdsngvdhimquclcz.supabase.co";
     const SUPABASE_ANON_KEY = "sb_publishable_gMETcAB_TRLGd8hqx48KRA_yXxE7U6v";
-
     const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     // === STATE ===
     let user = null;
-    let trades = []; // full list for analytics + tables
+    let trades = [];
 
     // === THEME ===
     function applyTheme(theme){
@@ -924,29 +940,22 @@
     function setActiveRoute(route){
       if (!routes.includes(route)) route = "focus";
 
-      // show/hide pages
       routes.forEach(r=>{
         const page = document.getElementById(`page-${r}`);
         if (page) page.classList.toggle("active", r === route);
       });
 
-      // sidebar active
       document.querySelectorAll(".navBtn").forEach(btn=>{
         btn.classList.toggle("active", btn.dataset.route === route);
       });
 
-      // update hash without jump
       if (location.hash.replace("#","") !== route){
         history.replaceState(null, "", `#${route}`);
       }
 
-      // repaint charts when analytics visible
-      if (route === "analytics"){
-        renderAnalytics();
-      }
-      if (route === "trades"){
-        renderTradesTable();
-      }
+      if (route === "analytics") renderAnalytics();
+      if (route === "trades") renderTradesTable();
+      if (route === "focus") renderFocus();
     }
 
     function initRouting(){
@@ -959,21 +968,17 @@
       });
 
       document.querySelectorAll(".navBtn").forEach(btn=>{
-        btn.addEventListener("click", ()=>{
-          setActiveRoute(btn.dataset.route);
-        });
+        btn.addEventListener("click", ()=> setActiveRoute(btn.dataset.route));
       });
     }
 
     // === AUTH GUARD ===
     async function requireAuth(){
       const { data, error } = await sb.auth.getSession();
-      if (error) {
-        console.error(error);
-      }
+      if (error) console.error(error);
+
       const session = data?.session;
       if (!session){
-        // redirect to login page you already have
         window.location.href = "login.html";
         return false;
       }
@@ -994,7 +999,7 @@
 
       const dateEl = document.getElementById("t_date");
       dateEl.value = iso;
-      dateEl.max = iso; // prevents future dates in picker
+      dateEl.max = iso;
 
       document.getElementById("t_symbol").value = "";
       document.getElementById("t_direction").value = "long";
@@ -1017,10 +1022,15 @@
     async function loadTrades(){
       if (!user) return;
 
-      // load recent 500 trades (enough for charts right now)
+      // show loading states
+      const recentBody = document.getElementById("recentBody");
+      const allBody = document.getElementById("allTradesBody");
+      if (recentBody) recentBody.innerHTML = `<tr><td class="emptyRow" colspan="8">loading…</td></tr>`;
+      if (allBody) allBody.innerHTML = `<tr><td class="emptyRow" colspan="8">loading…</td></tr>`;
+
       const { data, error } = await sb
         .from("trades")
-        .select("id, trade_date, symbol, direction, rr, r_multiple, notes, session, strategy, mistakes, created_at")
+        .select("id, trade_date, symbol, direction, rr, r_multiple, notes, session, strategy, mistakes, created_at, user_id")
         .eq("user_id", user.id)
         .order("trade_date", { ascending: false })
         .limit(500);
@@ -1030,8 +1040,13 @@
         document.getElementById("recentPill").classList.remove("ok");
         document.getElementById("recentPill").classList.add("warn");
         document.getElementById("recentPill").textContent = "error";
-        document.getElementById("recentBody").innerHTML =
-          `<tr><td class="emptyRow" colspan="5">error loading trades: ${escapeHtml(error.message)}</td></tr>`;
+
+        if (recentBody){
+          recentBody.innerHTML = `<tr><td class="emptyRow" colspan="8">error loading trades: ${escapeHtml(error.message)}</td></tr>`;
+        }
+        if (allBody){
+          allBody.innerHTML = `<tr><td class="emptyRow" colspan="8">error loading trades: ${escapeHtml(error.message)}</td></tr>`;
+        }
         return;
       }
 
@@ -1058,17 +1073,37 @@
       };
     }
 
+    // === DELETE TRADE ===
+    async function deleteTrade(id){
+      if (!id) return;
+      const ok = confirm("delete this trade");
+      if (!ok) return;
+
+      const { error } = await sb
+        .from("trades")
+        .delete()
+        .eq("id", id)
+        .eq("user_id", user.id);
+
+      if (error){
+        alert("delete failed: " + error.message);
+        return;
+      }
+
+      await loadTrades();
+    }
+
     // === RENDER: FOCUS ===
     function renderFocus(){
       const recent = trades.slice(0, 8);
 
-      // stats
       document.getElementById("s_loaded").textContent = String(recent.length);
-      const wins = recent.filter(x => (x.r_multiple ?? 0) > 0).length;
-      const decided = recent.filter(x => (x.r_multiple ?? 0) !== 0 && x.r_multiple !== null).length;
-      const winRate = decided ? (wins / decided) : 0;
 
-      document.getElementById("s_winrate").textContent = decided ? `${(winRate*100).toFixed(1)}%` : "—";
+      const wins = recent.filter(x => (x.r_multiple ?? 0) > 0).length;
+      const decided = recent.filter(x => (x.r_multiple ?? null) !== null).length;
+      const decidedNonNull = recent.filter(x => x.r_multiple !== null && Number.isFinite(x.r_multiple)).length;
+      const winRate = decidedNonNull ? (wins / decidedNonNull) : 0;
+      document.getElementById("s_winrate").textContent = decidedNonNull ? `${(winRate*100).toFixed(1)}%` : "—";
 
       const totalR = recent.reduce((a,x)=> a + (Number.isFinite(x.r_multiple) ? x.r_multiple : 0), 0);
       document.getElementById("s_totalr").textContent = formatNumber(totalR);
@@ -1077,17 +1112,21 @@
       const avgRR = rrVals.length ? rrVals.reduce((a,b)=>a+b,0)/rrVals.length : null;
       document.getElementById("s_avgrr").textContent = avgRR === null ? "—" : formatNumber(avgRR);
 
-      // table
       const body = document.getElementById("recentBody");
+      if (!body) return;
+
       if (!recent.length){
-        body.innerHTML = `<tr><td class="emptyRow" colspan="5">no trades yet, add your first one</td></tr>`;
+        body.innerHTML = `<tr><td class="emptyRow" colspan="8">no trades yet, add your first one</td></tr>`;
       } else {
         body.innerHTML = recent.map(row=>{
-          const date = row.dt ? fmtDate(row.dt) : "—";
+          const date = row.dt ? fmtDateTime(row.dt) : "—";
           const sym = escapeHtml(row.symbol || "—");
           const dir = escapeHtml(row.direction || "—");
           const rr = row.rr === null ? "—" : formatNumber(row.rr);
           const r = row.r_multiple === null ? "—" : formatNumber(row.r_multiple);
+          const session = escapeHtml(row.session || "—");
+          const strategy = escapeHtml(row.strategy || "—");
+
           return `
             <tr>
               <td>${date}</td>
@@ -1095,59 +1134,68 @@
               <td>${dir}</td>
               <td>${rr}</td>
               <td>${r}</td>
+              <td>${session}</td>
+              <td>${strategy}</td>
+              <td style="text-align:right;">
+                <button class="dangerBtn" data-del="${row.id}">delete</button>
+              </td>
             </tr>
           `;
         }).join("");
+
+        body.querySelectorAll("button[data-del]").forEach(btn=>{
+          btn.addEventListener("click", ()=> deleteTrade(btn.getAttribute("data-del")));
+        });
       }
 
-      // pills
       document.getElementById("recentPill").textContent = "ready";
       document.getElementById("focusStatus").textContent = "ready";
     }
 
     // === RENDER: TRADES TABLE ===
-function renderTradesTable(){
-  const body = document.getElementById("allTradesBody");
-  document.getElementById("tradesCountBadge").textContent = String(trades.length);
+    function renderTradesTable(){
+      const body = document.getElementById("allTradesBody");
+      document.getElementById("tradesCountBadge").textContent = String(trades.length);
 
-  if (!trades.length){
-    body.innerHTML = `<tr><td class="emptyRow" colspan="8">no trades yet</td></tr>`;
-    return;
-  }
+      if (!body) return;
 
-  body.innerHTML = trades.map(row=>{
-    const date = row.dt ? fmtDateTime(row.dt) : "—";
-    const sym = escapeHtml(row.symbol || "—");
-    const dir = escapeHtml(row.direction || "—");
-    const rr = row.rr === null ? "—" : formatNumber(row.rr);
-    const r = row.r_multiple === null ? "—" : formatNumber(row.r_multiple);
-    const session = escapeHtml(row.session || "—");
-    const strategy = escapeHtml(row.strategy || "—");
+      if (!trades.length){
+        body.innerHTML = `<tr><td class="emptyRow" colspan="8">no trades yet</td></tr>`;
+        return;
+      }
 
-    return `
-      <tr>
-        <td>${date}</td>
-        <td>${sym}</td>
-        <td>${dir}</td>
-        <td>${rr}</td>
-        <td>${r}</td>
-        <td>${session}</td>
-        <td>${strategy}</td>
-        <td style="text-align:right;">
-          <button class="dangerBtn" data-del="${row.id}">delete</button>
-        </td>
-      </tr>
-    `;
-  }).join("");
+      body.innerHTML = trades.map(row=>{
+        const date = row.dt ? fmtDateTime(row.dt) : "—";
+        const sym = escapeHtml(row.symbol || "—");
+        const dir = escapeHtml(row.direction || "—");
+        const rr = row.rr === null ? "—" : formatNumber(row.rr);
+        const r = row.r_multiple === null ? "—" : formatNumber(row.r_multiple);
+        const session = escapeHtml(row.session || "—");
+        const strategy = escapeHtml(row.strategy || "—");
 
-  body.querySelectorAll("button[data-del]").forEach(btn=>{
-    btn.addEventListener("click", ()=> deleteTrade(btn.getAttribute("data-del")));
-  });
-}
+        return `
+          <tr>
+            <td>${date}</td>
+            <td>${sym}</td>
+            <td>${dir}</td>
+            <td>${rr}</td>
+            <td>${r}</td>
+            <td>${session}</td>
+            <td>${strategy}</td>
+            <td style="text-align:right;">
+              <button class="dangerBtn" data-del="${row.id}">delete</button>
+            </td>
+          </tr>
+        `;
+      }).join("");
+
+      body.querySelectorAll("button[data-del]").forEach(btn=>{
+        btn.addEventListener("click", ()=> deleteTrade(btn.getAttribute("data-del")));
+      });
+    }
 
     // === RENDER: ANALYTICS ===
     function renderAnalytics(){
-      // profit factor from r_multiple
       const rVals = trades
         .map(t => t.r_multiple)
         .filter(v => Number.isFinite(v));
@@ -1168,8 +1216,7 @@ function renderTradesTable(){
       document.getElementById("a_awal").textContent =
         (avgWin === null || avgLoss === null) ? "—" : `${formatNumber(avgWin)} / ${formatNumber(avgLoss)}`;
 
-      // best hour by avg r
-      const byHour = new Map(); // hour -> {sum,count}
+      const byHour = new Map();
       trades.forEach(t=>{
         if (!t.dt || !Number.isFinite(t.r_multiple)) return;
         const h = t.dt.getHours();
@@ -1191,14 +1238,13 @@ function renderTradesTable(){
       document.getElementById("a_besthour").textContent = bestHour === null ? "—" : `${String(bestHour).padStart(2,"0")}:00`;
       document.getElementById("a_besthour_hint").textContent = bestHour === null ? "avg r" : `avg r ${formatNumber(bestAvg)}`;
 
-      // charts
       drawHourlyCanvas(byHour);
       drawEquityCanvas();
       drawDonutCanvas(wins.length, losses.length, bes.length);
       drawCalendarCanvas();
     }
 
-    // === CHART HELPERS (no external libs) ===
+    // === CHART HELPERS ===
     function prepCanvas(id){
       const c = document.getElementById(id);
       if (!c) return null;
@@ -1245,7 +1291,6 @@ function renderTradesTable(){
       ctx.clearRect(0,0,w,h);
       drawGlassGrid(ctx,w,h);
 
-      // bars (sum r per hour)
       const arr = [];
       for (let i=0;i<24;i++){
         const v = byHour.get(i);
@@ -1258,7 +1303,6 @@ function renderTradesTable(){
       const innerW = w - pad*2;
       const barW = innerW / 24;
 
-      // axis line
       ctx.save();
       ctx.strokeStyle = colorVar("--stroke2");
       ctx.globalAlpha = 0.9;
@@ -1280,7 +1324,6 @@ function renderTradesTable(){
         const isPos = b.val >= 0;
         const col = isPos ? colorVar("--accent") : colorVar("--danger");
 
-        // bar
         roundRect(ctx, x, y, bw, hh, 8);
         const grad = ctx.createLinearGradient(x,y,x,y+hh);
         grad.addColorStop(0, colorMix(col, "#ffffff", 0.12));
@@ -1289,7 +1332,6 @@ function renderTradesTable(){
         ctx.globalAlpha = 0.92;
         ctx.fill();
 
-        // glow
         ctx.globalAlpha = 0.20;
         ctx.shadowColor = col;
         ctx.shadowBlur = 18;
@@ -1307,7 +1349,6 @@ function renderTradesTable(){
       ctx.clearRect(0,0,w,h);
       drawGlassGrid(ctx,w,h);
 
-      // sort by date asc
       const sorted = [...trades]
         .filter(t => t.dt && Number.isFinite(t.r_multiple))
         .sort((a,b)=> a.dt - b.dt);
@@ -1341,7 +1382,6 @@ function renderTradesTable(){
         p.y = pad + (1 - ((p.y - minY)/span))*innerH;
       });
 
-      // axis baseline subtle
       ctx.save();
       ctx.strokeStyle = colorVar("--stroke2");
       ctx.globalAlpha = 0.85;
@@ -1351,7 +1391,6 @@ function renderTradesTable(){
       ctx.stroke();
       ctx.restore();
 
-      // gradient fill under line
       ctx.save();
       ctx.beginPath();
       ctx.moveTo(pts[0].x, pts[0].y);
@@ -1368,7 +1407,6 @@ function renderTradesTable(){
       ctx.fill();
       ctx.restore();
 
-      // line
       ctx.save();
       ctx.lineWidth = 3;
       ctx.lineJoin = "round";
@@ -1384,13 +1422,11 @@ function renderTradesTable(){
       for (let i=1;i<pts.length;i++) ctx.lineTo(pts[i].x, pts[i].y);
       ctx.stroke();
 
-      // glow
       ctx.shadowColor = colorVar("--accent");
       ctx.shadowBlur = 16;
       ctx.stroke();
       ctx.restore();
 
-      // last point
       const last = pts[pts.length-1];
       ctx.save();
       ctx.fillStyle = colorVar("--accent2");
@@ -1415,12 +1451,11 @@ function renderTradesTable(){
       const thick = Math.max(10, r*0.28);
 
       const arcs = [
-        {label:"win", val: winCount, color: colorVar("--accent2")},
-        {label:"loss", val: lossCount, color: colorVar("--danger")},
-        {label:"be", val: beCount, color: colorVar("--accent")}
+        {val: winCount, color: colorVar("--accent2")},
+        {val: lossCount, color: colorVar("--danger")},
+        {val: beCount, color: colorVar("--accent")}
       ];
 
-      // base ring
       ctx.save();
       ctx.strokeStyle = colorVar("--stroke2");
       ctx.globalAlpha = 0.9;
@@ -1444,7 +1479,6 @@ function renderTradesTable(){
         ctx.arc(cx, cy, r, start, start + ang);
         ctx.stroke();
 
-        // glow
         ctx.shadowColor = seg.color;
         ctx.shadowBlur = 14;
         ctx.stroke();
@@ -1453,7 +1487,6 @@ function renderTradesTable(){
         start += ang;
       });
 
-      // center text
       ctx.save();
       ctx.fillStyle = colorVar("--text");
       ctx.globalAlpha = 0.92;
@@ -1475,7 +1508,6 @@ function renderTradesTable(){
       ctx.clearRect(0,0,w,h);
       drawGlassGrid(ctx,w,h);
 
-      // build totals per day (YYYY-MM-DD) from r_multiple
       const map = new Map();
       trades.forEach(t=>{
         if (!t.dt || !Number.isFinite(t.r_multiple)) return;
@@ -1497,7 +1529,6 @@ function renderTradesTable(){
       const cellW = (w - pad*2 - cellGap*(cols-1)) / cols;
       const cellH = (h - pad*2 - cellGap*(rows-1)) / rows;
 
-      // max abs for heat scaling
       let maxAbs = 1;
       for (let d=1; d<=last.getDate(); d++){
         const dt = new Date(year, month, d);
@@ -1506,7 +1537,6 @@ function renderTradesTable(){
         maxAbs = Math.max(maxAbs, Math.abs(val));
       }
 
-      // day of week offset (0 sun)
       const offset = first.getDay();
 
       for (let i=0;i<rows*cols;i++){
@@ -1518,7 +1548,6 @@ function renderTradesTable(){
         const dayNum = i - offset + 1;
         const inMonth = dayNum >= 1 && dayNum <= last.getDate();
 
-        // cell bg
         const base = colorMix(colorVar("--panel"), "transparent", 0.35);
         ctx.save();
         roundRect(ctx, x, y, cellW, cellH, 14);
@@ -1526,7 +1555,6 @@ function renderTradesTable(){
         ctx.globalAlpha = 0.85;
         ctx.fill();
 
-        // stroke
         ctx.globalAlpha = 0.85;
         ctx.strokeStyle = colorVar("--stroke");
         ctx.lineWidth = 1;
@@ -1539,7 +1567,6 @@ function renderTradesTable(){
         const key = `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,"0")}-${String(dt.getDate()).padStart(2,"0")}`;
         const val = map.get(key) || 0;
 
-        // heat overlay
         const strength = Math.min(1, Math.abs(val)/maxAbs);
         if (strength > 0){
           const col = val >= 0 ? colorVar("--accent2") : colorVar("--danger");
@@ -1551,7 +1578,6 @@ function renderTradesTable(){
           ctx.restore();
         }
 
-        // day label
         ctx.save();
         ctx.fillStyle = colorVar("--text");
         ctx.globalAlpha = 0.90;
@@ -1559,7 +1585,6 @@ function renderTradesTable(){
         ctx.fillText(String(dayNum), x + 10, y + 18);
         ctx.restore();
 
-        // value
         if (val !== 0){
           ctx.save();
           ctx.fillStyle = colorVar("--text");
@@ -1598,7 +1623,6 @@ function renderTradesTable(){
           return;
         }
 
-        // block future dates
         const chosen = new Date(trade_date).getTime();
         const now = Date.now();
         if (chosen > now){
@@ -1623,7 +1647,6 @@ function renderTradesTable(){
           return;
         }
 
-        // apply result to sign (user enters absolute)
         if (r_multiple !== null && Number.isFinite(r_multiple)){
           const absR = Math.abs(r_multiple);
           if (result === "win") r_multiple = absR;
@@ -1658,7 +1681,6 @@ function renderTradesTable(){
         closeTradeModal();
 
         await loadTrades();
-        // make sure analytics updates if user is on it
         renderAnalytics();
 
       } finally {
@@ -1688,14 +1710,11 @@ function renderTradesTable(){
         document.getElementById("t_notes").value = "";
       });
 
-      document.getElementById("refreshBtn").addEventListener("click", async ()=>{
-        await loadTrades();
-      });
+      document.getElementById("refreshBtn").addEventListener("click", async ()=>{ await loadTrades(); });
 
       document.getElementById("toggleThemeBtn").addEventListener("click", ()=>{
         const cur = document.documentElement.getAttribute("data-theme") || "dark";
         applyTheme(cur === "dark" ? "light" : "dark");
-        // rerender charts after theme change
         renderAnalytics();
       });
 
@@ -1704,7 +1723,6 @@ function renderTradesTable(){
         window.location.href = "login.html";
       });
 
-      // rerender charts on resize
       window.addEventListener("resize", ()=>{
         if (document.getElementById("page-analytics").classList.contains("active")){
           renderAnalytics();
@@ -1750,9 +1768,7 @@ function renderTradesTable(){
       ctx.closePath();
     }
 
-    // very small color mixing utility (expects hex or rgba or css color from computed vars)
     function colorMix(c1, c2, t){
-      // fallback simple: return c1 if parsing fails
       const a = parseColor(c1);
       const b = parseColor(c2);
       if (!a || !b) return c1;
@@ -1767,7 +1783,6 @@ function renderTradesTable(){
       c = String(c).trim();
       if (!c) return null;
 
-      // hex
       if (c[0] === "#"){
         const hex = c.slice(1);
         if (hex.length === 3){
@@ -1784,7 +1799,6 @@ function renderTradesTable(){
         }
       }
 
-      // rgba/ rgb
       const m = c.match(/rgba?\(([^)]+)\)/i);
       if (m){
         const parts = m[1].split(",").map(x=>x.trim());
@@ -1796,7 +1810,6 @@ function renderTradesTable(){
         return {r,g,b,a};
       }
 
-      // try computed via canvas
       try{
         const tmp = document.createElement("canvas").getContext("2d");
         tmp.fillStyle = c;
