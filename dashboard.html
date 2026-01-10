@@ -1,392 +1,326 @@
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Sessionly - dashboard</title>
-
+  <meta name="description" content="Sessionly dashboard" />
   <style>
     :root{
-      --bg:#0b0f14;
-      --panel:#0f1521;
-      --card:#111826;
+      --bg:#070a10;
+      --panel:#0b1220;
+      --panel2:#0a1324;
+      --card: rgba(14,22,38,.92);
+      --card2: rgba(10,18,32,.75);
       --text:#e8eef7;
       --muted:#a8b3c5;
-      --accent:#7a3df0;
-      --line:#22304a;
-      --shadow: 0 20px 60px rgba(0,0,0,.45);
+      --line: rgba(70,90,135,.32);
+      --line2: rgba(70,90,135,.20);
+
+      --accent:#7c4dff;
+      --accent2:#3ddc97;
+
+      --shadow: 0 18px 70px rgba(0,0,0,.55);
       --radius:18px;
+      --radius2:14px;
     }
 
-    html[data-theme="light"]{
-      --bg:#f6f7fb;
+    /* light theme overrides */
+    [data-theme="light"]{
+      --bg:#f5f7ff;
       --panel:#ffffff;
-      --card:#ffffff;
-      --text:#0b0f14;
-      --muted:#4b5567;
-      --accent:#7a3df0;
-      --line:#e4e8f2;
-      --shadow: 0 18px 40px rgba(10,15,20,.10);
+      --panel2:#f6f8ff;
+      --card: rgba(255,255,255,.92);
+      --card2: rgba(255,255,255,.76);
+      --text:#0b1220;
+      --muted:#4d5b72;
+      --line: rgba(20,40,80,.14);
+      --line2: rgba(20,40,80,.10);
+      --shadow: 0 18px 70px rgba(10,20,60,.14);
     }
 
     *{box-sizing:border-box}
+    html,body{height:100%}
     body{
       margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      color:var(--text);
       background:
-        radial-gradient(1200px 600px at 15% 0%, rgba(122,61,240,.10), transparent 60%),
-        radial-gradient(900px 500px at 85% 20%, rgba(122,61,240,.07), transparent 60%),
+        radial-gradient(1200px 700px at 18% 0%, color-mix(in srgb, var(--accent) 20%, transparent), transparent 60%),
+        radial-gradient(900px 520px at 78% 14%, color-mix(in srgb, var(--accent2) 12%, transparent), transparent 60%),
+        radial-gradient(1100px 700px at 50% 100%, rgba(0,0,0,.25), transparent 65%),
         var(--bg);
-      color:var(--text);
     }
 
-    a{color:inherit;text-decoration:none}
-    button{font-family:inherit}
-
-    .app{
-      display:grid;
-      grid-template-columns: 260px 1fr;
+    a{color:inherit}
+    .layout{
       min-height:100vh;
+      display:grid;
+      grid-template-columns: 280px 1fr;
     }
     @media (max-width: 980px){
-      .app{grid-template-columns:1fr;}
+      .layout{grid-template-columns:1fr;}
+      .sidebar{position:sticky; top:0; z-index:30;}
     }
 
-    /* sidebar */
     .sidebar{
-      background: color-mix(in srgb, var(--panel) 92%, transparent);
-      border-right:1px solid color-mix(in srgb, var(--line) 90%, transparent);
-      padding:18px;
-      position:sticky;
-      top:0;
-      height:100vh;
-    }
-    @media (max-width: 980px){
-      .sidebar{
-        position:relative;
-        height:auto;
-        border-right:none;
-        border-bottom:1px solid color-mix(in srgb, var(--line) 90%, transparent);
-      }
+      padding:18px 16px;
+      background: linear-gradient(180deg, color-mix(in srgb, var(--panel) 92%, transparent), color-mix(in srgb, var(--panel) 78%, transparent));
+      border-right: 1px solid var(--line2);
+      backdrop-filter: blur(10px);
     }
 
-    .brand{
-      display:flex; align-items:center; gap:10px;
-      font-weight:950;
-      letter-spacing:.2px;
-      margin-bottom:16px;
+    .brandRow{display:flex; align-items:center; gap:10px; margin-bottom:12px;}
+    .logoDot{
+      width:12px; height:12px; border-radius:999px;
+      background: var(--accent);
+      box-shadow: 0 0 0 7px color-mix(in srgb, var(--accent) 18%, transparent);
     }
-    .dot{
-      width:10px;height:10px;border-radius:999px;background:var(--accent);
-      box-shadow:0 0 0 6px color-mix(in srgb, var(--accent) 18%, transparent);
-    }
-
-    .who{
-      font-size:12px;
-      color:var(--muted);
-      line-height:1.35;
-      margin:0 0 14px 0;
-      min-height:16px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-
+    .brand{font-weight:900; letter-spacing:.2px;}
+    .signed{color:var(--muted); font-size:13px; margin:6px 0 16px 0; line-height:1.35;}
     .nav{
-      display:flex;
-      flex-direction:column;
-      gap:6px;
-      margin-top:8px;
-    }
-
-    .navbtn{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      padding:10px 12px;
-      border-radius:14px;
-      border:1px solid transparent;
-      background: transparent;
-      color:var(--text);
-      cursor:pointer;
-      font-weight:900;
-      letter-spacing:.1px;
-    }
-
-    .navbtn:hover{
-      background: color-mix(in srgb, var(--bg) 55%, transparent);
-      border-color: color-mix(in srgb, var(--line) 70%, transparent);
-    }
-
-    .navbtn.active{
-      background: color-mix(in srgb, var(--accent) 14%, transparent);
-      border-color: color-mix(in srgb, var(--accent) 35%, var(--line));
-    }
-
-    .badge{
-      font-size:11px;
-      font-weight:950;
-      color:var(--muted);
-      padding:4px 8px;
-      border-radius:999px;
-      border:1px solid color-mix(in srgb, var(--line) 90%, transparent);
-      background: color-mix(in srgb, var(--bg) 55%, transparent);
-    }
-
-    .sideActions{
-      display:flex;
-      gap:10px;
-      margin-top:16px;
-      flex-wrap:wrap;
-    }
-
-    .btn{
-      appearance:none;
-      border:1px solid color-mix(in srgb, var(--line) 90%, transparent);
-      background: color-mix(in srgb, var(--bg) 55%, transparent);
-      color:var(--text);
-      padding:10px 12px;
-      border-radius:14px;
-      font-weight:950;
-      cursor:pointer;
-      flex:1;
-      min-width:110px;
-    }
-    .btn.primary{
-      background:var(--accent);
-      color:#fff;
-      border-color:transparent;
-    }
-    .btn:disabled{opacity:.6;cursor:not-allowed;}
-
-    .sideFooter{
-      margin-top:14px;
-      font-size:12px;
-      color:var(--muted);
-      line-height:1.4;
-    }
-
-    /* main */
-    .main{
-      padding:22px;
-    }
-
-    .wrap{
-      max-width:1120px;
-      margin:0 auto;
-    }
-
-    .card{
-      background: color-mix(in srgb, var(--card) 92%, transparent);
-      border:1px solid color-mix(in srgb, var(--line) 90%, transparent);
-      border-radius:var(--radius);
-      padding:18px;
-      box-shadow:var(--shadow);
-    }
-
-    .toprow{
-      display:flex;
-      align-items:flex-end;
-      justify-content:space-between;
-      gap:12px;
-      flex-wrap:wrap;
+      display:flex; flex-direction:column; gap:8px;
       margin-bottom:14px;
     }
 
-    h1{margin:0;font-size:26px;letter-spacing:-.2px;}
-    .sub{color:var(--muted);font-size:14px;line-height:1.45;margin-top:6px;}
+    .navBtn{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:12px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--line2);
+      background: color-mix(in srgb, var(--panel2) 78%, transparent);
+      text-decoration:none;
+      font-weight:800;
+      letter-spacing:.2px;
+      cursor:pointer;
+      transition: transform .12s ease, background .12s ease, border-color .12s ease;
+    }
+    .navBtn:hover{ transform: translateY(-1px); border-color: var(--line); }
+    .navBtn.active{
+      background: color-mix(in srgb, var(--accent) 18%, var(--panel2));
+      border-color: color-mix(in srgb, var(--accent) 40%, var(--line));
+      box-shadow: 0 10px 30px rgba(0,0,0,.20);
+    }
+    .tag{
+      font-size:12px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--line2);
+      color: color-mix(in srgb, var(--text) 85%, var(--muted));
+      background: color-mix(in srgb, var(--bg) 40%, transparent);
+      font-weight:800;
+    }
 
-    .stats{
+    .sideActions{display:flex; flex-direction:column; gap:10px; margin-top:10px;}
+    .sideAction{
+      width:100%;
+      border-radius: 14px;
+      padding:12px 12px;
+      font-weight:900;
+      border:1px solid var(--line2);
+      background: transparent;
+      color: var(--text);
+      cursor:pointer;
+      transition: transform .12s ease, border-color .12s ease, background .12s ease;
+    }
+    .sideAction:hover{ transform: translateY(-1px); border-color: var(--line); background: color-mix(in srgb, var(--panel2) 35%, transparent); }
+
+    .slogan{margin-top:14px; color:var(--muted); font-size:13px; line-height:1.4;}
+
+    .main{
+      padding:22px 22px 40px 22px;
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
+    }
+
+    .shell{
+      width:min(1120px, 100%);
+      border-radius: 22px;
+      background: linear-gradient(180deg, color-mix(in srgb, var(--panel) 84%, transparent), color-mix(in srgb, var(--panel) 66%, transparent));
+      border: 1px solid var(--line2);
+      box-shadow: var(--shadow);
+      padding:20px;
+      backdrop-filter: blur(12px);
+    }
+
+    .pageHead{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px;}
+    .titleWrap h1{margin:0; font-size:34px; letter-spacing:-.6px;}
+    .titleWrap p{margin:6px 0 0 0; color:var(--muted); font-weight:700; font-size:14px;}
+    .pill{
+      border:1px solid var(--line2);
+      background: color-mix(in srgb, var(--panel2) 58%, transparent);
+      padding:7px 12px;
+      border-radius:999px;
+      font-weight:900;
+      font-size:12px;
+      color: color-mix(in srgb, var(--text) 86%, var(--muted));
+      white-space:nowrap;
+    }
+
+    .ctaBar{
+      margin-top:10px;
+      display:flex; gap:10px; align-items:center;
+      padding:12px;
+      border-radius: 999px;
+      border:1px solid var(--line2);
+      background: color-mix(in srgb, var(--panel2) 70%, transparent);
+    }
+    .ctaBtn{
+      flex:1;
+      padding:12px 14px;
+      border-radius:999px;
+      font-weight:950;
+      border:1px solid transparent;
+      background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 90%, #000), color-mix(in srgb, var(--accent) 65%, var(--accent2)));
+      color:white;
+      cursor:pointer;
+      letter-spacing:.2px;
+    }
+    .ctaBtn:hover{ filter:brightness(1.05); }
+    .ctaHint{color:var(--muted); font-size:13px; font-weight:800; padding:0 10px;}
+
+    .grid4{
       display:grid;
       grid-template-columns: repeat(4, 1fr);
       gap:12px;
       margin-top:14px;
     }
-    @media (max-width: 980px){ .stats{grid-template-columns: repeat(2, 1fr);} }
-    @media (max-width: 560px){ .stats{grid-template-columns:1fr;} }
+    @media (max-width: 980px){ .grid4{grid-template-columns:1fr 1fr;} }
+    @media (max-width: 560px){ .grid4{grid-template-columns:1fr;} }
 
-    .stat{
-      border:1px solid color-mix(in srgb, var(--line) 90%, transparent);
-      border-radius:16px;
-      padding:14px;
-      background: color-mix(in srgb, var(--card) 92%, transparent);
+    .card{
+      border-radius: var(--radius);
+      border: 1px solid var(--line2);
+      background: var(--card);
+      padding:16px;
     }
-    .label{
-      color:var(--muted);
+    .statLabel{
+      font-size:12px;
+      color: color-mix(in srgb, var(--muted) 85%, var(--text));
       font-weight:950;
-      font-size:11px;
-      letter-spacing:.4px;
+      letter-spacing:.8px;
       text-transform:uppercase;
     }
-    .value{
-      margin-top:8px;
-      font-size:26px;
+    .statValue{
+      font-size:28px;
       font-weight:980;
-      letter-spacing:-.3px;
-    }
-    .hint{
       margin-top:6px;
+      letter-spacing:-.6px;
+    }
+    .statSub{
+      margin-top:2px;
       color:var(--muted);
-      font-size:12px;
-      line-height:1.35;
+      font-size:13px;
+      font-weight:750;
     }
 
-    .twoCol{
+    .row2{
       display:grid;
-      grid-template-columns: 1.25fr .75fr;
-      gap:14px;
-      margin-top:14px;
-      align-items:start;
+      grid-template-columns: 1.2fr .8fr;
+      gap:12px;
+      margin-top:12px;
     }
-    @media (max-width: 980px){ .twoCol{grid-template-columns:1fr;} }
+    @media (max-width: 980px){ .row2{grid-template-columns:1fr;} }
 
-    .sectionTitle{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      margin-top:6px;
+    .cardHead{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      margin-bottom:10px;
     }
-    .sectionTitle h2{margin:0;font-size:15px;}
+    .cardTitle{
+      font-size:18px;
+      font-weight:950;
+      margin:0;
+    }
 
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      padding:6px 10px;
-      border-radius:999px;
+    table{
+      width:100%;
+      border-collapse: collapse;
+      font-size:14px;
+    }
+    th,td{
+      text-align:left;
+      padding:10px 8px;
+      border-bottom:1px solid var(--line2);
+    }
+    th{
+      color: color-mix(in srgb, var(--muted) 85%, var(--text));
       font-weight:950;
       font-size:12px;
-      border:1px solid color-mix(in srgb, var(--line) 90%, transparent);
-      background: color-mix(in srgb, var(--bg) 55%, transparent);
-      color:var(--text);
+      letter-spacing:.8px;
+      text-transform:uppercase;
     }
-    .pill.green{border-color: color-mix(in srgb, #16a34a 35%, var(--line));}
-    .pill.red{border-color: color-mix(in srgb, #ef4444 35%, var(--line));}
+    td{font-weight:750;}
+    .muted{color:var(--muted); font-weight:750;}
 
-    .table{
-      width:100%;
-      border-collapse:collapse;
-      margin-top:12px;
-      overflow:hidden;
-      border-radius:14px;
-    }
-    .table th,.table td{
-      text-align:left;
-      padding:10px 10px;
-      border-bottom:1px solid color-mix(in srgb, var(--line) 90%, transparent);
+    .chips{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px;}
+    .chip{
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid var(--line2);
+      background: color-mix(in srgb, var(--panel2) 55%, transparent);
+      font-weight:900;
       font-size:13px;
     }
-    .table th{
-      color:var(--muted);
-      font-weight:950;
-      text-transform:uppercase;
-      letter-spacing:.35px;
-      font-size:11px;
-    }
 
-    .focusBox{
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-    }
-    .focusText{
-      margin:0;
+    .ghostBtn{
+      width:100%;
+      margin-top:12px;
+      padding:12px 14px;
+      border-radius: 14px;
+      border:1px solid var(--line2);
+      background: transparent;
       color:var(--text);
-      font-size:14px;
-      line-height:1.55;
-    }
-    .mutedNote{
-      margin:0;
-      color:var(--muted);
-      font-size:12px;
-      line-height:1.5;
-    }
-
-    .chips{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-      margin-top:6px;
-    }
-    .chip{
-      padding:7px 10px;
-      border-radius:999px;
       font-weight:950;
-      font-size:12px;
-      border:1px solid color-mix(in srgb, var(--line) 90%, transparent);
-      background: color-mix(in srgb, var(--bg) 55%, transparent);
-      color:var(--muted);
+      cursor:pointer;
     }
-    .chip strong{color:var(--text)}
+    .ghostBtn:hover{ background: color-mix(in srgb, var(--panel2) 35%, transparent); }
 
-    .toast{
-      margin-top:10px;
-      color:var(--muted);
-      font-size:12px;
-      min-height:18px;
-      white-space:pre-wrap;
-    }
-
-    /* views */
-    .view{display:none;}
-    .view.active{display:block;}
-
-    /* analytics placeholders */
-    .anaGrid{
+    /* analytics layout */
+    .anaTop{
       display:grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap:14px;
-      margin-top:14px;
-    }
-    @media (max-width: 980px){ .anaGrid{grid-template-columns:1fr;} }
-
-    .chartBox{
-      border:1px solid color-mix(in srgb, var(--line) 90%, transparent);
-      border-radius:16px;
-      padding:14px;
-      background: color-mix(in srgb, var(--card) 92%, transparent);
-      min-height:220px;
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-    }
-    .chartTitle{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-    }
-    .chartTitle h3{
-      margin:0;
-      font-size:14px;
-      letter-spacing:-.1px;
-    }
-    .fakeChart{
-      flex:1;
-      border-radius:14px;
-      border:1px dashed color-mix(in srgb, var(--line) 90%, transparent);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      color:color-mix(in srgb, var(--muted) 80%, transparent);
-      font-weight:950;
-      font-size:12px;
-      text-align:center;
-      padding:14px;
-    }
-
-    .smallRow{
-      display:grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: 1fr 1fr 1fr;
       gap:12px;
       margin-top:14px;
     }
-    @media (max-width: 980px){ .smallRow{grid-template-columns:1fr;} }
+    @media (max-width: 980px){ .anaTop{grid-template-columns:1fr;} }
+
+    .anaGrid{
+      margin-top:12px;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+    }
+    @media (max-width: 980px){ .anaGrid{grid-template-columns:1fr;} }
+
+    .fakeChart{
+      min-height:240px;
+      border-radius: var(--radius);
+      border:1px dashed var(--line2);
+      background: color-mix(in srgb, var(--card2) 60%, transparent);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color: color-mix(in srgb, var(--muted) 92%, var(--text));
+      font-weight:900;
+      position:relative;
+      overflow:hidden;
+    }
+    .chartTag{
+      position:absolute;
+      top:12px;
+      right:12px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--line2);
+      background: color-mix(in srgb, var(--bg) 45%, transparent);
+      font-size:12px;
+      font-weight:950;
+      color: color-mix(in srgb, var(--text) 86%, var(--muted));
+    }
 
     /* modal */
-    .overlay{
+    .backdrop{
       position:fixed;
       inset:0;
       background: rgba(0,0,0,.55);
@@ -394,272 +328,413 @@
       align-items:center;
       justify-content:center;
       padding:18px;
-      z-index:50;
+      z-index:999;
     }
-    .overlay.show{display:flex;}
     .modal{
-      width: min(720px, 100%);
-      background: color-mix(in srgb, var(--card) 96%, transparent);
-      border:1px solid color-mix(in srgb, var(--line) 90%, transparent);
-      border-radius:22px;
+      width:min(720px, 100%);
+      border-radius: 20px;
+      border:1px solid var(--line2);
+      background: color-mix(in srgb, var(--panel) 92%, transparent);
       box-shadow: var(--shadow);
-      padding:18px;
+      padding:16px;
+      backdrop-filter: blur(12px);
     }
-    .modalTop{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      margin-bottom:10px;
-    }
-    .modalTop h2{margin:0;font-size:16px;}
-    .x{
-      width:40px;
-      height:40px;
-      border-radius:14px;
-      border:1px solid color-mix(in srgb, var(--line) 90%, transparent);
-      background: color-mix(in srgb, var(--bg) 55%, transparent);
+    .modalHead{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px;}
+    .modalHead h2{margin:0; font-size:18px; font-weight:980;}
+    .xBtn{
+      border:1px solid var(--line2);
+      background: transparent;
       color:var(--text);
+      border-radius: 12px;
+      padding:8px 10px;
       cursor:pointer;
-      font-weight:950;
+      font-weight:980;
     }
 
-    .form{
+    .formGrid{
       display:grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: 1fr 1fr;
       gap:12px;
-      margin-top:12px;
     }
-    @media (max-width: 720px){ .form{grid-template-columns:1fr;} }
+    @media (max-width: 720px){ .formGrid{grid-template-columns:1fr;} }
 
-    label{
-      display:block;
-      font-size:12px;
-      font-weight:950;
-      color:var(--muted);
-      margin:0 0 6px 0;
-      letter-spacing:.35px;
-      text-transform:uppercase;
-    }
+    label{display:block; font-size:12px; font-weight:950; letter-spacing:.7px; text-transform:uppercase; color: color-mix(in srgb, var(--muted) 85%, var(--text)); margin:8px 0 6px;}
     input, select, textarea{
       width:100%;
       padding:12px 12px;
-      border-radius:14px;
-      border:1px solid color-mix(in srgb, var(--line) 90%, transparent);
-      background: color-mix(in srgb, var(--bg) 55%, transparent);
+      border-radius: 14px;
+      border:1px solid var(--line2);
+      background: color-mix(in srgb, var(--bg) 18%, transparent);
       color:var(--text);
+      font-weight:800;
       outline:none;
-      font-size:14px;
     }
-    textarea{min-height:96px; resize:vertical;}
-    .full{grid-column:1 / -1;}
-    .rowBtns{
-      display:flex;
-      gap:10px;
-      justify-content:flex-end;
+    textarea{min-height:92px; resize:vertical;}
+
+    .modalFoot{
+      display:flex; gap:10px; align-items:center; justify-content:flex-end;
       margin-top:12px;
-      flex-wrap:wrap;
     }
-    .helper{
-      margin-top:8px;
-      color:var(--muted);
-      font-size:12px;
-      line-height:1.45;
-      min-height:16px;
+    .btn{
+      padding:12px 14px;
+      border-radius: 14px;
+      border:1px solid var(--line2);
+      background: transparent;
+      color:var(--text);
+      font-weight:980;
+      cursor:pointer;
     }
+    .btn.primary{
+      border-color: transparent;
+      background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 90%, #000), color-mix(in srgb, var(--accent) 65%, var(--accent2)));
+      color:white;
+    }
+    .msg{margin-top:10px; font-weight:900; color:var(--muted); min-height:18px;}
+
+    /* WOW: subtle motion + chart glow */
+    @keyframes drawLine { from { stroke-dashoffset: var(--dash); } to { stroke-dashoffset: 0; } }
+    @keyframes pulseLive { 0%{transform:scale(1);opacity:.55} 50%{transform:scale(1.25);opacity:.25} 100%{transform:scale(1);opacity:.55} }
+
+    .pill.liveDot{position:relative; padding-left:26px;}
+    .pill.liveDot::before{
+      content:"";
+      position:absolute;
+      left:10px; top:50%;
+      width:8px; height:8px;
+      transform:translateY(-50%);
+      border-radius:999px;
+      background:var(--accent2);
+      box-shadow:0 0 0 6px color-mix(in srgb, var(--accent2) 18%, transparent);
+    }
+    .pill.liveDot::after{
+      content:"";
+      position:absolute;
+      left:10px; top:50%;
+      width:8px; height:8px;
+      transform:translateY(-50%);
+      border-radius:999px;
+      background:var(--accent2);
+      animation:pulseLive 1.6s ease-in-out infinite;
+      filter:blur(.2px);
+    }
+
+    .fakeChart.hasSvg{
+      border-style:solid;
+      border-color: color-mix(in srgb, var(--line) 65%, transparent);
+      position:relative;
+      overflow:hidden;
+    }
+    .fakeChart.hasSvg::before{
+      content:"";
+      position:absolute;
+      inset:-40%;
+      background:
+        radial-gradient(900px 400px at 20% 10%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 60%),
+        radial-gradient(700px 360px at 80% 30%, color-mix(in srgb, var(--accent2) 12%, transparent), transparent 60%);
+      opacity:.55;
+      pointer-events:none;
+    }
+
+    svg .gridline{ stroke: currentColor; opacity:.12; }
+    svg .baseline{ stroke: currentColor; opacity:.20; }
+    svg .bar{ fill: currentColor; opacity:.92; }
+    svg .bar.dim{ opacity:.18; }
+    svg .bar.best{ filter: drop-shadow(0 0 12px color-mix(in srgb, var(--accent2) 75%, transparent)); }
+    svg .equity{
+      fill:none;
+      stroke:currentColor;
+      stroke-width:2.8;
+      opacity:.94;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+    }
+    svg .equityBg{
+      fill:none;
+      stroke:currentColor;
+      stroke-width:6;
+      opacity:.10;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+    }
+
+    /* small utility */
+    .hide{display:none !important;}
   </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
 <body>
-  <div class="app">
-
+  <div class="layout">
+    <!-- SIDEBAR -->
     <aside class="sidebar">
-      <div class="brand">
-        <span class="dot"></span>
-        Sessionly
+      <div class="brandRow">
+        <span class="logoDot"></span>
+        <div class="brand">Sessionly</div>
+      </div>
+      <div class="signed">
+        signed in as <span id="userEmail">—</span>
       </div>
 
-      <div class="who" id="whoami">checking session...</div>
-
-      <nav class="nav" aria-label="dashboard navigation">
-        <button class="navbtn active" data-view="focus" type="button">focus <span class="badge">daily</span></button>
-        <button class="navbtn" data-view="analytics" type="button">analytics <span class="badge">charts</span></button>
-        <button class="navbtn" data-view="trades" type="button">trades <span class="badge">table</span></button>
-        <button class="navbtn" data-view="journal" type="button">journal <span class="badge">notes</span></button>
+      <nav class="nav">
+        <button class="navBtn" data-route="focus">
+          <span>focus</span>
+          <span class="tag">daily</span>
+        </button>
+        <button class="navBtn" data-route="analytics">
+          <span>analytics</span>
+          <span class="tag">charts</span>
+        </button>
+        <button class="navBtn" data-route="trades">
+          <span>trades</span>
+          <span class="tag">table</span>
+        </button>
+        <button class="navBtn" data-route="journal">
+          <span>journal</span>
+          <span class="tag">notes</span>
+        </button>
       </nav>
 
       <div class="sideActions">
-        <button class="btn" id="themeBtn" type="button">toggle theme</button>
-        <button class="btn" id="logoutBtn" type="button">log out</button>
+        <button class="sideAction" id="toggleThemeBtn">toggle theme</button>
+        <button class="sideAction" id="logoutBtn">log out</button>
       </div>
 
-      <p class="sideFooter">calm by default, deep when you want it</p>
+      <div class="slogan">calm by default, deep when you want it</div>
     </aside>
 
+    <!-- MAIN -->
     <main class="main">
-      <div class="wrap">
+      <div class="shell">
 
-        <section class="view active" id="view-focus">
-          <div class="card">
-            <div class="toprow">
-              <div>
-                <h1>focus</h1>
-                <div class="sub">your daily view, clean and calm</div>
-              </div>
-              <button class="btn primary" id="addTradeBtn" type="button">+ add trade</button>
-            </div>
+        <!-- FOCUS PAGE -->
+        <section id="page-focus" class="page">
+          <div class="pageHead">
+            <div class="titleWrap">
+              <h1>focus</h1>
+              <p>your daily view, clean and calm</p>
 
-            <div class="stats">
-              <div class="stat">
-                <div class="label">recent trades loaded</div>
-                <div class="value" id="statTrades">—</div>
-                <div class="hint">last 8 trades</div>
-              </div>
-              <div class="stat">
-                <div class="label">win rate</div>
-                <div class="value" id="statWinrate">—</div>
-                <div class="hint">wins / last 8 trades</div>
-              </div>
-              <div class="stat">
-                <div class="label">total r</div>
-                <div class="value" id="statTotalR">—</div>
-                <div class="hint">sum r multiple</div>
-              </div>
-              <div class="stat">
-                <div class="label">avg rr</div>
-                <div class="value" id="statAvgRr">—</div>
-                <div class="hint">average rr</div>
+              <div class="ctaBar">
+                <button class="ctaBtn" id="addTradeBtn1">+ add trade</button>
+                <div class="ctaHint">log fast, review later</div>
               </div>
             </div>
+            <span class="pill" id="focusStatusPill">ready</span>
+          </div>
 
-            <div class="twoCol">
-              <div class="card" style="box-shadow:none;">
-                <div class="sectionTitle">
-                  <h2>recent trades</h2>
-                  <span class="pill" id="statusPill">loading</span>
-                </div>
+          <div class="grid4">
+            <div class="card">
+              <div class="statLabel">recent trades loaded</div>
+              <div class="statValue" id="focusTradesCount">—</div>
+              <div class="statSub" id="focusTradesSub">last 8 trades</div>
+            </div>
+            <div class="card">
+              <div class="statLabel">win rate</div>
+              <div class="statValue" id="focusWinRate">—</div>
+              <div class="statSub">wins / last 8 trades</div>
+            </div>
+            <div class="card">
+              <div class="statLabel">total r</div>
+              <div class="statValue" id="focusTotalR">—</div>
+              <div class="statSub">sum r multiple</div>
+            </div>
+            <div class="card">
+              <div class="statLabel">avg rr</div>
+              <div class="statValue" id="focusAvgRR">—</div>
+              <div class="statSub">average rr</div>
+            </div>
+          </div>
 
-                <table class="table" aria-label="recent trades">
-                  <thead>
-                    <tr>
-                      <th>date</th>
-                      <th>symbol</th>
-                      <th>dir</th>
-                      <th>rr</th>
-                      <th>r</th>
-                    </tr>
-                  </thead>
-                  <tbody id="tradesTbody">
-                    <tr><td colspan="5" style="color:var(--muted);">loading your trades...</td></tr>
-                  </tbody>
-                </table>
-
-                <div class="toast" id="toast"></div>
+          <div class="row2">
+            <div class="card">
+              <div class="cardHead">
+                <h3 class="cardTitle">recent trades</h3>
+                <span class="pill" id="focusTradesPill">ready</span>
               </div>
 
-              <div class="card focusBox" style="box-shadow:none;">
-                <div class="sectionTitle">
-                  <h2>today’s focus</h2>
-                  <span class="pill green">coach</span>
-                </div>
+              <div class="muted" id="focusTradesMsg" style="margin:0 0 10px 0;"></div>
 
-                <p class="focusText" id="focusText">
-                  log the next trade immediately after closing it, and write one sentence on why you entered
-                </p>
+              <table>
+                <thead>
+                  <tr>
+                    <th>date</th>
+                    <th>symbol</th>
+                    <th>dir</th>
+                    <th>rr</th>
+                    <th>r</th>
+                  </tr>
+                </thead>
+                <tbody id="focusTradesBody">
+                  <tr><td colspan="5" class="muted">no trades yet, add your first one</td></tr>
+                </tbody>
+              </table>
+            </div>
 
-                <div class="chips">
-                  <div class="chip"><strong>session</strong> ny</div>
-                  <div class="chip"><strong>rule</strong> max 3 trades</div>
-                  <div class="chip"><strong>goal</strong> no revenge</div>
-                </div>
-
-                <p class="mutedNote">next we’ll generate this from your real patterns and mistakes</p>
-
-                <button class="btn" id="refreshBtn" type="button">refresh stats</button>
+            <div class="card">
+              <div class="cardHead">
+                <h3 class="cardTitle">today’s focus</h3>
+                <span class="pill">coach</span>
               </div>
+              <div style="font-weight:900; line-height:1.45;">
+                log the next trade immediately after closing it, and write one sentence on why you entered
+              </div>
+
+              <div class="chips">
+                <span class="chip">session ny</span>
+                <span class="chip">rule max 3 trades</span>
+                <span class="chip">goal no revenge</span>
+              </div>
+
+              <div class="muted" style="margin-top:10px; font-weight:800;">
+                next we’ll generate this from your real patterns and mistakes, for now it’s a placeholder
+              </div>
+
+              <button class="ghostBtn" id="refreshBtn1">refresh stats</button>
             </div>
           </div>
         </section>
 
-        <section class="view" id="view-analytics">
+        <!-- ANALYTICS PAGE -->
+        <section id="page-analytics" class="page hide">
+          <div class="pageHead">
+            <div class="titleWrap">
+              <h1>analytics</h1>
+              <p>deep data lives here, focus stays clean</p>
+            </div>
+            <span class="pill liveDot">live</span>
+          </div>
+
+          <div class="anaTop">
+            <div class="card">
+              <div class="statLabel">profit factor</div>
+              <div class="statValue" id="anaPF">—</div>
+              <div class="statSub" id="anaPFSub">from 0 trades</div>
+            </div>
+            <div class="card">
+              <div class="statLabel">avg win vs avg loss</div>
+              <div class="statValue" id="anaWinLoss">—</div>
+              <div class="statSub">avg win r vs avg loss r</div>
+            </div>
+            <div class="card">
+              <div class="statLabel">best hour</div>
+              <div class="statValue" id="anaBestHour">—</div>
+              <div class="statSub" id="anaBestHourSub">avg r —</div>
+            </div>
+          </div>
+
+          <div class="anaGrid">
+            <div class="card">
+              <div class="cardHead">
+                <h3 class="cardTitle">pnl by day (calendar)</h3>
+                <span class="pill">visual</span>
+              </div>
+              <div class="fakeChart" id="calendarChart">
+                calendar view placeholder
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="cardHead">
+                <h3 class="cardTitle">hourly performance</h3>
+                <span class="pill">sessionly</span>
+              </div>
+              <div class="fakeChart hasSvg" id="hourlyChart">
+                bar chart placeholder
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="cardHead">
+                <h3 class="cardTitle">win vs loss distribution</h3>
+                <span class="pill">edge</span>
+              </div>
+              <div class="fakeChart" id="distChart">
+                distribution placeholder
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="cardHead">
+                <h3 class="cardTitle">equity curve</h3>
+                <span class="pill">trend</span>
+              </div>
+              <div class="fakeChart hasSvg" id="equityChart">
+                equity curve will appear after 2+ trades
+              </div>
+            </div>
+          </div>
+
+          <div class="muted" style="margin-top:10px; font-weight:800;">
+            once you log trades here, we’ll build real charts from your dataset
+          </div>
+
+          <button class="ghostBtn" id="refreshBtn2">refresh stats</button>
+        </section>
+
+        <!-- TRADES PAGE -->
+        <section id="page-trades" class="page hide">
+          <div class="pageHead">
+            <div class="titleWrap">
+              <h1>trades</h1>
+              <p>your full table, filter later</p>
+              <div class="ctaBar">
+                <button class="ctaBtn" id="addTradeBtn2">+ add trade</button>
+                <div class="ctaHint">every trade is a data point</div>
+              </div>
+            </div>
+            <span class="pill" id="tradesCountPill">—</span>
+          </div>
+
           <div class="card">
-            <div class="toprow">
-              <div>
-                <h1>analytics</h1>
-                <div class="sub">deep data lives here, focus stays clean</div>
-              </div>
-              <span class="pill">live</span>
+            <div class="cardHead">
+              <h3 class="cardTitle">all trades</h3>
+              <span class="pill">table</span>
             </div>
 
-            <div class="smallRow">
-              <div class="stat">
-                <div class="label">profit factor</div>
-                <div class="value" id="anaPF">—</div>
-                <div class="hint" id="anaPFHint">based on r multiple</div>
-              </div>
-              <div class="stat">
-                <div class="label">avg win vs avg loss</div>
-                <div class="value" id="anaWinLoss">—</div>
-                <div class="hint" id="anaWinLossHint">wins and losses in r</div>
-              </div>
-              <div class="stat">
-                <div class="label">best hour</div>
-                <div class="value" id="anaBestHour">—</div>
-                <div class="hint" id="anaBestHourHint">by average r</div>
-              </div>
-            </div>
+            <div class="muted" id="tradesMsg" style="margin:0 0 10px 0;"></div>
 
-            <div class="anaGrid">
-              <div class="chartBox">
-                <div class="chartTitle"><h3>pnl by day (calendar)</h3><span class="badge">visual</span></div>
-                <div class="fakeChart">calendar view placeholder</div>
-              </div>
-
-              <div class="chartBox">
-                <div class="chartTitle"><h3>hourly performance</h3><span class="badge">sessionly</span></div>
-                <div class="fakeChart" id="hourlyChart">hourly performance will appear after 2+ trades</div>
-              </div>
-
-              <div class="chartBox">
-                <div class="chartTitle"><h3>win vs loss distribution</h3><span class="badge">edge</span></div>
-                <div class="fakeChart">distribution placeholder</div>
-              </div>
-
-              <div class="chartBox">
-                <div class="chartTitle"><h3>equity curve</h3><span class="badge">trend</span></div>
-                <div class="fakeChart" id="equityChart">equity curve will appear after 2+ trades</div>
-              </div>
-            </div>
-
-            <p class="mutedNote" style="margin-top:14px;">
-              once you log trades here, we’ll build real charts from your dataset
-            </p>
+            <table>
+              <thead>
+                <tr>
+                  <th>date</th>
+                  <th>symbol</th>
+                  <th>dir</th>
+                  <th>session</th>
+                  <th>strategy</th>
+                  <th>rr</th>
+                  <th>r</th>
+                </tr>
+              </thead>
+              <tbody id="tradesBody">
+                <tr><td colspan="7" class="muted">loading…</td></tr>
+              </tbody>
+            </table>
           </div>
         </section>
 
-        <section class="view" id="view-trades">
-          <div class="card">
-            <div class="toprow">
-              <div>
-                <h1>trades</h1>
-                <div class="sub">filters and full history will live here</div>
-              </div>
-              <button class="btn primary" type="button" id="addTradeBtn2">+ add trade</button>
+        <!-- JOURNAL PAGE -->
+        <section id="page-journal" class="page hide">
+          <div class="pageHead">
+            <div class="titleWrap">
+              <h1>journal</h1>
+              <p>notes that turn into rules</p>
             </div>
-            <div class="fakeChart" style="min-height:260px;">full trades table placeholder (next)</div>
+            <span class="pill">coming next</span>
           </div>
-        </section>
 
-        <section class="view" id="view-journal">
           <div class="card">
-            <div class="toprow">
-              <div>
-                <h1>journal</h1>
-                <div class="sub">notes, lessons, and weekly review</div>
-              </div>
-              <span class="pill">soon</span>
+            <div class="cardHead">
+              <h3 class="cardTitle">quick note</h3>
+              <span class="pill">placeholder</span>
             </div>
-            <div class="fakeChart" style="min-height:260px;">journal editor placeholder</div>
+            <div class="muted" style="font-weight:800; line-height:1.5;">
+              this is where your daily notes, rules, and “what I learned” will live
+            </div>
+
+            <label style="margin-top:12px;">today’s note</label>
+            <textarea id="journalNote" placeholder="write one thing you’ll do differently next session…"></textarea>
+            <button class="ghostBtn" id="journalSaveBtn">save (local only for now)</button>
+            <div class="msg" id="journalMsg"></div>
           </div>
         </section>
 
@@ -667,40 +742,35 @@
     </main>
   </div>
 
-  <!-- add trade modal -->
-  <div class="overlay" id="overlay" aria-hidden="true">
-    <div class="modal" role="dialog" aria-modal="true" aria-label="add trade">
-      <div class="modalTop">
+  <!-- ADD TRADE MODAL -->
+  <div class="backdrop" id="tradeBackdrop">
+    <div class="modal">
+      <div class="modalHead">
         <h2>add trade</h2>
-        <button class="x" id="closeModalBtn" type="button">✕</button>
+        <button class="xBtn" id="closeTradeModal">close</button>
       </div>
 
-      <div class="helper" id="modalMsg"></div>
-
-      <div class="form">
+      <div class="formGrid">
         <div>
-          <label for="tradeDate">trade date</label>
-          <input id="tradeDate" type="datetime-local" />
+          <label>date</label>
+          <input id="t_date" type="datetime-local" />
+        </div>
+        <div>
+          <label>symbol</label>
+          <input id="t_symbol" placeholder="XAUUSD / NASDAQ / ES" />
         </div>
 
         <div>
-          <label for="symbol">symbol</label>
-          <input id="symbol" type="text" placeholder="xauusd, es, aapl" />
-        </div>
-
-        <div>
-          <label for="direction">direction</label>
-          <select id="direction">
-            <option value="">select</option>
+          <label>direction</label>
+          <select id="t_direction">
             <option value="long">long</option>
             <option value="short">short</option>
           </select>
         </div>
-
         <div>
-          <label for="session">session</label>
-          <select id="session">
-            <option value="">select</option>
+          <label>session</label>
+          <select id="t_session">
+            <option value="">—</option>
             <option value="asia">asia</option>
             <option value="london">london</option>
             <option value="ny">ny</option>
@@ -708,251 +778,300 @@
         </div>
 
         <div>
-          <label for="rr">rr (planned)</label>
-          <input id="rr" type="number" step="0.01" placeholder="e.g. 2.0" />
+          <label>rr</label>
+          <input id="t_rr" type="number" step="0.01" placeholder="1.5" />
+        </div>
+        <div>
+          <label>r multiple</label>
+          <input id="t_r" type="number" step="0.01" placeholder="1.0 (or -1.0)" />
         </div>
 
         <div>
-          <label for="rMultiple">r multiple (result)</label>
-          <input id="rMultiple" type="number" step="0.01" placeholder="e.g. 1.5 or -1" />
+          <label>strategy</label>
+          <input id="t_strategy" placeholder="fvg / breakout / etc" />
+        </div>
+        <div>
+          <label>mistakes (comma separated)</label>
+          <input id="t_mistakes" placeholder="revenge, late entry, overtrade" />
         </div>
 
-        <div class="full">
-          <label for="strategy">strategy</label>
-          <input id="strategy" type="text" placeholder="fvg tap, breakout, forever model..." />
-        </div>
-
-        <div class="full">
-          <label for="mistakes">mistakes (comma separated)</label>
-          <input id="mistakes" type="text" placeholder="late entry, moved stop, revenge, no plan" />
-        </div>
-
-        <div class="full">
-          <label for="notes">notes</label>
-          <textarea id="notes" placeholder="what happened, why you entered, what to fix"></textarea>
+        <div style="grid-column:1/-1;">
+          <label>notes</label>
+          <textarea id="t_notes" placeholder="one sentence why you entered…"></textarea>
         </div>
       </div>
 
-      <div class="rowBtns">
-        <button class="btn" id="cancelBtn" type="button">cancel</button>
-        <button class="btn primary" id="saveBtn" type="button">save trade</button>
+      <div class="modalFoot">
+        <button class="btn" id="cancelTradeBtn">cancel</button>
+        <button class="btn primary" id="saveTradeBtn">save trade</button>
       </div>
+      <div class="msg" id="tradeMsg"></div>
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    const supabaseUrl = "https://oucikdsngvdhimquclcz.supabase.co";
-    const supabaseKey = "sb_publishable_gMETcAB_TRLGd8hqx48KRA_yXxE7U6v";
-    const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
+    // ====== CONFIG ======
+    const SUPABASE_URL = "https://oucikdsngvdhimquclcz.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_gMETcAB_TRLGd8hqx48KRA_yXxE7U6v";
+    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    const toast = (t) => {
-      const el = document.getElementById("toast");
-      if (el) el.textContent = t || "";
-    };
-
-    function setTheme(theme){
+    // ====== THEME ======
+    function applyTheme(theme){
       document.documentElement.setAttribute("data-theme", theme);
       localStorage.setItem("sessionly_theme", theme);
     }
-
     function initTheme(){
       const saved = localStorage.getItem("sessionly_theme");
-      if (saved === "light" || saved === "dark") setTheme(saved);
-      else setTheme("dark");
+      applyTheme(saved || "dark");
     }
 
-    function toggleTheme(){
-      const current = document.documentElement.getAttribute("data-theme") || "dark";
-      setTheme(current === "dark" ? "light" : "dark");
+    // ====== ROUTING ======
+    const pages = ["focus","analytics","trades","journal"];
+    function setRoute(route){
+      if (!pages.includes(route)) route = "focus";
+      location.hash = route;
+      renderRoute();
+    }
+    function renderRoute(){
+      const route = (location.hash || "#focus").replace("#","");
+      pages.forEach(p=>{
+        document.getElementById("page-"+p).classList.toggle("hide", p !== route);
+      });
+      document.querySelectorAll(".navBtn").forEach(btn=>{
+        btn.classList.toggle("active", btn.dataset.route === route);
+      });
     }
 
-    function fmtNum(n){
-      if (typeof n !== "number" || Number.isNaN(n)) return "—";
-      return n.toLocaleString(undefined, { maximumFractionDigits: 2 });
-    }
-
-    function fmtPct(n){
-      if (typeof n !== "number" || Number.isNaN(n)) return "—";
-      return (n * 100).toFixed(1) + "%";
-    }
-
-    function fmtDate(iso){
+    // ====== UTIL ======
+    function fmtDate(d){
       try{
-        const d = new Date(iso);
-        return d.toLocaleString(undefined, { year:"numeric", month:"short", day:"2-digit" });
-      }catch(e){
-        return "—";
-      }
+        const dt = new Date(d);
+        return dt.toLocaleDateString(undefined, {year:"numeric", month:"short", day:"2-digit"});
+      }catch(e){ return "—"; }
+    }
+    function fmtHourLabel(h){
+      const hh = String(h).padStart(2,"0");
+      return `${hh}:00`;
+    }
+    function setText(id, v){
+      const el = document.getElementById(id);
+      if (el) el.textContent = v;
+    }
+    function safeNum(x){
+      const n = Number(x);
+      return Number.isFinite(n) ? n : 0;
     }
 
-    function setStatus(text, tone){
-      const pill = document.getElementById("statusPill");
-      if (!pill) return;
-      pill.textContent = text;
-      pill.className = "pill" + (tone ? " " + tone : "");
-    }
+    // ====== DATA ======
+    let user = null;
+    let trades = []; // normalized: {trade_date, symbol, direction, rr, r, session, strategy, notes, created_at}
 
-    async function protectDashboard(){
-      const { data, error } = await sb.auth.getSession();
-      if (error || !data.session) {
-        window.location.href = "./login.html";
+    async function requireAuth(){
+      const { data } = await sb.auth.getSession();
+      const session = data.session;
+      if (!session){
+        // send to login page
+        window.location.href = "login.html";
         return null;
       }
-      return data.session;
+      user = session.user;
+      setText("userEmail", user.email || "—");
+      return user;
     }
 
-    async function loadUser(){
-      const { data } = await sb.auth.getUser();
-      const who = document.getElementById("whoami");
-      if (!who) return;
-      if (data && data.user && data.user.email) who.textContent = "signed in as " + data.user.email;
-      else who.textContent = "signed in";
-    }
+    async function loadTrades(){
+      if (!user) return [];
 
-    async function fetchTrades(){
-      setStatus("loading", "");
-      toast("");
-
+      // IMPORTANT: your DB uses columns like rr, r_multiple (or maybe r_multiple + rr)
+      // We'll try to select both rr + r_multiple and also r (fallback), session, strategy, mistakes, notes.
       const { data, error } = await sb
         .from("trades")
-        .select("trade_date,symbol,direction,rr,r_multiple")
-        .order("trade_date", { ascending: false })
-        .limit(8);
+        .select("id, trade_date, symbol, direction, rr, r_multiple, session, strategy, mistakes, notes, created_at")
+        .order("trade_date", { ascending: false });
 
-      if (error) {
-        setStatus("error", "red");
-        toast("error loading trades: " + error.message);
+      if (error){
+        console.log("loadTrades error", error);
         return [];
       }
 
-      setStatus("ready", "green");
-      return data || [];
+      return (data || []).map(t => ({
+        id: t.id,
+        trade_date: t.trade_date,
+        symbol: t.symbol || "—",
+        direction: t.direction || "—",
+        rr: t.rr,
+        r: (t.r_multiple ?? null),
+        session: t.session || "",
+        strategy: t.strategy || "",
+        mistakes: t.mistakes || [],
+        notes: t.notes || "",
+        created_at: t.created_at
+      }));
     }
 
-    function renderTrades(rows){
-      const tb = document.getElementById("tradesTbody");
-      if (!tb) return;
+    // ====== STATS ======
+    function computeAnalytics(all){
+      const clean = (all || []).map(t => ({
+        date: t.trade_date,
+        rr: safeNum(t.rr),
+        r: safeNum(t.r),
+        hour: (()=>{ try{ return new Date(t.trade_date).getHours(); }catch(e){ return null; } })()
+      }));
 
-      if (!rows.length) {
-        tb.innerHTML = `<tr><td colspan="5" style="color:var(--muted);">no trades yet, add your first one</td></tr>`;
-        return;
-      }
+      const wins = clean.filter(t => t.r > 0);
+      const losses = clean.filter(t => t.r < 0);
 
-      tb.innerHTML = rows.map(r => {
-        const dir = (r.direction || "").toLowerCase();
-        const dirText = dir ? dir : "—";
+      const sumWin = wins.reduce((a,b)=>a + b.r, 0);
+      const sumLossAbs = losses.reduce((a,b)=>a + Math.abs(b.r), 0);
 
-        const rrNum = (r.rr === null || r.rr === undefined) ? null : Number(r.rr);
-        const rrText = rrNum === null || Number.isNaN(rrNum) ? "—" : fmtNum(rrNum);
+      const pf = (sumLossAbs === 0) ? Infinity : (sumWin / sumLossAbs);
 
-        const rNum = (r.r_multiple === null || r.r_multiple === undefined) ? null : Number(r.r_multiple);
-        const rText = rNum === null || Number.isNaN(rNum) ? "—" : fmtNum(rNum);
+      const avgWin = wins.length ? (sumWin / wins.length) : NaN;
+      const avgLoss = losses.length ? (sumLossAbs / losses.length) : NaN;
 
-        return `
-          <tr>
-            <td>${fmtDate(r.trade_date)}</td>
-            <td>${(r.symbol || "—").toUpperCase()}</td>
-            <td>${dirText}</td>
-            <td>${rrText}</td>
-            <td>${rText}</td>
-          </tr>
-        `;
-      }).join("");
-    }
-
-    function calcStats(rows){
-      const total = rows.length;
-
-      let wins = 0;
-      let totalR = 0;
-
-      let rrSum = 0;
-      let rrCount = 0;
-
-      for (const r of rows){
-        const rmult = (r.r_multiple === null || r.r_multiple === undefined) ? NaN : Number(r.r_multiple);
-        if (!Number.isNaN(rmult)) {
-          totalR += rmult;
-          if (rmult > 0) wins += 1;
-        }
-
-        const rr = (r.rr === null || r.rr === undefined) ? NaN : Number(r.rr);
-        if (!Number.isNaN(rr)) {
-          rrSum += rr;
-          rrCount += 1;
-        }
-      }
-
-      const winrate = total ? (wins / total) : NaN;
-      const avgRr = rrCount ? (rrSum / rrCount) : NaN;
-
-      document.getElementById("statTrades").textContent = String(total || 0);
-      document.getElementById("statWinrate").textContent = total ? fmtPct(winrate) : "—";
-      document.getElementById("statTotalR").textContent = total ? fmtNum(totalR) : "—";
-      document.getElementById("statAvgRr").textContent = rrCount ? fmtNum(avgRr) : "—";
-    }
-
-    async function fetchTradesForAnalytics(){
-      const { data, error } = await sb
-        .from("trades")
-        .select("trade_date, r_multiple")
-        .order("trade_date", { ascending: true })
-        .limit(5000);
-
-      if (error) return { rows: [], error };
-      return { rows: data || [], error: null };
-    }
-
-    function calcAnalytics(rows){
-      const clean = rows
-        .map(r => ({ t: r.trade_date, r: Number(r.r_multiple) }))
-        .filter(x => x.t && !Number.isNaN(x.r));
-
-      const wins = clean.filter(x => x.r > 0).map(x => x.r);
-      const losses = clean.filter(x => x.r < 0).map(x => x.r);
-
-      const grossWin = wins.reduce((a,b)=>a+b,0);
-      const grossLossAbs = losses.reduce((a,b)=>a+Math.abs(b),0);
-
-      const pf = (grossLossAbs > 0) ? (grossWin / grossLossAbs) : (wins.length ? Infinity : NaN);
-
-      const avgWin = wins.length ? (grossWin / wins.length) : NaN;
-      const avgLossAbs = losses.length ? (grossLossAbs / losses.length) : NaN;
+      // hourly bucket avg r
+      const byHour = new Map();
+      clean.forEach(t=>{
+        if (t.hour === null) return;
+        const o = byHour.get(t.hour) || { sum:0, n:0 };
+        o.sum += t.r;
+        o.n += 1;
+        byHour.set(t.hour, o);
+      });
 
       // best hour by avg r
-      const byHour = new Map();
-      for (const x of clean){
-        const d = new Date(x.t);
-        const h = d.getHours();
-        if (!byHour.has(h)) byHour.set(h, { sum:0, n:0 });
-        const o = byHour.get(h);
-        o.sum += x.r;
-        o.n += 1;
-      }
       let bestHour = null;
       let bestHourAvg = -Infinity;
-      for (const [h, o] of byHour.entries()){
+      byHour.forEach((o, h)=>{
         const avg = o.sum / o.n;
         if (avg > bestHourAvg){
           bestHourAvg = avg;
           bestHour = h;
         }
+      });
+
+      // equity points (cumulative r in chronological order)
+      const chrono = [...clean].sort((a,b)=> new Date(a.date) - new Date(b.date));
+      let cum = 0;
+      const points = chrono.map((t, i)=>{
+        cum += t.r;
+        return { x: i, y: cum };
+      });
+
+      return { clean, wins, losses, pf, avgWin, avgLoss, byHour, bestHour, bestHourAvg, points };
+    }
+
+    function refreshFocus(){
+      // focus uses last 8 trades
+      const last = trades.slice(0, 8);
+      const a = computeAnalytics(last);
+
+      setText("focusTradesCount", String(last.length));
+      setText("focusTradesSub", "last 8 trades");
+
+      const winRate = last.length ? (a.wins.length / last.length) * 100 : NaN;
+      setText("focusWinRate", last.length ? `${winRate.toFixed(1)}%` : "—");
+
+      const totalR = a.clean.reduce((s,t)=>s+t.r,0);
+      setText("focusTotalR", last.length ? totalR.toFixed(1) : "—");
+
+      const avgRR = last.length ? (a.clean.reduce((s,t)=>s+t.rr,0) / last.length) : NaN;
+      setText("focusAvgRR", last.length ? (Number.isFinite(avgRR) ? avgRR.toFixed(2) : "—") : "—");
+
+      // table
+      const body = document.getElementById("focusTradesBody");
+      const msg = document.getElementById("focusTradesMsg");
+      body.innerHTML = "";
+
+      if (!last.length){
+        body.innerHTML = `<tr><td colspan="5" class="muted">no trades yet, add your first one</td></tr>`;
+        msg.textContent = "";
+        return;
       }
 
-      return { clean, pf, avgWin, avgLossAbs, bestHour, bestHourAvg, byHour };
+      msg.textContent = "";
+      last.forEach(t=>{
+        body.insertAdjacentHTML("beforeend", `
+          <tr>
+            <td>${fmtDate(t.trade_date)}</td>
+            <td>${escapeHtml(t.symbol)}</td>
+            <td>${escapeHtml(t.direction)}</td>
+            <td>${Number.isFinite(Number(t.rr)) ? Number(t.rr).toFixed(2) : "—"}</td>
+            <td>${Number.isFinite(Number(t.r)) ? Number(t.r).toFixed(2) : "—"}</td>
+          </tr>
+        `);
+      });
     }
 
-    function setText(id, text){
-      const el = document.getElementById(id);
-      if (el) el.textContent = text;
+    function refreshTradesTable(){
+      const pill = document.getElementById("tradesCountPill");
+      pill.textContent = `${trades.length} trades`;
+
+      const body = document.getElementById("tradesBody");
+      const msg = document.getElementById("tradesMsg");
+      body.innerHTML = "";
+
+      if (!trades.length){
+        body.innerHTML = `<tr><td colspan="7" class="muted">no trades yet, add your first one</td></tr>`;
+        msg.textContent = "";
+        return;
+      }
+
+      msg.textContent = "";
+      trades.forEach(t=>{
+        body.insertAdjacentHTML("beforeend", `
+          <tr>
+            <td>${fmtDate(t.trade_date)}</td>
+            <td>${escapeHtml(t.symbol)}</td>
+            <td>${escapeHtml(t.direction)}</td>
+            <td>${escapeHtml(t.session || "—")}</td>
+            <td>${escapeHtml(t.strategy || "—")}</td>
+            <td>${Number.isFinite(Number(t.rr)) ? Number(t.rr).toFixed(2) : "—"}</td>
+            <td>${Number.isFinite(Number(t.r)) ? Number(t.r).toFixed(2) : "—"}</td>
+          </tr>
+        `);
+      });
     }
 
+    function refreshAnalytics(){
+      const a = computeAnalytics(trades);
+
+      // profit factor (no ∞)
+      const hasWin = a.clean.some(x => x.r > 0);
+      const hasLoss = a.clean.some(x => x.r < 0);
+      const pfText = (hasWin && hasLoss && !Number.isNaN(a.pf) && Number.isFinite(a.pf)) ? a.pf.toFixed(2) : "—";
+      setText("anaPF", pfText);
+      setText("anaPFSub", `from ${trades.length} trades`);
+
+      // avg win vs avg loss
+      if (hasWin && hasLoss){
+        const wl = `${a.avgWin.toFixed(2)} vs ${a.avgLoss.toFixed(2)}`;
+        setText("anaWinLoss", wl);
+      } else {
+        setText("anaWinLoss", "—");
+      }
+
+      // best hour
+      if (a.bestHour !== null && Number.isFinite(a.bestHourAvg)){
+        setText("anaBestHour", fmtHourLabel(a.bestHour));
+        setText("anaBestHourSub", `avg r ${a.bestHourAvg.toFixed(2)}`);
+      } else {
+        setText("anaBestHour", "—");
+        setText("anaBestHourSub", "avg r —");
+      }
+
+      // draw charts
+      drawHourlyBars(a.byHour);
+      drawEquitySVG(a.points);
+    }
+
+    // ====== WOW CHARTS ======
     function drawEquitySVG(points){
       const el = document.getElementById("equityChart");
       if (!el) return;
 
-      if (points.length < 2){
+      if (!points || points.length < 2){
+        el.classList.remove("hasSvg");
         el.textContent = "equity curve will appear after 2+ trades";
         return;
       }
@@ -968,16 +1087,29 @@
       const toY = (y) => pad + ((maxY - y) * (h - pad*2) / span);
 
       let d = `M ${toX(0)} ${toY(points[0].y)}`;
-      for (let i=1;i<points.length;i++){
-        d += ` L ${toX(i)} ${toY(points[i].y)}`;
-      }
+      for (let i=1;i<points.length;i++) d += ` L ${toX(i)} ${toY(points[i].y)}`;
 
+      el.classList.add("hasSvg");
       el.innerHTML = `
         <svg viewBox="0 0 ${w} ${h}" width="100%" height="100%" preserveAspectRatio="none">
-          <path d="${d}" fill="none" stroke="currentColor" stroke-width="2.5" opacity="0.9"/>
+          ${[0.25,0.5,0.75].map(t=>{
+            const y = pad + t*(h-pad*2);
+            return `<line class="gridline" x1="${pad}" y1="${y}" x2="${w-pad}" y2="${y}"></line>`;
+          }).join("")}
+          <path class="equityBg" d="${d}"></path>
+          <path class="equity" id="equityPath" d="${d}"></path>
         </svg>
       `;
-      el.style.color = "var(--accent)";
+      el.style.color = "var(--accent2)";
+
+      const path = document.getElementById("equityPath");
+      if (!path) return;
+
+      const len = path.getTotalLength();
+      path.style.setProperty("--dash", len);
+      path.style.strokeDasharray = String(len);
+      path.style.strokeDashoffset = String(len);
+      path.style.animation = "drawLine 900ms cubic-bezier(.2,.9,.2,1) forwards";
     }
 
     function drawHourlyBars(byHour){
@@ -990,260 +1122,225 @@
         return o ? (o.sum / o.n) : 0;
       });
 
-      const nonZeroCount = vals.filter(v=>v!==0).length;
-      if (nonZeroCount === 0){
+      const hasAny = vals.some(v => v !== 0);
+      if (!hasAny){
+        el.classList.remove("hasSvg");
         el.textContent = "hourly performance will appear after you have trades across hours";
         return;
       }
 
       const w = 640, h = 220, pad = 18;
       const maxAbs = Math.max(...vals.map(v=>Math.abs(v))) || 1;
-
       const barW = (w - pad*2) / 24;
       const midY = h/2;
+
+      let bestIdx = 0;
+      let bestScore = -Infinity;
+      vals.forEach((v,i)=>{
+        const score = Math.abs(v);
+        if (score > bestScore){ bestScore = score; bestIdx = i; }
+      });
 
       const bars = vals.map((v, i)=>{
         const x = pad + i*barW + 2;
         const bw = Math.max(2, barW - 4);
         const bh = (Math.abs(v) / maxAbs) * (h/2 - pad);
-        const y = v >= 0 ? (midY - bh) : midY;
-        const opacity = v === 0 ? 0.25 : 0.9;
-        return `<rect x="${x}" y="${y}" width="${bw}" height="${bh}" rx="4" opacity="${opacity}"></rect>`;
+        const cls = [
+          "bar",
+          (v === 0 ? "dim" : ""),
+          (i === bestIdx ? "best" : "")
+        ].join(" ").trim();
+
+        return `<rect class="${cls}" data-bh="${bh}" data-v="${v}" x="${x}" y="${midY}" width="${bw}" height="0" rx="4"></rect>`;
       }).join("");
 
+      el.classList.add("hasSvg");
       el.innerHTML = `
         <svg viewBox="0 0 ${w} ${h}" width="100%" height="100%" preserveAspectRatio="none">
-          <line x1="${pad}" y1="${midY}" x2="${w-pad}" y2="${midY}" stroke="currentColor" opacity="0.25"/>
-          <g fill="currentColor">${bars}</g>
+          ${[0.25,0.5,0.75].map(t=>{
+            const y = pad + t*(h-pad*2);
+            return `<line class="gridline" x1="${pad}" y1="${y}" x2="${w-pad}" y2="${y}"></line>`;
+          }).join("")}
+          <line class="baseline" x1="${pad}" y1="${midY}" x2="${w-pad}" y2="${midY}"></line>
+          <g id="bars">${bars}</g>
         </svg>
       `;
       el.style.color = "var(--accent)";
-    }
 
-    async function refreshAnalytics(){
-      const { rows, error } = await fetchTradesForAnalytics();
-      if (error){
-        setText("anaPF", "—");
-        setText("anaWinLoss", "—");
-        setText("anaBestHour", "—");
-        return;
+      const rects = el.querySelectorAll("rect.bar");
+      const start = performance.now();
+      const dur = 700;
+      function easeOutCubic(t){ return 1 - Math.pow(1 - t, 3); }
+
+      function tick(now){
+        const t = Math.min(1, (now - start) / dur);
+        const k = easeOutCubic(t);
+
+        rects.forEach(r=>{
+          const bh = Number(r.getAttribute("data-bh")) || 0;
+          const v = Number(r.getAttribute("data-v")) || 0;
+          const targetH = bh * k;
+
+          if (v >= 0){
+            r.setAttribute("y", String(midY - targetH));
+            r.setAttribute("height", String(targetH));
+          } else {
+            r.setAttribute("y", String(midY));
+            r.setAttribute("height", String(targetH));
+          }
+        });
+
+        if (t < 1) requestAnimationFrame(tick);
       }
-
-      const a = calcAnalytics(rows);
-
-      if (!a.clean.length){
-        setText("anaPF", "—");
-        setText("anaWinLoss", "—");
-        setText("anaBestHour", "—");
-        return;
-      }
-
-      const pfText = (a.pf === Infinity) ? "∞" : (Number.isNaN(a.pf) ? "—" : a.pf.toFixed(2));
-      setText("anaPF", pfText);
-      setText("anaPFHint", `from ${a.clean.length} trades`);
-
-      const winLossText =
-        (!Number.isNaN(a.avgWin) && !Number.isNaN(a.avgLossAbs))
-          ? `${a.avgWin.toFixed(2)} vs ${a.avgLossAbs.toFixed(2)}`
-          : "—";
-      setText("anaWinLoss", winLossText);
-      setText("anaWinLossHint", "avg win r vs avg loss r");
-
-      if (a.bestHour !== null){
-        setText("anaBestHour", String(a.bestHour).padStart(2,"0") + ":00");
-        setText("anaBestHourHint", `avg r ${a.bestHourAvg.toFixed(2)}`);
-      } else {
-        setText("anaBestHour", "—");
-      }
-
-      let cum = 0;
-      const points = a.clean.map(x=>{
-        cum += x.r;
-        return { y: cum };
-      });
-      drawEquitySVG(points);
-      drawHourlyBars(a.byHour);
+      requestAnimationFrame(tick);
     }
 
-    async function refreshAll(){
-      const trades = await fetchTrades();
-      renderTrades(trades);
-      calcStats(trades);
-      await refreshAnalytics();
-    }
+    // ====== INSERT TRADE ======
+    function openTradeModal(){
+      const bd = document.getElementById("tradeBackdrop");
+      bd.style.display = "flex";
+      setText("tradeMsg", "");
 
-    async function logout(){
-      const btn = document.getElementById("logoutBtn");
-      if (btn) btn.disabled = true;
-      toast("logging out...");
-
-      const { error } = await sb.auth.signOut();
-
-      if (error) {
-        toast("logout error: " + error.message);
-        if (btn) btn.disabled = false;
-        return;
-      }
-
-      window.location.href = "./login.html";
-    }
-
-    function showView(name){
-      document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
-      const el = document.getElementById("view-" + name);
-      if (el) el.classList.add("active");
-
-      document.querySelectorAll(".navbtn").forEach(b => b.classList.remove("active"));
-      const activeBtn = document.querySelector(`.navbtn[data-view="${name}"]`);
-      if (activeBtn) activeBtn.classList.add("active");
-
-      localStorage.setItem("sessionly_view", name);
-      history.replaceState(null, "", "#"+name);
-
-      if (name === "analytics") refreshAnalytics();
-    }
-
-    function bootNav(){
-      document.querySelectorAll(".navbtn").forEach(btn => {
-        btn.addEventListener("click", () => showView(btn.getAttribute("data-view")));
-      });
-
-      const hash = (location.hash || "").replace("#","").trim();
-      const saved = localStorage.getItem("sessionly_view");
-      const initial = hash || saved || "focus";
-      showView(initial);
-    }
-
-    // modal logic
-    const overlay = document.getElementById("overlay");
-    const modalMsg = document.getElementById("modalMsg");
-    const saveBtn = document.getElementById("saveBtn");
-
-    function openModal(){
-      modalMsg.textContent = "";
-      overlay.classList.add("show");
-      overlay.setAttribute("aria-hidden", "false");
-
+      // default date = now
       const now = new Date();
-      const pad = (n) => String(n).padStart(2,"0");
-      const local = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`;
-      document.getElementById("tradeDate").value = local;
-      document.getElementById("symbol").focus();
+      const iso = new Date(now.getTime() - now.getTimezoneOffset()*60000).toISOString().slice(0,16);
+      document.getElementById("t_date").value = iso;
+      document.getElementById("t_symbol").focus();
     }
-
-    function closeModal(){
-      overlay.classList.remove("show");
-      overlay.setAttribute("aria-hidden", "true");
-      saveBtn.disabled = false;
-    }
-
-    function parseMistakes(input){
-      const raw = (input || "").trim();
-      if (!raw) return null;
-      const items = raw
-        .split(",")
-        .map(s => s.trim())
-        .filter(Boolean);
-      return items.length ? items : null;
+    function closeTradeModal(){
+      document.getElementById("tradeBackdrop").style.display = "none";
     }
 
     async function saveTrade(){
-      saveBtn.disabled = true;
-      modalMsg.textContent = "saving...";
+      const msg = document.getElementById("tradeMsg");
+      msg.textContent = "saving…";
 
-      const { data: userRes } = await sb.auth.getUser();
-      const user = userRes?.user;
-      if (!user) {
-        modalMsg.textContent = "you are not signed in, please log in again";
-        saveBtn.disabled = false;
+      const trade_date = document.getElementById("t_date").value;
+      const symbol = document.getElementById("t_symbol").value.trim();
+      const direction = document.getElementById("t_direction").value;
+      const session = document.getElementById("t_session").value;
+      const rr = document.getElementById("t_rr").value;
+      const r_multiple = document.getElementById("t_r").value;
+      const strategy = document.getElementById("t_strategy").value.trim();
+      const mistakesRaw = document.getElementById("t_mistakes").value.trim();
+      const notes = document.getElementById("t_notes").value.trim();
+
+      if (!trade_date){
+        msg.textContent = "please choose a date";
+        return;
+      }
+      if (!symbol){
+        msg.textContent = "please add a symbol";
         return;
       }
 
-      const tradeDateLocal = document.getElementById("tradeDate").value;
-      const symbol = document.getElementById("symbol").value.trim();
-      const direction = document.getElementById("direction").value;
-      const session = document.getElementById("session").value;
-      const rr = document.getElementById("rr").value.trim();
-      const rMultiple = document.getElementById("rMultiple").value.trim();
-      const strategy = document.getElementById("strategy").value.trim();
-      const mistakes = parseMistakes(document.getElementById("mistakes").value);
-      const notes = document.getElementById("notes").value.trim();
-
-      if (!tradeDateLocal) { modalMsg.textContent = "please choose a trade date"; saveBtn.disabled=false; return; }
-      if (!symbol) { modalMsg.textContent = "please enter a symbol"; saveBtn.disabled=false; return; }
-      if (!direction) { modalMsg.textContent = "please choose direction"; saveBtn.disabled=false; return; }
-
-      const tradeDateISO = new Date(tradeDateLocal).toISOString();
+      const mistakes = mistakesRaw
+        ? mistakesRaw.split(",").map(s=>s.trim()).filter(Boolean)
+        : [];
 
       const payload = {
         user_id: user.id,
-        trade_date: tradeDateISO,
-        symbol: symbol,
-        direction: direction,
+        trade_date: new Date(trade_date).toISOString(),
+        symbol,
+        direction,
         session: session || null,
         strategy: strategy || null,
-        notes: notes || null,
-        mistakes: mistakes,
+        mistakes: mistakes.length ? mistakes : null,
         rr: rr === "" ? null : Number(rr),
-        r_multiple: rMultiple === "" ? null : Number(rMultiple)
+        r_multiple: r_multiple === "" ? null : Number(r_multiple),
+        notes: notes || null
       };
 
-      if (payload.rr !== null && Number.isNaN(payload.rr)) { modalMsg.textContent = "rr must be a number"; saveBtn.disabled=false; return; }
-      if (payload.r_multiple !== null && Number.isNaN(payload.r_multiple)) { modalMsg.textContent = "r multiple must be a number"; saveBtn.disabled=false; return; }
-
       const { error } = await sb.from("trades").insert(payload);
-
-      if (error) {
-        modalMsg.textContent = "save failed: " + error.message;
-        saveBtn.disabled = false;
+      if (error){
+        console.log("insert error", error);
+        msg.textContent = "error saving trade: " + (error.message || "unknown");
         return;
       }
 
-      modalMsg.textContent = "saved ✅";
-      await refreshAll();
-      setTimeout(() => {
-        closeModal();
-        toast("trade saved");
-      }, 350);
+      msg.textContent = "saved";
+      closeTradeModal();
+      await fullRefresh();
     }
 
-    overlay.addEventListener("click", (e) => {
-      if (e.target === overlay) closeModal();
-    });
+    // ====== JOURNAL LOCAL ======
+    function loadJournal(){
+      const saved = localStorage.getItem("sessionly_journal_note") || "";
+      document.getElementById("journalNote").value = saved;
+    }
+    function saveJournal(){
+      const v = document.getElementById("journalNote").value;
+      localStorage.setItem("sessionly_journal_note", v);
+      document.getElementById("journalMsg").textContent = "saved";
+      setTimeout(()=> document.getElementById("journalMsg").textContent = "", 1200);
+    }
 
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && overlay.classList.contains("show")) closeModal();
-    });
+    // ====== ESCAPE ======
+    function escapeHtml(str){
+      return String(str ?? "").replace(/[&<>"']/g, s => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"
+      }[s]));
+    }
 
-    document.getElementById("closeModalBtn").addEventListener("click", closeModal);
-    document.getElementById("cancelBtn").addEventListener("click", closeModal);
-    saveBtn.addEventListener("click", saveTrade);
+    // ====== REFRESH ======
+    async function fullRefresh(){
+      trades = await loadTrades();
 
-    document.getElementById("themeBtn").addEventListener("click", toggleTheme);
-    document.getElementById("logoutBtn").addEventListener("click", logout);
-    document.getElementById("refreshBtn").addEventListener("click", refreshAll);
+      refreshFocus();
+      refreshAnalytics();
+      refreshTradesTable();
+    }
 
-    document.getElementById("addTradeBtn").addEventListener("click", () => {
-      showView("focus");
-      openModal();
-    });
-
-    document.getElementById("addTradeBtn2").addEventListener("click", () => {
-      showView("trades");
-      openModal();
-    });
-
-    // boot
-    (async () => {
+    // ====== INIT ======
+    async function init(){
       initTheme();
-      bootNav();
 
-      const session = await protectDashboard();
-      if (!session) return;
+      // nav
+      document.querySelectorAll(".navBtn").forEach(btn=>{
+        btn.addEventListener("click", ()=> setRoute(btn.dataset.route));
+      });
+      window.addEventListener("hashchange", renderRoute);
 
-      await loadUser();
-      await refreshAll();
-    })();
+      document.getElementById("toggleThemeBtn").addEventListener("click", ()=>{
+        const cur = document.documentElement.getAttribute("data-theme") || "dark";
+        applyTheme(cur === "dark" ? "light" : "dark");
+      });
+
+      document.getElementById("logoutBtn").addEventListener("click", async ()=>{
+        await sb.auth.signOut();
+        window.location.href = "login.html";
+      });
+
+      // add trade buttons
+      document.getElementById("addTradeBtn1").addEventListener("click", openTradeModal);
+      document.getElementById("addTradeBtn2").addEventListener("click", openTradeModal);
+      document.getElementById("closeTradeModal").addEventListener("click", closeTradeModal);
+      document.getElementById("cancelTradeBtn").addEventListener("click", closeTradeModal);
+      document.getElementById("tradeBackdrop").addEventListener("click", (e)=>{
+        if (e.target.id === "tradeBackdrop") closeTradeModal();
+      });
+      document.getElementById("saveTradeBtn").addEventListener("click", saveTrade);
+
+      // refresh buttons
+      document.getElementById("refreshBtn1").addEventListener("click", fullRefresh);
+      document.getElementById("refreshBtn2").addEventListener("click", fullRefresh);
+
+      // journal
+      loadJournal();
+      document.getElementById("journalSaveBtn").addEventListener("click", saveJournal);
+
+      // auth
+      const u = await requireAuth();
+      if (!u) return;
+
+      // route default
+      if (!location.hash) location.hash = "focus";
+      renderRoute();
+
+      await fullRefresh();
+    }
+
+    init();
   </script>
 </body>
 </html>
