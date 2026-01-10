@@ -588,24 +588,24 @@
                 <h1>analytics</h1>
                 <div class="sub">deep data lives here, focus stays clean</div>
               </div>
-              <span class="pill">coming next</span>
+              <span class="pill">live</span>
             </div>
 
             <div class="smallRow">
               <div class="stat">
                 <div class="label">profit factor</div>
-                <div class="value">—</div>
-                <div class="hint">will calculate from wins/losses</div>
+                <div class="value" id="anaPF">—</div>
+                <div class="hint" id="anaPFHint">based on r multiple</div>
               </div>
               <div class="stat">
                 <div class="label">avg win vs avg loss</div>
-                <div class="value">—</div>
-                <div class="hint">shows edge and risk control</div>
+                <div class="value" id="anaWinLoss">—</div>
+                <div class="hint" id="anaWinLossHint">wins and losses in r</div>
               </div>
               <div class="stat">
                 <div class="label">best hour</div>
-                <div class="value">—</div>
-                <div class="hint">your top performing hour</div>
+                <div class="value" id="anaBestHour">—</div>
+                <div class="hint" id="anaBestHourHint">by average r</div>
               </div>
             </div>
 
@@ -614,17 +614,20 @@
                 <div class="chartTitle"><h3>pnl by day (calendar)</h3><span class="badge">visual</span></div>
                 <div class="fakeChart">calendar view placeholder</div>
               </div>
+
               <div class="chartBox">
                 <div class="chartTitle"><h3>hourly performance</h3><span class="badge">sessionly</span></div>
-                <div class="fakeChart">bar chart placeholder</div>
+                <div class="fakeChart" id="hourlyChart">hourly performance will appear after 2+ trades</div>
               </div>
+
               <div class="chartBox">
                 <div class="chartTitle"><h3>win vs loss distribution</h3><span class="badge">edge</span></div>
                 <div class="fakeChart">distribution placeholder</div>
               </div>
+
               <div class="chartBox">
                 <div class="chartTitle"><h3>equity curve</h3><span class="badge">trend</span></div>
-                <div class="fakeChart">line chart placeholder</div>
+                <div class="fakeChart" id="equityChart">equity curve will appear after 2+ trades</div>
               </div>
             </div>
 
@@ -890,10 +893,183 @@
       document.getElementById("statAvgRr").textContent = rrCount ? fmtNum(avgRr) : "—";
     }
 
+    async function fetchTradesForAnalytics(){
+      const { data, error } = await sb
+        .from("trades")
+        .select("trade_date, r_multiple")
+        .order("trade_date", { ascending: true })
+        .limit(5000);
+
+      if (error) return { rows: [], error };
+      return { rows: data || [], error: null };
+    }
+
+    function calcAnalytics(rows){
+      const clean = rows
+        .map(r => ({ t: r.trade_date, r: Number(r.r_multiple) }))
+        .filter(x => x.t && !Number.isNaN(x.r));
+
+      const wins = clean.filter(x => x.r > 0).map(x => x.r);
+      const losses = clean.filter(x => x.r < 0).map(x => x.r);
+
+      const grossWin = wins.reduce((a,b)=>a+b,0);
+      const grossLossAbs = losses.reduce((a,b)=>a+Math.abs(b),0);
+
+      const pf = (grossLossAbs > 0) ? (grossWin / grossLossAbs) : (wins.length ? Infinity : NaN);
+
+      const avgWin = wins.length ? (grossWin / wins.length) : NaN;
+      const avgLossAbs = losses.length ? (grossLossAbs / losses.length) : NaN;
+
+      // best hour by avg r
+      const byHour = new Map();
+      for (const x of clean){
+        const d = new Date(x.t);
+        const h = d.getHours();
+        if (!byHour.has(h)) byHour.set(h, { sum:0, n:0 });
+        const o = byHour.get(h);
+        o.sum += x.r;
+        o.n += 1;
+      }
+      let bestHour = null;
+      let bestHourAvg = -Infinity;
+      for (const [h, o] of byHour.entries()){
+        const avg = o.sum / o.n;
+        if (avg > bestHourAvg){
+          bestHourAvg = avg;
+          bestHour = h;
+        }
+      }
+
+      return { clean, pf, avgWin, avgLossAbs, bestHour, bestHourAvg, byHour };
+    }
+
+    function setText(id, text){
+      const el = document.getElementById(id);
+      if (el) el.textContent = text;
+    }
+
+    function drawEquitySVG(points){
+      const el = document.getElementById("equityChart");
+      if (!el) return;
+
+      if (points.length < 2){
+        el.textContent = "equity curve will appear after 2+ trades";
+        return;
+      }
+
+      const w = 640, h = 220, pad = 18;
+
+      const ys = points.map(p => p.y);
+      const minY = Math.min(...ys);
+      const maxY = Math.max(...ys);
+      const span = (maxY - minY) || 1;
+
+      const toX = (i) => pad + (i * (w - pad*2) / (points.length - 1));
+      const toY = (y) => pad + ((maxY - y) * (h - pad*2) / span);
+
+      let d = `M ${toX(0)} ${toY(points[0].y)}`;
+      for (let i=1;i<points.length;i++){
+        d += ` L ${toX(i)} ${toY(points[i].y)}`;
+      }
+
+      el.innerHTML = `
+        <svg viewBox="0 0 ${w} ${h}" width="100%" height="100%" preserveAspectRatio="none">
+          <path d="${d}" fill="none" stroke="currentColor" stroke-width="2.5" opacity="0.9"/>
+        </svg>
+      `;
+      el.style.color = "var(--accent)";
+    }
+
+    function drawHourlyBars(byHour){
+      const el = document.getElementById("hourlyChart");
+      if (!el) return;
+
+      const hours = Array.from({length:24}, (_,i)=>i);
+      const vals = hours.map(h=>{
+        const o = byHour.get(h);
+        return o ? (o.sum / o.n) : 0;
+      });
+
+      const nonZeroCount = vals.filter(v=>v!==0).length;
+      if (nonZeroCount === 0){
+        el.textContent = "hourly performance will appear after you have trades across hours";
+        return;
+      }
+
+      const w = 640, h = 220, pad = 18;
+      const maxAbs = Math.max(...vals.map(v=>Math.abs(v))) || 1;
+
+      const barW = (w - pad*2) / 24;
+      const midY = h/2;
+
+      const bars = vals.map((v, i)=>{
+        const x = pad + i*barW + 2;
+        const bw = Math.max(2, barW - 4);
+        const bh = (Math.abs(v) / maxAbs) * (h/2 - pad);
+        const y = v >= 0 ? (midY - bh) : midY;
+        const opacity = v === 0 ? 0.25 : 0.9;
+        return `<rect x="${x}" y="${y}" width="${bw}" height="${bh}" rx="4" opacity="${opacity}"></rect>`;
+      }).join("");
+
+      el.innerHTML = `
+        <svg viewBox="0 0 ${w} ${h}" width="100%" height="100%" preserveAspectRatio="none">
+          <line x1="${pad}" y1="${midY}" x2="${w-pad}" y2="${midY}" stroke="currentColor" opacity="0.25"/>
+          <g fill="currentColor">${bars}</g>
+        </svg>
+      `;
+      el.style.color = "var(--accent)";
+    }
+
+    async function refreshAnalytics(){
+      const { rows, error } = await fetchTradesForAnalytics();
+      if (error){
+        setText("anaPF", "—");
+        setText("anaWinLoss", "—");
+        setText("anaBestHour", "—");
+        return;
+      }
+
+      const a = calcAnalytics(rows);
+
+      if (!a.clean.length){
+        setText("anaPF", "—");
+        setText("anaWinLoss", "—");
+        setText("anaBestHour", "—");
+        return;
+      }
+
+      const pfText = (a.pf === Infinity) ? "∞" : (Number.isNaN(a.pf) ? "—" : a.pf.toFixed(2));
+      setText("anaPF", pfText);
+      setText("anaPFHint", `from ${a.clean.length} trades`);
+
+      const winLossText =
+        (!Number.isNaN(a.avgWin) && !Number.isNaN(a.avgLossAbs))
+          ? `${a.avgWin.toFixed(2)} vs ${a.avgLossAbs.toFixed(2)}`
+          : "—";
+      setText("anaWinLoss", winLossText);
+      setText("anaWinLossHint", "avg win r vs avg loss r");
+
+      if (a.bestHour !== null){
+        setText("anaBestHour", String(a.bestHour).padStart(2,"0") + ":00");
+        setText("anaBestHourHint", `avg r ${a.bestHourAvg.toFixed(2)}`);
+      } else {
+        setText("anaBestHour", "—");
+      }
+
+      let cum = 0;
+      const points = a.clean.map(x=>{
+        cum += x.r;
+        return { y: cum };
+      });
+      drawEquitySVG(points);
+      drawHourlyBars(a.byHour);
+    }
+
     async function refreshAll(){
       const trades = await fetchTrades();
       renderTrades(trades);
       calcStats(trades);
+      await refreshAnalytics();
     }
 
     async function logout(){
@@ -923,6 +1099,8 @@
 
       localStorage.setItem("sessionly_view", name);
       history.replaceState(null, "", "#"+name);
+
+      if (name === "analytics") refreshAnalytics();
     }
 
     function bootNav(){
@@ -946,7 +1124,6 @@
       overlay.classList.add("show");
       overlay.setAttribute("aria-hidden", "false");
 
-      // set default datetime-local to now (local)
       const now = new Date();
       const pad = (n) => String(n).padStart(2,"0");
       const local = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`;
@@ -996,7 +1173,6 @@
       if (!symbol) { modalMsg.textContent = "please enter a symbol"; saveBtn.disabled=false; return; }
       if (!direction) { modalMsg.textContent = "please choose direction"; saveBtn.disabled=false; return; }
 
-      // convert datetime-local to ISO
       const tradeDateISO = new Date(tradeDateLocal).toISOString();
 
       const payload = {
@@ -1012,7 +1188,6 @@
         r_multiple: rMultiple === "" ? null : Number(rMultiple)
       };
 
-      // avoid NaN inserts
       if (payload.rr !== null && Number.isNaN(payload.rr)) { modalMsg.textContent = "rr must be a number"; saveBtn.disabled=false; return; }
       if (payload.r_multiple !== null && Number.isNaN(payload.r_multiple)) { modalMsg.textContent = "r multiple must be a number"; saveBtn.disabled=false; return; }
 
@@ -1032,7 +1207,6 @@
       }, 350);
     }
 
-    // close on overlay click (outside modal)
     overlay.addEventListener("click", (e) => {
       if (e.target === overlay) closeModal();
     });
@@ -1045,7 +1219,6 @@
     document.getElementById("cancelBtn").addEventListener("click", closeModal);
     saveBtn.addEventListener("click", saveTrade);
 
-    // buttons
     document.getElementById("themeBtn").addEventListener("click", toggleTheme);
     document.getElementById("logoutBtn").addEventListener("click", logout);
     document.getElementById("refreshBtn").addEventListener("click", refreshAll);
