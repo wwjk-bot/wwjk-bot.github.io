@@ -373,6 +373,8 @@
       color:color-mix(in srgb, var(--muted) 80%, transparent);
       font-weight:950;
       font-size:12px;
+      text-align:center;
+      padding:14px;
     }
 
     .smallRow{
@@ -383,13 +385,94 @@
     }
     @media (max-width: 980px){ .smallRow{grid-template-columns:1fr;} }
 
+    /* modal */
+    .overlay{
+      position:fixed;
+      inset:0;
+      background: rgba(0,0,0,.55);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+      z-index:50;
+    }
+    .overlay.show{display:flex;}
+    .modal{
+      width: min(720px, 100%);
+      background: color-mix(in srgb, var(--card) 96%, transparent);
+      border:1px solid color-mix(in srgb, var(--line) 90%, transparent);
+      border-radius:22px;
+      box-shadow: var(--shadow);
+      padding:18px;
+    }
+    .modalTop{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:10px;
+    }
+    .modalTop h2{margin:0;font-size:16px;}
+    .x{
+      width:40px;
+      height:40px;
+      border-radius:14px;
+      border:1px solid color-mix(in srgb, var(--line) 90%, transparent);
+      background: color-mix(in srgb, var(--bg) 55%, transparent);
+      color:var(--text);
+      cursor:pointer;
+      font-weight:950;
+    }
+
+    .form{
+      display:grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap:12px;
+      margin-top:12px;
+    }
+    @media (max-width: 720px){ .form{grid-template-columns:1fr;} }
+
+    label{
+      display:block;
+      font-size:12px;
+      font-weight:950;
+      color:var(--muted);
+      margin:0 0 6px 0;
+      letter-spacing:.35px;
+      text-transform:uppercase;
+    }
+    input, select, textarea{
+      width:100%;
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid color-mix(in srgb, var(--line) 90%, transparent);
+      background: color-mix(in srgb, var(--bg) 55%, transparent);
+      color:var(--text);
+      outline:none;
+      font-size:14px;
+    }
+    textarea{min-height:96px; resize:vertical;}
+    .full{grid-column:1 / -1;}
+    .rowBtns{
+      display:flex;
+      gap:10px;
+      justify-content:flex-end;
+      margin-top:12px;
+      flex-wrap:wrap;
+    }
+    .helper{
+      margin-top:8px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.45;
+      min-height:16px;
+    }
   </style>
 </head>
 
 <body>
   <div class="app">
 
-    <!-- sidebar -->
     <aside class="sidebar">
       <div class="brand">
         <span class="dot"></span>
@@ -399,25 +482,10 @@
       <div class="who" id="whoami">checking session...</div>
 
       <nav class="nav" aria-label="dashboard navigation">
-        <button class="navbtn active" data-view="focus" type="button">
-          focus
-          <span class="badge">daily</span>
-        </button>
-
-        <button class="navbtn" data-view="analytics" type="button">
-          analytics
-          <span class="badge">charts</span>
-        </button>
-
-        <button class="navbtn" data-view="trades" type="button">
-          trades
-          <span class="badge">table</span>
-        </button>
-
-        <button class="navbtn" data-view="journal" type="button">
-          journal
-          <span class="badge">notes</span>
-        </button>
+        <button class="navbtn active" data-view="focus" type="button">focus <span class="badge">daily</span></button>
+        <button class="navbtn" data-view="analytics" type="button">analytics <span class="badge">charts</span></button>
+        <button class="navbtn" data-view="trades" type="button">trades <span class="badge">table</span></button>
+        <button class="navbtn" data-view="journal" type="button">journal <span class="badge">notes</span></button>
       </nav>
 
       <div class="sideActions">
@@ -425,16 +493,12 @@
         <button class="btn" id="logoutBtn" type="button">log out</button>
       </div>
 
-      <p class="sideFooter">
-        calm by default, deep when you want it
-      </p>
+      <p class="sideFooter">calm by default, deep when you want it</p>
     </aside>
 
-    <!-- main -->
     <main class="main">
       <div class="wrap">
 
-        <!-- focus view -->
         <section class="view active" id="view-focus">
           <div class="card">
             <div class="toprow">
@@ -449,22 +513,22 @@
               <div class="stat">
                 <div class="label">recent trades loaded</div>
                 <div class="value" id="statTrades">—</div>
-                <div class="hint">this will become “total trades” by date range later</div>
+                <div class="hint">last 8 trades</div>
               </div>
               <div class="stat">
                 <div class="label">win rate</div>
                 <div class="value" id="statWinrate">—</div>
-                <div class="hint">wins / trades in the list</div>
+                <div class="hint">wins / last 8 trades</div>
               </div>
               <div class="stat">
-                <div class="label">total pnl</div>
-                <div class="value" id="statPnl">—</div>
-                <div class="hint">sum pnl in the list</div>
+                <div class="label">total r</div>
+                <div class="value" id="statTotalR">—</div>
+                <div class="hint">sum r multiple</div>
               </div>
               <div class="stat">
                 <div class="label">avg rr</div>
                 <div class="value" id="statAvgRr">—</div>
-                <div class="hint">average rr in the list</div>
+                <div class="hint">average rr</div>
               </div>
             </div>
 
@@ -482,7 +546,7 @@
                       <th>symbol</th>
                       <th>dir</th>
                       <th>rr</th>
-                      <th>pnl</th>
+                      <th>r</th>
                     </tr>
                   </thead>
                   <tbody id="tradesTbody">
@@ -509,9 +573,7 @@
                   <div class="chip"><strong>goal</strong> no revenge</div>
                 </div>
 
-                <p class="mutedNote">
-                  next we’ll generate this from your real patterns and mistakes, for now it’s a placeholder
-                </p>
+                <p class="mutedNote">next we’ll generate this from your real patterns and mistakes</p>
 
                 <button class="btn" id="refreshBtn" type="button">refresh stats</button>
               </div>
@@ -519,7 +581,6 @@
           </div>
         </section>
 
-        <!-- analytics view -->
         <section class="view" id="view-analytics">
           <div class="card">
             <div class="toprow">
@@ -550,45 +611,29 @@
 
             <div class="anaGrid">
               <div class="chartBox">
-                <div class="chartTitle">
-                  <h3>pnl by day (calendar)</h3>
-                  <span class="badge">visual</span>
-                </div>
+                <div class="chartTitle"><h3>pnl by day (calendar)</h3><span class="badge">visual</span></div>
                 <div class="fakeChart">calendar view placeholder</div>
               </div>
-
               <div class="chartBox">
-                <div class="chartTitle">
-                  <h3>hourly performance</h3>
-                  <span class="badge">sessionly</span>
-                </div>
+                <div class="chartTitle"><h3>hourly performance</h3><span class="badge">sessionly</span></div>
                 <div class="fakeChart">bar chart placeholder</div>
               </div>
-
               <div class="chartBox">
-                <div class="chartTitle">
-                  <h3>win vs loss distribution</h3>
-                  <span class="badge">edge</span>
-                </div>
+                <div class="chartTitle"><h3>win vs loss distribution</h3><span class="badge">edge</span></div>
                 <div class="fakeChart">distribution placeholder</div>
               </div>
-
               <div class="chartBox">
-                <div class="chartTitle">
-                  <h3>equity curve</h3>
-                  <span class="badge">trend</span>
-                </div>
+                <div class="chartTitle"><h3>equity curve</h3><span class="badge">trend</span></div>
                 <div class="fakeChart">line chart placeholder</div>
               </div>
             </div>
 
             <p class="mutedNote" style="margin-top:14px;">
-              we’ll build these charts after add trade is finished and your dataset starts filling up
+              once you log trades here, we’ll build real charts from your dataset
             </p>
           </div>
         </section>
 
-        <!-- trades view -->
         <section class="view" id="view-trades">
           <div class="card">
             <div class="toprow">
@@ -598,14 +643,10 @@
               </div>
               <button class="btn primary" type="button" id="addTradeBtn2">+ add trade</button>
             </div>
-
-            <div class="fakeChart" style="min-height:260px;">
-              full trades table placeholder (next after add trade)
-            </div>
+            <div class="fakeChart" style="min-height:260px;">full trades table placeholder (next)</div>
           </div>
         </section>
 
-        <!-- journal view -->
         <section class="view" id="view-journal">
           <div class="card">
             <div class="toprow">
@@ -615,15 +656,85 @@
               </div>
               <span class="pill">soon</span>
             </div>
-
-            <div class="fakeChart" style="min-height:260px;">
-              journal editor placeholder
-            </div>
+            <div class="fakeChart" style="min-height:260px;">journal editor placeholder</div>
           </div>
         </section>
 
       </div>
     </main>
+  </div>
+
+  <!-- add trade modal -->
+  <div class="overlay" id="overlay" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-label="add trade">
+      <div class="modalTop">
+        <h2>add trade</h2>
+        <button class="x" id="closeModalBtn" type="button">✕</button>
+      </div>
+
+      <div class="helper" id="modalMsg"></div>
+
+      <div class="form">
+        <div>
+          <label for="tradeDate">trade date</label>
+          <input id="tradeDate" type="datetime-local" />
+        </div>
+
+        <div>
+          <label for="symbol">symbol</label>
+          <input id="symbol" type="text" placeholder="xauusd, es, aapl" />
+        </div>
+
+        <div>
+          <label for="direction">direction</label>
+          <select id="direction">
+            <option value="">select</option>
+            <option value="long">long</option>
+            <option value="short">short</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="session">session</label>
+          <select id="session">
+            <option value="">select</option>
+            <option value="asia">asia</option>
+            <option value="london">london</option>
+            <option value="ny">ny</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="rr">rr (planned)</label>
+          <input id="rr" type="number" step="0.01" placeholder="e.g. 2.0" />
+        </div>
+
+        <div>
+          <label for="rMultiple">r multiple (result)</label>
+          <input id="rMultiple" type="number" step="0.01" placeholder="e.g. 1.5 or -1" />
+        </div>
+
+        <div class="full">
+          <label for="strategy">strategy</label>
+          <input id="strategy" type="text" placeholder="fvg tap, breakout, forever model..." />
+        </div>
+
+        <div class="full">
+          <label for="mistakes">mistakes (comma separated)</label>
+          <input id="mistakes" type="text" placeholder="late entry, moved stop, revenge, no plan" />
+        </div>
+
+        <div class="full">
+          <label for="notes">notes</label>
+          <textarea id="notes" placeholder="what happened, why you entered, what to fix"></textarea>
+        </div>
+      </div>
+
+      <div class="rowBtns">
+        <button class="btn" id="cancelBtn" type="button">cancel</button>
+        <button class="btn primary" id="saveBtn" type="button">save trade</button>
+      </div>
+    </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -728,14 +839,12 @@
       tb.innerHTML = rows.map(r => {
         const dir = (r.direction || "").toLowerCase();
         const dirText = dir ? dir : "—";
+
         const rrNum = (r.rr === null || r.rr === undefined) ? null : Number(r.rr);
         const rrText = rrNum === null || Number.isNaN(rrNum) ? "—" : fmtNum(rrNum);
 
-        const pnlNum = (r.r_multiple === null || r.r_multiple === undefined)
-          ? null
-          : Number(r.r_multiple);
-
-        const pnlText = pnlNum === null || Number.isNaN(pnlNum) ? "—" : fmtNum(pnlNum);
+        const rNum = (r.r_multiple === null || r.r_multiple === undefined) ? null : Number(r.r_multiple);
+        const rText = rNum === null || Number.isNaN(rNum) ? "—" : fmtNum(rNum);
 
         return `
           <tr>
@@ -743,7 +852,7 @@
             <td>${(r.symbol || "—").toUpperCase()}</td>
             <td>${dirText}</td>
             <td>${rrText}</td>
-            <td>${pnlText}</td>
+            <td>${rText}</td>
           </tr>
         `;
       }).join("");
@@ -753,17 +862,16 @@
       const total = rows.length;
 
       let wins = 0;
-      let pnlSum = 0;
+      let totalR = 0;
+
       let rrSum = 0;
       let rrCount = 0;
 
       for (const r of rows){
-        const pnl = (r.r_multiple === null || r.r_multiple === undefined)
-          ? NaN
-          : Number(r.r_multiple);
-        if (!Number.isNaN(pnl)) {
-          pnlSum += pnl;
-          if (pnl > 0) wins += 1;
+        const rmult = (r.r_multiple === null || r.r_multiple === undefined) ? NaN : Number(r.r_multiple);
+        if (!Number.isNaN(rmult)) {
+          totalR += rmult;
+          if (rmult > 0) wins += 1;
         }
 
         const rr = (r.rr === null || r.rr === undefined) ? NaN : Number(r.rr);
@@ -778,7 +886,7 @@
 
       document.getElementById("statTrades").textContent = String(total || 0);
       document.getElementById("statWinrate").textContent = total ? fmtPct(winrate) : "—";
-      document.getElementById("statPnl").textContent = total ? fmtNum(pnlSum) : "—";
+      document.getElementById("statTotalR").textContent = total ? fmtNum(totalR) : "—";
       document.getElementById("statAvgRr").textContent = rrCount ? fmtNum(avgRr) : "—";
     }
 
@@ -813,37 +921,144 @@
       const activeBtn = document.querySelector(`.navbtn[data-view="${name}"]`);
       if (activeBtn) activeBtn.classList.add("active");
 
-      // remember choice
       localStorage.setItem("sessionly_view", name);
-
-      // keep url clean but reflect state
       history.replaceState(null, "", "#"+name);
     }
 
     function bootNav(){
-      // click handlers
       document.querySelectorAll(".navbtn").forEach(btn => {
         btn.addEventListener("click", () => showView(btn.getAttribute("data-view")));
       });
 
-      // initial view from hash or saved
       const hash = (location.hash || "").replace("#","").trim();
       const saved = localStorage.getItem("sessionly_view");
       const initial = hash || saved || "focus";
       showView(initial);
     }
 
+    // modal logic
+    const overlay = document.getElementById("overlay");
+    const modalMsg = document.getElementById("modalMsg");
+    const saveBtn = document.getElementById("saveBtn");
+
+    function openModal(){
+      modalMsg.textContent = "";
+      overlay.classList.add("show");
+      overlay.setAttribute("aria-hidden", "false");
+
+      // set default datetime-local to now (local)
+      const now = new Date();
+      const pad = (n) => String(n).padStart(2,"0");
+      const local = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`;
+      document.getElementById("tradeDate").value = local;
+      document.getElementById("symbol").focus();
+    }
+
+    function closeModal(){
+      overlay.classList.remove("show");
+      overlay.setAttribute("aria-hidden", "true");
+      saveBtn.disabled = false;
+    }
+
+    function parseMistakes(input){
+      const raw = (input || "").trim();
+      if (!raw) return null;
+      const items = raw
+        .split(",")
+        .map(s => s.trim())
+        .filter(Boolean);
+      return items.length ? items : null;
+    }
+
+    async function saveTrade(){
+      saveBtn.disabled = true;
+      modalMsg.textContent = "saving...";
+
+      const { data: userRes } = await sb.auth.getUser();
+      const user = userRes?.user;
+      if (!user) {
+        modalMsg.textContent = "you are not signed in, please log in again";
+        saveBtn.disabled = false;
+        return;
+      }
+
+      const tradeDateLocal = document.getElementById("tradeDate").value;
+      const symbol = document.getElementById("symbol").value.trim();
+      const direction = document.getElementById("direction").value;
+      const session = document.getElementById("session").value;
+      const rr = document.getElementById("rr").value.trim();
+      const rMultiple = document.getElementById("rMultiple").value.trim();
+      const strategy = document.getElementById("strategy").value.trim();
+      const mistakes = parseMistakes(document.getElementById("mistakes").value);
+      const notes = document.getElementById("notes").value.trim();
+
+      if (!tradeDateLocal) { modalMsg.textContent = "please choose a trade date"; saveBtn.disabled=false; return; }
+      if (!symbol) { modalMsg.textContent = "please enter a symbol"; saveBtn.disabled=false; return; }
+      if (!direction) { modalMsg.textContent = "please choose direction"; saveBtn.disabled=false; return; }
+
+      // convert datetime-local to ISO
+      const tradeDateISO = new Date(tradeDateLocal).toISOString();
+
+      const payload = {
+        user_id: user.id,
+        trade_date: tradeDateISO,
+        symbol: symbol,
+        direction: direction,
+        session: session || null,
+        strategy: strategy || null,
+        notes: notes || null,
+        mistakes: mistakes,
+        rr: rr === "" ? null : Number(rr),
+        r_multiple: rMultiple === "" ? null : Number(rMultiple)
+      };
+
+      // avoid NaN inserts
+      if (payload.rr !== null && Number.isNaN(payload.rr)) { modalMsg.textContent = "rr must be a number"; saveBtn.disabled=false; return; }
+      if (payload.r_multiple !== null && Number.isNaN(payload.r_multiple)) { modalMsg.textContent = "r multiple must be a number"; saveBtn.disabled=false; return; }
+
+      const { error } = await sb.from("trades").insert(payload);
+
+      if (error) {
+        modalMsg.textContent = "save failed: " + error.message;
+        saveBtn.disabled = false;
+        return;
+      }
+
+      modalMsg.textContent = "saved ✅";
+      await refreshAll();
+      setTimeout(() => {
+        closeModal();
+        toast("trade saved");
+      }, 350);
+    }
+
+    // close on overlay click (outside modal)
+    overlay.addEventListener("click", (e) => {
+      if (e.target === overlay) closeModal();
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && overlay.classList.contains("show")) closeModal();
+    });
+
+    document.getElementById("closeModalBtn").addEventListener("click", closeModal);
+    document.getElementById("cancelBtn").addEventListener("click", closeModal);
+    saveBtn.addEventListener("click", saveTrade);
+
     // buttons
     document.getElementById("themeBtn").addEventListener("click", toggleTheme);
     document.getElementById("logoutBtn").addEventListener("click", logout);
     document.getElementById("refreshBtn").addEventListener("click", refreshAll);
 
-    function addTradePlaceholder(){
-      toast("next step: add trade modal (we build it next)");
+    document.getElementById("addTradeBtn").addEventListener("click", () => {
       showView("focus");
-    }
-    document.getElementById("addTradeBtn").addEventListener("click", addTradePlaceholder);
-    document.getElementById("addTradeBtn2").addEventListener("click", addTradePlaceholder);
+      openModal();
+    });
+
+    document.getElementById("addTradeBtn2").addEventListener("click", () => {
+      showView("trades");
+      openModal();
+    });
 
     // boot
     (async () => {
