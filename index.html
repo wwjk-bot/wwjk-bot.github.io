@@ -37,7 +37,6 @@
       overflow-x:hidden;
     }
 
-    /* background */
     .bg-wrap{position:fixed; inset:0; pointer-events:none; z-index:-1; overflow:hidden;}
     .grid{
       position:absolute; inset:-40%;
@@ -83,7 +82,6 @@
       pointer-events:none;
     }
 
-    /* layout */
     .container{max-width:1120px; margin:0 auto; padding:0 20px;}
     .nav{
       position:sticky; top:0; z-index:20;
@@ -108,9 +106,7 @@
       background: var(--accent);
       box-shadow: 0 0 0 6px rgba(55,247,182,.12);
     }
-    .nav-links{
-      display:flex; align-items:center; gap:10px;
-    }
+    .nav-links{display:flex; align-items:center; gap:10px;}
     .chip{
       display:inline-flex; align-items:center; justify-content:center;
       padding:8px 12px;
@@ -289,19 +285,10 @@
     }
     .tag.good .t-dot{background: rgba(55,247,182,.95); box-shadow: 0 0 0 6px rgba(55,247,182,.12);}
 
-    /* social proof */
     .section{padding:54px 0;}
-    .section-title{
-      margin:0 0 10px;
-      font-size:28px;
-      letter-spacing:-.01em;
-    }
-    .section-sub{
-      margin:0 0 18px;
-      color:var(--muted);
-      line-height:1.6;
-      max-width:70ch;
-    }
+    .section-title{margin:0 0 10px; font-size:28px; letter-spacing:-.01em;}
+    .section-sub{margin:0 0 18px; color:var(--muted); line-height:1.6; max-width:70ch;}
+
     .logos{
       display:grid;
       grid-template-columns: repeat(5, minmax(0,1fr));
@@ -337,7 +324,6 @@
     .quote{margin:10px 0 12px; color:rgba(255,255,255,.78); line-height:1.55; font-size:14px;}
     .who{color:rgba(255,255,255,.58); font-size:13px;}
 
-    /* features */
     .grid3{
       display:grid;
       grid-template-columns: repeat(3, minmax(0,1fr));
@@ -373,7 +359,7 @@
     .fcard h3{margin:0 0 8px; font-size:16px; text-transform:lowercase;}
     .fcard p{margin:0; color:rgba(255,255,255,.68); line-height:1.55; font-size:14px;}
 
-    /* PRICING */
+    /* pricing */
     .pricing-wrap{
       border-radius: var(--radius);
       border:1px solid rgba(255,255,255,.08);
@@ -389,6 +375,7 @@
       flex-wrap:wrap;
       padding:0 6px 8px;
     }
+
     .toggle{
       display:flex;
       align-items:center;
@@ -424,20 +411,132 @@
       border-color: rgba(55,247,182,.40);
     }
     .pill.on::after{ left:27px; background: linear-gradient(180deg, rgba(55,247,182,.95), rgba(55,247,182,.70)); }
-    .deal{
+
+    /* BIG DEAL BANNER */
+    .deal-banner{
+      display:none;
+      width:100%;
+      border-radius: 20px;
+      border: 1px solid rgba(55,247,182,.34);
+      background: linear-gradient(180deg, rgba(55,247,182,.14), rgba(124,92,255,.10));
+      box-shadow: 0 18px 44px rgba(0,0,0,.38);
+      padding:14px 14px;
+      margin:12px 6px 4px;
+      position:relative;
+      overflow:hidden;
+    }
+    .deal-banner::before{
+      content:"";
+      position:absolute; inset:-2px;
+      background: radial-gradient(520px 240px at 12% 20%, rgba(55,247,182,.22), transparent 62%),
+                  radial-gradient(520px 240px at 88% 10%, rgba(124,92,255,.22), transparent 62%);
+      opacity:.9;
+      pointer-events:none;
+    }
+    .deal-banner > *{position:relative; z-index:2;}
+    .deal-top{
+      display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap;
+    }
+    .deal-left{
+      display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+    }
+    .deal-flag{
       display:inline-flex;
       align-items:center;
-      gap:8px;
-      padding:8px 12px;
-      border:1px solid rgba(55,247,182,.28);
+      gap:10px;
+      padding:10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(55,247,182,.44);
       background: rgba(55,247,182,.12);
-      border-radius:999px;
-      color:rgba(255,255,255,.86);
+      box-shadow: 0 14px 28px rgba(0,0,0,.26);
+      font-weight:900;
+      letter-spacing:.2px;
+      color: rgba(255,255,255,.92);
+    }
+    .deal-flag b{
+      font-size:18px;
+      color: var(--accent);
+    }
+    .deal-flag span{
       font-size:13px;
+      color: rgba(255,255,255,.74);
+      font-weight:800;
+    }
+    .deal-meta{
+      color: rgba(255,255,255,.72);
+      font-size:13px;
+      line-height:1.35;
+      max-width:62ch;
+    }
+    .deal-timer{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      align-items:flex-end;
+      min-width: 220px;
+    }
+    .timer-pill{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 12px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(11,16,32,.55);
+      box-shadow: 0 14px 28px rgba(0,0,0,.26);
+      font-weight:900;
+      letter-spacing:.2px;
+      color: rgba(255,255,255,.92);
       white-space:nowrap;
     }
-    .deal b{color:var(--accent)}
-    .deal small{color:rgba(255,255,255,.70)}
+    .timer-pill .dot{
+      width:8px;height:8px;border-radius:999px;
+      background: rgba(255,90,90,.95);
+      box-shadow: 0 0 0 6px rgba(255,90,90,.12);
+    }
+    .timer-note{
+      color: rgba(255,255,255,.58);
+      font-size:12.5px;
+      text-align:right;
+    }
+
+    .save-row{
+      margin-top:10px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .save-grid{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap:10px;
+      width:100%;
+    }
+    .save-box{
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      padding:10px 10px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      min-height:54px;
+    }
+    .save-box .k{
+      color: rgba(255,255,255,.70);
+      font-size:12.5px;
+      font-weight:800;
+      text-transform:lowercase;
+    }
+    .save-box .v{
+      color: rgba(55,247,182,.92);
+      font-weight:900;
+      letter-spacing:.2px;
+      white-space:nowrap;
+    }
 
     .plans{
       margin-top:14px;
@@ -473,6 +572,7 @@
       transform: translateY(-10px) scale(1.03);
     }
     .plan.popular:hover{transform: translateY(-14px) scale(1.04); border-color: rgba(55,247,182,.58);}
+
     .badge{
       position:absolute;
       top:14px;
@@ -567,7 +667,6 @@
     }
     .spark svg{width:12px;height:12px;fill:rgba(124,92,255,.95)}
 
-    /* FAQ */
     details{
       border-radius: var(--radius2);
       border:1px solid rgba(255,255,255,.10);
@@ -590,7 +689,6 @@
     }
     details p{margin:10px 0 0; color:rgba(255,255,255,.68); line-height:1.6; font-size:14px;}
 
-    /* footer */
     footer{
       padding:38px 0 60px;
       border-top: 1px solid rgba(255,255,255,.08);
@@ -602,7 +700,6 @@
     .foot-links a{color:rgba(255,255,255,.62); text-decoration:none;}
     .foot-links a:hover{text-decoration:underline}
 
-    /* responsive */
     @media (max-width: 980px){
       .hero{grid-template-columns: 1fr; gap:12px; padding-top:46px;}
       h1{font-size:44px}
@@ -612,6 +709,9 @@
       .grid3{grid-template-columns: 1fr;}
       .plans{grid-template-columns: 1fr;}
       .faqgrid{grid-template-columns: 1fr;}
+      .save-grid{grid-template-columns: 1fr;}
+      .deal-timer{align-items:flex-start}
+      .timer-note{text-align:left}
       .plan.popular{transform:none}
     }
   </style>
@@ -759,7 +859,7 @@
     <section id="pricing" class="section">
       <div class="container">
         <h2 class="section-title">pricing</h2>
-        <p class="section-sub">choose monthly or yearly. yearly has a launch discount window.</p>
+        <p class="section-sub">choose monthly or yearly. yearly can unlock a limited promo per visitor.</p>
 
         <div class="pricing-wrap">
           <div class="pricing-head">
@@ -768,9 +868,44 @@
               <div class="pill" id="billingToggle" role="switch" aria-checked="false" tabindex="0"></div>
               <span class="label">yearly</span>
             </div>
+          </div>
 
-            <div class="deal" id="dealPill">
-              limited time <b id="dealPct">40%</b> off yearly <small>(launch window)</small>
+          <!-- BIG PROMO BANNER -->
+          <div class="deal-banner" id="dealBanner">
+            <div class="deal-top">
+              <div class="deal-left">
+                <div class="deal-flag">
+                  <b id="dealPctBig">40%</b>
+                  <span>off yearly</span>
+                </div>
+                <div class="deal-meta" id="dealMeta">
+                  limited-time launch deal. turn on yearly to see the discounted yearly totals and your real savings.
+                </div>
+              </div>
+              <div class="deal-timer">
+                <div class="timer-pill">
+                  <span class="dot"></span>
+                  ends in <span id="timerText">08:00:00</span>
+                </div>
+                <div class="timer-note" id="timerNote">after it ends, it disappears for 24h then returns</div>
+              </div>
+            </div>
+
+            <div class="save-row">
+              <div class="save-grid">
+                <div class="save-box">
+                  <div class="k">starter saves</div>
+                  <div class="v" id="saveStarter">$0</div>
+                </div>
+                <div class="save-box">
+                  <div class="k">premium saves</div>
+                  <div class="v" id="savePremium">$0</div>
+                </div>
+                <div class="save-box">
+                  <div class="k">professional saves</div>
+                  <div class="v" id="savePro">$0</div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -812,7 +947,7 @@
 
               <div class="trial">
                 <span class="spark"><svg viewBox="0 0 24 24"><path d="M12 2l1.6 5.2L19 9l-5.4 1.8L12 16l-1.6-5.2L5 9l5.4-1.8L12 2z"/></svg></span>
-                7-day free trial (card required). you won’t be charged until day 7. cancel before day 7 to avoid billing.
+                7-day free trial (card required).
               </div>
             </article>
 
@@ -850,7 +985,7 @@
           </details>
           <details>
             <summary>how does the 7-day trial work?</summary>
-            <p>you add a card at signup, but you won’t be charged until the trial ends. cancel before day 7 to avoid billing.</p>
+            <p>you add a card at signup and you get 7 days to try it.</p>
           </details>
           <details>
             <summary>is this for futures only?</summary>
@@ -879,10 +1014,9 @@
   </main>
 
   <script>
-    // year
     document.getElementById("year").textContent = new Date().getFullYear();
 
-    // pricing toggle
+    // base pricing
     const PRICES = {
       monthly: {
         starter: { price: 19, per: "/ month" },
@@ -890,21 +1024,128 @@
         pro:     { price: 99, per: "/ month" }
       },
       yearly: {
-        starter: { annual: 19 * 12, standardOff: 0.30, launchOff: 0.40, per: "/ year" },
-        premium: { annual: 49 * 12, standardOff: 0.30, launchOff: 0.40, per: "/ year" },
-        pro:     { annual: 99 * 12, standardOff: 0.30, launchOff: 0.40, per: "/ year" }
+        starter: { annual: 19 * 12, per: "/ year" },
+        premium: { annual: 49 * 12, per: "/ year" },
+        pro:     { annual: 99 * 12, per: "/ year" }
       }
     };
 
-    const launchDiscount = true; // change to false if you want only standard discount
-    const billingToggle = document.getElementById("billingToggle");
-    const dealPill = document.getElementById("dealPill");
-    const dealPct = document.getElementById("dealPct");
+    // promo logic:
+    // each visitor gets: 8h promo on first visit -> then 24h cooldown -> then promo returns (cycle repeats)
+    const PROMO = {
+      promoHours: 8,
+      cooldownHours: 24,
+      promoDiscount: 0.40,     // big deal
+      standardDiscount: 0.30   // normal yearly discount when promo is off
+    };
 
+    const LS_KEY = "sessionly_promo_cycle_v1";
+    const dealBanner = document.getElementById("dealBanner");
+    const dealPctBig = document.getElementById("dealPctBig");
+    const timerText = document.getElementById("timerText");
+    const saveStarter = document.getElementById("saveStarter");
+    const savePremium = document.getElementById("savePremium");
+    const savePro = document.getElementById("savePro");
+
+    const billingToggle = document.getElementById("billingToggle");
     let mode = "monthly";
+
+    function nowMs(){ return Date.now(); }
+
+    function getCycle(){
+      const raw = localStorage.getItem(LS_KEY);
+      if(raw){
+        try{ return JSON.parse(raw); }catch(e){}
+      }
+      // start promo immediately on first load
+      const start = nowMs();
+      const cycle = { phase: "promo", phaseStart: start };
+      localStorage.setItem(LS_KEY, JSON.stringify(cycle));
+      return cycle;
+    }
+
+    function setCycle(cycle){
+      localStorage.setItem(LS_KEY, JSON.stringify(cycle));
+    }
+
+    function computePhase(){
+      const cycle = getCycle();
+      const t = nowMs();
+      const promoMs = PROMO.promoHours * 60 * 60 * 1000;
+      const coolMs  = PROMO.cooldownHours * 60 * 60 * 1000;
+
+      let phase = cycle.phase;
+      let phaseStart = cycle.phaseStart;
+
+      // advance if expired
+      if(phase === "promo"){
+        if(t - phaseStart >= promoMs){
+          phase = "cooldown";
+          phaseStart = phaseStart + promoMs;
+          setCycle({ phase, phaseStart });
+        }
+      }else{
+        if(t - phaseStart >= coolMs){
+          phase = "promo";
+          phaseStart = phaseStart + coolMs;
+          setCycle({ phase, phaseStart });
+        }
+      }
+
+      const phaseLen = (phase === "promo") ? promoMs : coolMs;
+      const phaseEnd = phaseStart + phaseLen;
+
+      return { phase, phaseStart, phaseEnd };
+    }
 
     function fmtUSD(n){
       return "$" + Math.round(n).toLocaleString("en-US");
+    }
+
+    function fmtClock(msLeft){
+      const s = Math.max(0, Math.floor(msLeft/1000));
+      const hh = String(Math.floor(s/3600)).padStart(2,"0");
+      const mm = String(Math.floor((s%3600)/60)).padStart(2,"0");
+      const ss = String(s%60).padStart(2,"0");
+      return `${hh}:${mm}:${ss}`;
+    }
+
+    function currentYearlyDiscount(){
+      const { phase } = computePhase();
+      return (phase === "promo") ? PROMO.promoDiscount : PROMO.standardDiscount;
+    }
+
+    function promoActive(){
+      const { phase } = computePhase();
+      return phase === "promo";
+    }
+
+    function updateDealUI(){
+      const phaseInfo = computePhase();
+
+      if(phaseInfo.phase === "promo"){
+        dealBanner.style.display = "block";
+        dealPctBig.textContent = Math.round(PROMO.promoDiscount * 100) + "%";
+        timerText.textContent = fmtClock(phaseInfo.phaseEnd - nowMs());
+      }else{
+        dealBanner.style.display = "none";
+      }
+    }
+
+    function updateSavingsUI(){
+      // only show meaningful numbers when yearly is selected
+      const off = currentYearlyDiscount();
+      const annualStarter = PRICES.yearly.starter.annual;
+      const annualPremium = PRICES.yearly.premium.annual;
+      const annualPro = PRICES.yearly.pro.annual;
+
+      const saveS = annualStarter * off;
+      const saveP = annualPremium * off;
+      const saveR = annualPro * off;
+
+      saveStarter.textContent = fmtUSD(saveS);
+      savePremium.textContent = fmtUSD(saveP);
+      savePro.textContent = fmtUSD(saveR);
     }
 
     function setMode(nextMode){
@@ -914,17 +1155,17 @@
       billingToggle.classList.toggle("on", isYearly);
       billingToggle.setAttribute("aria-checked", String(isYearly));
 
-      dealPill.style.display = isYearly ? "inline-flex" : "none";
-      dealPct.textContent = launchDiscount ? "40%" : "30%";
+      updateDealUI();
+      updateSavingsUI();
 
       document.querySelectorAll("[data-price]").forEach(el=>{
         const key = el.getAttribute("data-price"); // starter | premium | pro
         if(mode === "monthly"){
           el.textContent = "$" + PRICES.monthly[key].price;
         }else{
-          const conf = PRICES.yearly[key];
-          const off = launchDiscount ? conf.launchOff : conf.standardOff;
-          el.textContent = fmtUSD(conf.annual * (1 - off));
+          const annual = PRICES.yearly[key].annual;
+          const off = currentYearlyDiscount();
+          el.textContent = fmtUSD(annual * (1 - off));
         }
       });
 
@@ -933,8 +1174,8 @@
         if(mode === "monthly"){
           el.style.display = "none";
         }else{
-          const conf = PRICES.yearly[key];
-          el.textContent = fmtUSD(conf.annual);
+          const annual = PRICES.yearly[key].annual;
+          el.textContent = fmtUSD(annual);
           el.style.display = "inline";
         }
       });
@@ -957,8 +1198,29 @@
       }
     });
 
+    // timer loop: if promo flips while user stays on page, update pricing live
+    function tick(){
+      const before = promoActive();
+      updateDealUI();
+      const after = promoActive();
+
+      if(mode === "yearly" && before !== after){
+        // phase switched while on page, refresh prices and savings
+        setMode("yearly");
+      }else{
+        // update timer text at least
+        if(mode === "yearly"){
+          updateSavingsUI();
+        }
+      }
+
+      requestAnimationFrame(()=>{});
+    }
+
     setMode("monthly");
+
+    // update once per second (cleaner than RAF here)
+    setInterval(tick, 1000);
   </script>
 </body>
 </html>
-
