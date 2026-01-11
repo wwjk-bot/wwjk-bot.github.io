@@ -1,595 +1,712 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Sessionly — Trade Less. Trade Better.</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Sessionly Pricing</title>
+  <style>
+    :root{
+      --bg:#05060b;
+      --panel:#0b1020cc;
+      --panel2:#0b1020;
+      --border:rgba(255,255,255,.10);
+      --border2:rgba(255,255,255,.16);
+      --text:rgba(255,255,255,.92);
+      --muted:rgba(255,255,255,.62);
+      --muted2:rgba(255,255,255,.42);
+      --accent:#37f7b6;
+      --accent2:#7c5cff;
+      --good:#37f7b6;
+      --shadow: 0 22px 60px rgba(0,0,0,.55);
+      --shadow2: 0 10px 24px rgba(0,0,0,.45);
+      --radius: 26px;
+      --radius2: 18px;
+      --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    }
 
-<style>
-:root{
-  --bg:#070b12;
-  --panel:#0d1422;
-  --panel-2:#111a2e;
-  --border:#1f2a44;
-  --text:#e6ebf5;
-  --muted:#9aa4bf;
-  --accent:#4cffb3;
-  --accent-2:#26d1ff;
-  --danger:#ff5c5c;
-  --gold:#ffd166;
-}
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:var(--font);
+      background: radial-gradient(1200px 800px at 18% 10%, rgba(124,92,255,.18), transparent 55%),
+                  radial-gradient(900px 650px at 78% 18%, rgba(55,247,182,.14), transparent 55%),
+                  radial-gradient(800px 700px at 50% 88%, rgba(55,247,182,.10), transparent 60%),
+                  var(--bg);
+      color:var(--text);
+      overflow-x:hidden;
+    }
 
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{
-  margin:0;
-  font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-  color:var(--text);
-  background:
-    radial-gradient(1200px 600px at 50% -220px,#142a55,#070b12 55%),
-    radial-gradient(900px 500px at 15% 10%, rgba(76,255,179,.10), transparent 60%),
-    radial-gradient(900px 500px at 85% 20%, rgba(38,209,255,.08), transparent 60%),
-    #070b12;
-  overflow-x:hidden;
-}
+    /* animated background */
+    .bg-wrap{
+      position:fixed; inset:0;
+      pointer-events:none;
+      z-index:-1;
+      overflow:hidden;
+    }
+    .grid{
+      position:absolute; inset:-40%;
+      background:
+        linear-gradient(to right, rgba(255,255,255,.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,.05) 1px, transparent 1px);
+      background-size: 54px 54px;
+      transform: rotate(8deg);
+      opacity:.20;
+      filter: blur(.2px);
+      animation: gridFloat 18s ease-in-out infinite;
+    }
+    @keyframes gridFloat{
+      0%,100%{transform: translate3d(0,0,0) rotate(8deg) scale(1)}
+      50%{transform: translate3d(-40px,20px,0) rotate(8deg) scale(1.02)}
+    }
+    .orb{
+      position:absolute;
+      width:520px; height:520px;
+      border-radius:999px;
+      background: radial-gradient(circle at 30% 30%, rgba(55,247,182,.28), transparent 62%),
+                  radial-gradient(circle at 70% 70%, rgba(124,92,255,.22), transparent 60%);
+      filter: blur(10px);
+      opacity:.75;
+      mix-blend-mode: screen;
+      animation: orb 14s ease-in-out infinite;
+    }
+    .orb.o1{left:-140px; top:-110px; animation-delay:-3s}
+    .orb.o2{right:-170px; top:40px; width:560px; height:560px; animation-delay:-7s}
+    .orb.o3{left:22%; bottom:-260px; width:680px; height:680px; opacity:.55; animation-delay:-11s}
+    @keyframes orb{
+      0%,100%{transform: translate3d(0,0,0) scale(1)}
+      50%{transform: translate3d(30px,-26px,0) scale(1.06)}
+    }
+    .noise{
+      position:absolute; inset:0;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.15'/%3E%3C/svg%3E");
+      opacity:.25;
+      mix-blend-mode: overlay;
+    }
+    .vignette{
+      position:absolute; inset:-1px;
+      background: radial-gradient(1200px 800px at 50% 25%, transparent 42%, rgba(0,0,0,.70) 78%, rgba(0,0,0,.85));
+      pointer-events:none;
+    }
 
-a{text-decoration:none;color:inherit}
+    .wrap{
+      max-width:1120px;
+      margin:0 auto;
+      padding:72px 20px 92px;
+    }
 
-.container{
-  max-width:1200px;
-  margin:0 auto;
-  padding:48px 24px;
-}
+    .top{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:10px;
+      text-align:center;
+      margin-bottom:26px;
+    }
 
-/* NAV */
-nav{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-.logo{
-  font-weight:800;
-  letter-spacing:.4px;
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-.logo-dot{
-  width:10px;height:10px;border-radius:999px;
-  background:var(--accent);
-  box-shadow:0 0 24px rgba(76,255,179,.55);
-}
-.nav-actions a{
-  margin-left:12px;
-  padding:10px 16px;
-  border-radius:12px;
-  font-size:14px;
-}
-.btn{
-  border:1px solid var(--border);
-  background:rgba(255,255,255,.02);
-}
-.btn:hover{
-  border-color:rgba(76,255,179,.35);
-}
-.btn-primary{
-  background:var(--accent);
-  color:#03110a;
-  font-weight:800;
-  border:none;
-  box-shadow:0 10px 30px rgba(76,255,179,.18);
-}
-.btn-primary:hover{filter:brightness(1.03)}
+    .kicker{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:8px 12px;
+      border:1px solid var(--border);
+      background: rgba(11,16,32,.55);
+      border-radius:999px;
+      box-shadow: var(--shadow2);
+      color:var(--muted);
+      font-size:13px;
+      letter-spacing:.2px;
+    }
+    .dot{
+      width:8px; height:8px; border-radius:50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 6px rgba(55,247,182,.12);
+    }
 
-/* HERO */
-.hero{
-  display:grid;
-  grid-template-columns:1.1fr .9fr;
-  gap:40px;
-  margin-top:80px;
-  position:relative;
-}
-.hero h1{
-  font-size:54px;
-  line-height:1.03;
-  margin:0 0 16px;
-  letter-spacing:-.6px;
-}
-.hero p{
-  color:var(--muted);
-  font-size:18px;
-  max-width:540px;
-}
-.hero-actions{
-  margin-top:32px;
-  display:flex;
-  gap:12px;
-  flex-wrap:wrap;
-}
-.hero-actions a{
-  padding:14px 22px;
-  border-radius:14px;
-  font-weight:800;
-}
-.preview{
-  background:linear-gradient(180deg,#0e1628,#0a1020);
-  border:1px solid var(--border);
-  border-radius:18px;
-  height:320px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:var(--muted);
-  position:relative;
-  overflow:hidden;
-}
-.preview:before{
-  content:"";
-  position:absolute;
-  inset:-2px;
-  background:
-    radial-gradient(600px 220px at 50% 0%, rgba(76,255,179,.14), transparent 60%),
-    radial-gradient(700px 260px at 70% 40%, rgba(38,209,255,.10), transparent 60%);
-  pointer-events:none;
-}
-.preview-inner{
-  position:relative;
-  border:1px dashed rgba(255,255,255,.10);
-  width:84%;
-  height:74%;
-  border-radius:14px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:700;
-  letter-spacing:.2px;
-}
+    h1{
+      margin:0;
+      font-size:54px;
+      line-height:1.02;
+      letter-spacing:-.02em;
+    }
+    .sub{
+      margin:0;
+      max-width:760px;
+      color:var(--muted);
+      font-size:16px;
+      line-height:1.55;
+    }
 
-/* TRUST */
-.trust{
-  margin-top:80px;
-  text-align:center;
-  color:var(--muted);
-}
-.trust strong{color:var(--text)}
-.stars{color:var(--gold)}
+    /* toggle */
+    .controls{
+      margin-top:14px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .toggle{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 12px;
+      border:1px solid var(--border);
+      background: rgba(11,16,32,.55);
+      border-radius:999px;
+      box-shadow: var(--shadow2);
+    }
+    .toggle .label{
+      font-size:13px;
+      color:var(--muted);
+      user-select:none;
+      white-space:nowrap;
+    }
+    .pill{
+      position:relative;
+      width:54px; height:30px;
+      background: rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:999px;
+      cursor:pointer;
+      transition: .25s ease;
+    }
+    .pill::after{
+      content:"";
+      position:absolute;
+      top:3px; left:3px;
+      width:24px; height:24px;
+      border-radius:999px;
+      background: linear-gradient(180deg, rgba(255,255,255,.95), rgba(255,255,255,.75));
+      box-shadow: 0 10px 18px rgba(0,0,0,.35);
+      transition: .25s ease;
+    }
+    .pill.on{
+      background: rgba(55,247,182,.18);
+      border-color: rgba(55,247,182,.40);
+    }
+    .pill.on::after{ left:27px; background: linear-gradient(180deg, rgba(55,247,182,.95), rgba(55,247,182,.70)); }
+    .deal{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border:1px solid rgba(55,247,182,.28);
+      background: rgba(55,247,182,.12);
+      border-radius:999px;
+      color:rgba(255,255,255,.86);
+      font-size:13px;
+      white-space:nowrap;
+    }
+    .deal b{color:var(--accent)}
+    .deal small{color:rgba(255,255,255,.70)}
 
-/* FEATURES */
-.features{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:24px;
-  margin-top:80px;
-}
-.card{
-  background:linear-gradient(180deg,#0e1628,#0a1020);
-  border:1px solid var(--border);
-  border-radius:16px;
-  padding:24px;
-  position:relative;
-  overflow:hidden;
-}
-.card:before{
-  content:"";
-  position:absolute;
-  inset:-2px;
-  background:radial-gradient(500px 200px at 20% 0%, rgba(76,255,179,.10), transparent 60%);
-  opacity:.8;
-  pointer-events:none;
-}
-.card h3{margin:0 0 8px; position:relative}
-.card p{margin:0; color:var(--muted); font-size:14px; position:relative}
+    /* pricing layout */
+    .pricing-stage{
+      margin-top:34px;
+      position:relative;
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
+      min-height:520px;
+    }
 
-/* PRICING */
-.pricing{
-  margin-top:110px;
-  position:relative;
-  padding:90px 0 60px;
-}
-.pricing:before{
-  /* grid + beams */
-  content:"";
-  position:absolute;
-  left:50%;
-  transform:translateX(-50%);
-  top:-40px;
-  width:min(1200px, 94vw);
-  height:520px;
-  border-radius:26px;
-  background:
-    radial-gradient(900px 280px at 50% 0%, rgba(76,255,179,.14), transparent 65%),
-    radial-gradient(700px 260px at 78% 35%, rgba(38,209,255,.10), transparent 65%),
-    radial-gradient(700px 260px at 22% 35%, rgba(255,92,92,.06), transparent 65%),
-    linear-gradient(180deg, rgba(255,255,255,.06), transparent 40%),
-    repeating-linear-gradient(90deg, rgba(255,255,255,.05) 0, rgba(255,255,255,.05) 1px, transparent 1px, transparent 90px),
-    repeating-linear-gradient(0deg, rgba(255,255,255,.04) 0, rgba(255,255,255,.04) 1px, transparent 1px, transparent 90px);
-  opacity:.35;
-  filter:blur(.2px);
-  pointer-events:none;
-}
-.pricing h2{
-  text-align:center;
-  font-size:44px;
-  margin:0 0 10px;
-  letter-spacing:-.6px;
-}
-.pricing p{
-  text-align:center;
-  color:var(--muted);
-  margin:0 0 54px;
-  font-size:16px;
-}
+    .plans{
+      position:relative;
+      width:min(980px, 100%);
+      height:520px;
+      display:flex;
+      align-items:flex-start;
+      justify-content:center;
+      gap:0;
+      perspective:1200px;
+    }
 
-.plans{
-  position:relative;
-  height:430px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:0;
-}
+    .plan{
+      position:absolute;
+      top:0;
+      width:380px;
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(11,16,32,.92), rgba(8,11,20,.86));
+      border:1px solid var(--border);
+      box-shadow: var(--shadow);
+      padding:26px 26px 22px;
+      transform-style:preserve-3d;
+      transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease, opacity .22s ease, filter .22s ease;
+      overflow:hidden;
+    }
 
-/* plan base */
-.plan{
-  width:360px;
-  max-width:88vw;
-  background:linear-gradient(180deg,#0e1628,#0a1020);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:22px;
-  padding:28px 28px 22px;
-  position:absolute;
-  overflow:hidden;
-  transition:transform .25s ease, filter .25s ease, opacity .25s ease;
-  backdrop-filter: blur(6px);
-}
-.plan:before{
-  content:"";
-  position:absolute;
-  inset:-2px;
-  background:
-    radial-gradient(700px 240px at 20% 0%, rgba(255,255,255,.06), transparent 60%),
-    radial-gradient(600px 220px at 90% 30%, rgba(76,255,179,.10), transparent 65%);
-  opacity:.9;
-  pointer-events:none;
-}
-.plan h3{
-  margin:0 0 10px;
-  font-size:18px;
-  letter-spacing:.2px;
-  position:relative;
-}
-.price{
-  font-size:44px;
-  font-weight:900;
-  letter-spacing:-.6px;
-  margin:6px 0 10px;
-  position:relative;
-}
-.sub{
-  color:var(--muted);
-  font-size:13px;
-  margin-bottom:14px;
-  position:relative;
-}
-.chips{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-  margin:12px 0 16px;
-  position:relative;
-}
-.chip{
-  font-size:12px;
-  color:#b7c0d8;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(255,255,255,.02);
-  padding:7px 10px;
-  border-radius:999px;
-}
-.plan ul{
-  list-style:none;
-  padding:0;
-  margin:16px 0 18px;
-  position:relative;
-}
-.plan li{
-  margin-bottom:10px;
-  color:rgba(230,235,245,.86);
-  font-size:14px;
-  display:flex;
-  align-items:flex-start;
-  gap:10px;
-}
-.tick{
-  width:18px;height:18px;flex:0 0 18px;
-  border-radius:6px;
-  background:rgba(76,255,179,.14);
-  border:1px solid rgba(76,255,179,.30);
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  margin-top:2px;
-}
-.tick svg{width:12px;height:12px;fill:var(--accent)}
-.plan a{
-  display:block;
-  text-align:center;
-  padding:14px;
-  border-radius:16px;
-  font-weight:900;
-  background:var(--accent);
-  color:#03110a;
-  box-shadow:0 16px 40px rgba(76,255,179,.16);
-  position:relative;
-}
-.plan a:hover{filter:brightness(1.03)}
+    .plan::before{
+      content:"";
+      position:absolute; inset:-2px;
+      background:
+        radial-gradient(420px 260px at 20% 12%, rgba(124,92,255,.28), transparent 60%),
+        radial-gradient(420px 260px at 80% 18%, rgba(55,247,182,.22), transparent 60%);
+      opacity:.65;
+      pointer-events:none;
+    }
+    .plan::after{
+      content:"";
+      position:absolute; inset:0;
+      background: linear-gradient(180deg, rgba(255,255,255,.06), transparent 35%);
+      pointer-events:none;
+    }
 
-/* positions */
-.plan.left{
-  transform:translateX(-330px) translateY(14px) scale(.92);
-  opacity:.92;
-  z-index:1;
-  filter:saturate(.95);
-}
-.plan.right{
-  transform:translateX(330px) translateY(14px) scale(.92);
-  opacity:.92;
-  z-index:1;
-  filter:saturate(.95);
-}
-.plan.popular{
-  width:400px;
-  transform:translateY(-10px) scale(1.06);
-  z-index:3;
-  border:1px solid rgba(76,255,179,.60);
-  box-shadow:
-    0 30px 90px rgba(76,255,179,.12),
-    0 0 0 1px rgba(76,255,179,.20) inset;
-}
+    .plan .inner{ position:relative; z-index:2; }
 
-/* popular spotlight + animated aura */
-.plan.popular:after{
-  content:"";
-  position:absolute;
-  left:50%;
-  top:-120px;
-  transform:translateX(-50%);
-  width:520px;
-  height:520px;
-  background:
-    radial-gradient(circle at 50% 50%, rgba(76,255,179,.34), rgba(76,255,179,.00) 62%),
-    radial-gradient(circle at 40% 30%, rgba(38,209,255,.16), rgba(38,209,255,.00) 60%);
-  filter:blur(6px);
-  opacity:.85;
-  animation:aura 4.2s ease-in-out infinite;
-  pointer-events:none;
-}
-@keyframes aura{
-  0%,100%{transform:translateX(-50%) scale(1)}
-  50%{transform:translateX(-50%) scale(1.04)}
-}
+    /* UPDATED: less tucked so pro is readable */
+    .plan.left{
+      transform:translateX(-290px) translateY(10px) scale(.94);
+      opacity:.96;
+      z-index:2;
+      filter:saturate(1);
+    }
+    .plan.right{
+      transform:translateX(290px) translateY(10px) scale(.94);
+      opacity:.96;
+      z-index:2;
+      filter:saturate(1);
+    }
+    .plan.popular{
+      width:410px;
+      transform:translateY(-12px) scale(1.06);
+      z-index:4;
+      border-color: rgba(55,247,182,.36);
+      box-shadow: 0 26px 70px rgba(0,0,0,.58);
+    }
 
-.badge{
-  position:absolute;
-  top:18px;
-  right:18px;
-  background:rgba(76,255,179,.12);
-  color:var(--accent);
-  padding:8px 12px;
-  border-radius:999px;
-  font-size:12px;
-  font-weight:900;
-  border:1px solid rgba(76,255,179,.35);
-  z-index:5;
-}
+    /* hover */
+    .plan:hover{
+      border-color: rgba(255,255,255,.18);
+      box-shadow: 0 30px 78px rgba(0,0,0,.62);
+    }
+    .plan.left:hover{
+      transform:translateX(-290px) translateY(-4px) scale(.97);
+    }
+    .plan.right:hover{
+      transform:translateX(290px) translateY(-4px) scale(.97);
+    }
+    .plan.popular:hover{
+      transform:translateY(-16px) scale(1.08);
+      border-color: rgba(55,247,182,.55);
+      box-shadow: 0 34px 92px rgba(0,0,0,.70);
+    }
 
-/* make sides feel tucked behind */
-.plan.left, .plan.right{
-  box-shadow:0 18px 55px rgba(0,0,0,.40);
-}
-.plan.left{
-  clip-path: inset(0 0 0 0 round 22px);
-}
-.plan.right{
-  clip-path: inset(0 0 0 0 round 22px);
-}
+    .badge{
+      position:absolute;
+      top:16px;
+      left:50%;
+      transform:translateX(-50%);
+      padding:7px 12px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:700;
+      letter-spacing:.25px;
+      color:#051014;
+      background: linear-gradient(180deg, rgba(55,247,182,1), rgba(55,247,182,.78));
+      border: 1px solid rgba(55,247,182,.55);
+      box-shadow: 0 16px 28px rgba(0,0,0,.28);
+    }
 
-/* subtle hover lift */
-.plan:hover{
-  transform:translateY(-6px) scale(1.02);
-  z-index:4;
-}
-.plan.left:hover{
-  transform:translateX(-330px) translateY(-2px) scale(.96);
-}
-.plan.right:hover{
-  transform:translateX(330px) translateY(-2px) scale(.96);
-}
-.plan.popular:hover{
-  transform:translateY(-14px) scale(1.07);
-}
+    .plan-title{
+      margin:0;
+      font-size:18px;
+      font-weight:700;
+      text-transform:lowercase;
+      letter-spacing:.2px;
+    }
 
-/* CTA */
-.cta{
-  margin:120px 0 80px;
-  text-align:center;
-}
-.cta h2{
-  font-size:44px;
-  margin:0;
-  letter-spacing:-.6px;
-}
-.cta p{
-  color:var(--muted);
-  margin:16px 0 32px;
-}
-footer{
-  text-align:center;
-  color:var(--muted);
-  font-size:13px;
-  padding-bottom:40px;
-}
+    .price-row{
+      margin-top:12px;
+      display:flex;
+      align-items:flex-end;
+      gap:10px;
+    }
+    .price{
+      font-size:54px;
+      font-weight:800;
+      letter-spacing:-.02em;
+      line-height:1;
+    }
+    .per{
+      color:var(--muted);
+      font-size:14px;
+      padding-bottom:8px;
+      white-space:nowrap;
+    }
+    .strike{
+      display:none;
+      color:rgba(255,255,255,.40);
+      text-decoration:line-through;
+      font-size:14px;
+      padding-bottom:10px;
+    }
+    .plan.popular .price{
+      background: linear-gradient(90deg, rgba(55,247,182,1), rgba(55,247,182,.72));
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+    }
 
-/* MOBILE */
-@media(max-width:980px){
-  .hero{grid-template-columns:1fr}
-  .features{grid-template-columns:1fr}
-  .hero h1{font-size:42px}
-  .plans{
-    height:auto;
-    flex-direction:column;
-    gap:18px;
-  }
-  .plan{
-    position:relative;
-    transform:none!important;
-    width:min(520px, 92vw);
-  }
-  .plan.left,.plan.right{
-    opacity:1;
-  }
-  .pricing:before{height:760px}
-}
-</style>
+    .desc{
+      margin:12px 0 0;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.45;
+      max-width:320px;
+    }
+
+    .list{
+      margin:18px 0 0;
+      padding:0;
+      list-style:none;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      color:rgba(255,255,255,.78);
+      font-size:14px;
+    }
+    .li{
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+    }
+    .tick{
+      width:18px; height:18px;
+      border-radius:6px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      background: rgba(55,247,182,.14);
+      border:1px solid rgba(55,247,182,.22);
+      flex:0 0 18px;
+      margin-top:1px;
+    }
+    .tick svg{width:12px; height:12px; fill:var(--accent)}
+    .muted-note{
+      margin-top:12px;
+      color:rgba(255,255,255,.56);
+      font-size:12.5px;
+      line-height:1.45;
+    }
+
+    .cta{
+      margin-top:18px;
+      width:100%;
+      border:none;
+      cursor:pointer;
+      border-radius: 14px;
+      padding:14px 14px;
+      font-weight:800;
+      font-size:14px;
+      letter-spacing:.2px;
+      color:#061014;
+      background: linear-gradient(180deg, rgba(55,247,182,1), rgba(55,247,182,.78));
+      box-shadow: 0 14px 26px rgba(55,247,182,.12), 0 18px 40px rgba(0,0,0,.35);
+      transition: transform .18s ease, filter .18s ease;
+    }
+    .cta:hover{ transform: translateY(-1px); filter: brightness(1.03); }
+    .cta:active{ transform: translateY(0px) scale(.99); }
+
+    .cta.secondary{
+      color: rgba(255,255,255,.92);
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.14);
+      box-shadow: 0 16px 40px rgba(0,0,0,.35);
+    }
+    .cta.secondary:hover{ filter: brightness(1.08); }
+
+    .trial{
+      margin-top:10px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      color:rgba(255,255,255,.72);
+      font-size:12.5px;
+      line-height:1.35;
+      text-align:center;
+    }
+    .trial .spark{
+      width:18px; height:18px;
+      border-radius:8px;
+      background: rgba(124,92,255,.16);
+      border:1px solid rgba(124,92,255,.28);
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .trial .spark svg{width:12px;height:12px;fill:rgba(124,92,255,.95)}
+
+    .fine{
+      margin-top:24px;
+      text-align:center;
+      color:rgba(255,255,255,.52);
+      font-size:12.5px;
+      line-height:1.55;
+    }
+    .fine a{color:rgba(55,247,182,.92); text-decoration:none}
+    .fine a:hover{text-decoration:underline}
+
+    /* responsive */
+    @media (max-width: 980px){
+      .plans{height:auto; padding-bottom:18px}
+      .plan{position:relative; width:100%; max-width:560px}
+      .plan.left,.plan.right,.plan.popular{transform:none; width:100%}
+      .plan.popular{order:-1}
+      .pricing-stage{min-height:auto}
+      h1{font-size:42px}
+    }
+  </style>
 </head>
 
 <body>
-
-<div class="container">
-<nav>
-  <div class="logo"><span class="logo-dot"></span>Sessionly</div>
-  <div class="nav-actions">
-    <a href="login.html" class="btn">log in</a>
-    <a href="app/index.html" class="btn-primary">open app</a>
+  <div class="bg-wrap" aria-hidden="true">
+    <div class="grid"></div>
+    <div class="orb o1"></div>
+    <div class="orb o2"></div>
+    <div class="orb o3"></div>
+    <div class="noise"></div>
+    <div class="vignette"></div>
   </div>
-</nav>
 
-<section class="hero">
-  <div>
-    <h1>trade your best hours<br>not your whole day</h1>
-    <p>
-      Sessionly is a performance system for traders who want fewer mistakes,
-      clearer rules, and real feedback — powered by AI coaching.
-    </p>
-    <div class="hero-actions">
-      <a href="login.html" class="btn-primary">get started</a>
-      <a href="#pricing" class="btn">see pricing</a>
-    </div>
-  </div>
-  <div class="preview">
-    <div class="preview-inner">sessionly app preview</div>
-  </div>
-</section>
-
-<div class="trust">
-  trusted by <strong>serious traders</strong><br>
-  <span class="stars">★★★★★</span> performance-focused feedback
-</div>
-
-<section class="features">
-  <div class="card">
-    <h3>1-minute trade logging</h3>
-    <p>log trades fast without breaking focus</p>
-  </div>
-  <div class="card">
-    <h3>AI coaching</h3>
-    <p>understand patterns mistakes and what to fix next</p>
-  </div>
-  <div class="card">
-    <h3>session intelligence</h3>
-    <p>see which hours make or break your performance</p>
-  </div>
-</section>
-
-<section id="pricing" class="pricing">
-  <h2>pricing</h2>
-  <p>less than one bad trading day</p>
-
-  <div class="plans">
-
-    <div class="plan left">
-      <h3>starter</h3>
-      <div class="price">$25</div>
-      <div class="sub">for building the habit</div>
-
-      <div class="chips">
-        <span class="chip">heatmap</span>
-        <span class="chip">basic stats</span>
-        <span class="chip">fast logging</span>
+  <main class="wrap">
+    <section class="top">
+      <div class="kicker">
+        <span class="dot"></span>
+        <span>pricing that pays for itself</span>
       </div>
 
-      <ul>
-        <li><span class="tick">
-          <svg viewBox="0 0 24 24"><path d="M9.2 16.6 4.9 12.3l1.4-1.4 2.9 2.9 8-8 1.4 1.4z"/></svg>
-        </span>manual trade logging</li>
-        <li><span class="tick"><svg viewBox="0 0 24 24"><path d="M9.2 16.6 4.9 12.3l1.4-1.4 2.9 2.9 8-8 1.4 1.4z"/></svg></span>calendar heatmap</li>
-        <li><span class="tick"><svg viewBox="0 0 24 24"><path d="M9.2 16.6 4.9 12.3l1.4-1.4 2.9 2.9 8-8 1.4 1.4z"/></svg></span>basic performance stats</li>
-        <li><span class="tick"><svg viewBox="0 0 24 24"><path d="M9.2 16.6 4.9 12.3l1.4-1.4 2.9 2.9 8-8 1.4 1.4z"/></svg></span>light AI summaries</li>
-      </ul>
+      <h1>pricing</h1>
+      <p class="sub">
+        sessionly is a performance system for traders. log fast, review smarter, and use ai coaching to
+        see what to fix next.
+      </p>
 
-      <a href="login.html">start</a>
-    </div>
+      <div class="controls">
+        <div class="toggle">
+          <span class="label" id="lblMonthly">monthly</span>
+          <div class="pill" id="billingToggle" role="switch" aria-checked="false" tabindex="0"></div>
+          <span class="label" id="lblYearly">yearly</span>
+        </div>
 
-    <div class="plan popular">
-      <div class="badge">most popular</div>
-      <h3>premium</h3>
-      <div class="price">$70</div>
-      <div class="sub">for real improvement week to week</div>
-
-      <div class="chips">
-        <span class="chip">AI coaching</span>
-        <span class="chip">weekly plan</span>
-        <span class="chip">mistake clusters</span>
-        <span class="chip">session edge</span>
+        <div class="deal" id="dealPill">
+          limited time <b id="dealPct">40%</b> off yearly <small>(first 7 days)</small>
+        </div>
       </div>
+    </section>
 
-      <ul>
-        <li><span class="tick"><svg viewBox="0 0 24 24"><path d="M9.2 16.6 4.9 12.3l1.4-1.4 2.9 2.9 8-8 1.4 1.4z"/></svg></span>full AI coaching</li>
-        <li><span class="tick"><svg viewBox="0 0 24 24"><path d="M9.2 16.6 4.9 12.3l1.4-1.4 2.9 2.9 8-8 1.4 1.4z"/></svg></span>weekly improvement report</li>
-        <li><span class="tick"><svg viewBox="0 0 24 24"><path d="M9.2 16.6 4.9 12.3l1.4-1.4 2.9 2.9 8-8 1.4 1.4z"/></svg></span>session breakdown</li>
-        <li><span class="tick"><svg viewBox="0 0 24 24"><path d="M9.2 16.6 4.9 12.3l1.4-1.4 2.9 2.9 8-8 1.4 1.4z"/></svg></span>mistake clustering</li>
-        <li><span class="tick"><svg viewBox="0 0 24 24"><path d="M9.2 16.6 4.9 12.3l1.4-1.4 2.9 2.9 8-8 1.4 1.4z"/></svg></span>rules and streaks</li>
-      </ul>
+    <section class="pricing-stage">
+      <div class="plans">
+        <!-- starter -->
+        <article class="plan left" aria-label="starter plan">
+          <div class="inner">
+            <h3 class="plan-title">starter</h3>
+            <div class="price-row">
+              <div class="price" data-price="starter">$19</div>
+              <div class="strike" data-strike="starter">$29</div>
+              <div class="per" data-per="starter">/ month</div>
+            </div>
+            <p class="desc">for consistent tracking, clean stats, and a simple improvement loop.</p>
 
-      <a href="login.html">start</a>
-    </div>
+            <ul class="list">
+              <li class="li">
+                <span class="tick">
+                  <svg viewBox="0 0 24 24"><path d="M9.2 16.6 4.9 12.3l1.4-1.4 2.9 2.9 8.5-8.5 1.4 1.4z"/></svg>
+                </span>
+                manual trade logging
+              </li>
+              <li class="li">
+                <span class="tick"><svg viewBox="0 0 24 24"><path d="M9.2 16.6 4.9 12.3l1.4-1.4 2.9 2.9 8.5-8.5 1.4 1.4z"/></svg></span>
+                calendar heatmap (win/loss days)
+              </li>
+              <li class="li">
+                <span class="tick"><svg viewBox="0 0 24 24"><path d="M9.2 16.6 4.9 12.3l1.4-1.4 2.9 2.9 8.5-8.5 1.4 1.4z"/></svg></span>
+                basic stats (win rate, rr, pnl)
+              </li>
+              <li class="li">
+                <span class="tick"><svg viewBox="0 0 24 24"><path d="M9.2 16.6 4.9 12.3l1.4-1.4 2.9 2.9 8.5-8.5 1.4 1.4z"/></svg></span>
+                light ai summaries (high level)
+              </li>
+            </ul>
 
-    <div class="plan right">
-      <h3>professional</h3>
-      <div class="price">$125</div>
-      <div class="sub">for multi-account and deeper analysis</div>
+            <button class="cta secondary" type="button" onclick="window.location.href='login.html'">
+              start
+            </button>
 
-      <div class="chips">
-        <span class="chip">multi-account</span>
-        <span class="chip">playbooks</span>
-        <span class="chip">deep diagnostics</span>
+            <div class="muted-note">
+              best if you want structure and consistency without deep coaching.
+            </div>
+          </div>
+        </article>
+
+        <!-- premium (most popular) -->
+        <article class="plan popular" aria-label="premium plan">
+          <div class="badge">most popular</div>
+          <div class="inner" style="padding-top:18px;">
+            <h3 class="plan-title">premium</h3>
+            <div class="price-row">
+              <div class="price" data-price="premium">$49</div>
+              <div class="strike" data-strike="premium">$79</div>
+              <div class="per" data-per="premium">/ month</div>
+            </div>
+            <p class="desc">your core performance system with ai coaching and weekly direction.</p>
+
+            <ul class="list">
+              <li class="li"><span class="tick"><svg viewBox="0 0 24 24"><path d="M9.2 16.6 4.9 12.3l1.4-1.4 2.9 2.9 8.5-8.5 1.4 1.4z"/></svg></span>full ai coaching (trade review)</li>
+              <li class="li"><span class="tick"><svg viewBox="0 0 24 24"><path d="M9.2 16.6 4.9 12.3l1.4-1.4 2.9 2.9 8.5-8.5 1.4 1.4z"/></svg></span>weekly improvement report</li>
+              <li class="li"><span class="tick"><svg viewBox="0 0 24 24"><path d="M9.2 16.6 4.9 12.3l1.4-1.4 2.9 2.9 8.5-8.5 1.4 1.4z"/></svg></span>session breakdown (best hours)</li>
+              <li class="li"><span class="tick"><svg viewBox="0 0 24 24"><path d="M9.2 16.6 4.9 12.3l1.4-1.4 2.9 2.9 8.5-8.5 1.4 1.4z"/></svg></span>mistake clustering + patterns</li>
+              <li class="li"><span class="tick"><svg viewBox="0 0 24 24"><path d="M9.2 16.6 4.9 12.3l1.4-1.4 2.9 2.9 8.5-8.5 1.4 1.4z"/></svg></span>rules, streaks, and accountability</li>
+            </ul>
+
+            <button class="cta" type="button" onclick="window.location.href='login.html'">
+              start
+            </button>
+
+            <div class="trial">
+              <span class="spark">
+                <svg viewBox="0 0 24 24"><path d="M12 2l1.6 5.2L19 9l-5.4 1.8L12 16l-1.6-5.2L5 9l5.4-1.8L12 2z"/></svg>
+              </span>
+              7-day free trial (card required). you won’t be charged until day 7. cancel anytime before day 7 to avoid billing.
+            </div>
+          </div>
+        </article>
+
+        <!-- professional -->
+        <article class="plan right" aria-label="professional plan">
+          <div class="inner">
+            <h3 class="plan-title">professional</h3>
+            <div class="price-row">
+              <div class="price" data-price="pro">$99</div>
+              <div class="strike" data-strike="pro">$149</div>
+              <div class="per" data-per="pro">/ month</div>
+            </div>
+            <p class="desc">for serious traders who want deeper diagnostics and advanced workflows.</p>
+
+            <ul class="list">
+              <li class="li"><span class="tick"><svg viewBox="0 0 24 24"><path d="M9.2 16.6 4.9 12.3l1.4-1.4 2.9 2.9 8.5-8.5 1.4 1.4z"/></svg></span>multi-account analysis</li>
+              <li class="li"><span class="tick"><svg viewBox="0 0 24 24"><path d="M9.2 16.6 4.9 12.3l1.4-1.4 2.9 2.9 8.5-8.5 1.4 1.4z"/></svg></span>strategy playbooks + grading</li>
+              <li class="li"><span class="tick"><svg viewBox="0 0 24 24"><path d="M9.2 16.6 4.9 12.3l1.4-1.4 2.9 2.9 8.5-8.5 1.4 1.4z"/></svg></span>deep ai diagnostics + root cause</li>
+              <li class="li"><span class="tick"><svg viewBox="0 0 24 24"><path d="M9.2 16.6 4.9 12.3l1.4-1.4 2.9 2.9 8.5-8.5 1.4 1.4z"/></svg></span>priority features access</li>
+              <li class="li"><span class="tick"><svg viewBox="0 0 24 24"><path d="M9.2 16.6 4.9 12.3l1.4-1.4 2.9 2.9 8.5-8.5 1.4 1.4z"/></svg></span>future broker imports (coming soon)</li>
+            </ul>
+
+            <button class="cta secondary" type="button" onclick="window.location.href='login.html'">
+              start
+            </button>
+
+            <div class="muted-note">
+              ideal if you trade multiple accounts or want the deepest coaching layer.
+            </div>
+          </div>
+        </article>
       </div>
+    </section>
 
-      <ul>
-        <li><span class="tick"><svg viewBox="0 0 24 24"><path d="M9.2 16.6 4.9 12.3l1.4-1.4 2.9 2.9 8-8 1.4 1.4z"/></svg></span>multi-account analysis</li>
-        <li><span class="tick"><svg viewBox="0 0 24 24"><path d="M9.2 16.6 4.9 12.3l1.4-1.4 2.9 2.9 8-8 1.4 1.4z"/></svg></span>strategy playbooks</li>
-        <li><span class="tick"><svg viewBox="0 0 24 24"><path d="M9.2 16.6 4.9 12.3l1.4-1.4 2.9 2.9 8-8 1.4 1.4z"/></svg></span>deep AI diagnostics</li>
-        <li><span class="tick"><svg viewBox="0 0 24 24"><path d="M9.2 16.6 4.9 12.3l1.4-1.4 2.9 2.9 8-8 1.4 1.4z"/></svg></span>priority features</li>
-        <li><span class="tick"><svg viewBox="0 0 24 24"><path d="M9.2 16.6 4.9 12.3l1.4-1.4 2.9 2.9 8-8 1.4 1.4z"/></svg></span>future broker imports</li>
-      </ul>
-
-      <a href="login.html">start</a>
+    <div class="fine">
+      prices shown in usd. annual discount applies to the first year only during the launch window.<br>
+      questions? <a href="mailto:support@sessionly.app">support@sessionly.app</a>
     </div>
+  </main>
 
-  </div>
-</section>
+  <script>
+    // pricing config
+    const PRICES = {
+      monthly: {
+        starter: { price: 19, per: "/ month" },
+        premium: { price: 49, per: "/ month", trial: true },
+        pro:     { price: 99, per: "/ month" }
+      },
+      yearly: {
+        // annual billed as "per year"
+        // base annual = monthly * 12 with 30% standard discount
+        // launch offer = 40% off annual for first 7 days (displayed as "limited time 40%")
+        // you can change these numbers anytime
+        starter: { annual: 19 * 12, standardOff: 0.30, launchOff: 0.40, per: "/ year" },
+        premium: { annual: 49 * 12, standardOff: 0.30, launchOff: 0.40, per: "/ year" },
+        pro:     { annual: 99 * 12, standardOff: 0.30, launchOff: 0.40, per: "/ year" }
+      }
+    };
 
-<section class="cta">
-  <h2>stop guessing. start improving.</h2>
-  <p>your performance system is one login away</p>
-  <a href="login.html" class="btn-primary" style="padding:16px 26px;border-radius:16px;font-weight:900;display:inline-block;">open sessionly</a>
-</section>
+    // launch offer default
+    const launchDiscount = true; // set false if you want to show only standard discount
+    const billingToggle = document.getElementById("billingToggle");
+    const dealPill = document.getElementById("dealPill");
+    const dealPct = document.getElementById("dealPct");
 
-<footer>
-  © sessionly
-</footer>
+    let mode = "monthly";
 
-</div>
+    function fmtUSD(n){
+      return "$" + Math.round(n).toLocaleString("en-US");
+    }
 
+    function setMode(nextMode){
+      mode = nextMode;
+
+      // toggle ui
+      const isYearly = mode === "yearly";
+      billingToggle.classList.toggle("on", isYearly);
+      billingToggle.setAttribute("aria-checked", String(isYearly));
+
+      // show/hide deal pill
+      dealPill.style.display = isYearly ? "inline-flex" : "none";
+      dealPct.textContent = launchDiscount ? "40%" : "30%";
+
+      // update prices
+      const priceEls = document.querySelectorAll("[data-price]");
+      const strikeEls = document.querySelectorAll("[data-strike]");
+      const perEls = document.querySelectorAll("[data-per]");
+
+      priceEls.forEach(el=>{
+        const key = el.getAttribute("data-price"); // starter | premium | pro
+        if(mode === "monthly"){
+          el.textContent = "$" + PRICES.monthly[key].price;
+        }else{
+          const conf = PRICES.yearly[key];
+          const off = launchDiscount ? conf.launchOff : conf.standardOff;
+          const discounted = conf.annual * (1 - off);
+          el.textContent = fmtUSD(discounted);
+        }
+      });
+
+      strikeEls.forEach(el=>{
+        const key = el.getAttribute("data-strike");
+        if(mode === "monthly"){
+          el.style.display = "none";
+        }else{
+          const conf = PRICES.yearly[key];
+          const full = conf.annual;
+          el.textContent = fmtUSD(full);
+          el.style.display = "inline";
+        }
+      });
+
+      perEls.forEach(el=>{
+        const key = el.getAttribute("data-per");
+        if(mode === "monthly"){
+          el.textContent = PRICES.monthly[key].per;
+        }else{
+          el.textContent = PRICES.yearly[key].per;
+        }
+      });
+    }
+
+    // click + keyboard toggle
+    function toggleBilling(){
+      setMode(mode === "monthly" ? "yearly" : "monthly");
+    }
+
+    billingToggle.addEventListener("click", toggleBilling);
+    billingToggle.addEventListener("keydown", (e)=>{
+      if(e.key === "Enter" || e.key === " "){
+        e.preventDefault();
+        toggleBilling();
+      }
+    });
+
+    // default state
+    setMode("monthly");
+  </script>
 </body>
 </html>
