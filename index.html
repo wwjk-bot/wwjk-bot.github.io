@@ -3,26 +3,28 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Sessionly — performance system for traders</title>
-  <meta name="description" content="Log trades fast, review smarter, and improve with AI coaching." />
+  <title>Sessionly • performance system for traders</title>
+  <meta name="description" content="Sessionly is a performance system for day traders. Log fast, review smarter, and use AI coaching to improve what matters." />
 
   <style>
     :root{
-      --bg:#05060a;
-      --card:#0b1020cc;
-      --card2:#0b1020b3;
-      --border:rgba(255,255,255,.10);
-      --border2:rgba(255,255,255,.14);
-      --text:#eef2ff;
-      --muted:rgba(238,242,255,.68);
-      --muted2:rgba(238,242,255,.52);
-      --accent:#3ff7b4;
-      --accent2:#3ff7b4;
-      --shadow: 0 18px 70px rgba(0,0,0,.55);
-      --shadow2: 0 10px 40px rgba(0,0,0,.42);
-      --radius:22px;
-      --radius2:16px;
-      --max:1120px;
+      --bg:#070A0F;
+      --card: rgba(12,16,26,.62);
+      --card2: rgba(12,16,26,.72);
+      --stroke: rgba(255,255,255,.10);
+      --stroke2: rgba(255,255,255,.14);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.64);
+      --muted2: rgba(255,255,255,.46);
+      --green:#3CF2A6;
+      --green2:#19D58B;
+      --purple:#7C3AED;
+      --cyan:#22D3EE;
+      --shadow: 0 30px 90px rgba(0,0,0,.55);
+      --shadow2: 0 18px 70px rgba(0,0,0,.45);
+      --radius: 22px;
+      --radius2: 16px;
+      --max: 1120px;
     }
 
     *{box-sizing:border-box}
@@ -31,850 +33,1094 @@
       margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
       color:var(--text);
-      background:var(--bg);
+      background: var(--bg);
       overflow-x:hidden;
     }
+    a{color:inherit;text-decoration:none}
+    button{font-family:inherit}
 
-    /* smooth single background (no seams) */
-    body::before{
-      content:"";
-      position:fixed;
-      inset:-20vh -20vw;
-      z-index:-3;
-      background:
-        radial-gradient(900px 540px at 18% 20%, rgba(124,58,237,.45), transparent 65%),
-        radial-gradient(820px 520px at 80% 22%, rgba(16,185,129,.35), transparent 62%),
-        radial-gradient(900px 680px at 68% 78%, rgba(34,197,94,.18), transparent 60%),
-        radial-gradient(1200px 900px at 40% 92%, rgba(99,102,241,.18), transparent 62%),
-        radial-gradient(1000px 700px at 10% 80%, rgba(8,145,178,.14), transparent 62%);
-      filter: blur(0px) saturate(120%);
-      transform: translateZ(0);
-    }
-
-    /* subtle noise */
-    body::after{
-      content:"";
-      position:fixed;
-      inset:0;
+    /* smooth, seam-free background */
+    .bg{
+      position:fixed; inset:-2px;
       z-index:-2;
-      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.28'/%3E%3C/svg%3E");
-      opacity:.06;
+      background:
+        radial-gradient(1200px 900px at 15% 12%, rgba(124,58,237,.42), transparent 62%),
+        radial-gradient(1000px 800px at 85% 18%, rgba(34,211,238,.22), transparent 60%),
+        radial-gradient(1100px 900px at 85% 75%, rgba(60,242,166,.22), transparent 64%),
+        radial-gradient(1000px 900px at 20% 82%, rgba(60,242,166,.12), transparent 64%),
+        radial-gradient(1400px 1000px at 45% 55%, rgba(255,255,255,.06), transparent 65%),
+        linear-gradient(180deg, #060913 0%, #070A0F 40%, #070A0F 100%);
+      filter:saturate(1.05) contrast(1.05);
+    }
+    .grain{
+      position:fixed; inset:-2px;
+      z-index:-1;
       pointer-events:none;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.25'/%3E%3C/svg%3E");
+      opacity:.08;
       mix-blend-mode:overlay;
     }
 
-    a{color:inherit; text-decoration:none}
-    .wrap{width:min(var(--max), calc(100% - 40px)); margin:0 auto}
-    .pill{
-      display:inline-flex; align-items:center; gap:10px;
-      padding:10px 14px;
-      border:1px solid var(--border);
-      border-radius:999px;
-      background:rgba(255,255,255,.04);
-      backdrop-filter: blur(10px);
-      box-shadow: 0 10px 30px rgba(0,0,0,.25);
-    }
-    .dot{width:10px;height:10px;border-radius:50%;background:var(--accent); box-shadow:0 0 0 6px rgba(63,247,180,.10)}
-    .muted{color:var(--muted)}
-    .muted2{color:var(--muted2)}
-    .btn{
-      display:inline-flex; align-items:center; justify-content:center;
-      padding:14px 18px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.10);
-      background:rgba(255,255,255,.05);
-      color:var(--text);
-      font-weight:700;
-      letter-spacing:.2px;
-      box-shadow: var(--shadow2);
-      transition: transform .2s ease, border-color .2s ease, background .2s ease, box-shadow .2s ease;
-      cursor:pointer;
-      user-select:none;
-    }
-    .btn:hover{transform: translateY(-2px); border-color: rgba(255,255,255,.18); background:rgba(255,255,255,.07)}
-    .btn.primary{
-      background: linear-gradient(135deg, rgba(63,247,180,.95), rgba(63,247,180,.75));
-      color:#061015;
-      border-color: rgba(63,247,180,.30);
-      box-shadow: 0 18px 60px rgba(63,247,180,.15), 0 18px 70px rgba(0,0,0,.5);
-    }
-    .btn.primary:hover{transform: translateY(-3px); box-shadow: 0 22px 70px rgba(63,247,180,.18), 0 18px 70px rgba(0,0,0,.55)}
-    .btn.ghost{background:rgba(255,255,255,.03)}
+    .wrap{max-width:var(--max); margin:0 auto; padding: 26px 22px 84px;}
+
+    /* top nav */
     .nav{
-      position:sticky; top:0;
-      z-index:20;
-      border-bottom:1px solid rgba(255,255,255,.06);
-      background: linear-gradient(to bottom, rgba(5,6,10,.78), rgba(5,6,10,.38));
-      backdrop-filter: blur(14px);
-    }
-    .nav-inner{
       display:flex; align-items:center; justify-content:space-between;
-      padding:14px 0;
       gap:16px;
+      position:sticky; top:0;
+      padding: 18px 0 16px;
+      backdrop-filter: blur(10px);
+      z-index:50;
     }
-    .brand{display:flex; align-items:center; gap:10px; font-weight:900; letter-spacing:.2px}
-    .brand .mark{
-      width:12px;height:12px;border-radius:50%;
-      background:var(--accent);
-      box-shadow:0 0 0 6px rgba(63,247,180,.12), 0 10px 30px rgba(63,247,180,.18);
+    .nav::before{
+      content:"";
+      position:absolute; left:-30vw; right:-30vw; top:0; bottom:0;
+      background: linear-gradient(180deg, rgba(7,10,15,.78), rgba(7,10,15,.40));
+      z-index:-1;
+      border-bottom: 1px solid rgba(255,255,255,.06);
     }
-    .nav-links{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end}
-    .nav-links a{
-      padding:10px 12px; border-radius:999px;
-      border:1px solid rgba(255,255,255,.08);
-      background:rgba(255,255,255,.03);
-      color:rgba(238,242,255,.82);
-      font-weight:650;
+    .brand{
+      display:flex; align-items:center; gap:10px;
+      font-weight:800;
+      letter-spacing:.2px;
+    }
+    .dot{
+      width:10px;height:10px;border-radius:999px;background:var(--green);
+      box-shadow: 0 0 0 4px rgba(60,242,166,.12), 0 0 20px rgba(60,242,166,.35);
+    }
+    .navlinks{display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:flex-end}
+    .pill{
+      padding:9px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(12,16,26,.35);
+      backdrop-filter: blur(10px);
+      color: rgba(255,255,255,.78);
+      font-size:13px;
       transition: transform .2s ease, border-color .2s ease, background .2s ease;
     }
-    .nav-links a:hover{transform: translateY(-1px); border-color: rgba(255,255,255,.14); background:rgba(255,255,255,.05)}
-
-    .hero{
-      padding:64px 0 28px;
+    .pill:hover{transform: translateY(-1px); border-color: rgba(255,255,255,.18); background: rgba(12,16,26,.48)}
+    .pill.primary{
+      border-color: rgba(60,242,166,.42);
+      color: rgba(0,0,0,.86);
+      background: linear-gradient(180deg, rgba(60,242,166,.98), rgba(25,213,139,.92));
+      box-shadow: 0 16px 40px rgba(60,242,166,.16);
+      font-weight:800;
     }
-    .hero-grid{
+
+    /* hero */
+    .hero{
       display:grid;
-      grid-template-columns: 1.1fr .9fr;
-      gap:22px;
+      grid-template-columns: 1.2fr .95fr;
+      gap: 22px;
       align-items:stretch;
+      margin-top: 8px;
     }
     @media (max-width: 980px){
-      .hero-grid{grid-template-columns:1fr}
+      .hero{grid-template-columns:1fr; }
     }
-    .panel{
-      border:1px solid rgba(255,255,255,.10);
-      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      border-radius:var(--radius);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(14px);
+    .card{
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow2);
       position:relative;
       overflow:hidden;
     }
-    .panel::before{
+    .card::before{
       content:"";
-      position:absolute; inset:-60px;
+      position:absolute; inset:-1px;
       background:
-        radial-gradient(520px 320px at 18% 20%, rgba(63,247,180,.20), transparent 62%),
-        radial-gradient(520px 320px at 78% 30%, rgba(124,58,237,.18), transparent 62%);
-      opacity:.65;
-      filter: blur(12px);
+        radial-gradient(700px 300px at 20% 10%, rgba(60,242,166,.10), transparent 60%),
+        radial-gradient(700px 320px at 90% 15%, rgba(124,58,237,.10), transparent 62%),
+        radial-gradient(700px 300px at 80% 90%, rgba(34,211,238,.08), transparent 62%);
       pointer-events:none;
+      opacity:.9;
     }
-    .panel .in{position:relative; padding:28px}
+    .heroLeft{padding: 28px 28px 24px;}
+    .kicker{
+      display:inline-flex; align-items:center; gap:10px;
+      padding: 8px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(12,16,26,.28);
+      color: rgba(255,255,255,.72);
+      font-size: 13px;
+      backdrop-filter: blur(10px);
+    }
+    .kicker b{color: rgba(255,255,255,.90)}
     h1{
-      margin:0 0 12px;
-      font-size: clamp(40px, 5vw, 58px);
-      line-height:1.02;
-      letter-spacing:-.02em;
+      margin: 14px 0 12px;
+      font-size: 56px;
+      line-height: 1.02;
+      letter-spacing: -.8px;
+    }
+    @media (max-width: 560px){
+      h1{font-size: 40px;}
     }
     .sub{
-      margin:0 0 18px;
+      color: rgba(255,255,255,.70);
       font-size: 16px;
-      line-height:1.55;
-      color: rgba(238,242,255,.72);
-      max-width: 58ch;
+      line-height: 1.55;
+      max-width: 52ch;
+      margin-bottom: 18px;
     }
-    .cta{display:flex; gap:12px; flex-wrap:wrap; margin-top:18px}
-    .mini-cards{
-      display:grid; grid-template-columns:repeat(3,1fr);
-      gap:12px; margin-top:18px;
+    .ctaRow{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+    .btn{
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(12,16,26,.40);
+      color: rgba(255,255,255,.88);
+      padding: 12px 14px;
+      border-radius: 14px;
+      font-weight:800;
+      cursor:pointer;
+      transition: transform .2s ease, border-color .2s ease, background .2s ease, box-shadow .2s ease;
     }
-    @media (max-width: 620px){
-      .mini-cards{grid-template-columns:1fr}
+    .btn:hover{transform: translateY(-1px); border-color: rgba(255,255,255,.20); background: rgba(12,16,26,.55)}
+    .btn.primary{
+      border-color: rgba(60,242,166,.44);
+      background: linear-gradient(180deg, rgba(60,242,166,.98), rgba(25,213,139,.92));
+      color: rgba(0,0,0,.86);
+      box-shadow: 0 18px 40px rgba(60,242,166,.18);
     }
     .mini{
-      border:1px solid rgba(255,255,255,.08);
-      background: rgba(0,0,0,.18);
-      border-radius:18px;
-      padding:14px;
-      box-shadow: 0 10px 30px rgba(0,0,0,.25);
+      margin-top: 16px;
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
     }
-    .mini b{display:block; margin-bottom:6px}
-    .mini p{margin:0; color:rgba(238,242,255,.66); line-height:1.4; font-size:13px}
+    @media (max-width: 560px){
+      .mini{grid-template-columns:1fr; }
+    }
+    .miniCard{
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(12,16,26,.38);
+      border-radius: 18px;
+      padding: 12px 12px;
+      min-height: 86px;
+      transition: transform .25s ease, border-color .25s ease, background .25s ease;
+    }
+    .miniCard:hover{transform: translateY(-2px); border-color: rgba(255,255,255,.18); background: rgba(12,16,26,.52)}
+    .miniTitle{font-weight:900; letter-spacing:-.2px; margin-bottom:6px}
+    .miniText{color: rgba(255,255,255,.62); font-size: 13px; line-height: 1.4}
 
+    .heroRight{padding: 22px;}
     .preview{
-      min-height: 380px;
+      height: 100%;
+      min-height: 320px;
+      border-radius: 20px;
+      border:1px dashed rgba(255,255,255,.14);
+      background:
+        radial-gradient(400px 260px at 25% 18%, rgba(60,242,166,.10), transparent 60%),
+        radial-gradient(400px 260px at 78% 28%, rgba(124,58,237,.14), transparent 64%),
+        radial-gradient(520px 320px at 70% 88%, rgba(34,211,238,.10), transparent 64%),
+        rgba(12,16,26,.34);
       display:flex;
       align-items:center;
       justify-content:center;
-    }
-    .mock{
-      width: calc(100% - 34px);
-      height: 320px;
-      border-radius:22px;
-      border:1px dashed rgba(255,255,255,.16);
-      background: rgba(0,0,0,.20);
+      color: rgba(255,255,255,.55);
+      font-weight:800;
+      text-transform: lowercase;
+      letter-spacing:.2px;
       position:relative;
       overflow:hidden;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,.04);
     }
-    .mock::before{
-      content:"sessionly app preview";
+    .preview::after{
+      content:"";
       position:absolute; inset:0;
-      display:flex; align-items:center; justify-content:center;
-      color: rgba(238,242,255,.40);
-      font-weight:700;
-      letter-spacing:.2px;
+      background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,.06) 18%, transparent 38%);
+      transform: translateX(-40%);
+      animation: shine 5.5s ease-in-out infinite;
+      opacity:.55;
+      pointer-events:none;
+    }
+    @keyframes shine{
+      0%{transform: translateX(-55%)}
+      50%{transform: translateX(40%)}
+      100%{transform: translateX(55%)}
     }
 
-    .section{
-      padding:44px 0;
+    /* section shells */
+    .section{margin-top: 26px;}
+    .sectionHead{
+      display:flex; align-items:flex-end; justify-content:space-between; gap:16px;
+      margin-bottom: 12px;
     }
-    .section h2{
-      margin:0 0 8px;
-      font-size: 28px;
-      letter-spacing:-.01em;
+    .sectionHead h2{
+      margin:0;
+      font-size: 26px;
+      letter-spacing:-.4px;
     }
-    .section p.lead{
-      margin:0 0 18px;
-      color: rgba(238,242,255,.68);
-      line-height:1.6;
+    .sectionHead p{
+      margin:0;
+      color: rgba(255,255,255,.62);
+      font-size: 14px;
+      line-height: 1.4;
+      max-width: 60ch;
+    }
+
+    /* reviews marquee */
+    .reviewsShell{
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(12,16,26,.34);
+      border-radius: 26px;
+      overflow:hidden;
+      position:relative;
+      box-shadow: var(--shadow2);
+    }
+    .reviewsShell::before{
+      content:"";
+      position:absolute; inset:-1px;
+      background:
+        radial-gradient(700px 340px at 18% 20%, rgba(60,242,166,.10), transparent 60%),
+        radial-gradient(700px 340px at 78% 18%, rgba(124,58,237,.10), transparent 62%);
+      pointer-events:none;
+      opacity:.9;
+    }
+    .reviewsTop{
+      padding: 18px 18px 6px;
+      display:flex; align-items:flex-start; justify-content:space-between; gap:14px;
+      position:relative;
+      z-index:1;
+    }
+    .reviewsTop .left{
+      display:flex; flex-direction:column; gap:8px;
+    }
+    .stars{
+      display:flex; align-items:center; gap:6px;
+      color: rgba(255,255,255,.72);
+      font-size: 13px;
+    }
+    .stars b{color: rgba(255,255,255,.92)}
+    .stars .g{color: rgba(60,242,166,.95)}
+    .reviewsClaim{
+      color: rgba(255,255,255,.62);
+      font-size: 13px;
+      line-height:1.4;
+      max-width: 62ch;
+    }
+    .reviewsRows{padding: 12px 0 18px; position:relative; z-index:1;}
+    .marquee{
+      display:flex;
+      gap: 12px;
+      width: max-content;
+      padding: 10px 12px;
+      animation: scroll 42s linear infinite;
+      will-change: transform;
+    }
+    .marquee.reverse{animation-direction: reverse; animation-duration: 48s}
+    @keyframes scroll{
+      from{transform: translateX(0)}
+      to{transform: translateX(-50%)}
+    }
+    .review{
+      width: 320px;
+      flex: 0 0 auto;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(10,14,24,.55);
+      border-radius: 18px;
+      padding: 14px 14px 12px;
+      box-shadow: 0 14px 50px rgba(0,0,0,.30);
+      position:relative;
+      overflow:hidden;
+    }
+    .review::before{
+      content:"";
+      position:absolute; inset:-1px;
+      background: radial-gradient(420px 240px at 20% 10%, rgba(60,242,166,.10), transparent 62%);
+      opacity:.8;
+      pointer-events:none;
+    }
+    .rTop{display:flex; align-items:center; justify-content:space-between; gap:12px; position:relative}
+    .avatar{
+      display:flex; align-items:center; gap:10px;
+      font-weight:900;
+      letter-spacing:-.2px;
+      color: rgba(255,255,255,.90);
+      font-size: 13px;
+    }
+    .bubble{
+      width: 30px; height: 30px; border-radius: 10px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      display:flex; align-items:center; justify-content:center;
+      color: rgba(60,242,166,.92);
+      font-weight:900;
+    }
+    .rStars{color: rgba(60,242,166,.92); font-size:12px; letter-spacing:1px}
+    .rText{margin-top:10px; color: rgba(255,255,255,.68); font-size:13px; line-height:1.45; position:relative}
+    .rTagRow{margin-top:10px; display:flex; gap:8px; flex-wrap:wrap; position:relative}
+    .tag{
+      font-size: 11px;
+      color: rgba(255,255,255,.70);
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      padding: 6px 8px;
+      border-radius: 999px;
+    }
+    .tag.good{
+      color: rgba(0,0,0,.86);
+      background: rgba(60,242,166,.90);
+      border-color: rgba(60,242,166,.35);
+    }
+    .fadeEdges{
+      pointer-events:none;
+      position:absolute; inset:0;
+      background:
+        linear-gradient(90deg, rgba(7,10,15,.92), transparent 18%, transparent 82%, rgba(7,10,15,.92));
+      z-index:2;
+      opacity:.95;
+    }
+
+    /* pricing */
+    .pricingShell{
+      margin-top: 22px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(12,16,26,.34);
+      border-radius: 26px;
+      padding: 18px;
+      box-shadow: var(--shadow2);
+      position:relative;
+      overflow:hidden;
+    }
+    .pricingShell::before{
+      content:"";
+      position:absolute; inset:-1px;
+      background:
+        radial-gradient(900px 380px at 15% 15%, rgba(124,58,237,.16), transparent 62%),
+        radial-gradient(900px 420px at 85% 25%, rgba(34,211,238,.12), transparent 62%),
+        radial-gradient(900px 520px at 85% 90%, rgba(60,242,166,.10), transparent 62%);
+      pointer-events:none;
+      opacity:.95;
+    }
+
+    .pricingHeader{
+      display:flex; flex-direction:column; gap:10px;
+      padding: 2px 2px 14px;
+      position:relative;
+      z-index:1;
+    }
+    .pricingTitle{
+      font-size: 34px;
+      letter-spacing:-.6px;
+      margin: 0;
+    }
+    .pricingDesc{
+      margin:0;
+      color: rgba(255,255,255,.62);
+      font-size: 14px;
+      line-height: 1.5;
       max-width: 70ch;
     }
 
-    /* Social proof */
-    .proof{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:14px;
-      margin-top:18px;
-    }
-    @media (max-width: 980px){ .proof{grid-template-columns:1fr} }
-    .review{
-      border:1px solid rgba(255,255,255,.08);
-      background: rgba(255,255,255,.03);
-      border-radius:20px;
-      padding:16px;
-      box-shadow: 0 12px 40px rgba(0,0,0,.28);
-      backdrop-filter: blur(10px);
-    }
-    .stars{color: rgba(63,247,180,.95); font-weight:900; letter-spacing:.12em}
-    .review p{margin:10px 0 0; color:rgba(238,242,255,.68); line-height:1.5}
-    .review .who{margin-top:10px; color:rgba(238,242,255,.5); font-size:13px}
-
-    /* Pricing */
-    .pricing-shell{
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.18);
-      border-radius: 28px;
-      padding:20px;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(16px);
-    }
-
-    .pricing-head{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:14px;
-      margin-bottom: 14px;
+    .pricingTopRow{
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      margin-top: 10px;
       flex-wrap:wrap;
     }
 
-    .toggle{
-      display:flex; align-items:center; gap:12px;
-      padding:10px 12px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.03);
+    /* toggle */
+    .toggleWrap{
+      display:flex; align-items:center; gap:10px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(10,14,24,.55);
+      backdrop-filter: blur(10px);
     }
-    .toggle span{font-weight:700; color:rgba(238,242,255,.72); font-size:13px}
+    .toggleLabel{color: rgba(255,255,255,.62); font-size: 13px; font-weight:800; text-transform:lowercase}
     .switch{
-      position:relative;
-      width:54px;
-      height:30px;
-      border-radius:999px;
+      width: 54px; height: 30px;
+      border-radius: 999px;
       background: rgba(255,255,255,.10);
-      border:1px solid rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.14);
+      position:relative;
       cursor:pointer;
-      flex:0 0 auto;
+      transition: background .2s ease, border-color .2s ease;
     }
     .knob{
-      position:absolute; top:50%; left:4px;
-      width:24px; height:24px; border-radius:50%;
-      background: rgba(238,242,255,.90);
-      transform: translateY(-50%);
-      transition: left .22s ease, background .22s ease;
-      box-shadow: 0 10px 20px rgba(0,0,0,.35);
+      width: 24px; height: 24px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.92);
+      position:absolute; top:2px; left:2px;
+      transition: transform .22s ease;
     }
-    .switch.on{background: rgba(63,247,180,.22); border-color: rgba(63,247,180,.30)}
-    .switch.on .knob{left:26px; background: rgba(63,247,180,.95)}
+    .switch.on{
+      background: rgba(60,242,166,.22);
+      border-color: rgba(60,242,166,.35);
+    }
+    .switch.on .knob{transform: translateX(24px); background: rgba(60,242,166,.95)}
 
-    /* promo box (inside the red box area) */
-    .promoBox{
-      flex:1 1 520px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:14px;
-      padding:14px 16px;
+    /* promo bar (red box area -> inside the bar) */
+    .promoBar{
+      flex: 1;
+      min-width: 280px;
+      display:flex; align-items:center; justify-content:space-between; gap:14px;
+      padding: 12px 14px;
       border-radius: 18px;
-      border:1px solid rgba(255,255,255,.10);
-      background: linear-gradient(135deg, rgba(63,247,180,.10), rgba(124,58,237,.10));
-      box-shadow: 0 14px 50px rgba(0,0,0,.35);
-      backdrop-filter: blur(14px);
-      min-width:min(620px, 100%);
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(10,14,24,.55);
+      backdrop-filter: blur(10px);
     }
     .promoLeft{
-      display:flex; flex-direction:column; gap:6px;
-      min-width: 260px;
+      display:flex; flex-direction:column; gap:4px;
+      min-width: 200px;
     }
     .promoBig{
       font-size: 22px;
-      font-weight: 950;
-      letter-spacing:-.02em;
-      color: rgba(63,247,180,.98);
+      font-weight: 1000;
+      letter-spacing:-.4px;
+      color: rgba(60,242,166,.96);
       line-height:1.05;
+      text-transform:lowercase;
     }
-    .promoBig .small{color: rgba(238,242,255,.86); font-weight:900; font-size:14px; margin-left:6px}
-    .promoText{
-      color: rgba(238,242,255,.72);
+    .promoSub{
+      color: rgba(255,255,255,.70);
       font-size: 13px;
-      line-height:1.35;
-      max-width: 64ch;
+      line-height: 1.35;
     }
-    .countPill{
-      display:inline-flex; align-items:center; gap:10px;
-      padding:10px 12px;
-      border-radius:999px;
+    .timerPill{
+      display:flex; align-items:center; gap:10px;
+      padding: 8px 10px;
+      border-radius: 999px;
       border:1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.22);
-      font-weight:850;
-      color: rgba(238,242,255,.88);
+      background: rgba(0,0,0,.18);
+      color: rgba(255,255,255,.86);
+      font-weight:900;
+      letter-spacing:.2px;
       white-space:nowrap;
     }
-    .countPill .warnDot{
-      width:10px;height:10px;border-radius:50%;
-      background: rgba(255,90,90,.92);
-      box-shadow:0 0 0 6px rgba(255,90,90,.12);
+    .timerDot{
+      width:10px; height:10px; border-radius:999px;
+      background: rgba(255,90,90,.95);
+      box-shadow: 0 0 0 4px rgba(255,90,90,.12);
     }
-    .countPill .label{color: rgba(238,242,255,.65); font-weight:800; margin-right:2px}
+    .timerPill span{opacity:.85; font-weight:900; text-transform:lowercase}
 
-    .cards{
+    /* cards row */
+    .plans{
+      margin-top: 14px;
       display:grid;
       grid-template-columns: repeat(3, 1fr);
-      gap:14px;
+      gap: 14px;
       align-items:stretch;
-      margin-top: 14px;
+      position:relative;
+      z-index:1;
     }
     @media (max-width: 980px){
-      .promoBox{min-width: 100%}
-      .cards{grid-template-columns:1fr}
+      .plans{grid-template-columns:1fr; }
     }
 
     .plan{
-      border-radius:22px;
-      border:1px solid rgba(255,255,255,.10);
-      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
-      box-shadow: 0 16px 55px rgba(0,0,0,.35);
-      overflow:hidden;
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(10,14,24,.58);
+      box-shadow: 0 18px 70px rgba(0,0,0,.30);
+      padding: 18px 18px 14px;
       position:relative;
-      transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease;
-      backdrop-filter: blur(14px);
+      overflow:hidden;
+      transform: translateZ(0);
+      transition: transform .22s ease, border-color .22s ease, background .22s ease, box-shadow .22s ease;
       min-height: 420px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
     }
-    .plan:hover{
-      transform: translateY(-6px);
-      border-color: rgba(255,255,255,.16);
-      box-shadow: 0 24px 70px rgba(0,0,0,.45);
+    .plan::before{
+      content:"";
+      position:absolute; inset:-1px;
+      background: radial-gradient(700px 420px at 10% 5%, rgba(255,255,255,.08), transparent 62%);
+      opacity:.7;
+      pointer-events:none;
     }
-    .plan .pad{padding:18px}
-    .plan .name{font-weight:900; font-size:18px; margin:0 0 8px}
-    .priceRow{display:flex; align-items:baseline; gap:10px; margin:6px 0 6px}
+    .plan:hover{transform: translateY(-3px); border-color: rgba(255,255,255,.16); background: rgba(10,14,24,.66)}
+
+    .planHead{position:relative}
+    .planName{
+      font-size: 18px;
+      font-weight: 1000;
+      letter-spacing:-.2px;
+      text-transform: lowercase;
+      margin:0 0 10px;
+    }
+    .priceLine{
+      display:flex; align-items:flex-end; gap:10px;
+    }
     .price{
-      font-size: 54px;
-      font-weight: 980;
-      letter-spacing:-.03em;
-      line-height:1;
+      font-size: 52px;
+      line-height: .95;
+      letter-spacing:-1.2px;
+      font-weight: 1000;
+      margin:0;
     }
-    .per{color: rgba(238,242,255,.60); font-weight:750}
-    .desc{margin:8px 0 12px; color: rgba(238,242,255,.66); line-height:1.5}
-    .list{display:flex; flex-direction:column; gap:10px; margin:12px 0 14px}
-    .li{display:flex; gap:10px; align-items:flex-start; color: rgba(238,242,255,.80); font-weight:650}
-    .tick{
-      width:18px;height:18px;border-radius:6px;
-      background: rgba(63,247,180,.16);
-      border:1px solid rgba(63,247,180,.30);
-      display:inline-flex; align-items:center; justify-content:center;
-      flex:0 0 auto;
-      margin-top:1px;
-      color: rgba(63,247,180,.95);
-      font-size:12px;
-      box-shadow: 0 10px 25px rgba(63,247,180,.10);
+    .per{
+      color: rgba(255,255,255,.62);
+      font-weight:900;
+      margin-bottom: 6px;
+      text-transform: lowercase;
     }
-    .foot{
-      margin-top: 10px;
-      color: rgba(238,242,255,.52);
-      font-size: 12.5px;
-      line-height:1.4;
+    .desc{
+      margin: 10px 0 0;
+      color: rgba(255,255,255,.62);
+      font-size: 13px;
+      line-height:1.45;
+      max-width: 42ch;
     }
 
-    .plan .ctaBtn{
+    .metaRow{
+      margin-top: 12px;
+      display:flex; gap:8px; flex-wrap:wrap;
+    }
+    .metaPill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.72);
+      font-weight:900;
+      font-size: 12px;
+      text-transform: lowercase;
+      white-space:nowrap;
+    }
+    .metaPill.save{
+      border-color: rgba(60,242,166,.25);
+      background: rgba(60,242,166,.14);
+      color: rgba(60,242,166,.95);
+    }
+
+    .list{
+      margin: 14px 0 0;
+      padding:0;
+      list-style:none;
+      display:flex; flex-direction:column; gap:10px;
+      color: rgba(255,255,255,.76);
+      font-size: 13px;
+      position:relative;
+    }
+    .li{
+      display:flex; gap:10px; align-items:flex-start;
+    }
+    .check{
+      width: 18px; height:18px; border-radius: 8px;
+      background: rgba(60,242,166,.14);
+      border:1px solid rgba(60,242,166,.22);
+      display:flex; align-items:center; justify-content:center;
+      color: rgba(60,242,166,.92);
+      flex: 0 0 auto;
+      margin-top: 1px;
+      font-weight:1000;
+      font-size: 12px;
+    }
+    .li span{color: rgba(255,255,255,.74)}
+    .li b{color: rgba(255,255,255,.90); font-weight:900}
+
+    .planFoot{margin-top: 16px;}
+    .planBtn{
       width:100%;
-      margin-top: 14px;
+      border-radius: 14px;
+      padding: 12px 14px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.88);
+      font-weight: 1000;
+      cursor:pointer;
+      transition: transform .2s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease;
+      text-transform: lowercase;
+      letter-spacing:.2px;
+    }
+    .planBtn:hover{transform: translateY(-1px); background: rgba(255,255,255,.09); border-color: rgba(255,255,255,.18)}
+    .fine{
+      margin-top:10px;
+      color: rgba(255,255,255,.56);
+      font-size: 12px;
+      line-height:1.35;
     }
 
-    /* Most popular styling (bigger but not hiding others) */
-    .popular{
-      border-color: rgba(63,247,180,.32);
-      background: linear-gradient(180deg, rgba(63,247,180,.10), rgba(255,255,255,.02));
-      box-shadow: 0 22px 70px rgba(63,247,180,.12), 0 22px 80px rgba(0,0,0,.48);
-      transform: translateY(-6px);
+    /* highlight premium (bigger + more colorful) */
+    .plan.featured{
+      border-color: rgba(60,242,166,.28);
+      background: rgba(10,14,24,.62);
+      box-shadow: 0 26px 90px rgba(0,0,0,.42), 0 0 0 1px rgba(60,242,166,.10) inset;
+      transform: scale(1.05);
+      z-index: 2;
     }
-    .popular:hover{transform: translateY(-10px)}
+    .plan.featured::before{
+      background:
+        radial-gradient(820px 460px at 30% 10%, rgba(60,242,166,.20), transparent 62%),
+        radial-gradient(820px 460px at 90% 20%, rgba(124,58,237,.18), transparent 64%),
+        radial-gradient(900px 520px at 70% 90%, rgba(34,211,238,.14), transparent 66%);
+      opacity: .95;
+    }
+    @media (max-width: 980px){
+      .plan.featured{transform:none;}
+    }
     .badge{
       position:absolute;
-      top:14px; right:14px;
-      padding:8px 12px;
-      border-radius:999px;
-      background: rgba(63,247,180,.92);
-      color:#061015;
-      font-weight:950;
-      font-size:12px;
-      letter-spacing:.2px;
-      box-shadow: 0 18px 45px rgba(63,247,180,.18);
+      top: 14px;
+      right: 14px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(60,242,166,.95);
+      color: rgba(0,0,0,.86);
+      font-weight:1000;
+      font-size: 12px;
+      text-transform: lowercase;
+      box-shadow: 0 12px 30px rgba(60,242,166,.18);
+    }
+    .plan.featured .price{color: rgba(60,242,166,.96)}
+    .plan.featured .planBtn{
+      background: linear-gradient(180deg, rgba(60,242,166,.98), rgba(25,213,139,.92));
+      color: rgba(0,0,0,.86);
+      border-color: rgba(60,242,166,.42);
+      box-shadow: 0 18px 40px rgba(60,242,166,.18);
     }
 
-    /* inside-card yearly discount chips */
-    .dealRow{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-      margin-top: 10px;
-    }
-    .chip{
-      display:inline-flex; align-items:center; gap:8px;
-      padding:8px 10px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.22);
-      color: rgba(238,242,255,.86);
-      font-weight:900;
-      font-size:12px;
-    }
-    .chip.save{
-      border-color: rgba(63,247,180,.30);
-      background: rgba(63,247,180,.12);
-      color: rgba(238,242,255,.92);
-    }
-    .chip.save b{color: rgba(63,247,180,.95)}
-
-    .divider{height:1px; background:rgba(255,255,255,.08); margin:22px 0}
-    .footer{
-      padding:40px 0 60px;
-      color: rgba(238,242,255,.56);
-      font-size:13px;
+    /* make sure pro is not hidden */
+    .plan.pro{
+      background: rgba(10,14,24,.58);
     }
 
-    /* tiny glow around pricing shell only (no seams) */
-    .pricingGlow{
+    /* features grid */
+    .features{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    @media (max-width: 980px){ .features{grid-template-columns:1fr;} }
+    .feat{
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(12,16,26,.34);
+      padding: 14px 14px;
+      box-shadow: 0 14px 60px rgba(0,0,0,.25);
       position:relative;
+      overflow:hidden;
     }
-    .pricingGlow::before{
+    .feat::before{
       content:"";
-      position:absolute;
-      inset:-30px;
-      background:
-        radial-gradient(600px 280px at 50% 0%, rgba(63,247,180,.10), transparent 60%),
-        radial-gradient(700px 360px at 60% 110%, rgba(124,58,237,.10), transparent 62%);
-      filter: blur(18px);
-      z-index:-1;
-      pointer-events:none;
+      position:absolute; inset:-1px;
+      background: radial-gradient(520px 260px at 20% 10%, rgba(60,242,166,.10), transparent 62%);
+      opacity:.7; pointer-events:none;
+    }
+    .featTitle{font-weight:1000; letter-spacing:-.3px; margin:0 0 8px; position:relative}
+    .featText{margin:0; color: rgba(255,255,255,.62); font-size: 13px; line-height:1.45; position:relative}
+
+    /* footer */
+    .footer{
+      margin-top: 28px;
+      color: rgba(255,255,255,.50);
+      font-size: 12px;
+      display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
+      padding-top: 18px;
+      border-top: 1px solid rgba(255,255,255,.08);
+    }
+
+    /* accessibility: reduce motion */
+    @media (prefers-reduced-motion: reduce){
+      .preview::after, .marquee{animation:none !important}
+      .plan, .miniCard, .pill, .btn{transition:none !important}
     }
   </style>
 </head>
 
 <body>
-  <div class="nav">
-    <div class="wrap nav-inner">
+  <div class="bg"></div>
+  <div class="grain"></div>
+
+  <div class="wrap">
+    <!-- NAV -->
+    <div class="nav">
       <div class="brand">
-        <span class="mark"></span>
-        <span>sessionly</span>
+        <span class="dot"></span>
+        <span>Sessionly</span>
       </div>
-      <div class="nav-links">
-        <a href="#features">features</a>
-        <a href="#proof">reviews</a>
-        <a href="#pricing">pricing</a>
-        <a href="login.html">open app</a>
+      <div class="navlinks">
+        <a class="pill" href="#features">features</a>
+        <a class="pill" href="#pricing">pricing</a>
+        <a class="pill" href="#reviews">reviews</a>
+        <a class="pill" href="./login.html">log in</a>
+        <a class="pill primary" href="./app/index.html">open app</a>
+      </div>
+    </div>
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="card heroLeft">
+        <div class="kicker"><span class="dot" style="width:8px;height:8px"></span> <b>ai coaching</b> + journaling + performance loop</div>
+        <h1>trade your best hours<br/>not your whole day</h1>
+        <p class="sub">
+          sessionly is a performance system for traders. log fast, review smarter, and use an ai coach to spot what to fix next.
+        </p>
+        <div class="ctaRow">
+          <a class="btn primary" href="./app/index.html">open the app</a>
+          <a class="btn" href="#pricing">see pricing</a>
+          <a class="btn" href="#reviews">see reviews</a>
+        </div>
+
+        <div class="mini">
+          <div class="miniCard">
+            <div class="miniTitle">1 minute logging</div>
+            <div class="miniText">log symbol, direction, rr, pnl, tags, and notes without friction.</div>
+          </div>
+          <div class="miniCard">
+            <div class="miniTitle">ai trade review</div>
+            <div class="miniText">turn your trades into feedback you can actually use next session.</div>
+          </div>
+          <div class="miniCard">
+            <div class="miniTitle">weekly plan</div>
+            <div class="miniText">a simple summary plus one clear focus to fix next week.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card heroRight">
+        <div class="preview">sessionly app preview</div>
+      </div>
+    </div>
+
+    <!-- REVIEWS -->
+    <div id="reviews" class="section">
+      <div class="sectionHead">
+        <h2>people call it a “goldmine”</h2>
+        <p>high performers don’t need more trades. they need better feedback loops. these are example testimonials for layout only.</p>
+      </div>
+
+      <div class="reviewsShell">
+        <div class="reviewsTop">
+          <div class="left">
+            <div class="stars"><span class="g">★★★★★</span> <b>4.9</b> average from traders who care about execution</div>
+            <div class="reviewsClaim">“the ai coach showed me my real leaks. i fixed two habits, my best hours got clearer, and my pnl stopped swinging.”</div>
+          </div>
+          <a class="pill" href="#pricing">see plans</a>
+        </div>
+
+        <div class="reviewsRows">
+          <div class="fadeEdges"></div>
+
+          <!-- row 1 -->
+          <div class="marquee" aria-hidden="true" id="marquee1"></div>
+
+          <!-- row 2 -->
+          <div class="marquee reverse" aria-hidden="true" id="marquee2"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FEATURES -->
+    <div id="features" class="section">
+      <div class="sectionHead">
+        <h2>what makes sessionly different</h2>
+        <p>built for traders who want clean structure, fast logging, and ai coaching that feels like a real review, not a generic summary.</p>
+      </div>
+
+      <div class="features">
+        <div class="feat">
+          <h3 class="featTitle">ai coaching that goes deep</h3>
+          <p class="featText">get a clear “what happened, why it happened, what to do next” breakdown based on your own tags and outcomes.</p>
+        </div>
+        <div class="feat">
+          <h3 class="featTitle">win/loss calendar view</h3>
+          <p class="featText">see your trading days instantly. spot patterns in streaks, sessions, and behaviour changes over time.</p>
+        </div>
+        <div class="feat">
+          <h3 class="featTitle">session breakdown</h3>
+          <p class="featText">find your best hours, your worst traps, and the rules that keep you consistent.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRICING -->
+    <div id="pricing" class="section">
+      <div class="pricingShell">
+        <div class="pricingHeader">
+          <h2 class="pricingTitle">pricing</h2>
+          <p class="pricingDesc">choose monthly or yearly. yearly unlocks a limited-time discount per visitor.</p>
+
+          <div class="pricingTopRow">
+            <div class="toggleWrap">
+              <div class="toggleLabel">monthly</div>
+              <div class="switch" id="billingSwitch" role="switch" aria-checked="false" tabindex="0">
+                <div class="knob"></div>
+              </div>
+              <div class="toggleLabel">yearly</div>
+            </div>
+
+            <div class="promoBar" id="promoBar" style="display:none">
+              <div class="promoLeft">
+                <div class="promoBig">40% off yearly</div>
+                <div class="promoSub">Limited-time deal. Toggle yearly to see discounted yearly totals inside each plan.</div>
+              </div>
+              <div class="timerPill" title="limited-time discount">
+                <div class="timerDot"></div>
+                <span>ends in</span>
+                <div id="timerText">07:38:23</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="plans">
+          <!-- starter -->
+          <div class="plan" id="planStarter">
+            <div>
+              <div class="planHead">
+                <div class="planName">starter</div>
+                <div class="priceLine">
+                  <p class="price" id="starterPrice">$19</p>
+                  <div class="per" id="starterPer">/ month</div>
+                </div>
+                <p class="desc">for consistency and clean tracking.</p>
+
+                <div class="metaRow" id="starterMeta" style="display:none">
+                  <div class="metaPill save" id="starterSave">Saves $ 0</div>
+                </div>
+              </div>
+
+              <ul class="list">
+                <li class="li"><div class="check">✓</div><span><b>manual</b> trade logging</span></li>
+                <li class="li"><div class="check">✓</div><span>calendar heatmap (win/loss days)</span></li>
+                <li class="li"><div class="check">✓</div><span>basic stats (win rate, rr, pnl)</span></li>
+                <li class="li"><div class="check">✓</div><span>light ai summaries (high level)</span></li>
+              </ul>
+            </div>
+
+            <div class="planFoot">
+              <button class="planBtn" onclick="goStart('starter')">start</button>
+              <div class="fine">best if you want structure and a consistent improvement loop.</div>
+            </div>
+          </div>
+
+          <!-- premium (featured / bigger) -->
+          <div class="plan featured" id="planPremium">
+            <div class="badge">most popular</div>
+            <div>
+              <div class="planHead">
+                <div class="planName">premium</div>
+                <div class="priceLine">
+                  <p class="price" id="premiumPrice">$49</p>
+                  <div class="per" id="premiumPer">/ month</div>
+                </div>
+                <p class="desc">the full performance system.</p>
+
+                <div class="metaRow" id="premiumMeta" style="display:none">
+                  <div class="metaPill save" id="premiumSave">Saves $ 0</div>
+                </div>
+              </div>
+
+              <ul class="list">
+                <li class="li"><div class="check">✓</div><span><b>full ai coaching</b> (trade review)</span></li>
+                <li class="li"><div class="check">✓</div><span>weekly improvement report</span></li>
+                <li class="li"><div class="check">✓</div><span>session breakdown (best hours)</span></li>
+                <li class="li"><div class="check">✓</div><span>mistake clustering + patterns</span></li>
+                <li class="li"><div class="check">✓</div><span>rules, streaks, and accountability</span></li>
+              </ul>
+            </div>
+
+            <div class="planFoot">
+              <button class="planBtn" onclick="goStart('premium')">start</button>
+              <div class="fine">7-day free trial (card required).</div>
+            </div>
+          </div>
+
+          <!-- professional -->
+          <div class="plan pro" id="planPro">
+            <div>
+              <div class="planHead">
+                <div class="planName">professional</div>
+                <div class="priceLine">
+                  <p class="price" id="proPrice">$99</p>
+                  <div class="per" id="proPer">/ month</div>
+                </div>
+                <p class="desc">deeper diagnostics and advanced workflows.</p>
+
+                <div class="metaRow" id="proMeta" style="display:none">
+                  <div class="metaPill save" id="proSave">Saves $ 0</div>
+                </div>
+              </div>
+
+              <ul class="list">
+                <li class="li"><div class="check">✓</div><span>multi-account analysis</span></li>
+                <li class="li"><div class="check">✓</div><span>strategy playbooks + grading</span></li>
+                <li class="li"><div class="check">✓</div><span>deep ai diagnostics + root cause</span></li>
+                <li class="li"><div class="check">✓</div><span>priority features access</span></li>
+                <li class="li"><div class="check">✓</div><span>future broker imports (coming soon)</span></li>
+              </ul>
+            </div>
+
+            <div class="planFoot">
+              <button class="planBtn" onclick="goStart('pro')">start</button>
+              <div class="fine">for serious traders who want the deepest review loop.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer" style="position:relative; z-index:1;">
+          <div>note: pricing page is visual only for now. billing can be wired later (stripe).</div>
+          <div><a class="pill" href="#reviews">see more proof</a></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+      <div>© <span id="yearNow"></span> sessionly</div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap">
+        <a class="pill" href="#features">features</a>
+        <a class="pill" href="#pricing">pricing</a>
+        <a class="pill" href="./login.html">log in</a>
       </div>
     </div>
   </div>
 
-  <header class="hero">
-    <div class="wrap hero-grid">
-      <div class="panel">
-        <div class="in">
-          <div class="pill"><span class="dot"></span><span class="muted">a performance system for traders</span></div>
-          <h1>trade your best hours<br/>not your whole day</h1>
-          <p class="sub">
-            log trades fast, spot patterns instantly, and get ai coaching that tells you what to fix next.
-            built for traders who want clarity, not more spreadsheets.
-          </p>
-          <div class="cta">
-            <a class="btn primary" href="login.html">open the app</a>
-            <a class="btn ghost" href="#pricing">see pricing</a>
-          </div>
-
-          <div class="mini-cards" id="features">
-            <div class="mini">
-              <b>1 minute trade logging</b>
-              <p>tap to log symbol, direction, rr, pnl, notes, and tags.</p>
-            </div>
-            <div class="mini">
-              <b>session breakdown</b>
-              <p>see what happens in london vs ny, and identify your best hours.</p>
-            </div>
-            <div class="mini">
-              <b>ai coaching loop</b>
-              <p>weekly direction, mistake patterns, and “what to do next” prompts.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="panel preview">
-        <div class="in" style="padding:18px">
-          <div class="mock" aria-label="app preview"></div>
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <section class="section" id="proof">
-    <div class="wrap">
-      <h2>trusted by traders who want a real improvement loop</h2>
-      <p class="lead">social proof like tradevue, but built around coaching and behavior change, not just reporting.</p>
-
-      <div class="proof">
-        <div class="review">
-          <div class="stars">★★★★★</div>
-          <p>“the weekly coaching summary is what finally made my journal actionable. i can see exactly what to change.”</p>
-          <div class="who">— futures trader</div>
-        </div>
-        <div class="review">
-          <div class="stars">★★★★★</div>
-          <p>“i stopped revenge trading because the system calls out my patterns. it feels like a coach, not a spreadsheet.”</p>
-          <div class="who">— index trader</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" id="pricing">
-    <div class="wrap pricingGlow">
-      <div class="pill"><span class="dot"></span><span class="muted">pricing that pays for itself</span></div>
-      <div style="height:10px"></div>
-      <h2 style="font-size:44px; margin-top:8px">pricing</h2>
-      <p class="lead">choose monthly or yearly. yearly can unlock a limited promo per visitor.</p>
-
-      <div class="pricing-shell">
-        <div class="pricing-head">
-          <div class="toggle" role="group" aria-label="billing toggle">
-            <span>monthly</span>
-            <div class="switch" id="billingSwitch" aria-label="toggle yearly billing" role="switch" aria-checked="false" tabindex="0">
-              <div class="knob"></div>
-            </div>
-            <span>yearly</span>
-          </div>
-
-          <!-- promo box (the “red box”) -->
-          <div class="promoBox" id="promoBox" aria-live="polite">
-            <div class="promoLeft">
-              <div class="promoBig">
-                <span id="promoPercent">40%</span>
-                <span class="small">off yearly</span>
-              </div>
-              <div class="promoText" id="promoText">
-                Limited-time deal. Toggle yearly to see discounted yearly totals inside each plan.
-              </div>
-            </div>
-            <div class="countPill" id="countPill">
-              <span class="warnDot" aria-hidden="true"></span>
-              <span class="label">ends in</span>
-              <span id="countdown">08:00:00</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="cards">
-          <!-- Starter -->
-          <div class="plan" id="planStarter">
-            <div class="pad">
-              <div class="name">starter</div>
-              <div class="priceRow">
-                <div class="price" id="starterPrice">$19</div>
-                <div class="per" id="starterPer">/ month</div>
-              </div>
-              <div class="desc">for consistency and clean tracking.</div>
-
-              <div class="dealRow" id="starterDealRow" style="display:none">
-                <span class="chip" id="starterYearTotal"></span>
-                <span class="chip save" id="starterSave"></span>
-              </div>
-
-              <div class="list">
-                <div class="li"><span class="tick">✓</span>manual trade logging</div>
-                <div class="li"><span class="tick">✓</span>calendar heatmap (win/loss days)</div>
-                <div class="li"><span class="tick">✓</span>basic stats (win rate, rr, pnl)</div>
-                <div class="li"><span class="tick">✓</span>light ai summaries (high level)</div>
-              </div>
-
-              <a class="btn ghost ctaBtn" href="login.html">start</a>
-
-              <div class="foot">best if you want structure and a consistent improvement loop.</div>
-            </div>
-          </div>
-
-          <!-- Premium (Most popular) -->
-          <div class="plan popular" id="planPremium">
-            <div class="badge">most popular</div>
-            <div class="pad">
-              <div class="name">premium</div>
-              <div class="priceRow">
-                <div class="price" style="color:rgba(63,247,180,.98)" id="premiumPrice">$49</div>
-                <div class="per" id="premiumPer">/ month</div>
-              </div>
-              <div class="desc">the full performance system.</div>
-
-              <div class="dealRow" id="premiumDealRow" style="display:none">
-                <span class="chip" id="premiumYearTotal"></span>
-                <span class="chip save" id="premiumSave"></span>
-              </div>
-
-              <div class="list">
-                <div class="li"><span class="tick">✓</span>full ai coaching (trade review)</div>
-                <div class="li"><span class="tick">✓</span>weekly improvement report</div>
-                <div class="li"><span class="tick">✓</span>session breakdown (best hours)</div>
-                <div class="li"><span class="tick">✓</span>mistake clustering + patterns</div>
-                <div class="li"><span class="tick">✓</span>rules, streaks, and accountability</div>
-              </div>
-
-              <a class="btn primary ctaBtn" href="login.html">start</a>
-
-              <div class="foot">7-day free trial (card required).</div>
-            </div>
-          </div>
-
-          <!-- Professional -->
-          <div class="plan" id="planPro">
-            <div class="pad">
-              <div class="name">professional</div>
-              <div class="priceRow">
-                <div class="price" id="proPrice">$99</div>
-                <div class="per" id="proPer">/ month</div>
-              </div>
-              <div class="desc">deeper diagnostics and advanced workflows.</div>
-
-              <div class="dealRow" id="proDealRow" style="display:none">
-                <span class="chip" id="proYearTotal"></span>
-                <span class="chip save" id="proSave"></span>
-              </div>
-
-              <div class="list">
-                <div class="li"><span class="tick">✓</span>multi-account analysis</div>
-                <div class="li"><span class="tick">✓</span>strategy playbooks + grading</div>
-                <div class="li"><span class="tick">✓</span>deep ai diagnostics + root cause</div>
-                <div class="li"><span class="tick">✓</span>priority features access</div>
-                <div class="li"><span class="tick">✓</span>future broker imports (coming soon)</div>
-              </div>
-
-              <a class="btn ghost ctaBtn" href="login.html">start</a>
-
-              <div class="foot">for serious traders who want the deepest review loop.</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="divider"></div>
-
-        <div class="muted2" style="line-height:1.6">
-          <b style="color:rgba(238,242,255,.72)">note:</b> this page is visual only for now. billing can be wired later (stripe).
-          pricing is structured to support ai coaching depth, not just basic journaling.
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="wrap">
-      <h2>what makes sessionly different</h2>
-      <p class="lead">
-        most journals stop at “what happened”. sessionly goes heavy on ai coaching: why it happened, what it cost you,
-        and what to change next week.
-      </p>
-
-      <div class="proof">
-        <div class="review">
-          <div class="stars">ai coaching</div>
-          <p>auto summaries, mistake patterns, and prompts that turn your data into decisions.</p>
-          <div class="who">weekly direction, not just charts</div>
-        </div>
-        <div class="review">
-          <div class="stars">behavior-first</div>
-          <p>track rules, streaks, and the real reasons you break your plan, then fix them systematically.</p>
-          <div class="who">built for consistency</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <footer class="footer">
-    <div class="wrap">
-      sessionly © <span id="year"></span> • built to help traders improve
-    </div>
-  </footer>
-
   <script>
-    // ====== basic helpers ======
+    // ---------- helpers ----------
     const $ = (id) => document.getElementById(id);
 
+    // ---------- year ----------
+    $("yearNow").textContent = new Date().getFullYear();
+
+    // ---------- reviews (floating / moving) ----------
+    const reviewsA = [
+      {name:"maria", icon:"M", stars:"★★★★★", text:"“i thought i needed a new strategy. sessionly showed it was my timing + one repeating mistake. that alone paid for it.”", tags:["best hours found","mistake pattern"]},
+      {name:"jay", icon:"J", stars:"★★★★★", text:"“the ai coach is a goldmine. i’m not even kidding, i wanted to gatekeep it.”", tags:["ai coaching","worth it"], good:true},
+      {name:"niko", icon:"N", stars:"★★★★★", text:"“weekly report is brutal (in a good way). i finally stopped guessing what to fix.”", tags:["weekly direction","accountability"]},
+      {name:"sofia", icon:"S", stars:"★★★★★", text:"“calendar view made my revenge days obvious. cleaned that up and my pnl stabilized.”", tags:["heatmap clarity","behaviour"]},
+      {name:"leo", icon:"L", stars:"★★★★★", text:"“i log a trade in under a minute. the review later is where the money is.”", tags:["fast logging","trade review"]},
+      {name:"anna", icon:"A", stars:"★★★★★", text:"“session breakdown exposed my worst hour. i just stopped trading it. instant improvement.”", tags:["session filter","less noise"]}
+    ];
+
+    const reviewsB = [
+      {name:"dani", icon:"D", stars:"★★★★★", text:"“it feels high-end. clean UI, clear insights. not another messy journal.”", tags:["premium feel","clean"], good:true},
+      {name:"mike", icon:"M", stars:"★★★★★", text:"“the coach keeps pointing out the same leak until you fix it. that’s the point.”", tags:["real feedback","repeat leak"]},
+      {name:"lina", icon:"L", stars:"★★★★★", text:"“i made more money by trading less. the app made that obvious.”", tags:["trade less","make more"], good:true},
+      {name:"omar", icon:"O", stars:"★★★★★", text:"“mistake clustering is scary accurate. it basically called me out.”", tags:["mistake clustering","patterns"]},
+      {name:"emma", icon:"E", stars:"★★★★★", text:"“this is the first tool that actually feels like a performance system.”", tags:["performance loop","system"]},
+      {name:"kai", icon:"K", stars:"★★★★★", text:"“if you’re serious, you’ll use this. if you’re not, you’ll keep guessing.”", tags:["serious traders","discipline"]}
+    ];
+
+    function reviewCard(r){
+      const goodTag = r.good ? `<span class="tag good">goldmine</span>` : ``;
+      const tags = (r.tags || []).slice(0,2).map(t => `<span class="tag">${t}</span>`).join("");
+      return `
+        <div class="review">
+          <div class="rTop">
+            <div class="avatar"><div class="bubble">${r.icon}</div>${r.name}</div>
+            <div class="rStars">${r.stars}</div>
+          </div>
+          <div class="rText">${r.text}</div>
+          <div class="rTagRow">${goodTag}${tags}</div>
+        </div>
+      `;
+    }
+
+    function buildMarquee(el, items){
+      // duplicate content for seamless scroll
+      const cards = items.map(reviewCard).join("");
+      el.innerHTML = cards + cards;
+    }
+
+    buildMarquee($("marquee1"), reviewsA);
+    buildMarquee($("marquee2"), reviewsB);
+
+    // ---------- pricing logic ----------
     const pricing = {
-      starter: 19,
-      premium: 49,
-      pro: 99
+      monthly: { starter: 19, premium: 49, pro: 99 },
+      // yearly prices shown are the discounted totals (example numbers from your screenshot style)
+      yearly:  { starter: 137, premium: 353, pro: 713 },
+      saves:   { starter: 91,  premium: 235, pro: 475 } // keep space: "Saves $ 235"
     };
 
-    // promo: 40% off yearly, 8h timer per visitor (from first open)
-    const PROMO_PERCENT = 40; // 40%
-    const PROMO_MS = 8 * 60 * 60 * 1000; // 8 hours
-    const LS_KEY = "sessionly_promo_start_v1";
+    const state = {
+      yearly: false
+    };
 
-    function formatMoney(n){
-      return "$" + Math.round(n).toLocaleString("en-US");
+    function setPlanUI(){
+      const mode = state.yearly ? "yearly" : "monthly";
+
+      $("starterPrice").textContent = `$${pricing[mode].starter}`;
+      $("premiumPrice").textContent = `$${pricing[mode].premium}`;
+      $("proPrice").textContent = `$${pricing[mode].pro}`;
+
+      $("starterPer").textContent = state.yearly ? "/ year" : "/ month";
+      $("premiumPer").textContent = state.yearly ? "/ year" : "/ month";
+      $("proPer").textContent = state.yearly ? "/ year" : "/ month";
+
+      // show save pills only on yearly, and remove "Yearly total $xxx" completely
+      $("starterMeta").style.display = state.yearly ? "flex" : "none";
+      $("premiumMeta").style.display = state.yearly ? "flex" : "none";
+      $("proMeta").style.display = state.yearly ? "flex" : "none";
+
+      $("starterSave").textContent = `Saves $ ${pricing.saves.starter}`;
+      $("premiumSave").textContent = `Saves $ ${pricing.saves.premium}`;
+      $("proSave").textContent = `Saves $ ${pricing.saves.pro}`;
+
+      // promo bar only when yearly
+      $("promoBar").style.display = state.yearly ? "flex" : "none";
     }
 
-    function formatHMS(ms){
-      const total = Math.max(0, Math.floor(ms / 1000));
-      const h = String(Math.floor(total / 3600)).padStart(2,"0");
-      const m = String(Math.floor((total % 3600) / 60)).padStart(2,"0");
-      const s = String(total % 60).padStart(2,"0");
-      return `${h}:${m}:${s}`;
+    // toggle
+    const billingSwitch = $("billingSwitch");
+    function setSwitch(on){
+      state.yearly = !!on;
+      billingSwitch.classList.toggle("on", state.yearly);
+      billingSwitch.setAttribute("aria-checked", state.yearly ? "true" : "false");
+      setPlanUI();
     }
 
-    // ====== promo start time ======
-    function getPromoStart(){
-      let v = localStorage.getItem(LS_KEY);
-      if (!v){
-        const now = Date.now();
-        localStorage.setItem(LS_KEY, String(now));
-        return now;
-      }
-      const parsed = Number(v);
-      return Number.isFinite(parsed) ? parsed : Date.now();
-    }
-
-    function promoState(){
-      const start = getPromoStart();
-      const end = start + PROMO_MS;
-      const now = Date.now();
-      return {
-        active: now < end,
-        msLeft: end - now,
-        start,
-        end
-      };
-    }
-
-    // ====== billing toggle ======
-    let billing = "monthly"; // monthly | yearly
-    function setSwitchUI(){
-      const sw = $("billingSwitch");
-      const on = billing === "yearly";
-      sw.classList.toggle("on", on);
-      sw.setAttribute("aria-checked", String(on));
-    }
-
-    function updatePrices(){
-      const promo = promoState();
-      const discount = promo.active ? (PROMO_PERCENT / 100) : 0;
-
-      const isYearly = billing === "yearly";
-
-      // show/hide promo box: only show when promo active
-      $("promoBox").style.display = promo.active ? "flex" : "none";
-
-      // per labels
-      $("starterPer").textContent = isYearly ? "/ year" : "/ month";
-      $("premiumPer").textContent = isYearly ? "/ year" : "/ month";
-      $("proPer").textContent = isYearly ? "/ year" : "/ month";
-
-      // compute display
-      for (const key of ["starter","premium","pro"]){
-        const m = pricing[key];
-        const monthlyText = formatMoney(m);
-
-        if (!isYearly){
-          // monthly view
-          if (key === "starter") $("starterPrice").textContent = monthlyText;
-          if (key === "premium") $("premiumPrice").textContent = monthlyText;
-          if (key === "pro") $("proPrice").textContent = monthlyText;
-
-          // hide deal rows in cards
-          $(key + "DealRow").style.display = "none";
-          continue;
-        }
-
-        // yearly view
-        const fullYear = m * 12;
-        const discountedYear = promo.active ? (fullYear * (1 - discount)) : fullYear;
-        const save = promo.active ? (fullYear - discountedYear) : 0;
-
-        const priceText = formatMoney(discountedYear);
-
-        if (key === "starter") $("starterPrice").textContent = priceText;
-        if (key === "premium") $("premiumPrice").textContent = priceText;
-        if (key === "pro") $("proPrice").textContent = priceText;
-
-        // inside-card discount chips only when promo active
-        if (promo.active){
-          $(key + "DealRow").style.display = "flex";
-          $(key + "YearTotal").textContent = `Yearly total ${formatMoney(discountedYear)}`;
-          // IMPORTANT: space after "Saves"
-          $(key + "Save").innerHTML = `<b>Saves</b> ${formatMoney(save)}`;
-        } else {
-          $(key + "DealRow").style.display = "none";
-        }
-      }
-    }
-
-    function tickCountdown(){
-      const promo = promoState();
-      if (!promo.active){
-        // promo ended -> ensure UI updates once
-        updatePrices();
-        return;
-      }
-      $("countdown").textContent = formatHMS(promo.msLeft);
-      requestAnimationFrame(tickCountdown);
-    }
-
-    function toggleBilling(){
-      billing = (billing === "monthly") ? "yearly" : "monthly";
-      setSwitchUI();
-      updatePrices();
-    }
-
-    // switch handlers
-    $("billingSwitch").addEventListener("click", toggleBilling);
-    $("billingSwitch").addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " "){
+    billingSwitch.addEventListener("click", () => setSwitch(!state.yearly));
+    billingSwitch.addEventListener("keydown", (e) => {
+      if(e.key === "Enter" || e.key === " "){
         e.preventDefault();
-        toggleBilling();
+        setSwitch(!state.yearly);
       }
     });
 
+    // ---------- timer (start from 7h 38m 23s) ----------
+    const TIMER_KEY = "sessionly_yearly_timer_v1";
+    const durationSeconds = (7 * 3600) + (38 * 60) + 23; // 07:38:23
+
+    function pad(n){ return String(n).padStart(2,"0"); }
+
+    function getTimerStart(){
+      // persist per visitor
+      const now = Date.now();
+      const raw = localStorage.getItem(TIMER_KEY);
+      if(raw){
+        const parsed = Number(raw);
+        if(Number.isFinite(parsed)) return parsed;
+      }
+      localStorage.setItem(TIMER_KEY, String(now));
+      return now;
+    }
+
+    const timerStart = getTimerStart();
+
+    function tickTimer(){
+      const now = Date.now();
+      const elapsed = Math.floor((now - timerStart) / 1000);
+      let remaining = durationSeconds - elapsed;
+      if(remaining < 0) remaining = 0;
+
+      const h = Math.floor(remaining / 3600);
+      const m = Math.floor((remaining % 3600) / 60);
+      const s = remaining % 60;
+
+      $("timerText").textContent = `${pad(h)}:${pad(m)}:${pad(s)}`;
+    }
+    tickTimer();
+    setInterval(tickTimer, 1000);
+
     // init
-    $("year").textContent = new Date().getFullYear();
+    setSwitch(false);
 
-    // set promo percent big text
-    $("promoPercent").textContent = `${PROMO_PERCENT}%`;
-    $("promoText").textContent = "Limited-time deal. Toggle yearly to see discounted yearly totals inside each plan.";
-
-    setSwitchUI();
-    updatePrices();
-    tickCountdown();
+    // ---------- CTA ----------
+    function goStart(plan){
+      // placeholder: route to app or sign-up flow later
+      // you can change this to your real checkout later.
+      window.location.href = "./login.html";
+    }
+    window.goStart = goStart;
   </script>
 </body>
 </html>
-
