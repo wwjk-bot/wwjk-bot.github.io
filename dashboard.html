@@ -1,73 +1,55 @@
-```html
 <!doctype html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Sessionly Dashboard</title>
 <meta name="description" content="Sessionly dashboard" />
+
 <style>
-/* =========================================================
-   SESSIONLY CLEAN UI (trader-vue-ish cleanliness, not copied)
-   - flatter cards, subtle borders
-   - more whitespace
-   - calmer typography
-   - sidebar like a modern SaaS
-   ========================================================= */
-
 :root{
-  --bg:#f6f7fb;
-  --bg2:#f1f3fa;
-  --panel:#ffffff;
-
-  --card:#ffffff;
-  --card2:#ffffff;
-
-  --stroke:rgba(15, 23, 42, .10);
-  --stroke2:rgba(15, 23, 42, .14);
-
-  --text:#0b1222;
-  --muted:rgba(11,18,34,.62);
-
-  --accent:#5b21b6;
-  --accent2:#16a34a;
-  --danger:#ef4444;
-  --warn:#f59e0b;
-
-  --sidebarText:#0b1222;
-  --sidebarMuted:rgba(11,18,34,.60);
-
-  --shadow: 0 14px 40px rgba(15, 23, 42, .08);
-  --shadow2: 0 10px 26px rgba(15, 23, 42, .06);
-
-  --radius:14px;
-  --radius2:16px;
-
-  --pad:18px;
-}
-
-[data-theme="dark"]{
   --bg:#070a12;
-  --bg2:#0b1020;
   --panel:#0b1020;
-
-  --card:rgba(12,18,36,.82);
-  --card2:rgba(10,14,28,.78);
-
-  --stroke:rgba(160,180,230,.14);
-  --stroke2:rgba(160,180,230,.20);
-
+  --card:rgba(15,22,42,.82);
+  --card2:rgba(12,18,36,.78);
+  --stroke:rgba(120,140,190,.18);
+  --stroke2:rgba(120,140,190,.28);
   --text:#eaf0ff;
-  --muted:rgba(234,240,255,.66);
+  --muted:#aab6d2;
 
   --accent:#7c3aed;
   --accent2:#22c55e;
+  --danger:#ef4444;
+  --warn:#f59e0b;
 
-  --sidebarText:#eaf0ff;
-  --sidebarMuted:rgba(234,240,255,.66);
+  --sidebarText:#e8eef7;
+  --sidebarMuted:#a8b3c5;
 
-  --shadow: 0 20px 70px rgba(0,0,0,.42);
-  --shadow2: 0 12px 36px rgba(0,0,0,.28);
+  --shadow: 0 20px 80px rgba(0,0,0,.55);
+  --shadow2: 0 12px 40px rgba(0,0,0,.38);
+
+  --radius:16px;
+  --radius2:20px;
+}
+
+[data-theme="light"]{
+  --bg:#f6f7ff;
+  --panel:#eef2ff;
+  --card:rgba(255,255,255,.86);
+  --card2:rgba(255,255,255,.74);
+  --stroke:rgba(40,55,120,.14);
+  --stroke2:rgba(40,55,120,.22);
+  --text:#0b1222;
+  --muted:#44506a;
+
+  --accent:#5b21b6;
+  --accent2:#16a34a;
+
+  --sidebarText:#2f1f7a;
+  --sidebarMuted:#4d5b72;
+
+  --shadow: 0 18px 70px rgba(25,35,80,.12);
+  --shadow2: 0 10px 30px rgba(25,35,80,.10);
 }
 
 *{box-sizing:border-box}
@@ -76,496 +58,583 @@ body{
   margin:0;
   font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
   color:var(--text);
-  background: linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
   overflow-x:hidden;
+  background:
+    radial-gradient(1000px 560px at 12% -8%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 60%),
+    radial-gradient(900px 520px at 88% 4%, color-mix(in srgb, var(--accent2) 10%, transparent), transparent 66%),
+    linear-gradient(180deg, var(--bg) 0%, color-mix(in srgb, var(--bg) 92%, #000 8%) 100%);
 }
 
-/* layout */
+[data-theme="light"] body{
+  background:
+    radial-gradient(900px 500px at 16% 0%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 62%),
+    radial-gradient(800px 420px at 86% 8%, color-mix(in srgb, var(--accent2) 7%, transparent), transparent 64%),
+    linear-gradient(180deg, #f7f8ff 0%, #f1f4ff 100%);
+}
+
+a{color:inherit}
+hr{border:0;border-top:1px solid var(--stroke);margin:14px 0}
+
 .app{
   min-height:100vh;
   display:grid;
-  grid-template-columns: 260px 1fr;
+  grid-template-columns: 280px 1fr;
 }
 
 @media (max-width: 980px){
   .app{grid-template-columns: 1fr;}
-  .sidebar{position:sticky; top:0; z-index:60}
+  .sidebar{position:sticky; top:0; z-index:50}
 }
 
 /* sidebar */
 .sidebar{
-  padding:18px 14px;
+  padding:18px 16px;
   border-right:1px solid var(--stroke);
-  background: color-mix(in srgb, var(--panel) 85%, transparent);
-  backdrop-filter: blur(10px);
+  background: linear-gradient(180deg, rgba(8,10,16,.72), rgba(8,10,16,.42));
+  backdrop-filter: blur(14px);
+}
+[data-theme="light"] .sidebar{
+  background: linear-gradient(180deg, rgba(255,255,255,.78), rgba(255,255,255,.52));
 }
 
-.sidebarHeader{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  margin-bottom:14px;
+.sidebar,.sidebar *{color:var(--sidebarText)}
+.signed,.slogan{color:var(--sidebarMuted)}
+.logoRow{
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:10px;
 }
-
 .brand{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  font-weight:900;
-  letter-spacing:.2px;
+  display:flex; align-items:center; gap:10px;
+  font-weight:950; letter-spacing:.2px;
 }
-.logoMark{
-  width:26px;height:26px;border-radius:9px;
-  background: linear-gradient(135deg,
-    color-mix(in srgb, var(--accent) 88%, #000 12%),
-    color-mix(in srgb, var(--accent2) 75%, #000 25%)
-  );
-  box-shadow: 0 10px 24px color-mix(in srgb, var(--accent) 18%, transparent);
+.logoDot{
+  width:12px; height:12px; border-radius:999px;
+  background: radial-gradient(circle at 30% 30%, #fff 0%, color-mix(in srgb, var(--accent) 85%, #000 15%) 40%, color-mix(in srgb, var(--accent) 90%, #000 10%) 100%);
+  box-shadow: 0 0 0 7px color-mix(in srgb, var(--accent) 18%, transparent);
 }
-
-.sidebarSearch{
-  margin:12px 0 14px 0;
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:10px 12px;
-  border-radius:12px;
-  border:1px solid var(--stroke);
-  background: color-mix(in srgb, var(--panel) 70%, transparent);
-}
-.sidebarSearch svg{width:16px;height:16px;opacity:.65}
-.sidebarSearch input{
-  border:none;
-  outline:none;
-  background:transparent;
-  width:100%;
-  color:var(--text);
-  font-weight:750;
-}
-.sidebarSearch input::placeholder{color:var(--muted); font-weight:650;}
-
 .signed{
-  margin:6px 2px 10px 2px;
-  color:var(--sidebarMuted);
-  font-size:12px;
-  font-weight:700;
+  font-size:13px; opacity:.95; margin:6px 0 14px 0;
 }
-
-.navGroup{
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-  margin-top:10px;
-}
-
+.navGroup{display:flex; flex-direction:column; gap:10px; margin-top:10px;}
 .navBtn{
   width:100%;
-  display:flex;
-  align-items:center;
-  justify-content:flex-start;
-  gap:10px;
-  padding:10px 10px;
-  border-radius:12px;
-  border:1px solid transparent;
-  background:transparent;
-  color:var(--sidebarText);
-  cursor:pointer;
-  font-weight:820;
-  transition: background .14s ease, border-color .14s ease, transform .08s ease;
-}
-.navBtn:hover{
-  background: color-mix(in srgb, var(--accent) 6%, transparent);
-  border-color: color-mix(in srgb, var(--accent) 12%, var(--stroke) 88%);
-  transform: translateY(-1px);
-}
-.navBtn.active{
-  background: color-mix(in srgb, var(--accent) 10%, transparent);
-  border-color: color-mix(in srgb, var(--accent) 20%, var(--stroke) 80%);
-}
-
-.navIcon{
-  width:18px;height:18px;opacity:.85;
-}
-.navText{flex:1}
-.navTag{
-  font-size:11px;
-  padding:4px 8px;
-  border-radius:999px;
-  border:1px solid var(--stroke);
-  color:var(--muted);
-  font-weight:850;
-  background: color-mix(in srgb, var(--panel) 55%, transparent);
-}
-
-.sidebarActions{
-  margin-top:14px;
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-}
-
-.sideBtn{
-  width:100%;
-  padding:10px 10px;
-  border-radius:12px;
-  border:1px solid var(--stroke);
-  background: color-mix(in srgb, var(--panel) 70%, transparent);
+  display:flex; align-items:center; justify-content:space-between;
+  gap:12px;
+  padding:12px 12px;
+  border-radius:14px;
+  border:1px solid color-mix(in srgb, var(--stroke) 100%, transparent);
+  background: rgba(255,255,255,0);
   cursor:pointer;
   font-weight:900;
-  color:var(--sidebarText);
-  transition: transform .08s ease, background .14s ease, border-color .14s ease;
+  transition: transform .08s ease, background .18s ease, border-color .18s ease;
 }
-.sideBtn:hover{
+.navBtn:hover{
   transform: translateY(-1px);
-  background: color-mix(in srgb, var(--accent) 7%, transparent);
-  border-color: color-mix(in srgb, var(--accent) 18%, var(--stroke) 82%);
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 24%, var(--stroke) 76%);
+}
+.navBtn.active{
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 36%, var(--stroke) 64%);
+  box-shadow: 0 10px 30px color-mix(in srgb, var(--accent) 14%, transparent);
+}
+.tag{
+  font-size:12px;
+  padding:5px 10px;
+  border-radius:999px;
+  border:1px solid color-mix(in srgb, var(--stroke) 100%, transparent);
+  background: color-mix(in srgb, var(--panel) 55%, transparent);
+  opacity:.95;
+}
+.sidebarActions{
+  margin-top:18px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.ghostBtn{
+  width:100%;
+  padding:12px 12px;
+  border-radius:14px;
+  border:1px solid var(--stroke);
+  background: color-mix(in srgb, var(--panel) 28%, transparent);
+  font-weight:900;
+  cursor:pointer;
+  transition: transform .08s ease, background .18s ease, border-color .18s ease;
+}
+.ghostBtn:hover{
+  transform: translateY(-1px);
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 26%, var(--stroke) 74%);
 }
 
 .slogan{
   margin-top:14px;
-  padding:10px 10px;
-  border-radius:12px;
-  border:1px solid var(--stroke);
-  background: color-mix(in srgb, var(--panel) 65%, transparent);
-  color:var(--sidebarMuted);
-  font-weight:750;
-  font-size:12px;
+  font-size:13px;
   line-height:1.35;
+  opacity:.9;
 }
 
 /* main */
-.main{ padding:18px 18px 40px 18px; }
-.wrap{ max-width: 1160px; margin:0 auto; }
+.main{ padding:26px 22px 44px 22px; }
+.wrap{ max-width: 1180px; margin:0 auto; }
 
-/* topbar like a SaaS */
-.topbar{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  flex-wrap:wrap;
-  margin-bottom:14px;
-}
-.topbarLeft{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  flex-wrap:wrap;
-}
-.h1{
-  font-size:20px;
-  font-weight:950;
-  letter-spacing:-.3px;
-  margin:0;
-}
-.topbarRight{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  flex-wrap:wrap;
-}
-
-.btn{
-  border:1px solid var(--stroke);
-  background: color-mix(in srgb, var(--panel) 80%, transparent);
-  color:var(--text);
-  border-radius:12px;
-  padding:9px 12px;
-  font-weight:900;
-  cursor:pointer;
-  transition: transform .08s ease, background .14s ease, border-color .14s ease;
-}
-.btn:hover{
-  transform: translateY(-1px);
-  background: color-mix(in srgb, var(--accent) 7%, transparent);
-  border-color: color-mix(in srgb, var(--accent) 18%, var(--stroke) 82%);
-}
-.btnPrimary{
-  border-color: color-mix(in srgb, var(--accent) 24%, var(--stroke) 76%);
-  background: color-mix(in srgb, var(--accent) 12%, transparent);
-}
-.btnGreen{
-  border-color: color-mix(in srgb, var(--accent2) 22%, var(--stroke) 78%);
-  background: color-mix(in srgb, var(--accent2) 10%, transparent);
-}
-.pills{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-}
-.pillChip{
-  border:1px solid var(--stroke);
-  background: color-mix(in srgb, var(--panel) 85%, transparent);
-  border-radius:999px;
-  padding:6px 10px;
-  font-weight:900;
-  font-size:12px;
-  color:var(--muted);
-  cursor:pointer;
-}
-.pillChip.active{
-  color:var(--text);
-  border-color: color-mix(in srgb, var(--accent) 22%, var(--stroke) 78%);
-  background: color-mix(in srgb, var(--accent) 10%, transparent);
-}
-
-.card{
+.panel{
   border:1px solid var(--stroke);
   border-radius: var(--radius2);
   background: linear-gradient(180deg, var(--card) 0%, var(--card2) 100%);
+  box-shadow: var(--shadow);
+  overflow:hidden;
+  position:relative;
+}
+.panel::before{
+  content:"";
+  position:absolute; inset:-2px;
+  background:
+    radial-gradient(860px 320px at 18% 0%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 60%),
+    radial-gradient(760px 320px at 84% 6%, color-mix(in srgb, var(--accent2) 10%, transparent), transparent 62%);
+  opacity:.55;
+  pointer-events:none;
+}
+.panelInner{position:relative; padding:20px;}
+
+.panelHeader{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:14px;
+  margin-bottom:14px;
+}
+.title{
+  font-size:34px;
+  font-weight:980;
+  letter-spacing:-.6px;
+  margin:0;
+  line-height:1.05;
+  text-transform:none;
+}
+.subtitle{
+  margin-top:6px;
+  color:var(--muted);
+  font-weight:650;
+  font-size:14px;
+}
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:7px 10px;
+  border-radius:999px;
+  border:1px solid var(--stroke);
+  background: color-mix(in srgb, var(--panel) 34%, transparent);
+  font-weight:900;
+  font-size:12px;
+  white-space:nowrap;
+}
+.badgeDot{
+  width:8px; height:8px; border-radius:999px;
+  background: var(--accent2);
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent2) 16%, transparent);
+}
+
+.snapshotRow{
+  margin:10px 0 6px 0;
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  align-items:center;
+}
+.snapshotPill{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 12px;
+  border-radius:999px;
+  border:1px solid var(--stroke);
+  background: color-mix(in srgb, var(--panel) 30%, transparent);
+  font-weight:900;
+}
+.snapshotPill.good{ border-color: color-mix(in srgb, var(--accent2) 36%, var(--stroke) 64%); }
+.snapshotPill.neutral{ border-color: color-mix(in srgb, var(--accent) 36%, var(--stroke) 64%); }
+.snapshotPill.warn{ border-color: color-mix(in srgb, var(--warn) 44%, var(--stroke) 56%); }
+.snapshotPill .small{font-weight:800;color:var(--muted);}
+
+.ctaRow{ margin-top:12px; display:flex; gap:12px; align-items:center; }
+.cta{
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:14px 14px;
+  border-radius: 14px;
+  border:1px solid color-mix(in srgb, var(--accent) 34%, transparent);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 85%, #000 15%), color-mix(in srgb, var(--accent) 55%, #000 45%));
+  color:#fff;
+  font-weight:980;
+  cursor:pointer;
+  transition: transform .08s ease, filter .18s ease;
+  box-shadow: 0 14px 40px color-mix(in srgb, var(--accent) 20%, transparent);
+}
+.cta:hover{transform: translateY(-1px); filter: brightness(1.04);}
+.cta:active{transform: translateY(0px);}
+
+.gridStats{
+  margin-top:14px;
+  display:grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap:12px;
+}
+@media (max-width: 1100px){ .gridStats{grid-template-columns: repeat(3, 1fr);} }
+@media (max-width: 680px){ .gridStats{grid-template-columns: repeat(2, 1fr);} }
+@media (max-width: 420px){ .gridStats{grid-template-columns: 1fr;} }
+
+.statCard{
+  border:1px solid var(--stroke);
+  background: color-mix(in srgb, var(--panel) 34%, transparent);
+  border-radius: var(--radius);
+  padding:14px 14px;
+  box-shadow: var(--shadow2);
+  position:relative;
+  overflow:hidden;
+}
+.statCard::after{
+  content:"";
+  position:absolute; inset:-2px;
+  background: radial-gradient(260px 120px at 10% 0%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 70%);
+  opacity:.55;
+  pointer-events:none;
+}
+.statLabel{position:relative; font-size:12px; font-weight:950; letter-spacing:.4px; opacity:.85; text-transform:uppercase;}
+.statValue{position:relative; margin-top:8px; font-size:28px; font-weight:980; letter-spacing:-.6px;}
+.statHint{position:relative; margin-top:4px; font-size:12px; color:var(--muted); font-weight:650;}
+
+.gridMain{
+  margin-top:12px;
+  display:grid;
+  grid-template-columns: 1.25fr .75fr;
+  gap:12px;
+  align-items:start;
+}
+@media (max-width: 980px){ .gridMain{grid-template-columns: 1fr;} }
+
+.card{
+  border:1px solid var(--stroke);
+  background: color-mix(in srgb, var(--panel) 34%, transparent);
+  border-radius: var(--radius2);
+  padding:16px;
   box-shadow: var(--shadow2);
 }
-
-.cardInner{ padding:16px; }
-
-.sectionTitleRow{
+.cardHead{
   display:flex;
-  align-items:flex-end;
+  align-items:center;
   justify-content:space-between;
   gap:10px;
-  margin:0 0 10px 0;
+  margin-bottom:10px;
 }
-.sectionTitle{
-  font-size:16px;
+.cardTitle{
+  font-size:18px;
   font-weight:950;
   letter-spacing:-.2px;
   margin:0;
 }
-.sectionSub{
+.pill{
   font-size:12px;
-  font-weight:750;
-  color:var(--muted);
-}
-
-.grid2{
-  display:grid;
-  grid-template-columns: 1.35fr .65fr;
-  gap:12px;
-  align-items:start;
-}
-@media (max-width: 980px){ .grid2{grid-template-columns:1fr;} }
-
-.grid3{
-  display:grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap:12px;
-}
-@media (max-width: 980px){ .grid3{grid-template-columns:1fr;} }
-
-/* stat cards */
-.statRow{
-  display:grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap:10px;
-  margin-top:12px;
-}
-@media (max-width: 1100px){ .statRow{grid-template-columns: repeat(3, 1fr);} }
-@media (max-width: 680px){ .statRow{grid-template-columns: repeat(2, 1fr);} }
-
-.stat{
+  font-weight:950;
   border:1px solid var(--stroke);
-  border-radius:14px;
-  background: color-mix(in srgb, var(--panel) 85%, transparent);
-  padding:12px;
+  background: color-mix(in srgb, var(--panel) 34%, transparent);
+  padding:6px 10px;
+  border-radius:999px;
+  opacity:.95;
+  white-space:nowrap;
 }
-.statLabel{
-  font-size:11px;
-  letter-spacing:.35px;
-  text-transform:uppercase;
-  color:var(--muted);
-  font-weight:950;
-}
-.statValue{
-  margin-top:6px;
-  font-size:22px;
-  font-weight:980;
-  letter-spacing:-.4px;
-}
-.statHint{
-  margin-top:4px;
-  font-size:12px;
-  color:var(--muted);
-  font-weight:700;
-}
+.pill.ok{border-color: color-mix(in srgb, var(--accent2) 36%, var(--stroke) 64%); }
+.pill.warn{border-color: color-mix(in srgb, var(--warn) 42%, var(--stroke) 58%); }
+.pill.live{border-color: color-mix(in srgb, var(--accent) 42%, var(--stroke) 58%); }
 
-/* tables */
+/* table */
 table{width:100%; border-collapse:collapse;}
-th,td{
-  padding:10px 10px;
-  border-bottom:1px solid var(--stroke);
-  text-align:left;
-  font-size:13px;
-}
-th{
-  font-size:11px;
-  text-transform:uppercase;
-  letter-spacing:.35px;
-  color:var(--muted);
-  font-weight:950;
-}
-tbody tr:hover td{
-  background: color-mix(in srgb, var(--accent) 4%, transparent);
-}
-.emptyRow{ color:var(--muted); font-weight:750; padding:14px 10px; }
+th,td{padding:10px 10px; border-bottom:1px solid var(--stroke); text-align:left; font-size:14px;}
+th{font-size:12px; text-transform:uppercase; letter-spacing:.4px; opacity:.75;}
+.emptyRow{ color:var(--muted); font-weight:650; padding:14px 10px; }
 
-/* delete icon */
+/* delete icon button */
 .iconBtn{
-  border:1px solid color-mix(in srgb, var(--danger) 30%, var(--stroke) 70%);
-  background: transparent;
-  border-radius:10px;
-  padding:7px 9px;
+  border:1px solid color-mix(in srgb, var(--danger) 40%, var(--stroke) 60%);
+  background: color-mix(in srgb, var(--panel) 28%, transparent);
+  border-radius: 12px;
+  padding:8px 10px;
   cursor:pointer;
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  transition: transform .08s ease, background .14s ease, border-color .14s ease;
+  gap:8px;
+  transition: transform .08s ease, background .18s ease, border-color .18s ease, filter .18s ease;
 }
 .iconBtn:hover{
   transform: translateY(-1px);
-  background: color-mix(in srgb, var(--danger) 7%, transparent);
-  border-color: color-mix(in srgb, var(--danger) 42%, var(--stroke) 58%);
+  background: color-mix(in srgb, var(--danger) 10%, transparent);
+  border-color: color-mix(in srgb, var(--danger) 55%, var(--stroke) 45%);
+  filter: brightness(1.03);
 }
-.iconBtn svg{width:16px;height:16px}
+.iconBtn svg{ width:16px; height:16px; }
 .iconBtn .srOnly{
   position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
   clip:rect(0,0,0,0);white-space:nowrap;border:0;
 }
 
-/* calendar grid (cleaner) */
-.calTop{
+/* coach card */
+.coachText{ color:var(--text); font-weight:800; line-height:1.45; margin:6px 0 12px 0; }
+.chips{display:flex; flex-wrap:wrap; gap:10px; margin:10px 0 12px 0;}
+.chip{
+  font-size:13px;
+  font-weight:900;
+  border:1px solid var(--stroke);
+  background: color-mix(in srgb, var(--panel) 32%, transparent);
+  padding:8px 12px;
+  border-radius:999px;
+  opacity:.98;
+  cursor:default;
+  transition: transform .08s ease, background .18s ease, border-color .18s ease;
+}
+.chip:hover{
+  transform: translateY(-1px);
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 30%, var(--stroke) 70%);
+}
+.mutedLine{color:var(--muted); font-weight:650; font-size:13px; line-height:1.35;}
+.miniBtn{
+  width:100%;
+  margin-top:12px;
+  padding:12px 12px;
+  border-radius:14px;
+  border:1px solid var(--stroke);
+  background: color-mix(in srgb, var(--panel) 34%, transparent);
+  font-weight:950;
+  cursor:pointer;
+  transition: transform .08s ease, background .18s ease, border-color .18s ease;
+}
+.miniBtn:hover{
+  transform: translateY(-1px);
+  background: color-mix(in srgb, var(--accent2) 10%, transparent);
+  border-color: color-mix(in srgb, var(--accent2) 24%, var(--stroke) 76%);
+}
+
+/* Momentum / Goals */
+.momentumGrid{
+  display:grid;
+  grid-template-columns: 1.15fr .85fr;
+  gap:12px;
+  margin-top:12px;
+}
+@media (max-width: 980px){ .momentumGrid{grid-template-columns: 1fr;} }
+
+.goalHeader{
   display:flex;
   align-items:center;
   justify-content:space-between;
   gap:10px;
   flex-wrap:wrap;
+  margin-bottom:10px;
 }
-.calNav{display:flex; gap:8px; align-items:center; flex-wrap:wrap;}
-.calTitle{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  font-weight:950;
-  letter-spacing:-.2px;
-}
-.calMetaPill{
-  border:1px solid var(--stroke);
-  background: color-mix(in srgb, var(--panel) 85%, transparent);
-  border-radius:999px;
-  padding:6px 10px;
-  font-size:12px;
-  font-weight:950;
-  color:var(--muted);
-}
+.goalHeaderLeft{display:flex;flex-direction:column;gap:4px;}
+.goalHeadline{font-size:16px;font-weight:950;letter-spacing:-.2px;}
+.goalSub{font-size:13px;color:var(--muted);font-weight:700;}
+.goalSettings{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
 
-.toggleRow{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  color:var(--muted);
-  font-weight:800;
-  font-size:12px;
-}
-.switch{
-  width:44px;height:24px;border-radius:999px;
+.selectLike{
   border:1px solid var(--stroke);
-  background: color-mix(in srgb, var(--panel) 85%, transparent);
-  position:relative;
+  background: color-mix(in srgb, var(--panel) 34%, transparent);
+  border-radius: 14px;
+  padding:10px 12px;
+  color:var(--text);
+  font-weight:900;
+  outline:none;
   cursor:pointer;
 }
-.switchDot{
-  width:18px;height:18px;border-radius:999px;
-  position:absolute; top:2px; left:2px;
-  background: color-mix(in srgb, var(--accent) 80%, #000 20%);
-  transition: transform .18s ease, background .18s ease;
-}
-.switch.on .switchDot{
-  transform: translateX(20px);
-  background: color-mix(in srgb, var(--accent2) 85%, #000 15%);
-}
-
-.calDowRow, .calGrid{
-  display:grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap:10px;
-}
-.calDow{
-  font-size:11px;
-  font-weight:950;
-  text-transform:uppercase;
-  letter-spacing:.35px;
-  color:var(--muted);
-  padding:2px 4px;
-}
-
-.calCell{
+.inputLike{
   border:1px solid var(--stroke);
-  border-radius:14px;
-  background: color-mix(in srgb, var(--panel) 85%, transparent);
-  min-height:92px;
-  padding:10px;
+  background: color-mix(in srgb, var(--panel) 34%, transparent);
+  border-radius: 14px;
+  padding:10px 12px;
+  color:var(--text);
+  font-weight:900;
+  outline:none;
+  width: 130px;
+}
+
+.goalsGrid{
+  display:grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap:12px;
+  margin-top:12px;
+}
+@media (max-width: 980px){ .goalsGrid{grid-template-columns: 1fr;} }
+
+.goalBox{
+  border:1px solid var(--stroke);
+  background: color-mix(in srgb, var(--panel) 30%, transparent);
+  border-radius: 18px;
+  padding:14px;
+  box-shadow: var(--shadow2);
   position:relative;
   overflow:hidden;
 }
-.calCell.muted{opacity:.35}
-.calCell.active{
-  outline:2px solid color-mix(in srgb, var(--accent) 40%, transparent);
-  box-shadow: 0 16px 40px color-mix(in srgb, var(--accent) 12%, transparent);
+.goalBox::before{
+  content:"";
+  position:absolute; inset:-2px;
+  background: radial-gradient(260px 120px at 10% 0%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 70%);
+  opacity:.45;
+  pointer-events:none;
 }
-.calDay{
-  font-weight:980;
-  font-size:12px;
-  color:var(--muted);
+.goalRowTop{
+  position:relative;
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:10px;
 }
-.calMeta{
-  margin-top:8px;
-  font-size:12px;
-  color:var(--muted);
-  font-weight:750;
-  line-height:1.25;
-}
-.calValue{
-  margin-top:8px;
-  font-weight:980;
-  font-size:14px;
-}
-.calValue.pos{color: color-mix(in srgb, var(--accent2) 85%, var(--text) 15%);}
-.calValue.neg{color: color-mix(in srgb, var(--danger) 85%, var(--text) 15%);}
+.goalName{font-weight:980;font-size:15px;letter-spacing:-.1px;}
+.goalSmall{margin-top:3px;color:var(--muted);font-weight:750;font-size:12px;}
+.goalEditRow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end;}
+.goalEditRow .selectLike{ min-width: 150px; }
+.goalCustomInput{display:none;width: 150px;}
+.goalCustomInput.show{ display:block; }
 
-/* chart boxes (still minimal, but cleaner) */
+.bar{
+  margin-top:12px;
+  height:12px;
+  border-radius:999px;
+  border:1px solid var(--stroke);
+  background: color-mix(in srgb, var(--panel) 28%, transparent);
+  overflow:hidden;
+  position:relative;
+}
+.barFill{
+  height:100%;
+  width:0%;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--accent2) 80%, #000 20%), color-mix(in srgb, var(--accent) 65%, #000 35%));
+  box-shadow: 0 10px 26px color-mix(in srgb, var(--accent2) 14%, transparent);
+}
+.progressMeta{
+  margin-top:10px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  color:var(--muted);
+  font-weight:800;
+  font-size:13px;
+}
+
+/* analytics layout */
+.gridAnalyticsTop{
+  margin-top:12px;
+  display:grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap:12px;
+}
+@media (max-width: 980px){ .gridAnalyticsTop{grid-template-columns: 1fr;} }
+
 .gridCharts{
   margin-top:12px;
   display:grid;
   grid-template-columns: 1fr 1fr;
   gap:12px;
 }
-@media (max-width: 980px){ .gridCharts{grid-template-columns:1fr;} }
+@media (max-width: 980px){ .gridCharts{grid-template-columns: 1fr;} }
 
 .chartBox{
-  border:1px solid var(--stroke);
-  border-radius:14px;
+  border:1px dashed color-mix(in srgb, var(--stroke2) 100%, transparent);
+  border-radius:18px;
   height:240px;
   position:relative;
   overflow:hidden;
-  background: color-mix(in srgb, var(--panel) 85%, transparent);
+  background: color-mix(in srgb, var(--panel) 12%, transparent);
 }
-.chartCanvas{
-  position:absolute;
-  inset:12px 12px 44px 12px;
-}
-.chartCanvas canvas{width:100%; height:100%; display:block;}
+.chartCanvas{position:absolute;inset:12px 12px 44px 12px;}
+.chartCanvas canvas{width:100%;height:100%;display:block;}
 .chartHint{
-  position:absolute;
-  left:12px; right:12px; bottom:10px;
-  font-size:12px;
-  color:var(--muted);
-  font-weight:750;
+  position:absolute;left:12px;right:12px;bottom:10px;
+  font-size:12px;color:var(--muted);font-weight:750;opacity:.95;pointer-events:none;
+}
+
+/* calendar page */
+.calTop{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:12px;
+}
+.calTitleRow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.calNav{display:flex;gap:10px;align-items:center;}
+.calBtn{
+  border:1px solid var(--stroke);
+  background: color-mix(in srgb, var(--panel) 34%, transparent);
+  border-radius:14px;
+  padding:10px 12px;
+  font-weight:950;
+  cursor:pointer;
+  transition: transform .08s ease, background .18s ease, border-color .18s ease;
+}
+.calBtn:hover{
+  transform: translateY(-1px);
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 26%, var(--stroke) 74%);
+}
+.toggleRow{display:flex;align-items:center;gap:10px;color:var(--muted);font-weight:750;font-size:13px;}
+.switch{
+  width:44px;height:24px;border-radius:999px;
+  border:1px solid var(--stroke);
+  background: color-mix(in srgb, var(--panel) 34%, transparent);
+  position:relative;cursor:pointer;flex:0 0 auto;
+}
+.switchDot{
+  width:18px;height:18px;border-radius:999px;
+  position:absolute; top:2px; left:2px;
+  background: color-mix(in srgb, var(--accent) 80%, #000 20%);
+  transition: transform .18s ease, background .18s ease;
+  box-shadow: 0 10px 26px rgba(0,0,0,.35);
+}
+.switch.on .switchDot{transform: translateX(20px);background: color-mix(in srgb, var(--accent2) 85%, #000 15%);}
+
+.calGrid{display:grid;grid-template-columns: repeat(7, 1fr);gap:10px;margin-top:10px;}
+.calDow{font-size:12px;font-weight:950;letter-spacing:.35px;text-transform:uppercase;opacity:.7;padding:2px 2px;}
+.calCell{
+  border:1px solid var(--stroke);
+  background: color-mix(in srgb, var(--panel) 30%, transparent);
+  border-radius:18px;
+  min-height:92px;
+  padding:10px;
+  position:relative;
+  overflow:hidden;
+  box-shadow: var(--shadow2);
+}
+.calCell.muted{opacity:.35;filter:saturate(.7);}
+.calCell::before{
+  content:"";
+  position:absolute; inset:-2px;
+  background: radial-gradient(280px 120px at 10% 0%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 70%);
+  opacity:.45;pointer-events:none;
+}
+.calCellInner{position:relative;}
+.calDay{font-weight:980;font-size:12px;opacity:.92;}
+.calMeta{margin-top:8px;color:var(--muted);font-weight:750;font-size:12px;line-height:1.35;}
+.calValue{margin-top:8px;font-weight:980;font-size:14px;}
+.calValue.pos{ color: color-mix(in srgb, var(--accent2) 85%, #fff 15%); }
+.calValue.neg{ color: color-mix(in srgb, var(--danger) 85%, #fff 15%); }
+.calGlowPos{background: radial-gradient(240px 120px at 10% 0%, color-mix(in srgb, var(--accent2) 20%, transparent), transparent 70%);}
+.calGlowNeg{background: radial-gradient(240px 120px at 10% 0%, color-mix(in srgb, var(--danger) 18%, transparent), transparent 70%);}
+.calCell.active{
+  outline:2px solid color-mix(in srgb, var(--accent) 55%, transparent);
+  box-shadow: 0 22px 70px color-mix(in srgb, var(--accent) 16%, transparent);
 }
 
 /* modal */
 .modalBackdrop{
   position:fixed; inset:0;
-  background: rgba(0,0,0,.45);
+  background: rgba(0,0,0,.55);
   backdrop-filter: blur(10px);
   display:none;
   align-items:center;
@@ -575,40 +644,34 @@ tbody tr:hover td{
 }
 .modal{
   width:min(760px, 100%);
-  border-radius: 18px;
+  border-radius: 20px;
   border:1px solid var(--stroke);
   background: linear-gradient(180deg, var(--card) 0%, var(--card2) 100%);
   box-shadow: var(--shadow);
   overflow:hidden;
+  position:relative;
 }
-.modalInner{padding:16px;}
-.modalHead{
-  display:flex;
-  align-items:flex-start;
-  justify-content:space-between;
-  gap:12px;
-  margin-bottom:10px;
+.modal::before{
+  content:"";
+  position:absolute; inset:-2px;
+  background:
+    radial-gradient(680px 220px at 10% 0%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 70%),
+    radial-gradient(640px 220px at 90% 0%, color-mix(in srgb, var(--accent2) 10%, transparent), transparent 72%);
+  opacity:.65;
+  pointer-events:none;
 }
-.modalTitle{
-  margin:0;
-  font-size:18px;
-  font-weight:980;
-  letter-spacing:-.2px;
-}
-.subtitle{
-  margin-top:4px;
-  color:var(--muted);
-  font-weight:750;
-  font-size:12px;
-}
+.modalInner{position:relative; padding:16px;}
+.modalHead{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px;}
+.modalTitle{margin:0;font-size:20px;font-weight:980;letter-spacing:-.2px;}
 .closeBtn{
   border:1px solid var(--stroke);
-  background: color-mix(in srgb, var(--panel) 85%, transparent);
-  border-radius: 12px;
-  padding:9px 12px;
+  background: color-mix(in srgb, var(--panel) 34%, transparent);
+  border-radius: 14px;
+  padding:10px 12px;
   font-weight:950;
   cursor:pointer;
 }
+
 .formGrid{
   margin-top:10px;
   display:grid;
@@ -619,24 +682,31 @@ tbody tr:hover td{
 
 label{
   display:block;
-  font-size:11px;
+  font-size:12px;
   font-weight:950;
   text-transform:uppercase;
   letter-spacing:.35px;
-  color:var(--muted);
+  opacity:.8;
   margin:0 0 6px 2px;
 }
 input,select,textarea{
   width:100%;
   padding:12px 12px;
-  border-radius:12px;
+  border-radius:14px;
   border:1px solid var(--stroke);
-  background: color-mix(in srgb, var(--panel) 85%, transparent);
+  background: color-mix(in srgb, var(--panel) 34%, transparent);
   color:var(--text);
   font-weight:800;
   outline:none;
 }
 textarea{min-height:96px; resize:vertical;}
+
+input[type="datetime-local"]{border-radius:14px;padding:14px 14px;}
+input[type="datetime-local"]::-webkit-calendar-picker-indicator{
+  opacity:.75;cursor:pointer;
+  filter: drop-shadow(0 0 10px color-mix(in srgb, var(--accent) 35%, transparent));
+}
+
 .modalActions{
   margin-top:12px;
   display:flex;
@@ -646,395 +716,559 @@ textarea{min-height:96px; resize:vertical;}
   justify-content:flex-end;
 }
 .saveBtn{
-  padding:10px 12px;
-  border-radius:12px;
-  border:1px solid color-mix(in srgb, var(--accent2) 26%, var(--stroke) 74%);
-  background: color-mix(in srgb, var(--accent2) 14%, transparent);
-  color:var(--text);
+  padding:12px 14px;
+  border-radius:14px;
+  border:1px solid color-mix(in srgb, var(--accent2) 34%, transparent);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--accent2) 85%, #000 15%), color-mix(in srgb, var(--accent2) 58%, #000 42%));
+  color:#fff;
   font-weight:980;
   cursor:pointer;
 }
 .dangerPrimary{
-  padding:10px 12px;
-  border-radius:12px;
-  border:1px solid color-mix(in srgb, var(--danger) 26%, var(--stroke) 74%);
-  background: color-mix(in srgb, var(--danger) 10%, transparent);
-  color:var(--text);
+  padding:12px 14px;
+  border-radius:14px;
+  border:1px solid color-mix(in srgb, var(--danger) 40%, transparent);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--danger) 78%, #000 22%), color-mix(in srgb, var(--danger) 55%, #000 45%));
+  color:#fff;
   font-weight:980;
   cursor:pointer;
 }
-.msg{
-  margin-top:10px;
-  min-height:18px;
-  font-size:12px;
-  color:var(--muted);
-  font-weight:750;
-}
+.msg{margin-top:10px;min-height:20px;font-size:13px;color:var(--muted);font-weight:750;}
 
 /* pages */
 .page{display:none;}
 .page.active{display:block;}
 
-/* tiny helpers */
-.rowGap{height:12px}
-.hr{
-  height:1px;
-  background: var(--stroke);
-  margin:12px 0;
-}
+/* AI Coach output formatting */
+#coachOutput{white-space:pre-line;}
 </style>
 </head>
 
 <body>
 <div class="app">
   <aside class="sidebar">
-    <div class="sidebarHeader">
-      <div class="brand">
-        <div class="logoMark"></div>
-        <div>Sessionly</div>
-      </div>
-      <button class="btn" id="toggleThemeBtn" title="Toggle theme">Theme</button>
-    </div>
-
-    <div class="sidebarSearch">
-      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path d="M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15Z" stroke="currentColor" stroke-width="2"/>
-        <path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-      </svg>
-      <input placeholder="Search" />
+    <div class="logoRow">
+      <div class="brand"><span class="logoDot"></span><span>Sessionly</span></div>
     </div>
 
     <div class="signed">Signed in as <span id="userEmail">...</span></div>
 
     <div class="navGroup">
-      <button class="navBtn" data-route="focus">
-        <svg class="navIcon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12a8 8 0 1 1 16 0 8 8 0 0 1-16 0Z" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-        <span class="navText">Dashboard</span><span class="navTag">Daily</span>
-      </button>
-
-      <button class="navBtn" data-route="calendar">
-        <svg class="navIcon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 3v3M17 3v3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M4 7h16v14H4V7Z" stroke="currentColor" stroke-width="2"/><path d="M8 11h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-        <span class="navText">Calendar</span><span class="navTag">Month</span>
-      </button>
-
-      <button class="navBtn" data-route="analytics">
-        <svg class="navIcon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 19V5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M4 19h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M7 15l3-4 3 2 4-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <span class="navText">Reports</span><span class="navTag">Charts</span>
-      </button>
-
-      <button class="navBtn" data-route="trades">
-        <svg class="navIcon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-        <span class="navText">Trades</span><span class="navTag">Table</span>
-      </button>
-
-      <button class="navBtn" data-route="journal">
-        <svg class="navIcon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 4h12v16H6V4Z" stroke="currentColor" stroke-width="2"/><path d="M8 8h8M8 12h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-        <span class="navText">Journal</span><span class="navTag">Notes</span>
-      </button>
+      <button class="navBtn" data-route="focus"><span>Focus</span><span class="tag">Daily</span></button>
+      <button class="navBtn" data-route="analytics"><span>Analytics</span><span class="tag">Charts</span></button>
+      <button class="navBtn" data-route="calendar"><span>Calendar</span><span class="tag">Month</span></button>
+      <button class="navBtn" data-route="trades"><span>Trades</span><span class="tag">Table</span></button>
+      <button class="navBtn" data-route="coach"><span>AI Coach</span><span class="tag">Insight</span></button>
+      <button class="navBtn" data-route="journal"><span>Journal</span><span class="tag">Notes</span></button>
     </div>
 
     <div class="sidebarActions">
-      <button class="sideBtn" id="addTradeBtnSide">+ New trade</button>
-      <button class="sideBtn" id="logoutBtn">Log out</button>
+      <button class="ghostBtn" id="toggleThemeBtn">Toggle Theme</button>
+      <button class="ghostBtn" id="logoutBtn">Log Out</button>
     </div>
 
-    <div class="slogan">clean. calm. consistent.</div>
+    <div class="slogan">Calm by default, deep when you want it.</div>
   </aside>
 
   <main class="main">
     <div class="wrap">
 
-      <!-- TOP BAR (changes per page title via JS below) -->
-      <div class="topbar">
-        <div class="topbarLeft">
-          <h2 class="h1" id="topTitle">Dashboard</h2>
-          <div class="pills" id="rangePills">
-            <button class="pillChip active" data-range="30">30 days</button>
-            <button class="pillChip" data-range="60">60 days</button>
-            <button class="pillChip" data-range="90">90 days</button>
-            <button class="pillChip" data-range="custom">Custom</button>
-          </div>
-        </div>
-        <div class="topbarRight">
-          <button class="btn" id="editLayoutBtn">Edit layout</button>
-          <button class="btn btnPrimary" id="addTradeBtn">+ Add trade</button>
-        </div>
-      </div>
-
-      <!-- FOCUS / DASHBOARD -->
+      <!-- focus page -->
       <section class="page" id="page-focus">
-        <div class="card">
-          <div class="cardInner">
-            <div class="sectionTitleRow">
+        <div class="panel">
+          <div class="panelInner">
+            <div class="panelHeader">
               <div>
-                <h3 class="sectionTitle" id="focusGreeting">Good day</h3>
-                <div class="sectionSub" id="focusSubtitle">Your performance snapshot.</div>
-              </div>
-              <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                <span class="calMetaPill" id="tierText">Tier: —</span>
-                <span class="calMetaPill">Streak: <span id="streakText">—</span></span>
-                <span class="calMetaPill">Month: <span id="monthRChip">—</span></span>
-              </div>
-            </div>
+                <h1 class="title" id="focusGreeting">Good day</h1>
+                <div class="subtitle" id="focusSubtitle">Your performance snapshot, clean and motivating.</div>
 
-            <div class="statRow">
-              <div class="stat"><div class="statLabel">Total PnL</div><div class="statValue" id="s_total_pnl">—</div><div class="statHint" id="s_total_pnl_hint">All time</div></div>
-              <div class="stat"><div class="statLabel">Month PnL</div><div class="statValue" id="s_month_pnl">—</div><div class="statHint" id="s_month_pnl_hint">This month</div></div>
-              <div class="stat"><div class="statLabel">Profit Factor</div><div class="statValue" id="s_pf">—</div><div class="statHint" id="s_pf_hint">From R multiples</div></div>
-              <div class="stat"><div class="statLabel">Win Rate</div><div class="statValue" id="s_winrate">—</div><div class="statHint" id="s_winrate_hint">Decided trades</div></div>
-              <div class="stat"><div class="statLabel">Total Trades</div><div class="statValue" id="s_total_trades">—</div><div class="statHint">Logged</div></div>
-              <div class="stat"><div class="statLabel">Avg R</div><div class="statValue" id="s_avgr">—</div><div class="statHint">Per trade</div></div>
-            </div>
-
-            <div class="rowGap"></div>
-
-            <div class="grid2">
-              <div class="card">
-                <div class="cardInner">
-                  <div class="sectionTitleRow">
-                    <div>
-                      <h3 class="sectionTitle">Recent trades</h3>
-                      <div class="sectionSub" id="recentPill">Ready</div>
-                    </div>
-                    <button class="btn btnGreen" id="refreshBtn">Refresh</button>
+                <div class="snapshotRow">
+                  <div class="snapshotPill neutral" id="tierPill">
+                    <span id="tierText">Tier: —</span>
                   </div>
-
-                  <div style="overflow:auto;">
-                    <table>
-                      <thead>
-                        <tr>
-                          <th>Date</th>
-                          <th>Symbol</th>
-                          <th>Dir</th>
-                          <th>RR</th>
-                          <th>R</th>
-                          <th>Session</th>
-                          <th>Strategy</th>
-                          <th style="text-align:right;"></th>
-                        </tr>
-                      </thead>
-                      <tbody id="recentTradesBody">
-                        <tr><td class="emptyRow" colspan="8">Loading…</td></tr>
-                      </tbody>
-                    </table>
+                  <div class="snapshotPill neutral">
+                    <span>Streak</span>
+                    <span class="small" id="streakText">—</span>
+                  </div>
+                  <div class="snapshotPill neutral">
+                    <span>This Month</span>
+                    <span class="small" id="monthRChip">—</span>
                   </div>
                 </div>
               </div>
+              <div class="badge"><span class="badgeDot"></span><span id="focusStatus">Ready</span></div>
+            </div>
 
+            <div class="ctaRow">
+              <button class="cta" id="addTradeBtn">+ Add Trade</button>
+            </div>
+
+            <div class="gridStats">
+              <div class="statCard">
+                <div class="statLabel">Total PnL</div>
+                <div class="statValue" id="s_total_pnl">—</div>
+                <div class="statHint" id="s_total_pnl_hint">All time</div>
+              </div>
+
+              <div class="statCard">
+                <div class="statLabel">Month PnL</div>
+                <div class="statValue" id="s_month_pnl">—</div>
+                <div class="statHint" id="s_month_pnl_hint">This month</div>
+              </div>
+
+              <div class="statCard">
+                <div class="statLabel">Profit Factor</div>
+                <div class="statValue" id="s_pf">—</div>
+                <div class="statHint" id="s_pf_hint">From R multiples</div>
+              </div>
+
+              <div class="statCard">
+                <div class="statLabel">Win Rate</div>
+                <div class="statValue" id="s_winrate">—</div>
+                <div class="statHint" id="s_winrate_hint">Decided trades</div>
+              </div>
+
+              <div class="statCard">
+                <div class="statLabel">Total Trades</div>
+                <div class="statValue" id="s_total_trades">—</div>
+                <div class="statHint">Logged</div>
+              </div>
+
+              <div class="statCard">
+                <div class="statLabel">Avg R</div>
+                <div class="statValue" id="s_avgr">—</div>
+                <div class="statHint">Per trade</div>
+              </div>
+            </div>
+
+            <div class="momentumGrid">
               <div class="card">
-                <div class="cardInner">
-                  <div class="sectionTitleRow">
-                    <div>
-                      <h3 class="sectionTitle">Quick insight</h3>
-                      <div class="sectionSub" id="insightPill">Sessionly</div>
-                    </div>
-                    <button class="btn" id="insightRefreshBtn">Regenerate</button>
-                  </div>
-                  <div class="sectionSub" style="font-size:13px; line-height:1.4; color:var(--text);" id="insightText">
-                    Add trades to unlock your personalized insight.
+                <div class="cardHead">
+                  <h3 class="cardTitle">Momentum</h3>
+                  <span class="pill ok" id="momentumPill">Ready</span>
+                </div>
+
+                <div class="goalHeader">
+                  <div class="goalHeaderLeft">
+                    <div class="goalHeadline">Goals</div>
+                    <div class="goalSub">Set targets in money. Progress uses your R × risk-per-R.</div>
                   </div>
 
-                  <div class="hr"></div>
-
-                  <div class="sectionSub">Goals and risk settings</div>
-                  <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;">
-                    <select id="currencySelect">
+                  <div class="goalSettings">
+                    <select class="selectLike" id="currencySelect" title="Currency">
                       <option value="USD">USD</option>
                       <option value="EUR">EUR</option>
                       <option value="GBP">GBP</option>
                     </select>
-                    <input id="riskPerRInput" type="number" step="1" min="1" placeholder="Risk per 1R" />
-                  </div>
 
-                  <div class="rowGap"></div>
-
-                  <div class="sectionSub">Daily goal</div>
-                  <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:8px;">
-                    <select class="goalSelect" id="goalDailySelect" data-period="daily">
-                      <option value="50">50</option><option value="100">100</option><option value="200">200</option>
-                      <option value="500">500</option><option value="1000">1000</option><option value="custom">Custom…</option>
-                    </select>
-                    <input id="goalDailyInput" class="goalCustomInput" type="number" step="1" placeholder="Enter amount" />
+                    <input class="inputLike" id="riskPerRInput" type="number" step="1" min="1" title="Risk per 1R" placeholder="Risk/1R" />
                   </div>
-                  <div class="sectionSub" style="margin-top:10px;">
-                    <span id="goalDailyLeft">—</span> · <span id="goalDailyPct">—</span>
-                    <div style="height:10px;border:1px solid var(--stroke);border-radius:999px;overflow:hidden;margin-top:8px;background:color-mix(in srgb, var(--panel) 85%, transparent);">
-                      <div id="goalDailyFill" style="height:100%;width:0%;background:linear-gradient(90deg,color-mix(in srgb, var(--accent2) 70%, transparent),color-mix(in srgb, var(--accent) 60%, transparent));"></div>
+                </div>
+
+                <div class="goalsGrid">
+                  <!-- Daily -->
+                  <div class="goalBox">
+                    <div class="goalRowTop">
+                      <div>
+                        <div class="goalName">Daily Goal</div>
+                        <div class="goalSmall">Today</div>
+                      </div>
+                      <div class="goalEditRow">
+                        <select class="selectLike goalSelect" id="goalDailySelect" data-period="daily">
+                          <option value="50">50</option>
+                          <option value="100">100</option>
+                          <option value="200">200</option>
+                          <option value="500">500</option>
+                          <option value="1000">1000</option>
+                          <option value="custom">Custom…</option>
+                        </select>
+                        <input id="goalDailyInput" class="inputLike goalCustomInput" type="number" step="1" placeholder="Enter amount" />
+                      </div>
+                    </div>
+                    <div class="bar"><div class="barFill" id="goalDailyFill"></div></div>
+                    <div class="progressMeta">
+                      <div id="goalDailyLeft">—</div>
+                      <div id="goalDailyPct">—</div>
                     </div>
                   </div>
 
-                  <div class="rowGap"></div>
-
-                  <div class="sectionSub">Weekly goal</div>
-                  <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:8px;">
-                    <select class="goalSelect" id="goalWeeklySelect" data-period="weekly">
-                      <option value="200">200</option><option value="500">500</option><option value="1000">1000</option>
-                      <option value="2000">2000</option><option value="5000">5000</option><option value="custom">Custom…</option>
-                    </select>
-                    <input id="goalWeeklyInput" class="goalCustomInput" type="number" step="1" placeholder="Enter amount" />
-                  </div>
-                  <div class="sectionSub" style="margin-top:10px;">
-                    <span id="goalWeeklyLeft">—</span> · <span id="goalWeeklyPct">—</span>
-                    <div style="height:10px;border:1px solid var(--stroke);border-radius:999px;overflow:hidden;margin-top:8px;background:color-mix(in srgb, var(--panel) 85%, transparent);">
-                      <div id="goalWeeklyFill" style="height:100%;width:0%;background:linear-gradient(90deg,color-mix(in srgb, var(--accent2) 70%, transparent),color-mix(in srgb, var(--accent) 60%, transparent));"></div>
+                  <!-- Weekly -->
+                  <div class="goalBox">
+                    <div class="goalRowTop">
+                      <div>
+                        <div class="goalName">Weekly Goal</div>
+                        <div class="goalSmall">This week (Mon–Sun)</div>
+                      </div>
+                      <div class="goalEditRow">
+                        <select class="selectLike goalSelect" id="goalWeeklySelect" data-period="weekly">
+                          <option value="200">200</option>
+                          <option value="500">500</option>
+                          <option value="1000">1000</option>
+                          <option value="2000">2000</option>
+                          <option value="5000">5000</option>
+                          <option value="custom">Custom…</option>
+                        </select>
+                        <input id="goalWeeklyInput" class="inputLike goalCustomInput" type="number" step="1" placeholder="Enter amount" />
+                      </div>
+                    </div>
+                    <div class="bar"><div class="barFill" id="goalWeeklyFill"></div></div>
+                    <div class="progressMeta">
+                      <div id="goalWeeklyLeft">—</div>
+                      <div id="goalWeeklyPct">—</div>
                     </div>
                   </div>
 
-                  <div class="rowGap"></div>
-
-                  <div class="sectionSub">Monthly goal</div>
-                  <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:8px;">
-                    <select class="goalSelect" id="goalMonthlySelect" data-period="monthly">
-                      <option value="500">500</option><option value="1000">1000</option><option value="2000">2000</option>
-                      <option value="5000">5000</option><option value="10000">10000</option><option value="custom">Custom…</option>
-                    </select>
-                    <input id="goalMonthlyInput" class="goalCustomInput" type="number" step="1" placeholder="Enter amount" />
-                  </div>
-                  <div class="sectionSub" style="margin-top:10px;">
-                    <span id="goalMonthlyLeft">—</span> · <span id="goalMonthlyPct">—</span>
-                    <div style="height:10px;border:1px solid var(--stroke);border-radius:999px;overflow:hidden;margin-top:8px;background:color-mix(in srgb, var(--panel) 85%, transparent);">
-                      <div id="goalMonthlyFill" style="height:100%;width:0%;background:linear-gradient(90deg,color-mix(in srgb, var(--accent2) 70%, transparent),color-mix(in srgb, var(--accent) 60%, transparent));"></div>
+                  <!-- Monthly -->
+                  <div class="goalBox">
+                    <div class="goalRowTop">
+                      <div>
+                        <div class="goalName">Monthly Goal</div>
+                        <div class="goalSmall">This month</div>
+                      </div>
+                      <div class="goalEditRow">
+                        <select class="selectLike goalSelect" id="goalMonthlySelect" data-period="monthly">
+                          <option value="500">500</option>
+                          <option value="1000">1000</option>
+                          <option value="2000">2000</option>
+                          <option value="5000">5000</option>
+                          <option value="10000">10000</option>
+                          <option value="custom">Custom…</option>
+                        </select>
+                        <input id="goalMonthlyInput" class="inputLike goalCustomInput" type="number" step="1" placeholder="Enter amount" />
+                      </div>
+                    </div>
+                    <div class="bar"><div class="barFill" id="goalMonthlyFill"></div></div>
+                    <div class="progressMeta">
+                      <div id="goalMonthlyLeft">—</div>
+                      <div id="goalMonthlyPct">—</div>
                     </div>
                   </div>
+                </div>
 
+                <div class="mutedLine" style="margin-top:10px;">
+                  Tip: Set “Risk/1R” to match your real risk size (example: 100). PnL here is a clean proxy using your own risk.
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="cardHead">
+                  <h3 class="cardTitle">Today’s Focus</h3>
+                  <span class="pill live">Coach</span>
+                </div>
+                <div class="coachText">Log the next trade immediately after closing it, and write one sentence on why you entered.</div>
+                <div class="chips">
+                  <div class="chip">Session: NY</div>
+                  <div class="chip">Rule: Max 3 Trades</div>
+                  <div class="chip">Goal: No Revenge</div>
+                </div>
+                <div class="mutedLine">Next this becomes personalized. For now it’s a placeholder.</div>
+                <button class="miniBtn" id="refreshBtn">Refresh Stats</button>
+              </div>
+            </div>
+
+            <div class="gridMain">
+              <div class="card">
+                <div class="cardHead">
+                  <h3 class="cardTitle">Recent Trades</h3>
+                  <span class="pill ok" id="recentPill">Ready</span>
+                </div>
+
+                <div style="overflow:auto;">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Date</th>
+                        <th>Symbol</th>
+                        <th>Dir</th>
+                        <th>RR</th>
+                        <th>R</th>
+                        <th>Session</th>
+                        <th>Strategy</th>
+                        <th style="text-align:right;"></th>
+                      </tr>
+                    </thead>
+                    <tbody id="recentTradesBody">
+                      <tr><td class="emptyRow" colspan="8">Loading…</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="cardHead">
+                  <h3 class="cardTitle">Quick Insight</h3>
+                  <span class="pill" id="insightPill">Sessionly</span>
+                </div>
+                <div class="mutedLine" id="insightText">Add trades to unlock your personalized insight.</div>
+                <button class="miniBtn" id="insightRefreshBtn" style="margin-top:12px;">Regenerate Insight</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- analytics page -->
+      <section class="page" id="page-analytics">
+        <div class="panel">
+          <div class="panelInner">
+            <div class="panelHeader">
+              <div>
+                <h1 class="title">Analytics</h1>
+                <div class="subtitle">Deep data lives here. Focus stays clean.</div>
+              </div>
+              <div class="badge"><span class="badgeDot"></span><span>Live</span></div>
+            </div>
+
+            <div class="gridAnalyticsTop">
+              <div class="statCard">
+                <div class="statLabel">Profit Factor</div>
+                <div class="statValue" id="a_pf">—</div>
+                <div class="statHint" id="a_pf_hint">From R multiple</div>
+              </div>
+              <div class="statCard">
+                <div class="statLabel">Avg Win vs Avg Loss</div>
+                <div class="statValue" id="a_awal">—</div>
+                <div class="statHint">Avg win R vs avg loss R</div>
+              </div>
+              <div class="statCard">
+                <div class="statLabel">Best Hour</div>
+                <div class="statValue" id="a_besthour">—</div>
+                <div class="statHint" id="a_besthour_hint">Avg R</div>
+              </div>
+            </div>
+
+            <div class="gridCharts">
+              <div class="card">
+                <div class="cardHead">
+                  <h3 class="cardTitle">Hourly Performance</h3>
+                  <span class="pill">R</span>
+                </div>
+                <div class="chartBox">
+                  <div class="chartCanvas"><canvas id="hourlyCanvas"></canvas></div>
+                  <div class="chartHint">Bars = Total R per hour</div>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="cardHead">
+                  <h3 class="cardTitle">Equity Curve</h3>
+                  <span class="pill">R</span>
+                </div>
+                <div class="chartBox">
+                  <div class="chartCanvas"><canvas id="equityCanvas"></canvas></div>
+                  <div class="chartHint">Line = Cumulative R over time</div>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="cardHead">
+                  <h3 class="cardTitle">Win / Loss / BE</h3>
+                  <span class="pill">Edge</span>
+                </div>
+                <div class="chartBox">
+                  <div class="chartCanvas"><canvas id="donutCanvas"></canvas></div>
+                  <div class="chartHint">Distribution by outcome</div>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="cardHead">
+                  <h3 class="cardTitle">PnL by Day</h3>
+                  <span class="pill">Heat</span>
+                </div>
+                <div class="chartBox">
+                  <div class="chartCanvas"><canvas id="calendarCanvas"></canvas></div>
+                  <div class="chartHint">Heat = Total R per day (current month)</div>
                 </div>
               </div>
             </div>
 
+            <div style="margin-top:10px;color:var(--muted);font-weight:700;font-size:13px;">
+              Log trades and the charts will update instantly.
+            </div>
           </div>
         </div>
       </section>
 
-      <!-- ANALYTICS -->
-      <section class="page" id="page-analytics">
-        <div class="card">
-          <div class="cardInner">
-            <div class="sectionTitleRow">
-              <div>
-                <h3 class="sectionTitle">Reports</h3>
-                <div class="sectionSub">Charts update automatically from your trades.</div>
-              </div>
-              <div class="calMetaPill" id="tradesCountBadge">0</div>
-            </div>
-
-            <div class="grid3">
-              <div class="stat"><div class="statLabel">Profit Factor</div><div class="statValue" id="a_pf">—</div><div class="statHint" id="a_pf_hint">From R multiple</div></div>
-              <div class="stat"><div class="statLabel">Avg Win vs Avg Loss</div><div class="statValue" id="a_awal">—</div><div class="statHint">Avg win R vs avg loss R</div></div>
-              <div class="stat"><div class="statLabel">Best Hour</div><div class="statValue" id="a_besthour">—</div><div class="statHint" id="a_besthour_hint">Avg R</div></div>
-            </div>
-
-            <div class="gridCharts">
-              <div class="card"><div class="cardInner">
-                <div class="sectionTitleRow"><h3 class="sectionTitle">Hourly performance</h3><div class="sectionSub">Total R per hour</div></div>
-                <div class="chartBox"><div class="chartCanvas"><canvas id="hourlyCanvas"></canvas></div><div class="chartHint">Bars = Total R</div></div>
-              </div></div>
-
-              <div class="card"><div class="cardInner">
-                <div class="sectionTitleRow"><h3 class="sectionTitle">Equity curve</h3><div class="sectionSub">Cumulative R</div></div>
-                <div class="chartBox"><div class="chartCanvas"><canvas id="equityCanvas"></canvas></div><div class="chartHint">Line = Cumulative R</div></div>
-              </div></div>
-
-              <div class="card"><div class="cardInner">
-                <div class="sectionTitleRow"><h3 class="sectionTitle">Win / Loss / BE</h3><div class="sectionSub">Outcome</div></div>
-                <div class="chartBox"><div class="chartCanvas"><canvas id="donutCanvas"></canvas></div><div class="chartHint">Distribution</div></div>
-              </div></div>
-
-              <div class="card"><div class="cardInner">
-                <div class="sectionTitleRow"><h3 class="sectionTitle">PnL by day</h3><div class="sectionSub">Current month</div></div>
-                <div class="chartBox"><div class="chartCanvas"><canvas id="calendarCanvas"></canvas></div><div class="chartHint">Heat = Total R</div></div>
-              </div></div>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      <!-- CALENDAR -->
+      <!-- calendar page -->
       <section class="page" id="page-calendar">
-        <div class="card">
-          <div class="cardInner">
-            <div class="sectionTitleRow">
+        <div class="panel">
+          <div class="panelInner">
+            <div class="panelHeader">
               <div>
-                <h3 class="sectionTitle">Calendar</h3>
-                <div class="sectionSub">Each day shows trades and performance.</div>
+                <h1 class="title">Calendar</h1>
+                <div class="subtitle">See your trading days at a glance.</div>
               </div>
-              <div class="toggleRow">
-                <div class="switch" id="calModeSwitch" title="Toggle between total R and win rate"><div class="switchDot"></div></div>
-                <div id="calModeLabel">Show Win Rate</div>
-              </div>
+              <div class="badge"><span class="badgeDot"></span><span id="calBadge">Live</span></div>
             </div>
 
-            <div class="calTop">
-              <div class="calTitle">
-                <span class="calMetaPill" id="calYear">—</span>
-                <span class="calMetaPill" id="calMonth">—</span>
+            <div class="card">
+              <div class="calTop">
+                <div class="calTitleRow">
+                  <div class="badge" style="gap:10px;">
+                    <span id="calYear">—</span>
+                  </div>
+                  <div class="badge" style="gap:10px;">
+                    <span id="calMonth">—</span>
+                  </div>
+                </div>
+
+                <div class="calNav">
+                  <button class="calBtn" id="calPrevBtn">‹ Prev</button>
+                  <button class="calBtn" id="calTodayBtn">Today</button>
+                  <button class="calBtn" id="calNextBtn">Next ›</button>
+                </div>
+
+                <div class="toggleRow">
+                  <div class="switch" id="calModeSwitch" title="Toggle between total R and win rate">
+                    <div class="switchDot"></div>
+                  </div>
+                  <div><span id="calModeLabel">Show Win Rate</span></div>
+                </div>
               </div>
-              <div class="calNav">
-                <button class="btn" id="calPrevBtn">‹ Prev</button>
-                <button class="btn" id="calTodayBtn">Today</button>
-                <button class="btn" id="calNextBtn">Next ›</button>
+
+              <div class="calGrid" id="calDowRow"></div>
+              <div class="calGrid" id="calGrid"></div>
+
+              <div class="mutedLine" style="margin-top:12px;">
+                Each day shows total trades, win rate, and a green/red result.
               </div>
             </div>
-
-            <div class="rowGap"></div>
-
-            <div class="calDowRow" id="calDowRow"></div>
-            <div class="calGrid" id="calGrid"></div>
-
           </div>
         </div>
       </section>
 
-      <!-- TRADES -->
+      <!-- trades page -->
       <section class="page" id="page-trades">
-        <div class="card">
-          <div class="cardInner">
-            <div class="sectionTitleRow">
+        <div class="panel">
+          <div class="panelInner">
+            <div class="panelHeader">
               <div>
-                <h3 class="sectionTitle">Trades</h3>
-                <div class="sectionSub">Full list.</div>
+                <h1 class="title">Trades</h1>
+                <div class="subtitle">Your full list (search coming next).</div>
               </div>
-              <div class="calMetaPill"><span id="tradesCountBadge2">0</span> trades</div>
+              <div class="badge"><span class="badgeDot"></span><span id="tradesCountBadge">0</span></div>
             </div>
 
-            <div style="overflow:auto;">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Date</th>
-                    <th>Symbol</th>
-                    <th>Dir</th>
-                    <th>RR</th>
-                    <th>R</th>
-                    <th>Session</th>
-                    <th>Strategy</th>
-                    <th style="text-align:right;"></th>
-                  </tr>
-                </thead>
-                <tbody id="tradesTableBody">
-                  <tr><td class="emptyRow" colspan="8">Loading…</td></tr>
-                </tbody>
-              </table>
+            <div class="card">
+              <div class="cardHead">
+                <h3 class="cardTitle">All Trades</h3>
+                <span class="pill">Table</span>
+              </div>
+
+              <div style="overflow:auto;">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>Symbol</th>
+                      <th>Dir</th>
+                      <th>RR</th>
+                      <th>R</th>
+                      <th>Session</th>
+                      <th>Strategy</th>
+                      <th style="text-align:right;"></th>
+                    </tr>
+                  </thead>
+                  <tbody id="tradesTableBody">
+                    <tr><td class="emptyRow" colspan="8">Loading…</td></tr>
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- coach page -->
+      <section class="page" id="page-coach">
+        <div class="panel">
+          <div class="panelInner">
+            <div class="panelHeader">
+              <div>
+                <h1 class="title">AI Coach</h1>
+                <div class="subtitle">Real insights from your last trades. No fluff.</div>
+              </div>
+              <div class="badge"><span class="badgeDot"></span><span id="coachStatus">Ready</span></div>
+            </div>
+
+            <div class="gridMain">
+              <div class="card">
+                <div class="cardHead">
+                  <h3 class="cardTitle">Coach Report</h3>
+                  <span class="pill live" id="coachPill">Insight</span>
+                </div>
+
+                <div class="mutedLine" style="margin-bottom:10px;">Range</div>
+
+                <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+                  <select class="selectLike" id="coachRangeSelect" title="Range">
+                    <option value="7">Last 7 days</option>
+                    <option value="14">Last 14 days</option>
+                    <option value="30" selected>Last 30 days</option>
+                    <option value="60">Last 60 days</option>
+                    <option value="90">Last 90 days</option>
+                  </select>
+
+                  <button class="miniBtn" id="coachGenerateBtn" style="width:auto; margin-top:0;">Generate</button>
+                  <button class="ghostBtn" id="coachCopyBtn" style="width:auto;">Copy</button>
+                </div>
+
+                <div class="mutedLine" id="coachMeta" style="margin-top:12px;">
+                  Uses your logged trades only. Make sure you have at least ~10 trades for best results.
+                </div>
+
+                <div class="card" style="margin-top:12px;">
+                  <div class="mutedLine" id="coachOutput">
+                    Click “Generate” to get your AI coach report.
+                  </div>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="cardHead">
+                  <h3 class="cardTitle">What it looks for</h3>
+                  <span class="pill">Signals</span>
+                </div>
+
+                <div class="mutedLine" style="white-space:pre-line;">
+• best hours and worst hours
+• best symbols and worst symbols
+• leaks (revenge, late entries, bad sessions)
+• your highest edge patterns
+• 1–3 specific rules to focus on next
+                </div>
+
+                <button class="miniBtn" id="coachUseOnFocusBtn">Show a short version on Focus</button>
+              </div>
             </div>
 
           </div>
         </div>
       </section>
 
-      <!-- JOURNAL -->
+      <!-- journal page -->
       <section class="page" id="page-journal">
-        <div class="card">
-          <div class="cardInner">
-            <div class="sectionTitleRow">
+        <div class="panel">
+          <div class="panelInner">
+            <div class="panelHeader">
               <div>
-                <h3 class="sectionTitle">Journal</h3>
-                <div class="sectionSub">Coming next.</div>
+                <h1 class="title">Journal</h1>
+                <div class="subtitle">Notes and patterns, coming next.</div>
               </div>
-              <span class="calMetaPill">Soon</span>
+              <div class="badge"><span class="badgeDot"></span><span>Soon</span></div>
             </div>
 
-            <div class="sectionSub" style="font-size:13px; color:var(--text); line-height:1.5;">
-              Next we’ll save daily notes and auto-surface repeating mistakes and best setups.
+            <div class="card">
+              <div class="cardHead">
+                <h3 class="cardTitle">Quick Note</h3>
+                <span class="pill warn">Placeholder</span>
+              </div>
+              <div class="mutedLine">
+                Next we’ll save daily notes and auto-surface your repeating mistakes and best setups.
+              </div>
             </div>
           </div>
         </div>
@@ -1050,15 +1284,15 @@ textarea{min-height:96px; resize:vertical;}
     <div class="modalInner">
       <div class="modalHead">
         <div>
-          <h3 class="modalTitle">Add trade</h3>
-          <div class="subtitle">Fast logging, clean data.</div>
+          <h3 class="modalTitle">Add Trade</h3>
+          <div class="subtitle" style="margin-top:4px;">Fast logging, clean data.</div>
         </div>
         <button class="closeBtn" id="closeModalBtn">Close</button>
       </div>
 
       <div class="formGrid">
         <div>
-          <label>Date and time</label>
+          <label>Date and Time</label>
           <input id="t_date" type="datetime-local" />
         </div>
 
@@ -1085,17 +1319,17 @@ textarea{min-height:96px; resize:vertical;}
         </div>
 
         <div>
-          <label>RR (optional)</label>
+          <label>RR (Optional)</label>
           <input id="t_rr" type="number" step="0.01" placeholder="1.0" />
         </div>
 
         <div>
-          <label>R multiple (absolute)</label>
+          <label>R Multiple (Enter absolute)</label>
           <input id="t_r" type="number" step="0.01" placeholder="1.3" />
         </div>
 
         <div>
-          <label>Session (optional)</label>
+          <label>Session (Optional)</label>
           <select id="t_session">
             <option value="">—</option>
             <option value="asia">Asia</option>
@@ -1106,24 +1340,24 @@ textarea{min-height:96px; resize:vertical;}
         </div>
 
         <div>
-          <label>Strategy (optional)</label>
+          <label>Strategy (Optional)</label>
           <input id="t_strategy" placeholder="FVG / Breakout / Mean Reversion" />
         </div>
 
         <div style="grid-column: 1 / -1;">
-          <label>Mistakes (optional, comma separated)</label>
+          <label>Mistakes (Optional, comma separated)</label>
           <input id="t_mistakes" placeholder="Late entry, revenge, no stop" />
         </div>
 
         <div style="grid-column: 1 / -1;">
-          <label>Notes (optional)</label>
+          <label>Notes (Optional)</label>
           <textarea id="t_notes" placeholder="Why you entered, what you’ll fix next"></textarea>
         </div>
       </div>
 
       <div class="modalActions">
-        <button class="btn" id="clearBtn">Clear</button>
-        <button class="saveBtn" id="saveBtn">Save trade</button>
+        <button class="ghostBtn" id="clearBtn" style="width:auto;">Clear</button>
+        <button class="saveBtn" id="saveBtn">Save Trade</button>
       </div>
 
       <div class="msg" id="modalMsg"></div>
@@ -1138,18 +1372,18 @@ textarea{min-height:96px; resize:vertical;}
       <div class="modalHead">
         <div>
           <h3 class="modalTitle" id="confirmTitle">Are you sure?</h3>
-          <div class="subtitle" id="confirmSubtitle">This is permanent and can’t be undone.</div>
+          <div class="subtitle" style="margin-top:4px;" id="confirmSubtitle">This is permanent and can’t be undone.</div>
         </div>
         <button class="closeBtn" id="confirmCloseBtn">Close</button>
       </div>
 
-      <div class="subtitle" id="confirmBody" style="font-size:13px; color:var(--text);">
+      <div class="mutedLine" id="confirmBody" style="margin-top:4px;">
         Are you sure you want to delete this trade? This is permanent and can’t be undone.
       </div>
 
       <div class="modalActions" style="margin-top:14px;">
-        <button class="btn" id="confirmCancelBtn">Cancel</button>
-        <button class="dangerPrimary" id="confirmOkBtn">Delete</button>
+        <button class="ghostBtn" id="confirmCancelBtn" style="width:auto;">Cancel</button>
+        <button class="dangerPrimary" id="confirmOkBtn" style="width:auto;">Delete</button>
       </div>
 
       <div class="msg" id="confirmMsg"></div>
@@ -1168,10 +1402,26 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 /*
 IMPORTANT FOR DELETE:
+You must add a delete policy in Supabase, otherwise delete will fail with RLS.
+
 create policy "users can delete own trades"
 on public.trades for delete
 using (auth.uid() = user_id);
 */
+
+// === AI COACH FUNCTION INVOKE ===
+// requires you to deploy a Supabase Edge Function named "ai-coach"
+async function generateAICoach(rangeDays = 30){
+  const { data, error } = await sb.functions.invoke("ai-coach", {
+    body: { rangeDays }
+  });
+
+  if (error){
+    console.error("AI coach error:", error);
+    throw new Error(error.message || "AI coach failed");
+  }
+  return data;
+}
 
 // === STATE ===
 let user = null;
@@ -1179,8 +1429,8 @@ let trades = [];
 
 // calendar state
 let calYear = new Date().getFullYear();
-let calMonth = new Date().getMonth();
-let calShowPercent = false;
+let calMonth = new Date().getMonth(); // 0-11
+let calShowPercent = false; // false = show total R, true = show % (win rate)
 
 // local settings
 let settings = {
@@ -1189,8 +1439,8 @@ let settings = {
   goals: { daily: 100, weekly: 500, monthly: 2000 }
 };
 
-// date range UI (visual for now; you can wire it to filtering later)
-let rangeDays = 30;
+// AI coach cache
+let coachCache = { text: "", short: "" };
 
 // === THEME ===
 function applyTheme(theme){
@@ -1199,22 +1449,11 @@ function applyTheme(theme){
 }
 function initTheme(){
   const saved = localStorage.getItem("sessionly_theme");
-  applyTheme(saved || "light");
+  applyTheme(saved || "dark");
 }
 
 // === ROUTING ===
-const routes = ["focus","analytics","calendar","trades","journal"];
-
-function setTopTitle(route){
-  const map = {
-    focus: "Dashboard",
-    analytics: "Reports",
-    calendar: "Calendar",
-    trades: "Trades",
-    journal: "Journal"
-  };
-  document.getElementById("topTitle").textContent = map[route] || "Dashboard";
-}
+const routes = ["focus","analytics","calendar","trades","coach","journal"];
 
 function setActiveRoute(route){
   if (!routes.includes(route)) route = "focus";
@@ -1228,8 +1467,6 @@ function setActiveRoute(route){
     btn.classList.toggle("active", btn.dataset.route === route);
   });
 
-  setTopTitle(route);
-
   if (location.hash.replace("#","") !== route){
     history.replaceState(null, "", `#${route}`);
   }
@@ -1238,6 +1475,7 @@ function setActiveRoute(route){
   if (route === "trades") renderTradesTable();
   if (route === "calendar") renderCalendar();
   if (route === "focus") renderFocus();
+  if (route === "coach") renderCoachPage();
 }
 
 function initRouting(){
@@ -1250,7 +1488,9 @@ function initRouting(){
   });
 
   document.querySelectorAll(".navBtn").forEach(btn=>{
-    btn.addEventListener("click", ()=> setActiveRoute(btn.dataset.route));
+    btn.addEventListener("click", ()=>{
+      setActiveRoute(btn.dataset.route);
+    });
   });
 }
 
@@ -1267,6 +1507,7 @@ async function requireAuth(){
   user = session.user;
   document.getElementById("userEmail").textContent = user.email || "Signed in";
 
+  // load per-user local settings
   loadLocalSettings();
   initGoalControls();
   initSettingsControls();
@@ -1275,8 +1516,9 @@ async function requireAuth(){
 }
 
 // === LOCAL SETTINGS ===
-function settingsKey(){ return `sessionly_settings_${user?.id || "anon"}`; }
-
+function settingsKey(){
+  return `sessionly_settings_${user?.id || "anon"}`;
+}
 function loadLocalSettings(){
   try{
     const raw = localStorage.getItem(settingsKey());
@@ -1294,7 +1536,9 @@ function loadLocalSettings(){
   } catch(e){}
 }
 function saveLocalSettings(){
-  try{ localStorage.setItem(settingsKey(), JSON.stringify(settings)); } catch(e){}
+  try{
+    localStorage.setItem(settingsKey(), JSON.stringify(settings));
+  } catch(e){}
 }
 
 // === MODALS ===
@@ -1334,7 +1578,9 @@ const confirmOkBtn = document.getElementById("confirmOkBtn");
 const confirmCancelBtn = document.getElementById("confirmCancelBtn");
 const confirmCloseBtn = document.getElementById("confirmCloseBtn");
 
-function closeConfirm(){ confirmBackdrop.style.display = "none"; }
+function closeConfirm(){
+  confirmBackdrop.style.display = "none";
+}
 
 function confirmDialog({
   title = "Are you sure?",
@@ -1364,7 +1610,9 @@ function confirmDialog({
       confirmBackdrop.removeEventListener("click", onBg);
       window.removeEventListener("keydown", onEsc);
     }
-    function onEsc(e){ if (e.key === "Escape") onCancel(); }
+    function onEsc(e){
+      if (e.key === "Escape") onCancel();
+    }
 
     confirmOkBtn.addEventListener("click", onOk);
     confirmCancelBtn.addEventListener("click", onCancel);
@@ -1387,19 +1635,23 @@ async function loadTrades(){
 
   if (error){
     console.error(error);
-    document.getElementById("recentTradesBody").innerHTML =
-      `<tr><td class="emptyRow" colspan="8">Error loading trades: ${escapeHtml(error.message)}</td></tr>`;
+    const pill = document.getElementById("recentPill");
+    pill.classList.remove("ok");
+    pill.classList.add("warn");
+    pill.textContent = "Error";
+    const body = document.getElementById("recentTradesBody");
+    body.innerHTML = `<tr><td class="emptyRow" colspan="8">Error loading trades: ${escapeHtml(error.message)}</td></tr>`;
     document.getElementById("tradesTableBody").innerHTML =
       `<tr><td class="emptyRow" colspan="8">Error loading trades: ${escapeHtml(error.message)}</td></tr>`;
     return;
   }
 
   trades = (data || []).map(normalizeTrade);
-
   renderFocus();
   renderAnalytics();
   renderTradesTable();
   renderCalendar();
+  renderCoachPage();
 }
 
 function normalizeTrade(t){
@@ -1425,7 +1677,7 @@ async function deleteTrade(id){
     title: "Delete this trade?",
     subtitle: "This is permanent and can’t be undone.",
     body: "Are you sure you want to delete this trade? This is permanent and can’t be undone.",
-    okText: "Delete",
+    okText: "Delete Trade",
     cancelText: "Cancel"
   });
   if (!ok) return;
@@ -1444,7 +1696,7 @@ async function deleteTrade(id){
       console.error(error);
       confirmMsg.textContent = `Delete failed: ${error.message}`;
       confirmOkBtn.disabled = false;
-      confirmOkBtn.textContent = "Delete";
+      confirmOkBtn.textContent = "Delete Trade";
       return;
     }
 
@@ -1452,7 +1704,7 @@ async function deleteTrade(id){
     await loadTrades();
   } finally {
     confirmOkBtn.disabled = false;
-    confirmOkBtn.textContent = "Delete";
+    confirmOkBtn.textContent = "Delete Trade";
   }
 }
 
@@ -1481,11 +1733,19 @@ function nameFromEmail(email){
 }
 
 function computeTier(pf, totalR, totalTrades){
-  if (!Number.isFinite(pf) || totalTrades < 10) return { label: "Tier: Getting Started" };
-  if (pf >= 2.0 && totalR > 0) return { label: "Tier: Top 1%" };
-  if (pf >= 1.5 && totalR > 0) return { label: "Tier: Top 5%" };
-  if (pf >= 1.2 && totalR > 0) return { label: "Tier: Building Edge" };
-  return { label: "Tier: Keep Refining" };
+  if (!Number.isFinite(pf) || totalTrades < 10){
+    return { label: "Tier: Getting Started", className: "neutral" };
+  }
+  if (pf >= 2.0 && totalR > 0){
+    return { label: "Tier: Top 1% Profitable", className: "good" };
+  }
+  if (pf >= 1.5 && totalR > 0){
+    return { label: "Tier: Top 5% Profitable", className: "good" };
+  }
+  if (pf >= 1.2 && totalR > 0){
+    return { label: "Tier: Building an Edge", className: "neutral" };
+  }
+  return { label: "Tier: Keep Refining", className: "warn" };
 }
 
 function dailyAggMap(){
@@ -1502,6 +1762,7 @@ function computePositiveDayStreak(){
   const map = dailyAggMap();
   const today = new Date();
   let streak = 0;
+
   for (let i=0; i<3650; i++){
     const d = new Date(today);
     d.setDate(today.getDate() - i);
@@ -1541,18 +1802,17 @@ function setGoal(period, amount){
 function syncGoalDropdown(period, goalVal){
   const sel = document.getElementById(`goal${cap(period)}Select`);
   const input = document.getElementById(`goal${cap(period)}Input`);
+
   const optionValues = Array.from(sel.options).map(o=>o.value);
   const asString = String(Math.round(goalVal));
 
   if (optionValues.includes(asString)){
     sel.value = asString;
     input.classList.remove("show");
-    input.style.display = "none";
     input.value = String(goalVal);
   } else {
     sel.value = "custom";
     input.classList.add("show");
-    input.style.display = "block";
     input.value = String(goalVal);
   }
 }
@@ -1564,10 +1824,10 @@ function initGoalControls(){
       const v = sel.value;
       const input = document.getElementById(`goal${cap(period)}Input`);
       if (v === "custom"){
-        input.style.display = "block";
+        input.classList.add("show");
         input.focus();
       } else {
-        input.style.display = "none";
+        input.classList.remove("show");
         const n = Number(v);
         if (Number.isFinite(n) && n > 0) setGoal(period, n);
       }
@@ -1663,10 +1923,10 @@ function updateGoalUI(label, goalAmountMoney, achievedMoney){
 
   const left = goal - achieved;
   if (left <= 0){
-    leftEl.textContent = `${fmtMoney(0)} left`;
+    leftEl.textContent = `${fmtMoney(0)} Left`;
     pctEl.textContent = `100%`;
   } else {
-    leftEl.textContent = `${fmtMoney(left)} left`;
+    leftEl.textContent = `${fmtMoney(left)} Left`;
     pctEl.textContent = `${pct.toFixed(0)}%`;
   }
 }
@@ -1678,10 +1938,12 @@ function renderFocus(){
   document.getElementById("focusGreeting").textContent = who ? `${greeting}, ${who}` : greeting;
 
   const rVals = trades.map(t => t.r_multiple).filter(v => Number.isFinite(v));
-  const totalR = rVals.reduce((a,b)=>a+b,0);
+  const totalTrades = trades.length;
 
+  const totalR = rVals.reduce((a,b)=>a+b,0);
   const wins = rVals.filter(v => v > 0);
   const losses = rVals.filter(v => v < 0);
+  const bes = rVals.filter(v => v === 0);
 
   const sumWins = wins.reduce((a,b)=>a+b,0);
   const sumLossAbs = Math.abs(losses.reduce((a,b)=>a+b,0));
@@ -1706,17 +1968,19 @@ function renderFocus(){
   document.getElementById("s_winrate").textContent = winRate === null ? "—" : `${(winRate*100).toFixed(1)}%`;
   document.getElementById("s_winrate_hint").textContent = decided ? `${wins.length}/${decided} decided` : "No decided trades yet";
 
-  document.getElementById("s_total_trades").textContent = String(trades.length);
+  document.getElementById("s_total_trades").textContent = String(totalTrades);
 
   const avgR = rVals.length ? (totalR / rVals.length) : null;
   document.getElementById("s_avgr").textContent = avgR === null ? "—" : formatNumber(avgR);
 
   const tier = computeTier(pf, totalR, rVals.length);
+  const tierPill = document.getElementById("tierPill");
+  tierPill.classList.remove("good","neutral","warn");
+  tierPill.classList.add(tier.className);
   document.getElementById("tierText").textContent = tier.label;
 
   const streak = computePositiveDayStreak();
-  document.getElementById("streakText").textContent = `${streak} day${streak===1?"":"s"}`;
-
+  document.getElementById("streakText").textContent = `${streak} Day${streak===1?"":"s"}`;
   document.getElementById("monthRChip").textContent = `${monthR >= 0 ? "+" : ""}${formatNumber(monthR)}R`;
 
   renderInsight(pf, totalR, winRate, avgR, rVals.length);
@@ -1759,8 +2023,10 @@ function renderFocus(){
     });
   }
 
+  document.getElementById("recentPill").textContent = "Ready";
+  document.getElementById("focusStatus").textContent = "Ready";
+
   renderGoals();
-  document.getElementById("tradesCountBadge2").textContent = String(trades.length);
 }
 
 function renderInsight(pf, totalR, winRate, avgR, n){
@@ -1773,33 +2039,84 @@ function renderInsight(pf, totalR, winRate, avgR, n){
     return;
   }
 
+  // a bit more detailed than before
+  const best = computeBestHourAndSession();
+  const bestHourText = best.bestHour === null ? "—" : `${String(best.bestHour).padStart(2,"0")}:00`;
+  const bestSessionText = best.bestSession || "—";
+
   if (Number.isFinite(pf) && pf >= 1.5 && totalR > 0){
     pill.textContent = "Momentum";
-    el.textContent = "Strong zone. Keep sizing consistent and protect your best hours. Consistency beats intensity.";
+    el.textContent = `Strong zone. Best hour: ${bestHourText}. Best session: ${bestSessionText}. Keep sizing consistent and protect your best window.`;
     return;
   }
 
   if (Number.isFinite(winRate) && winRate < 0.35 && Number.isFinite(avgR) && avgR > 0){
     pill.textContent = "Edge";
-    el.textContent = "Win rate is low, but avg R is positive. That’s a classic high R:R profile. Don’t overtrade.";
+    el.textContent = `You’re running a high R:R profile. Best hour: ${bestHourText}. Cut the bottom sessions and stop adding extra trades after a loss.`;
     return;
   }
 
   if (Number.isFinite(pf) && pf < 1.0){
-    pill.textContent = "Fix one leak";
-    el.textContent = "Losses outweigh wins. Tighten one rule (stops, revenge, or late entries) and retest.";
+    pill.textContent = "Fix One Leak";
+    el.textContent = `Losses outweigh wins. Best hour: ${bestHourText}. Focus one rule: no late entries or no revenge for 10 trades, then reassess.`;
     return;
   }
 
   pill.textContent = "Progress";
-  el.textContent = "You’re building the base. Small improvements compound fast.";
+  el.textContent = `You’re building the base. Best hour so far: ${bestHourText}. Tighten the plan slightly and keep tracking.`;
+}
+
+function computeBestHourAndSession(){
+  // best hour by avg R
+  const byHour = new Map();
+  trades.forEach(t=>{
+    if (!t.dt || !Number.isFinite(t.r_multiple)) return;
+    const h = t.dt.getHours();
+    const cur = byHour.get(h) || {sum:0,count:0};
+    cur.sum += t.r_multiple;
+    cur.count += 1;
+    byHour.set(h, cur);
+  });
+
+  let bestHour = null;
+  let bestAvg = -Infinity;
+  for (const [h, v] of byHour.entries()){
+    const avg = v.sum / Math.max(1, v.count);
+    if (avg > bestAvg){
+      bestAvg = avg;
+      bestHour = h;
+    }
+  }
+
+  // best session by avg R
+  const bySession = new Map();
+  trades.forEach(t=>{
+    if (!Number.isFinite(t.r_multiple)) return;
+    const s = (t.session || "").trim().toLowerCase();
+    if (!s) return;
+    const cur = bySession.get(s) || {sum:0,count:0};
+    cur.sum += t.r_multiple;
+    cur.count += 1;
+    bySession.set(s, cur);
+  });
+
+  let bestSession = null;
+  let bestSessionAvg = -Infinity;
+  for (const [s, v] of bySession.entries()){
+    const avg = v.sum / Math.max(1, v.count);
+    if (avg > bestSessionAvg){
+      bestSessionAvg = avg;
+      bestSession = s;
+    }
+  }
+
+  return { bestHour, bestSession: bestSession ? cap(bestSession) : null };
 }
 
 // === RENDER: TRADES TABLE ===
 function renderTradesTable(){
   const body = document.getElementById("tradesTableBody");
   document.getElementById("tradesCountBadge").textContent = String(trades.length);
-  document.getElementById("tradesCountBadge2").textContent = String(trades.length);
 
   if (!trades.length){
     body.innerHTML = `<tr><td class="emptyRow" colspan="8">No trades yet.</td></tr>`;
@@ -1846,7 +2163,7 @@ function renderCalendar(){
 
   const modeSwitch = document.getElementById("calModeSwitch");
   modeSwitch.classList.toggle("on", calShowPercent);
-  document.getElementById("calModeLabel").textContent = calShowPercent ? "Show total R" : "Show win rate";
+  document.getElementById("calModeLabel").textContent = calShowPercent ? "Show Total R" : "Show Win Rate";
 
   const dowRow = document.getElementById("calDowRow");
   const dows = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
@@ -1869,14 +2186,18 @@ function renderCalendar(){
   let html = "";
   for (let i=0;i<totalCells;i++){
     const dayNum = i - firstDowMon0 + 1;
+
     let inMonth = dayNum >= 1 && dayNum <= daysInMonth;
     let displayDay = dayNum;
     let cellMuted = false;
 
     if (!inMonth){
       cellMuted = true;
-      if (dayNum < 1) displayDay = prevMonthLast + dayNum;
-      else displayDay = dayNum - daysInMonth;
+      if (dayNum < 1){
+        displayDay = prevMonthLast + dayNum;
+      } else {
+        displayDay = dayNum - daysInMonth;
+      }
     }
 
     let key = null;
@@ -1891,19 +2212,22 @@ function renderCalendar(){
 
     const isActive = inMonth && isThisMonth && dayNum === today.getDate();
     const valClass = totalR > 0 ? "pos" : (totalR < 0 ? "neg" : "");
+    const glowClass = totalR > 0 ? "calGlowPos" : (totalR < 0 ? "calGlowNeg" : "");
 
     const showVal = calShowPercent
       ? (winRate === null ? "—" : `${(winRate*100).toFixed(0)}%`)
       : (tradesCount ? ((totalR > 0 ? "+" : "") + formatNumber(totalR)) : "—");
 
-    const metaLine1 = tradesCount ? `${tradesCount} trade${tradesCount===1?"":"s"}` : "No trades";
-    const metaLine2 = tradesCount ? `WR: ${winRate === null ? "—" : `${(winRate*100).toFixed(0)}%`}` : "";
+    const metaLine1 = tradesCount ? `Total trades: ${tradesCount}` : "No trades";
+    const metaLine2 = tradesCount ? `Win rate: ${winRate === null ? "—" : `${(winRate*100).toFixed(0)}%`}` : "";
 
     html += `
-      <div class="calCell ${cellMuted ? "muted" : ""} ${isActive ? "active" : ""}">
-        <div class="calDay">${displayDay}</div>
-        <div class="calMeta">${escapeHtml(metaLine1)}${metaLine2 ? "<br/>"+escapeHtml(metaLine2) : ""}</div>
-        <div class="calValue ${valClass}">${escapeHtml(showVal)}</div>
+      <div class="calCell ${cellMuted ? "muted" : ""} ${glowClass} ${isActive ? "active" : ""}">
+        <div class="calCellInner">
+          <div class="calDay">${displayDay}</div>
+          <div class="calMeta">${escapeHtml(metaLine1)}${metaLine2 ? "<br/>"+escapeHtml(metaLine2) : ""}</div>
+          <div class="calValue ${valClass}">${escapeHtml(showVal)}</div>
+        </div>
       </div>
     `;
   }
@@ -1927,13 +2251,116 @@ function buildDailyAgg(year, month){
 
     if (t.r_multiple > 0){ cur.wins += 1; cur.decided += 1; }
     else if (t.r_multiple < 0){ cur.losses += 1; cur.decided += 1; }
+    else if (t.r_multiple === 0){ /* BE */ }
 
     map.set(key, cur);
   });
   return map;
 }
 
-// === ANALYTICS ===
+// === RENDER: AI COACH PAGE ===
+function setCoachLoading(isLoading){
+  const status = document.getElementById("coachStatus");
+  const pill = document.getElementById("coachPill");
+  const btn = document.getElementById("coachGenerateBtn");
+  if (!status || !pill || !btn) return;
+
+  if (isLoading){
+    status.textContent = "Thinking…";
+    pill.textContent = "AI";
+    btn.disabled = true;
+    btn.textContent = "Generating…";
+  } else {
+    status.textContent = "Ready";
+    pill.textContent = "Insight";
+    btn.disabled = false;
+    btn.textContent = "Generate";
+  }
+}
+
+function renderCoachPage(){
+  const out = document.getElementById("coachOutput");
+  const meta = document.getElementById("coachMeta");
+  const rangeSel = document.getElementById("coachRangeSelect");
+  if (!out || !meta || !rangeSel) return;
+
+  meta.textContent = `Trades loaded: ${trades.length}. Best results after 10+ trades.`;
+  out.textContent = coachCache.text ? coachCache.text : "Click “Generate” to get your AI coach report.";
+}
+
+async function coachGenerate(){
+  const out = document.getElementById("coachOutput");
+  const rangeSel = document.getElementById("coachRangeSelect");
+  const meta = document.getElementById("coachMeta");
+
+  const rangeDays = Number(rangeSel?.value || 30);
+
+  try{
+    setCoachLoading(true);
+    if (out) out.textContent = "Analyzing your trades…";
+
+    const res = await generateAICoach(rangeDays);
+
+    coachCache.text = res?.coach_text || "No coach text returned.";
+    coachCache.short = res?.short_text || "";
+
+    if (out) out.textContent = coachCache.text;
+    if (meta) meta.textContent = `Generated from last ${rangeDays} days.`;
+  } catch(e){
+    console.error(e);
+    if (out) out.textContent = "Could not generate coach report. Make sure the Supabase Edge Function 'ai-coach' is deployed and your secrets are set.";
+    if (meta) meta.textContent = "Error generating report.";
+  } finally {
+    setCoachLoading(false);
+  }
+}
+
+function wireCoachUI(){
+  const genBtn = document.getElementById("coachGenerateBtn");
+  const copyBtn = document.getElementById("coachCopyBtn");
+  const useBtn = document.getElementById("coachUseOnFocusBtn");
+  const rangeSel = document.getElementById("coachRangeSelect");
+
+  if (genBtn) genBtn.addEventListener("click", coachGenerate);
+
+  if (rangeSel) rangeSel.addEventListener("change", ()=>{
+    coachCache = { text:"", short:"" };
+    const out = document.getElementById("coachOutput");
+    if (out) out.textContent = "Click “Generate” to get your AI coach report.";
+  });
+
+  if (copyBtn) copyBtn.addEventListener("click", async ()=>{
+    const text = coachCache.text || "";
+    if (!text) return;
+    try{
+      await navigator.clipboard.writeText(text);
+      copyBtn.textContent = "Copied";
+      setTimeout(()=> copyBtn.textContent = "Copy", 900);
+    } catch(e){
+      console.error(e);
+      copyBtn.textContent = "Copy failed";
+      setTimeout(()=> copyBtn.textContent = "Copy", 900);
+    }
+  });
+
+  if (useBtn) useBtn.addEventListener("click", ()=>{
+    const insight = document.getElementById("insightText");
+    const pill = document.getElementById("insightPill");
+    if (!insight || !pill) return;
+
+    if (coachCache.short){
+      insight.textContent = coachCache.short;
+      pill.textContent = "Coach";
+      location.hash = "#focus";
+    } else {
+      insight.textContent = "Generate a coach report first, then click this to show a short version here.";
+      pill.textContent = "Coach";
+      location.hash = "#focus";
+    }
+  });
+}
+
+// === RENDER: ANALYTICS ===
 function renderAnalytics(){
   const rVals = trades.map(t => t.r_multiple).filter(v => Number.isFinite(v));
   const wins = rVals.filter(v => v > 0);
@@ -1980,7 +2407,7 @@ function renderAnalytics(){
   drawCalendarCanvas();
 }
 
-// === CHARTS (unchanged logic, slightly cleaner drawing) ===
+// === CHART HELPERS (no external libs) ===
 function prepCanvas(id){
   const c = document.getElementById(id);
   if (!c) return null;
@@ -1992,7 +2419,32 @@ function prepCanvas(id){
   ctx.setTransform(dpr,0,0,dpr,0,0);
   return {c, ctx, w: rect.width, h: rect.height};
 }
-function cssVar(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+
+function colorVar(name){
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}
+
+function drawGlassGrid(ctx, w, h){
+  ctx.save();
+  ctx.globalAlpha = 0.30;
+  ctx.strokeStyle = colorMix(colorVar("--stroke"), "transparent", 0.0);
+  ctx.lineWidth = 1;
+
+  const step = 28;
+  for (let x=0; x<=w; x+=step){
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, h);
+    ctx.stroke();
+  }
+  for (let y=0; y<=h; y+=step){
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(w, y);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
 
 function drawHourlyCanvas(byHour){
   const pack = prepCanvas("hourlyCanvas");
@@ -2000,6 +2452,7 @@ function drawHourlyCanvas(byHour){
   const {ctx,w,h} = pack;
 
   ctx.clearRect(0,0,w,h);
+  drawGlassGrid(ctx,w,h);
 
   const arr = [];
   for (let i=0;i<24;i++){
@@ -2008,15 +2461,14 @@ function drawHourlyCanvas(byHour){
   }
 
   const maxAbs = Math.max(1, ...arr.map(x => Math.abs(x.val)));
-  const pad = 16;
+  const pad = 18;
   const baseY = h/2;
   const innerW = w - pad*2;
   const barW = innerW / 24;
 
   ctx.save();
-  ctx.strokeStyle = cssVar("--stroke2");
-  ctx.globalAlpha = 1;
-  ctx.lineWidth = 1;
+  ctx.strokeStyle = colorVar("--stroke2");
+  ctx.globalAlpha = 0.85;
   ctx.beginPath();
   ctx.moveTo(pad, baseY);
   ctx.lineTo(w-pad, baseY);
@@ -2024,18 +2476,30 @@ function drawHourlyCanvas(byHour){
   ctx.restore();
 
   arr.forEach((b, i)=>{
-    const x = pad + i*barW + barW*0.25;
-    const bw = barW*0.50;
+    const x = pad + i*barW + barW*0.22;
+    const bw = barW*0.56;
     const norm = b.val / maxAbs;
-    const barH = norm * (h*0.32);
+    const barH = norm * (h*0.34);
+
     const y = baseY - Math.max(0, barH);
     const hh = Math.abs(barH);
-    const col = b.val >= 0 ? cssVar("--accent2") : cssVar("--danger");
+
+    const isPos = b.val >= 0;
+    const col = isPos ? colorVar("--accent") : colorVar("--danger");
 
     roundRect(ctx, x, y, bw, hh, 8);
-    ctx.fillStyle = col;
-    ctx.globalAlpha = 0.85;
+    const grad = ctx.createLinearGradient(x,y,x,y+hh);
+    grad.addColorStop(0, colorMix(col, "#ffffff", 0.12));
+    grad.addColorStop(1, colorMix(col, "#000000", 0.22));
+    ctx.fillStyle = grad;
+    ctx.globalAlpha = 0.90;
     ctx.fill();
+
+    ctx.globalAlpha = 0.16;
+    ctx.shadowColor = col;
+    ctx.shadowBlur = 18;
+    ctx.fill();
+    ctx.shadowBlur = 0;
     ctx.globalAlpha = 1;
   });
 }
@@ -2046,21 +2510,22 @@ function drawEquityCanvas(){
   const {ctx,w,h} = pack;
 
   ctx.clearRect(0,0,w,h);
+  drawGlassGrid(ctx,w,h);
 
   const sorted = [...trades]
     .filter(t => t.dt && Number.isFinite(t.r_multiple))
     .sort((a,b)=> a.dt - b.dt);
 
-  const pad = 16;
+  const pad = 18;
   const innerW = w - pad*2;
   const innerH = h - pad*2;
 
   if (sorted.length < 2){
     ctx.save();
-    ctx.fillStyle = cssVar("--muted");
-    ctx.globalAlpha = 1;
-    ctx.font = "800 12px ui-sans-serif, system-ui";
-    ctx.fillText("Equity curve appears after 2+ trades.", pad, h/2);
+    ctx.fillStyle = colorVar("--muted");
+    ctx.globalAlpha = 0.9;
+    ctx.font = "700 13px ui-sans-serif, system-ui";
+    ctx.fillText("Equity curve will appear after 2+ trades.", pad, h/2);
     ctx.restore();
     return;
   }
@@ -2081,8 +2546,8 @@ function drawEquityCanvas(){
   });
 
   ctx.save();
-  ctx.strokeStyle = cssVar("--stroke2");
-  ctx.lineWidth = 1;
+  ctx.strokeStyle = colorVar("--stroke2");
+  ctx.globalAlpha = 0.8;
   ctx.beginPath();
   ctx.moveTo(pad, pad + innerH);
   ctx.lineTo(pad + innerW, pad + innerH);
@@ -2090,14 +2555,48 @@ function drawEquityCanvas(){
   ctx.restore();
 
   ctx.save();
-  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  ctx.moveTo(pts[0].x, pts[0].y);
+  for (let i=1;i<pts.length;i++) ctx.lineTo(pts[i].x, pts[i].y);
+  ctx.lineTo(pts[pts.length-1].x, pad + innerH);
+  ctx.lineTo(pts[0].x, pad + innerH);
+  ctx.closePath();
+
+  const fillGrad = ctx.createLinearGradient(0,pad,0,pad+innerH);
+  fillGrad.addColorStop(0, colorMix(colorVar("--accent2"), "transparent", 0.72));
+  fillGrad.addColorStop(1, "transparent");
+  ctx.fillStyle = fillGrad;
+  ctx.globalAlpha = 0.50;
+  ctx.fill();
+  ctx.restore();
+
+  ctx.save();
+  ctx.lineWidth = 3;
   ctx.lineJoin = "round";
   ctx.lineCap = "round";
-  ctx.strokeStyle = cssVar("--accent");
+  const lineGrad = ctx.createLinearGradient(pad,0,pad+innerW,0);
+  lineGrad.addColorStop(0, colorVar("--accent"));
+  lineGrad.addColorStop(1, colorVar("--accent2"));
+  ctx.strokeStyle = lineGrad;
+  ctx.globalAlpha = 0.92;
+
   ctx.beginPath();
   ctx.moveTo(pts[0].x, pts[0].y);
   for (let i=1;i<pts.length;i++) ctx.lineTo(pts[i].x, pts[i].y);
   ctx.stroke();
+
+  ctx.shadowColor = colorVar("--accent");
+  ctx.shadowBlur = 16;
+  ctx.stroke();
+  ctx.restore();
+
+  const last = pts[pts.length-1];
+  ctx.save();
+  ctx.fillStyle = colorVar("--accent2");
+  ctx.globalAlpha = 0.95;
+  ctx.beginPath();
+  ctx.arc(last.x, last.y, 4.5, 0, Math.PI*2);
+  ctx.fill();
   ctx.restore();
 }
 
@@ -2107,20 +2606,22 @@ function drawDonutCanvas(winCount, lossCount, beCount){
   const {ctx,w,h} = pack;
 
   ctx.clearRect(0,0,w,h);
+  drawGlassGrid(ctx,w,h);
 
   const total = Math.max(1, winCount + lossCount + beCount);
   const cx = w/2, cy = h/2;
-  const r = Math.min(w,h)*0.28;
-  const thick = Math.max(10, r*0.30);
+  const r = Math.min(w,h)*0.30;
+  const thick = Math.max(10, r*0.28);
 
   const arcs = [
-    {val: winCount, color: cssVar("--accent2")},
-    {val: lossCount, color: cssVar("--danger")},
-    {val: beCount, color: cssVar("--accent")}
+    {val: winCount, color: colorVar("--accent2")},
+    {val: lossCount, color: colorVar("--danger")},
+    {val: beCount, color: colorVar("--accent")}
   ];
 
   ctx.save();
-  ctx.strokeStyle = cssVar("--stroke2");
+  ctx.strokeStyle = colorVar("--stroke2");
+  ctx.globalAlpha = 0.85;
   ctx.lineWidth = thick;
   ctx.beginPath();
   ctx.arc(cx, cy, r, 0, Math.PI*2);
@@ -2136,22 +2637,27 @@ function drawDonutCanvas(winCount, lossCount, beCount){
     ctx.lineWidth = thick;
     ctx.lineCap = "round";
     ctx.strokeStyle = seg.color;
+    ctx.globalAlpha = 0.90;
     ctx.beginPath();
     ctx.arc(cx, cy, r, start, start + ang);
     ctx.stroke();
-    ctx.restore();
 
+    ctx.shadowColor = seg.color;
+    ctx.shadowBlur = 14;
+    ctx.stroke();
+    ctx.restore();
     start += ang;
   });
 
   ctx.save();
-  ctx.fillStyle = cssVar("--text");
+  ctx.fillStyle = colorVar("--text");
+  ctx.globalAlpha = 0.92;
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.font = "980 20px ui-sans-serif, system-ui";
-  ctx.fillText(`${winCount}/${total}`, cx, cy - 6);
-  ctx.fillStyle = cssVar("--muted");
-  ctx.font = "850 12px ui-sans-serif, system-ui";
+  ctx.font = "980 22px ui-sans-serif, system-ui";
+  ctx.fillText(`${winCount}/${total}`, cx, cy - 8);
+  ctx.fillStyle = colorVar("--muted");
+  ctx.font = "800 12px ui-sans-serif, system-ui";
   ctx.fillText("Wins / Trades", cx, cy + 14);
   ctx.restore();
 }
@@ -2162,6 +2668,7 @@ function drawCalendarCanvas(){
   const {ctx,w,h} = pack;
 
   ctx.clearRect(0,0,w,h);
+  drawGlassGrid(ctx,w,h);
 
   const map = new Map();
   trades.forEach(t=>{
@@ -2176,12 +2683,13 @@ function drawCalendarCanvas(){
   const first = new Date(year, month, 1);
   const last = new Date(year, month+1, 0);
 
-  const pad = 14;
+  const pad = 16;
   const cols = 7;
   const rows = 6;
-  const gap = 8;
-  const cellW = (w - pad*2 - gap*(cols-1)) / cols;
-  const cellH = (h - pad*2 - gap*(rows-1)) / rows;
+
+  const cellGap = 8;
+  const cellW = (w - pad*2 - cellGap*(cols-1)) / cols;
+  const cellH = (h - pad*2 - cellGap*(rows-1)) / rows;
 
   let maxAbs = 1;
   for (let d=1; d<=last.getDate(); d++){
@@ -2194,19 +2702,26 @@ function drawCalendarCanvas(){
   const offset = first.getDay(); // Sun=0
 
   for (let i=0;i<rows*cols;i++){
-    const rr = Math.floor(i/cols);
-    const cc = i%cols;
-    const x = pad + cc*(cellW+gap);
-    const y = pad + rr*(cellH+gap);
+    const r = Math.floor(i/cols);
+    const c = i%cols;
+    const x = pad + c*(cellW+cellGap);
+    const y = pad + r*(cellH+cellGap);
 
     const dayNum = i - offset + 1;
     const inMonth = dayNum >= 1 && dayNum <= last.getDate();
 
-    roundRect(ctx, x, y, cellW, cellH, 10);
-    ctx.fillStyle = cssVar("--stroke");
-    ctx.globalAlpha = 0.22;
+    const base = colorMix(colorVar("--panel"), "transparent", 0.35);
+    ctx.save();
+    roundRect(ctx, x, y, cellW, cellH, 14);
+    ctx.fillStyle = base;
+    ctx.globalAlpha = 0.85;
     ctx.fill();
-    ctx.globalAlpha = 1;
+
+    ctx.globalAlpha = 0.85;
+    ctx.strokeStyle = colorVar("--stroke");
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    ctx.restore();
 
     if (!inMonth) continue;
 
@@ -2216,19 +2731,31 @@ function drawCalendarCanvas(){
 
     const strength = Math.min(1, Math.abs(val)/maxAbs);
     if (strength > 0){
-      const col = val >= 0 ? cssVar("--accent2") : cssVar("--danger");
-      roundRect(ctx, x, y, cellW, cellH, 10);
-      ctx.fillStyle = col;
-      ctx.globalAlpha = 0.18 + strength*0.18;
+      const col = val >= 0 ? colorVar("--accent2") : colorVar("--danger");
+      ctx.save();
+      roundRect(ctx, x, y, cellW, cellH, 14);
+      ctx.fillStyle = colorMix(col, "transparent", 0.65);
+      ctx.globalAlpha = 0.55 + strength*0.22;
       ctx.fill();
-      ctx.globalAlpha = 1;
+      ctx.restore();
     }
 
-    ctx.fillStyle = cssVar("--text");
-    ctx.globalAlpha = 0.9;
-    ctx.font = "900 11px ui-sans-serif, system-ui";
-    ctx.fillText(String(dayNum), x + 8, y + 16);
-    ctx.globalAlpha = 1;
+    ctx.save();
+    ctx.fillStyle = colorVar("--text");
+    ctx.globalAlpha = 0.90;
+    ctx.font = "900 12px ui-sans-serif, system-ui";
+    ctx.fillText(String(dayNum), x + 10, y + 18);
+    ctx.restore();
+
+    if (val !== 0){
+      ctx.save();
+      ctx.fillStyle = colorVar("--text");
+      ctx.globalAlpha = 0.88;
+      ctx.font = "900 12px ui-sans-serif, system-ui";
+      const txt = (val > 0 ? "+" : "") + formatNumber(val);
+      ctx.fillText(txt, x + 10, y + cellH - 12);
+      ctx.restore();
+    }
   }
 }
 
@@ -2254,8 +2781,11 @@ async function saveTrade(){
     const notes = document.getElementById("t_notes").value.trim();
 
     if (!trade_date){ modalMsg.textContent = "Please choose a date."; return; }
+
     const chosen = new Date(trade_date).getTime();
-    if (chosen > Date.now()){ modalMsg.textContent = "You can’t log a trade in the future."; return; }
+    const now = Date.now();
+    if (chosen > now){ modalMsg.textContent = "You can’t log a trade in the future."; return; }
+
     if (!symbol){ modalMsg.textContent = "Please enter a symbol."; return; }
 
     const rr = rrRaw === "" ? null : Number(rrRaw);
@@ -2264,6 +2794,7 @@ async function saveTrade(){
     let r_multiple = (rRaw === "" ? null : Number(rRaw));
     if (r_multiple !== null && !Number.isFinite(r_multiple)){ modalMsg.textContent = "R multiple must be a number."; return; }
 
+    // user enters absolute, result sets sign
     if (r_multiple !== null && Number.isFinite(r_multiple)){
       const absR = Math.abs(r_multiple);
       if (result === "win") r_multiple = absR;
@@ -2271,7 +2802,9 @@ async function saveTrade(){
       if (result === "be") r_multiple = 0;
     }
 
-    const mistakes = mistakesRaw ? mistakesRaw.split(",").map(s=>s.trim()).filter(Boolean) : [];
+    const mistakes = mistakesRaw
+      ? mistakesRaw.split(",").map(s=>s.trim()).filter(Boolean)
+      : [];
 
     const payload = {
       user_id: user.id,
@@ -2293,19 +2826,21 @@ async function saveTrade(){
     }
 
     closeTradeModal();
+
     await loadTrades();
+    renderAnalytics();
+    renderCalendar();
+    renderGoals();
+
   } finally {
     btn.disabled = false;
-    btn.textContent = "Save trade";
+    btn.textContent = "Save Trade";
   }
 }
 
 // === UI WIRING ===
 function wireUI(){
-  // add trade buttons
   document.getElementById("addTradeBtn").addEventListener("click", openTradeModal);
-  document.getElementById("addTradeBtnSide").addEventListener("click", openTradeModal);
-
   document.getElementById("closeModalBtn").addEventListener("click", closeTradeModal);
   document.getElementById("modalBackdrop").addEventListener("click", (e)=>{
     if (e.target === modalBackdrop) closeTradeModal();
@@ -2324,10 +2859,12 @@ function wireUI(){
     document.getElementById("t_notes").value = "";
   });
 
-  document.getElementById("refreshBtn").addEventListener("click", async ()=>{ await loadTrades(); });
+  document.getElementById("refreshBtn").addEventListener("click", async ()=>{
+    await loadTrades();
+  });
 
   document.getElementById("toggleThemeBtn").addEventListener("click", ()=>{
-    const cur = document.documentElement.getAttribute("data-theme") || "light";
+    const cur = document.documentElement.getAttribute("data-theme") || "dark";
     applyTheme(cur === "dark" ? "light" : "dark");
     renderAnalytics();
     renderCalendar();
@@ -2365,26 +2902,8 @@ function wireUI(){
   });
 
   // insight refresh
-  document.getElementById("insightRefreshBtn").addEventListener("click", ()=> renderFocus());
-
-  // top range pills (visual only for now)
-  document.querySelectorAll("#rangePills .pillChip").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      document.querySelectorAll("#rangePills .pillChip").forEach(b=>b.classList.remove("active"));
-      btn.classList.add("active");
-      const v = btn.getAttribute("data-range");
-      rangeDays = v === "custom" ? 30 : Number(v);
-      // later: filter trades by date range before rendering
-      renderFocus();
-      renderAnalytics();
-      renderTradesTable();
-      renderCalendar();
-    });
-  });
-
-  // edit layout button (placeholder)
-  document.getElementById("editLayoutBtn").addEventListener("click", ()=>{
-    alert("Edit layout is a placeholder for now.");
+  document.getElementById("insightRefreshBtn").addEventListener("click", ()=>{
+    renderFocus();
   });
 
   window.addEventListener("resize", ()=>{
@@ -2420,10 +2939,12 @@ function escapeHtml(s){
     .replaceAll('"',"&quot;")
     .replaceAll("'","&#039;");
 }
+
 function monthName(m){
   const names = ["January","February","March","April","May","June","July","August","September","October","November","December"];
   return names[m] || "—";
 }
+
 function roundRect(ctx, x, y, w, h, r){
   const rr = Math.min(r, w/2, h/2);
   ctx.beginPath();
@@ -2434,18 +2955,83 @@ function roundRect(ctx, x, y, w, h, r){
   ctx.arcTo(x, y, x+w, y, rr);
   ctx.closePath();
 }
+
+function colorMix(c1, c2, t){
+  const a = parseColor(c1);
+  const b = parseColor(c2);
+  if (!a || !b) return c1;
+  const r = Math.round(a.r + (b.r - a.r) * t);
+  const g = Math.round(a.g + (b.g - a.g) * t);
+  const b2 = Math.round(a.b + (b.b - a.b) * t);
+  const aa = (a.a + (b.a - a.a) * t);
+  return `rgba(${r},${g},${b2},${aa})`;
+}
+
+function parseColor(c){
+  c = String(c).trim();
+  if (!c) return null;
+
+  if (c[0] === "#"){
+    const hex = c.slice(1);
+    if (hex.length === 3){
+      const r = parseInt(hex[0]+hex[0],16);
+      const g = parseInt(hex[1]+hex[1],16);
+      const b = parseInt(hex[2]+hex[2],16);
+      return {r,g,b,a:1};
+    }
+    if (hex.length === 6){
+      const r = parseInt(hex.slice(0,2),16);
+      const g = parseInt(hex.slice(2,4),16);
+      const b = parseInt(hex.slice(4,6),16);
+      return {r,g,b,a:1};
+    }
+  }
+
+  const m = c.match(/rgba?\(([^)]+)\)/i);
+  if (m){
+    const parts = m[1].split(",").map(x=>x.trim());
+    const r = Number(parts[0]);
+    const g = Number(parts[1]);
+    const b = Number(parts[2]);
+    const a = parts[3] !== undefined ? Number(parts[3]) : 1;
+    if ([r,g,b,a].some(x=>Number.isNaN(x))) return null;
+    return {r,g,b,a};
+  }
+
+  try{
+    const tmp = document.createElement("canvas").getContext("2d");
+    tmp.fillStyle = c;
+    const v = tmp.fillStyle;
+    const mm = v.match(/rgba?\(([^)]+)\)/i);
+    if (mm){
+      const parts = mm[1].split(",").map(x=>x.trim());
+      const r = Number(parts[0]);
+      const g = Number(parts[1]);
+      const b = Number(parts[2]);
+      const a = parts[3] !== undefined ? Number(parts[3]) : 1;
+      if ([r,g,b,a].some(x=>Number.isNaN(x))) return null;
+      return {r,g,b,a};
+    }
+  } catch(e){}
+
+  return null;
+}
+
 function cap(s){
   s = String(s || "");
   if (!s) return "";
   return s[0].toUpperCase() + s.slice(1);
 }
-function clamp(v, a, b){ return Math.min(b, Math.max(a, v)); }
+function clamp(v, a, b){
+  return Math.min(b, Math.max(a, v));
+}
 
 // === INIT ===
 (async function init(){
   initTheme();
   initRouting();
   wireUI();
+  wireCoachUI();
 
   const ok = await requireAuth();
   if (!ok) return;
@@ -2460,4 +3046,3 @@ function clamp(v, a, b){ return Math.min(b, Math.max(a, v)); }
 </script>
 </body>
 </html>
-```
