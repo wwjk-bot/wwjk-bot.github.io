@@ -82,7 +82,7 @@ grid-template-columns: 280px 1fr;
 .sidebar{position:sticky; top:0; z-index:50}
 }
 
-/* sidebar */
+/* Sidebar */
 .sidebar{
 padding:22px 18px;
 border-right:1px solid var(--stroke);
@@ -161,9 +161,9 @@ line-height:1.35;
 opacity:.9;
 }
 
-/* main */
+/* Main */
 .main{ padding:28px 26px 44px 26px; }
-.wrap{ max-width: 1140px; margin:0 auto; }
+.wrap{ max-width: 1180px; margin:0 auto; }
 
 .panel{
 border:1px solid var(--stroke);
@@ -182,14 +182,14 @@ radial-gradient(700px 320px at 84% 6%, color-mix(in srgb, var(--accent2) 12%, tr
 opacity:.65;
 pointer-events:none;
 }
-
 .panelInner{position:relative; padding:22px;}
+
 .panelHeader{
 display:flex;
 align-items:flex-start;
 justify-content:space-between;
 gap:14px;
-margin-bottom:14px;
+margin-bottom:12px;
 }
 .title{
 font-size:34px;
@@ -223,32 +223,56 @@ background: var(--accent2);
 box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent2) 16%, transparent);
 }
 
-.snapshotRow{
-margin:10px 0 6px 0;
+.topRow{
 display:flex;
+align-items:flex-start;
+justify-content:space-between;
+gap:14px;
 flex-wrap:wrap;
-gap:10px;
-align-items:center;
+margin-bottom:10px;
 }
-.snapshotPill{
+.greetingWrap{min-width: 280px;}
+.greeting{
+font-size:20px;
+font-weight:950;
+letter-spacing:-.2px;
+margin:0;
+}
+.greetingSub{
+margin-top:6px;
+color:var(--muted);
+font-weight:700;
+font-size:13px;
+}
+
+.snapshotPills{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+align-items:center;
+justify-content:flex-end;
+}
+.snapPill{
 display:inline-flex;
 align-items:center;
-gap:8px;
+gap:10px;
 padding:8px 12px;
 border-radius:999px;
 border:1px solid var(--stroke);
 background: color-mix(in srgb, var(--panel) 30%, transparent);
-font-weight:900;
+font-weight:950;
+font-size:13px;
 }
-.snapshotPill.good{ border-color: color-mix(in srgb, var(--accent2) 36%, var(--stroke) 64%); }
-.snapshotPill.neutral{ border-color: color-mix(in srgb, var(--accent) 36%, var(--stroke) 64%); }
-.snapshotPill.warn{ border-color: color-mix(in srgb, var(--warn) 44%, var(--stroke) 56%); }
-.snapshotPill .small{
-font-weight:800;
-color:var(--muted);
+.snapPill strong{font-weight:980;}
+.snapDot{
+width:10px;height:10px;border-radius:999px;
+background: var(--accent2);
+box-shadow: 0 0 0 7px color-mix(in srgb, var(--accent2) 14%, transparent);
 }
+.snapDot.warn{ background: var(--warn); box-shadow: 0 0 0 7px color-mix(in srgb, var(--warn) 14%, transparent); }
+.snapDot.bad{ background: var(--danger); box-shadow: 0 0 0 7px color-mix(in srgb, var(--danger) 14%, transparent); }
 
-.ctaRow{ margin-top:12px; display:flex; gap:12px; align-items:center; }
+.ctaRow{ margin-top:10px; display:flex; gap:12px; align-items:center; }
 .cta{
 width:100%;
 display:flex;
@@ -273,9 +297,8 @@ display:grid;
 grid-template-columns: repeat(6, 1fr);
 gap:12px;
 }
-@media (max-width: 1100px){ .gridStats{grid-template-columns: repeat(3, 1fr);} }
-@media (max-width: 680px){ .gridStats{grid-template-columns: repeat(2, 1fr);} }
-@media (max-width: 420px){ .gridStats{grid-template-columns: 1fr;} }
+@media (max-width: 1120px){ .gridStats{grid-template-columns: repeat(3, 1fr);} }
+@media (max-width: 620px){ .gridStats{grid-template-columns: 1fr;} }
 
 .statCard{
 border:1px solid var(--stroke);
@@ -285,6 +308,7 @@ padding:14px 14px;
 box-shadow: var(--shadow2);
 position:relative;
 overflow:hidden;
+min-height: 96px;
 }
 .statCard::after{
 content:"";
@@ -294,17 +318,17 @@ opacity:.65;
 pointer-events:none;
 }
 .statLabel{position:relative; font-size:12px; font-weight:950; letter-spacing:.4px; opacity:.85; text-transform:uppercase;}
-.statValue{position:relative; margin-top:8px; font-size:28px; font-weight:980; letter-spacing:-.6px;}
+.statValue{position:relative; margin-top:8px; font-size:26px; font-weight:980; letter-spacing:-.6px;}
 .statHint{position:relative; margin-top:4px; font-size:12px; color:var(--muted); font-weight:650;}
 
-.gridMain{
+.gridDash{
 margin-top:12px;
 display:grid;
-grid-template-columns: 1.25fr .75fr;
+grid-template-columns: 1.55fr .75fr;
 gap:12px;
 align-items:start;
 }
-@media (max-width: 980px){ .gridMain{grid-template-columns: 1fr;} }
+@media (max-width: 980px){ .gridDash{grid-template-columns: 1fr;} }
 
 .card{
 border:1px solid var(--stroke);
@@ -340,13 +364,20 @@ white-space:nowrap;
 .pill.warn{border-color: color-mix(in srgb, var(--warn) 42%, var(--stroke) 58%); }
 .pill.live{border-color: color-mix(in srgb, var(--accent) 42%, var(--stroke) 58%); }
 
-/* table */
+.cardGrid2{
+display:grid;
+grid-template-columns: 1fr 1fr;
+gap:12px;
+}
+@media (max-width: 980px){ .cardGrid2{grid-template-columns: 1fr;} }
+
+/* Table */
 table{width:100%; border-collapse:collapse;}
 th,td{padding:10px 10px; border-bottom:1px solid var(--stroke); text-align:left; font-size:14px;}
 th{font-size:12px; text-transform:uppercase; letter-spacing:.4px; opacity:.75;}
 .emptyRow{ color:var(--muted); font-weight:650; padding:14px 10px; }
 
-/* delete icon button */
+/* Delete icon button */
 .iconBtn{
 border:1px solid color-mix(in srgb, var(--danger) 40%, var(--stroke) 60%);
 background: color-mix(in srgb, var(--panel) 28%, transparent);
@@ -358,6 +389,7 @@ align-items:center;
 justify-content:center;
 gap:8px;
 transition: transform .08s ease, background .18s ease, border-color .18s ease, filter .18s ease;
+position:relative;
 }
 .iconBtn:hover{
 transform: translateY(-1px);
@@ -375,53 +407,8 @@ clip:rect(0,0,0,0);
 white-space:nowrap;border:0;
 }
 
-/* coach card */
-.coachText{ color:var(--text); font-weight:800; line-height:1.45; margin:6px 0 12px 0; }
-.chips{display:flex; flex-wrap:wrap; gap:10px; margin:10px 0 12px 0;}
-.chip{
-font-size:13px;
-font-weight:900;
-border:1px solid var(--stroke);
-background: color-mix(in srgb, var(--panel) 32%, transparent);
-padding:8px 12px;
-border-radius:999px;
-opacity:.98;
-cursor:default;
-transition: transform .08s ease, background .18s ease, border-color .18s ease;
-}
-.chip:hover{
-transform: translateY(-1px);
-background: color-mix(in srgb, var(--accent) 10%, transparent);
-border-color: color-mix(in srgb, var(--accent) 30%, var(--stroke) 70%);
-}
-.mutedLine{color:var(--muted); font-weight:650; font-size:13px; line-height:1.35;}
-.miniBtn{
-width:100%;
-margin-top:12px;
-padding:12px 12px;
-border-radius:16px;
-border:1px solid var(--stroke);
-background: color-mix(in srgb, var(--panel) 34%, transparent);
-font-weight:950;
-cursor:pointer;
-transition: transform .08s ease, background .18s ease, border-color .18s ease;
-}
-.miniBtn:hover{
-transform: translateY(-1px);
-background: color-mix(in srgb, var(--accent2) 10%, transparent);
-border-color: color-mix(in srgb, var(--accent2) 24%, var(--stroke) 76%);
-}
-
-/* Momentum / Goals */
-.momentumGrid{
-display:grid;
-grid-template-columns: 1.15fr .85fr;
-gap:12px;
-margin-top:12px;
-}
-@media (max-width: 980px){ .momentumGrid{grid-template-columns: 1fr;} }
-
-.goalHeader{
+/* Goals */
+.goalsTop{
 display:flex;
 align-items:center;
 justify-content:space-between;
@@ -429,133 +416,120 @@ gap:10px;
 flex-wrap:wrap;
 margin-bottom:10px;
 }
-.goalHeaderLeft{
-display:flex;
-flex-direction:column;
-gap:4px;
-}
-.goalHeadline{
-font-size:16px;
-font-weight:950;
-letter-spacing:-.2px;
-}
-.goalSub{
-font-size:13px;
+.smallHint{
 color:var(--muted);
 font-weight:700;
+font-size:12px;
+line-height:1.35;
 }
-.goalSettings{
+.formRow{
 display:flex;
-align-items:center;
 gap:10px;
 flex-wrap:wrap;
+align-items:center;
 }
-
-.selectLike{
-border:1px solid var(--stroke);
-background: color-mix(in srgb, var(--panel) 34%, transparent);
-border-radius: 14px;
-padding:10px 12px;
-color:var(--text);
-font-weight:900;
-outline:none;
-cursor:pointer;
-}
-
-.inputLike{
-border:1px solid var(--stroke);
-background: color-mix(in srgb, var(--panel) 34%, transparent);
-border-radius: 14px;
-padding:10px 12px;
-color:var(--text);
-font-weight:900;
-outline:none;
-width: 130px;
-}
-
-.goalsGrid{
-display:grid;
-grid-template-columns: 1fr 1fr 1fr;
-gap:12px;
-margin-top:12px;
-}
-@media (max-width: 980px){ .goalsGrid{grid-template-columns: 1fr;} }
-
-.goalBox{
-border:1px solid var(--stroke);
-background: color-mix(in srgb, var(--panel) 30%, transparent);
-border-radius: 18px;
-padding:14px;
-box-shadow: var(--shadow2);
-position:relative;
-overflow:hidden;
-}
-.goalBox::before{
-content:"";
-position:absolute; inset:-2px;
-background: radial-gradient(260px 120px at 10% 0%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 70%);
-opacity:.55;
-pointer-events:none;
-}
-.goalRowTop{
-position:relative;
+.field{
 display:flex;
-align-items:flex-start;
-justify-content:space-between;
+flex-direction:column;
+gap:6px;
+min-width: 160px;
+}
+.field label{
+margin:0;
+font-size:11px;
+font-weight:950;
+text-transform:uppercase;
+letter-spacing:.35px;
+opacity:.85;
+}
+.select,input[type="number"]{
+width:100%;
+padding:12px 12px;
+border-radius:14px;
+border:1px solid var(--stroke);
+background: color-mix(in srgb, var(--panel) 34%, transparent);
+color:var(--text);
+font-weight:850;
+outline:none;
+}
+.kpi{
+margin-top:10px;
+display:grid;
+grid-template-columns: 1fr;
 gap:10px;
 }
-.goalName{
-font-weight:980;
-font-size:15px;
-letter-spacing:-.1px;
+.goalBox{
+border:1px solid var(--stroke);
+border-radius:18px;
+padding:12px;
+background: color-mix(in srgb, var(--panel) 30%, transparent);
 }
-.goalSmall{
-margin-top:3px;
+.goalBoxTitle{
+font-weight:950;
+letter-spacing:-.2px;
+margin:0;
+font-size:14px;
+}
+.goalBoxSub{
+margin-top:4px;
 color:var(--muted);
 font-weight:750;
 font-size:12px;
 }
-.goalEditRow{
-display:flex;
-align-items:center;
-gap:10px;
-flex-wrap:wrap;
-justify-content:flex-end;
-}
-.goalEditRow .selectLike{ min-width: 150px; }
-.goalCustomInput{
-display:none;
-width: 150px;
-}
-.goalCustomInput.show{ display:block; }
-
-.bar{
-margin-top:12px;
-height:12px;
-border-radius:999px;
-border:1px solid var(--stroke);
-background: color-mix(in srgb, var(--panel) 28%, transparent);
-overflow:hidden;
-position:relative;
-}
-.barFill{
-height:100%;
-width:0%;
-background: linear-gradient(90deg, color-mix(in srgb, var(--accent2) 80%, #000 20%), color-mix(in srgb, var(--accent) 65%, #000 35%));
-box-shadow: 0 10px 26px color-mix(in srgb, var(--accent2) 14%, transparent);
-}
-.progressMeta{
+.progressRow{
 margin-top:10px;
 display:flex;
 align-items:center;
 justify-content:space-between;
 gap:10px;
+font-weight:900;
+}
+.progressBar{
+margin-top:8px;
+height:10px;
+border-radius:999px;
+border:1px solid var(--stroke);
+background: color-mix(in srgb, var(--panel) 22%, transparent);
+overflow:hidden;
+}
+.progressFill{
+height:100%;
+width:0%;
+border-radius:999px;
+background: linear-gradient(90deg, color-mix(in srgb, var(--accent2) 80%, #000 20%), color-mix(in srgb, var(--accent) 65%, #000 35%));
+box-shadow: 0 10px 28px color-mix(in srgb, var(--accent2) 16%, transparent);
+}
+.goalFoot{
+margin-top:10px;
 color:var(--muted);
-font-weight:800;
-font-size:13px;
+font-weight:750;
+font-size:12px;
+line-height:1.35;
 }
 
-/* analytics layout */
+/* Charts */
+.chartWrap{
+border:1px solid var(--stroke);
+background: color-mix(in srgb, var(--panel) 34%, transparent);
+border-radius:18px;
+padding:12px;
+box-shadow: var(--shadow2);
+}
+.chartCanvasBox{
+border:1px dashed color-mix(in srgb, var(--stroke2) 100%, transparent);
+border-radius:18px;
+height:230px;
+overflow:hidden;
+}
+canvas{display:block; width:100%; height:100%;}
+.chartCaption{
+margin-top:10px;
+font-size:12px;
+color:var(--muted);
+font-weight:750;
+}
+
+/* Analytics layout */
 .gridAnalyticsTop{
 margin-top:12px;
 display:grid;
@@ -572,31 +546,7 @@ gap:12px;
 }
 @media (max-width: 980px){ .gridCharts{grid-template-columns: 1fr;} }
 
-/* chart box: reserve a footer area so hint never overlaps chart */
-.chartBox{
-border:1px dashed color-mix(in srgb, var(--stroke2) 100%, transparent);
-border-radius:18px;
-height:240px;
-position:relative;
-overflow:hidden;
-background: color-mix(in srgb, var(--panel) 12%, transparent);
-}
-.chartCanvas{
-position:absolute;
-inset:12px 12px 44px 12px; /* bottom space reserved */
-}
-.chartCanvas canvas{ width:100%; height:100%; display:block; }
-.chartHint{
-position:absolute;
-left:12px; right:12px; bottom:10px;
-font-size:12px;
-color:var(--muted);
-font-weight:750;
-opacity:.95;
-pointer-events:none;
-}
-
-/* calendar page */
+/* Calendar page (unchanged) */
 .calTop{
 display:flex;
 align-items:center;
@@ -724,7 +674,7 @@ outline:2px solid color-mix(in srgb, var(--accent) 55%, transparent);
 box-shadow: 0 22px 70px color-mix(in srgb, var(--accent) 16%, transparent);
 }
 
-/* modal */
+/* Modal */
 .modalBackdrop{
 position:fixed; inset:0;
 background: rgba(0,0,0,.55);
@@ -761,7 +711,7 @@ justify-content:space-between;
 gap:12px;
 margin-bottom:10px;
 }
-.modalTitle{margin:0; font-size:20px; font-weight:980; letter-spacing:-.2px;}
+.modalTitle{margin:0; font-size:20px; font-weight:980; letter-spacing:-.2px; text-transform:none;}
 .closeBtn{
 border:1px solid var(--stroke);
 background: color-mix(in srgb, var(--panel) 34%, transparent);
@@ -842,7 +792,7 @@ color:var(--muted);
 font-weight:750;
 }
 
-/* pages */
+/* Pages */
 .page{display:none;}
 .page.active{display:block;}
 </style>
@@ -855,7 +805,7 @@ font-weight:750;
   <div class="signed">Signed in as <span id="userEmail">...</span></div>
 
   <div class="navGroup">
-    <button class="navBtn" data-route="focus"><span>Focus</span><span class="tag">Daily</span></button>
+    <button class="navBtn" data-route="focus"><span>Dashboard</span><span class="tag">Daily</span></button>
     <button class="navBtn" data-route="analytics"><span>Analytics</span><span class="tag">Charts</span></button>
     <button class="navBtn" data-route="calendar"><span>Calendar</span><span class="tag">Month</span></button>
     <button class="navBtn" data-route="trades"><span>Trades</span><span class="tag">Table</span></button>
@@ -873,30 +823,29 @@ font-weight:750;
 <main class="main">
 <div class="wrap">
 
-<!-- focus page -->
+<!-- Dashboard page -->
 <section class="page" id="page-focus">
   <div class="panel">
     <div class="panelInner">
       <div class="panelHeader">
         <div>
-          <h1 class="title" id="focusGreeting">Good day</h1>
-          <div class="subtitle" id="focusSubtitle">Your performance snapshot, clean and motivating.</div>
-
-          <div class="snapshotRow">
-            <div class="snapshotPill neutral" id="tierPill">
-              <span id="tierText">Tier: —</span>
-            </div>
-            <div class="snapshotPill neutral">
-              <span>Streak</span>
-              <span class="small" id="streakText">—</span>
-            </div>
-            <div class="snapshotPill neutral">
-              <span>This Month</span>
-              <span class="small" id="monthRChip">—</span>
-            </div>
-          </div>
+          <h1 class="title">Dashboard</h1>
+          <div class="subtitle">A clean snapshot of performance and momentum.</div>
         </div>
         <div class="badge"><span class="badgeDot"></span><span id="focusStatus">Ready</span></div>
+      </div>
+
+      <div class="topRow">
+        <div class="greetingWrap">
+          <p class="greeting" id="greetingText">Good day</p>
+          <div class="greetingSub" id="greetingSub">Here’s your performance snapshot.</div>
+        </div>
+
+        <div class="snapshotPills">
+          <div class="snapPill"><span class="snapDot" id="tierDot"></span><span id="tierText">Tier: —</span></div>
+          <div class="snapPill"><strong id="streakText">Streak: —</strong></div>
+          <div class="snapPill"><strong id="monthText">This Month: —</strong></div>
+        </div>
       </div>
 
       <div class="ctaRow">
@@ -906,34 +855,29 @@ font-weight:750;
       <div class="gridStats">
         <div class="statCard">
           <div class="statLabel">Total PnL</div>
-          <div class="statValue" id="s_total_pnl">—</div>
-          <div class="statHint" id="s_total_pnl_hint">All time</div>
+          <div class="statValue" id="s_totalPnl">—</div>
+          <div class="statHint" id="s_totalPnl_hint">All-time (Estimate)</div>
         </div>
-
         <div class="statCard">
           <div class="statLabel">Month PnL</div>
-          <div class="statValue" id="s_month_pnl">—</div>
-          <div class="statHint" id="s_month_pnl_hint">This month</div>
+          <div class="statValue" id="s_monthPnl">—</div>
+          <div class="statHint" id="s_monthPnl_hint">This month (Estimate)</div>
         </div>
-
         <div class="statCard">
           <div class="statLabel">Profit Factor</div>
           <div class="statValue" id="s_pf">—</div>
-          <div class="statHint" id="s_pf_hint">From R multiples</div>
+          <div class="statHint" id="s_pf_hint">From decided trades</div>
         </div>
-
         <div class="statCard">
           <div class="statLabel">Win Rate</div>
           <div class="statValue" id="s_winrate">—</div>
-          <div class="statHint" id="s_winrate_hint">Decided trades</div>
+          <div class="statHint" id="s_winrate_hint">Decided only</div>
         </div>
-
         <div class="statCard">
           <div class="statLabel">Total Trades</div>
-          <div class="statValue" id="s_total_trades">—</div>
+          <div class="statValue" id="s_totalTrades">—</div>
           <div class="statHint">Logged</div>
         </div>
-
         <div class="statCard">
           <div class="statLabel">Avg R</div>
           <div class="statValue" id="s_avgr">—</div>
@@ -941,139 +885,35 @@ font-weight:750;
         </div>
       </div>
 
-      <div class="momentumGrid">
+      <div class="gridDash">
+        <!-- Left: Recent trades + mini charts -->
         <div class="card">
           <div class="cardHead">
             <h3 class="cardTitle">Momentum</h3>
-            <span class="pill ok" id="momentumPill">Ready</span>
-          </div>
-
-          <div class="goalHeader">
-            <div class="goalHeaderLeft">
-              <div class="goalHeadline">Goals</div>
-              <div class="goalSub">Set targets in money. Progress uses your R × risk-per-R.</div>
-            </div>
-
-            <div class="goalSettings">
-              <select class="selectLike" id="currencySelect" title="Currency">
-                <option value="USD">USD</option>
-                <option value="EUR">EUR</option>
-                <option value="GBP">GBP</option>
-              </select>
-
-              <input class="inputLike" id="riskPerRInput" type="number" step="1" min="1" title="Risk per 1R" placeholder="Risk/1R" />
-            </div>
-          </div>
-
-          <div class="goalsGrid">
-            <!-- Daily -->
-            <div class="goalBox">
-              <div class="goalRowTop">
-                <div>
-                  <div class="goalName">Daily Goal</div>
-                  <div class="goalSmall">Today</div>
-                </div>
-                <div class="goalEditRow">
-                  <select class="selectLike goalSelect" id="goalDailySelect" data-period="daily">
-                    <option value="50">50</option>
-                    <option value="100">100</option>
-                    <option value="200">200</option>
-                    <option value="500">500</option>
-                    <option value="1000">1000</option>
-                    <option value="custom">Custom…</option>
-                  </select>
-                  <input id="goalDailyInput" class="inputLike goalCustomInput" type="number" step="1" placeholder="Enter amount" />
-                </div>
-              </div>
-              <div class="bar"><div class="barFill" id="goalDailyFill"></div></div>
-              <div class="progressMeta">
-                <div id="goalDailyLeft">—</div>
-                <div id="goalDailyPct">—</div>
-              </div>
-            </div>
-
-            <!-- Weekly -->
-            <div class="goalBox">
-              <div class="goalRowTop">
-                <div>
-                  <div class="goalName">Weekly Goal</div>
-                  <div class="goalSmall">This week (Mon–Sun)</div>
-                </div>
-                <div class="goalEditRow">
-                  <select class="selectLike goalSelect" id="goalWeeklySelect" data-period="weekly">
-                    <option value="200">200</option>
-                    <option value="500">500</option>
-                    <option value="1000">1000</option>
-                    <option value="2000">2000</option>
-                    <option value="5000">5000</option>
-                    <option value="custom">Custom…</option>
-                  </select>
-                  <input id="goalWeeklyInput" class="inputLike goalCustomInput" type="number" step="1" placeholder="Enter amount" />
-                </div>
-              </div>
-              <div class="bar"><div class="barFill" id="goalWeeklyFill"></div></div>
-              <div class="progressMeta">
-                <div id="goalWeeklyLeft">—</div>
-                <div id="goalWeeklyPct">—</div>
-              </div>
-            </div>
-
-            <!-- Monthly -->
-            <div class="goalBox">
-              <div class="goalRowTop">
-                <div>
-                  <div class="goalName">Monthly Goal</div>
-                  <div class="goalSmall">This month</div>
-                </div>
-                <div class="goalEditRow">
-                  <select class="selectLike goalSelect" id="goalMonthlySelect" data-period="monthly">
-                    <option value="500">500</option>
-                    <option value="1000">1000</option>
-                    <option value="2000">2000</option>
-                    <option value="5000">5000</option>
-                    <option value="10000">10000</option>
-                    <option value="custom">Custom…</option>
-                  </select>
-                  <input id="goalMonthlyInput" class="inputLike goalCustomInput" type="number" step="1" placeholder="Enter amount" />
-                </div>
-              </div>
-              <div class="bar"><div class="barFill" id="goalMonthlyFill"></div></div>
-              <div class="progressMeta">
-                <div id="goalMonthlyLeft">—</div>
-                <div id="goalMonthlyPct">—</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="mutedLine" style="margin-top:10px;">
-            Tip: Set “Risk/1R” to match your real risk size (example: 100). Your PnL and goals will feel realistic.
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="cardHead">
-            <h3 class="cardTitle">Today’s Focus</h3>
-            <span class="pill live">Coach</span>
-          </div>
-          <div class="coachText">Log the next trade immediately after closing it, and write one sentence on why you entered.</div>
-          <div class="chips">
-            <div class="chip">Session: NY</div>
-            <div class="chip">Rule: Max 3 Trades</div>
-            <div class="chip">Goal: No Revenge</div>
-          </div>
-          <div class="mutedLine">Next we’ll generate this from your real patterns. For now, it’s a placeholder.</div>
-          <button class="miniBtn" id="refreshBtn">Refresh Stats</button>
-        </div>
-      </div>
-
-      <div class="gridMain">
-        <div class="card">
-          <div class="cardHead">
-            <h3 class="cardTitle">Recent Trades</h3>
             <span class="pill ok" id="recentPill">Ready</span>
           </div>
 
-          <div style="overflow:auto;">
+          <div class="cardGrid2">
+            <div class="chartWrap">
+              <div class="cardHead" style="margin-bottom:8px;">
+                <h3 class="cardTitle" style="font-size:16px;">Equity Curve (R)</h3>
+                <span class="pill">Trend</span>
+              </div>
+              <div class="chartCanvasBox"><canvas id="dashEquityCanvas"></canvas></div>
+              <div class="chartCaption">Cumulative R over time.</div>
+            </div>
+
+            <div class="chartWrap">
+              <div class="cardHead" style="margin-bottom:8px;">
+                <h3 class="cardTitle" style="font-size:16px;">Win / Loss</h3>
+                <span class="pill">Distribution</span>
+              </div>
+              <div class="chartCanvasBox"><canvas id="dashDonutCanvas"></canvas></div>
+              <div class="chartCaption">Win vs Loss vs Breakeven.</div>
+            </div>
+          </div>
+
+          <div style="margin-top:12px; overflow:auto;">
             <table>
               <thead>
                 <tr>
@@ -1094,13 +934,144 @@ font-weight:750;
           </div>
         </div>
 
+        <!-- Right: Goals -->
         <div class="card">
           <div class="cardHead">
-            <h3 class="cardTitle">Quick Insight</h3>
-            <span class="pill" id="insightPill">Sessionly</span>
+            <h3 class="cardTitle">Goals</h3>
+            <span class="pill live">Live</span>
           </div>
-          <div class="mutedLine" id="insightText">Add trades to unlock your personalized insight.</div>
-          <button class="miniBtn" id="insightRefreshBtn" style="margin-top:12px;">Regenerate Insight</button>
+
+          <div class="goalsTop">
+            <div class="smallHint">
+              Track Daily, Weekly, and Monthly targets in money.<br/>
+              PnL is estimated from R until you add real PnL later.
+            </div>
+          </div>
+
+          <div class="formRow">
+            <div class="field" style="min-width:120px;">
+              <label>Currency</label>
+              <select class="select" id="goalCurrency">
+                <option value="USD">USD</option>
+                <option value="EUR">EUR</option>
+                <option value="GBP">GBP</option>
+                <option value="CAD">CAD</option>
+                <option value="AUD">AUD</option>
+                <option value="CHF">CHF</option>
+              </select>
+            </div>
+
+            <div class="field" style="min-width:160px;">
+              <label>Risk per 1R</label>
+              <input type="number" class="select" id="riskPerR" step="1" min="0" placeholder="100" />
+            </div>
+          </div>
+
+          <div class="kpi">
+            <div class="goalBox">
+              <div class="goalsTop" style="margin:0;">
+                <div>
+                  <p class="goalBoxTitle">Daily Goal</p>
+                  <div class="goalBoxSub">Today</div>
+                </div>
+                <div class="field" style="min-width: 160px; margin-left:auto;">
+                  <label style="opacity:.8;">Target</label>
+                  <select class="select" id="goalDaily">
+                    <option value="0">Not set</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                    <option value="200">200</option>
+                    <option value="500">500</option>
+                    <option value="1000">1000</option>
+                    <option value="2000">2000</option>
+                    <option value="5000">5000</option>
+                    <option value="custom">Custom…</option>
+                  </select>
+                </div>
+              </div>
+              <div id="dailyCustomWrap" style="display:none; margin-top:10px;">
+                <div class="field" style="min-width: 100%;">
+                  <label>Custom Daily Target</label>
+                  <input type="number" class="select" id="goalDailyCustom" step="1" min="0" placeholder="Enter amount" />
+                </div>
+              </div>
+              <div class="progressRow">
+                <div id="dailyProgressText">—</div>
+                <div id="dailyPercentText">—</div>
+              </div>
+              <div class="progressBar"><div class="progressFill" id="dailyFill"></div></div>
+            </div>
+
+            <div class="goalBox">
+              <div class="goalsTop" style="margin:0;">
+                <div>
+                  <p class="goalBoxTitle">Weekly Goal</p>
+                  <div class="goalBoxSub">Mon–Sun</div>
+                </div>
+                <div class="field" style="min-width: 160px; margin-left:auto;">
+                  <label style="opacity:.8;">Target</label>
+                  <select class="select" id="goalWeekly">
+                    <option value="0">Not set</option>
+                    <option value="200">200</option>
+                    <option value="500">500</option>
+                    <option value="1000">1000</option>
+                    <option value="2000">2000</option>
+                    <option value="5000">5000</option>
+                    <option value="10000">10000</option>
+                    <option value="custom">Custom…</option>
+                  </select>
+                </div>
+              </div>
+              <div id="weeklyCustomWrap" style="display:none; margin-top:10px;">
+                <div class="field" style="min-width: 100%;">
+                  <label>Custom Weekly Target</label>
+                  <input type="number" class="select" id="goalWeeklyCustom" step="1" min="0" placeholder="Enter amount" />
+                </div>
+              </div>
+              <div class="progressRow">
+                <div id="weeklyProgressText">—</div>
+                <div id="weeklyPercentText">—</div>
+              </div>
+              <div class="progressBar"><div class="progressFill" id="weeklyFill"></div></div>
+            </div>
+
+            <div class="goalBox">
+              <div class="goalsTop" style="margin:0;">
+                <div>
+                  <p class="goalBoxTitle">Monthly Goal</p>
+                  <div class="goalBoxSub">This month</div>
+                </div>
+                <div class="field" style="min-width: 160px; margin-left:auto;">
+                  <label style="opacity:.8;">Target</label>
+                  <select class="select" id="goalMonthly">
+                    <option value="0">Not set</option>
+                    <option value="500">500</option>
+                    <option value="1000">1000</option>
+                    <option value="2000">2000</option>
+                    <option value="5000">5000</option>
+                    <option value="10000">10000</option>
+                    <option value="20000">20000</option>
+                    <option value="custom">Custom…</option>
+                  </select>
+                </div>
+              </div>
+              <div id="monthlyCustomWrap" style="display:none; margin-top:10px;">
+                <div class="field" style="min-width: 100%;">
+                  <label>Custom Monthly Target</label>
+                  <input type="number" class="select" id="goalMonthlyCustom" step="1" min="0" placeholder="Enter amount" />
+                </div>
+              </div>
+              <div class="progressRow">
+                <div id="monthlyProgressText">—</div>
+                <div id="monthlyPercentText">—</div>
+              </div>
+              <div class="progressBar"><div class="progressFill" id="monthlyFill"></div></div>
+            </div>
+          </div>
+
+          <div class="goalFoot" id="goalFootNote">
+            Tip: Set Risk per 1R (example: 100) so goals reflect estimated money.
+          </div>
         </div>
       </div>
 
@@ -1108,14 +1079,14 @@ font-weight:750;
   </div>
 </section>
 
-<!-- analytics page -->
+<!-- Analytics page -->
 <section class="page" id="page-analytics">
   <div class="panel">
     <div class="panelInner">
       <div class="panelHeader">
         <div>
           <h1 class="title">Analytics</h1>
-          <div class="subtitle">Deep data lives here. Focus stays clean.</div>
+          <div class="subtitle">Deeper charts live here.</div>
         </div>
         <div class="badge"><span class="badgeDot"></span><span>Live</span></div>
       </div>
@@ -1139,59 +1110,51 @@ font-weight:750;
       </div>
 
       <div class="gridCharts">
-        <div class="card">
-          <div class="cardHead">
+        <div class="chartWrap">
+          <div class="cardHead" style="margin-bottom:8px;">
             <h3 class="cardTitle">Hourly Performance</h3>
-            <span class="pill">R</span>
+            <span class="pill">Sessionly</span>
           </div>
-          <div class="chartBox">
-            <div class="chartCanvas"><canvas id="hourlyCanvas"></canvas></div>
-            <div class="chartHint">Bars = Total R per hour</div>
-          </div>
+          <div class="chartCanvasBox"><canvas id="hourlyCanvas"></canvas></div>
+          <div class="chartCaption">Bars = total R per hour.</div>
         </div>
 
-        <div class="card">
-          <div class="cardHead">
+        <div class="chartWrap">
+          <div class="cardHead" style="margin-bottom:8px;">
             <h3 class="cardTitle">Equity Curve</h3>
-            <span class="pill">R</span>
+            <span class="pill">Trend</span>
           </div>
-          <div class="chartBox">
-            <div class="chartCanvas"><canvas id="equityCanvas"></canvas></div>
-            <div class="chartHint">Line = Cumulative R over time</div>
-          </div>
+          <div class="chartCanvasBox"><canvas id="equityCanvas"></canvas></div>
+          <div class="chartCaption">Line = cumulative R over time.</div>
         </div>
 
-        <div class="card">
-          <div class="cardHead">
-            <h3 class="cardTitle">Win / Loss / BE</h3>
+        <div class="chartWrap">
+          <div class="cardHead" style="margin-bottom:8px;">
+            <h3 class="cardTitle">Win / Loss Distribution</h3>
             <span class="pill">Edge</span>
           </div>
-          <div class="chartBox">
-            <div class="chartCanvas"><canvas id="donutCanvas"></canvas></div>
-            <div class="chartHint">Distribution by outcome</div>
-          </div>
+          <div class="chartCanvasBox"><canvas id="donutCanvas"></canvas></div>
+          <div class="chartCaption">Donut = win, loss, breakeven.</div>
         </div>
 
-        <div class="card">
-          <div class="cardHead">
-            <h3 class="cardTitle">PnL by Day</h3>
-            <span class="pill">Heat</span>
+        <div class="chartWrap">
+          <div class="cardHead" style="margin-bottom:8px;">
+            <h3 class="cardTitle">PnL by Day (R)</h3>
+            <span class="pill">Calendar</span>
           </div>
-          <div class="chartBox">
-            <div class="chartCanvas"><canvas id="calendarCanvas"></canvas></div>
-            <div class="chartHint">Heat = Total R per day (current month)</div>
-          </div>
+          <div class="chartCanvasBox"><canvas id="calendarCanvas"></canvas></div>
+          <div class="chartCaption">Heat = total R per day (current month).</div>
         </div>
       </div>
 
       <div style="margin-top:10px;color:var(--muted);font-weight:700;font-size:13px;">
-        Log trades and the charts will update instantly.
+        Log trades and charts update instantly.
       </div>
     </div>
   </div>
 </section>
 
-<!-- calendar page -->
+<!-- Calendar page -->
 <section class="page" id="page-calendar">
   <div class="panel">
     <div class="panelInner">
@@ -1221,25 +1184,26 @@ font-weight:750;
           </div>
 
           <div class="toggleRow">
-            <div class="switch" id="calModeSwitch" title="Toggle between total R and win rate">
+            <div class="switch" id="calModeSwitch" title="Toggle between Total R and Win/Loss%">
               <div class="switchDot"></div>
             </div>
-            <div><span id="calModeLabel">Show Win Rate</span></div>
+            <div><span id="calModeLabel">Show Win/Loss %</span></div>
           </div>
         </div>
 
         <div class="calGrid" id="calDowRow"></div>
         <div class="calGrid" id="calGrid"></div>
 
-        <div class="mutedLine" style="margin-top:12px;">
-          Each day shows total trades, win rate, and a green/red result.
+        <div class="smallHint" style="margin-top:12px;">
+          Each day shows total trades, win rate, and a green or red result.
         </div>
       </div>
+
     </div>
   </div>
 </section>
 
-<!-- trades page -->
+<!-- Trades page -->
 <section class="page" id="page-trades">
   <div class="panel">
     <div class="panelInner">
@@ -1282,14 +1246,14 @@ font-weight:750;
   </div>
 </section>
 
-<!-- journal page -->
+<!-- Journal page -->
 <section class="page" id="page-journal">
   <div class="panel">
     <div class="panelInner">
       <div class="panelHeader">
         <div>
           <h1 class="title">Journal</h1>
-          <div class="subtitle">Notes and patterns, coming next.</div>
+          <div class="subtitle">Notes and patterns (coming next).</div>
         </div>
         <div class="badge"><span class="badgeDot"></span><span>Soon</span></div>
       </div>
@@ -1299,8 +1263,8 @@ font-weight:750;
           <h3 class="cardTitle">Quick Note</h3>
           <span class="pill warn">Placeholder</span>
         </div>
-        <div class="mutedLine">
-          Next we’ll save daily notes and auto-surface your repeating mistakes and best setups.
+        <div class="smallHint">
+          Next we’ll save daily notes and surface repeating mistakes and best setups.
         </div>
       </div>
     </div>
@@ -1311,7 +1275,7 @@ font-weight:750;
 </main>
 </div>
 
-<!-- add trade modal -->
+<!-- Add trade modal -->
 <div class="modalBackdrop" id="modalBackdrop">
   <div class="modal" role="dialog" aria-modal="true" aria-label="Add trade">
     <div class="modalInner">
@@ -1325,7 +1289,7 @@ font-weight:750;
 
       <div class="formGrid">
         <div>
-          <label>Date and Time</label>
+          <label>Date and time</label>
           <input id="t_date" type="datetime-local" />
         </div>
 
@@ -1357,7 +1321,7 @@ font-weight:750;
         </div>
 
         <div>
-          <label>R Multiple (Enter absolute)</label>
+          <label>R multiple (Enter absolute)</label>
           <input id="t_r" type="number" step="0.01" placeholder="1.3" />
         </div>
 
@@ -1398,7 +1362,7 @@ font-weight:750;
   </div>
 </div>
 
-<!-- confirm delete modal -->
+<!-- Confirm delete modal -->
 <div class="modalBackdrop" id="confirmBackdrop">
   <div class="modal" role="dialog" aria-modal="true" aria-label="Confirm delete">
     <div class="modalInner">
@@ -1410,7 +1374,7 @@ font-weight:750;
         <button class="closeBtn" id="confirmCloseBtn">Close</button>
       </div>
 
-      <div class="mutedLine" id="confirmBody" style="margin-top:4px;">
+      <div class="smallHint" id="confirmBody" style="margin-top:4px;">
         Are you sure you want to delete this trade? This is permanent and can’t be undone.
       </div>
 
@@ -1424,7 +1388,7 @@ font-weight:750;
   </div>
 </div>
 
-<!-- supabase -->
+<!-- Supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
@@ -1446,17 +1410,27 @@ using (auth.uid() = user_id);
 let user = null;
 let trades = [];
 
-// calendar state
+// Calendar state
 let calYear = new Date().getFullYear();
 let calMonth = new Date().getMonth(); // 0-11
 let calShowPercent = false; // false = show total R, true = show % (win rate)
 
-// local settings
-let settings = {
+// Goals state (localStorage)
+const GOALS_KEY = "sessionly_goals_v1";
+const DEFAULT_GOALS = {
 currency: "USD",
 riskPerR: 100,
-goals: { daily: 100, weekly: 500, monthly: 2000 }
+daily: 0,
+weekly: 0,
+monthly: 0,
+dailyCustom: 0,
+weeklyCustom: 0,
+monthlyCustom: 0,
+dailyMode: "preset",   // "preset" | "custom"
+weeklyMode: "preset",
+monthlyMode: "preset"
 };
+let goals = loadGoals();
 
 // === THEME ===
 function applyTheme(theme){
@@ -1490,7 +1464,7 @@ function setActiveRoute(route){
   if (route === "analytics") renderAnalytics();
   if (route === "trades") renderTradesTable();
   if (route === "calendar") renderCalendar();
-  if (route === "focus") renderFocus();
+  if (route === "focus") renderDashboard();
 }
 
 function initRouting(){
@@ -1521,39 +1495,7 @@ async function requireAuth(){
   }
   user = session.user;
   document.getElementById("userEmail").textContent = user.email || "Signed in";
-
-  // load per-user local settings
-  loadLocalSettings();
-  initGoalControls();
-  initSettingsControls();
-
   return true;
-}
-
-// === LOCAL SETTINGS ===
-function settingsKey(){
-  return `sessionly_settings_${user?.id || "anon"}`;
-}
-function loadLocalSettings(){
-  try{
-    const raw = localStorage.getItem(settingsKey());
-    if (!raw) return;
-    const parsed = JSON.parse(raw);
-    settings = {
-      currency: parsed.currency || settings.currency,
-      riskPerR: Number.isFinite(Number(parsed.riskPerR)) ? Number(parsed.riskPerR) : settings.riskPerR,
-      goals: {
-        daily: Number.isFinite(Number(parsed?.goals?.daily)) ? Number(parsed.goals.daily) : settings.goals.daily,
-        weekly: Number.isFinite(Number(parsed?.goals?.weekly)) ? Number(parsed.goals.weekly) : settings.goals.weekly,
-        monthly: Number.isFinite(Number(parsed?.goals?.monthly)) ? Number(parsed.goals.monthly) : settings.goals.monthly,
-      }
-    };
-  } catch(e){}
-}
-function saveLocalSettings(){
-  try{
-    localStorage.setItem(settingsKey(), JSON.stringify(settings));
-  } catch(e){}
 }
 
 // === MODALS ===
@@ -1583,7 +1525,7 @@ function openTradeModal(){
 }
 function closeTradeModal(){ modalBackdrop.style.display = "none"; }
 
-// confirm modal
+// Confirm modal
 const confirmBackdrop = document.getElementById("confirmBackdrop");
 const confirmTitle = document.getElementById("confirmTitle");
 const confirmSubtitle = document.getElementById("confirmSubtitle");
@@ -1662,7 +1604,8 @@ async function loadTrades(){
   }
 
   trades = (data || []).map(normalizeTrade);
-  renderFocus();
+
+  renderDashboard();
   renderAnalytics();
   renderTradesTable();
   renderCalendar();
@@ -1688,7 +1631,7 @@ function normalizeTrade(t){
 // === DELETE TRADE ===
 async function deleteTrade(id){
   const ok = await confirmDialog({
-    title: "Delete this trade?",
+    title: "Delete trade?",
     subtitle: "This is permanent and can’t be undone.",
     body: "Are you sure you want to delete this trade? This is permanent and can’t be undone.",
     okText: "Delete Trade",
@@ -1731,303 +1674,127 @@ function trashIconSvg(){
   `;
 }
 
-// === GREETING / TIER / STREAK ===
+// === DASHBOARD HELPERS ===
 function getGreeting(){
   const h = new Date().getHours();
   if (h < 12) return "Good morning";
   if (h < 18) return "Good afternoon";
   return "Good evening";
 }
-function nameFromEmail(email){
-  if (!email) return "";
-  const base = String(email).split("@")[0] || "";
-  const pretty = base.replace(/[._-]+/g, " ").trim();
-  if (!pretty) return "";
-  return pretty.split(" ").map(w => w ? (w[0].toUpperCase()+w.slice(1)) : "").join(" ");
+
+function startOfDay(d){
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate());
 }
 
-function computeTier(pf, totalR, totalTrades){
-  // simple incentive tiers, based on what you have (R + PF + sample size)
-  if (!Number.isFinite(pf) || totalTrades < 10){
-    return { label: "Tier: Getting Started", className: "neutral" };
-  }
-  if (pf >= 2.0 && totalR > 0){
-    return { label: "Tier: Top 1% Profitable", className: "good" };
-  }
-  if (pf >= 1.5 && totalR > 0){
-    return { label: "Tier: Top 5% Profitable", className: "good" };
-  }
-  if (pf >= 1.2 && totalR > 0){
-    return { label: "Tier: Building an Edge", className: "neutral" };
-  }
-  return { label: "Tier: Keep Refining", className: "warn" };
+function sameDay(a,b){
+  return a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate();
 }
 
-function dailyAggMap(){
-  const map = new Map();
+function weekStartMon(d){
+  const dd = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  const day = (dd.getDay() + 6) % 7; // mon=0
+  dd.setDate(dd.getDate() - day);
+  dd.setHours(0,0,0,0);
+  return dd;
+}
+
+function monthStart(d){
+  const dd = new Date(d.getFullYear(), d.getMonth(), 1);
+  dd.setHours(0,0,0,0);
+  return dd;
+}
+
+function sumRBetween(start, endExclusive){
+  let sum = 0;
   trades.forEach(t=>{
     if (!t.dt || !Number.isFinite(t.r_multiple)) return;
-    const key = `${t.dt.getFullYear()}-${String(t.dt.getMonth()+1).padStart(2,"0")}-${String(t.dt.getDate()).padStart(2,"0")}`;
-    map.set(key, (map.get(key)||0) + t.r_multiple);
+    if (t.dt >= start && t.dt < endExclusive) sum += t.r_multiple;
   });
-  return map;
+  return sum;
 }
 
-function computePositiveDayStreak(){
-  const map = dailyAggMap();
-  const today = new Date();
-  let streak = 0;
+function decidedStats(list){
+  const vals = list.map(t=>t.r_multiple).filter(v=>Number.isFinite(v));
+  const wins = vals.filter(v=>v>0);
+  const losses = vals.filter(v=>v<0);
+  const decided = vals.filter(v=>v!==0);
+  const sumWins = wins.reduce((a,b)=>a+b,0);
+  const sumLossAbs = Math.abs(losses.reduce((a,b)=>a+b,0));
+  const pf = sumLossAbs>0 ? (sumWins/sumLossAbs) : (wins.length?Infinity:null);
+  const winRate = decided.length ? (wins.length/decided.length) : null;
+  return {pf, winRate, wins:wins.length, losses:losses.length, bes: vals.filter(v=>v===0).length, decided:decided.length, total:vals.length};
+}
 
+function performanceTier(winRate, pf, totalTrades){
+  // Very simple, motivational, but based on actual stats.
+  // Returns {label, dotClass}
+  if (!totalTrades || totalTrades < 10){
+    return {label:"Tier: Building Data", dotClass:"warn"};
+  }
+  if ((pf !== null && pf !== Infinity && pf >= 2) && (winRate !== null && winRate >= 0.45)){
+    return {label:"Tier: Elite Edge", dotClass:""};
+  }
+  if ((pf !== null && pf !== Infinity && pf >= 1.5)){
+    return {label:"Tier: Top 10% Profitable", dotClass:""};
+  }
+  if ((pf !== null && pf !== Infinity && pf >= 1.2)){
+    return {label:"Tier: Above Average", dotClass:""};
+  }
+  if ((pf !== null && pf !== Infinity && pf >= 1.0)){
+    return {label:"Tier: Break-even+ Potential", dotClass:"warn"};
+  }
+  return {label:"Tier: Rebuild Mode", dotClass:"bad"};
+}
+
+function calcStreakDays(){
+  // streak = consecutive days ending today with at least 1 trade logged
+  const withDates = trades.filter(t=>t.dt).map(t=>startOfDay(t.dt).getTime());
+  const set = new Set(withDates);
+
+  const today = startOfDay(new Date());
+  let streak = 0;
   for (let i=0; i<3650; i++){
     const d = new Date(today);
-    d.setDate(today.getDate() - i);
-    const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
-    if (!map.has(key)) break;              // no trading day -> streak ends
-    const val = map.get(key) || 0;
-    if (val <= 0) break;                   // not positive -> streak ends
-    streak += 1;
+    d.setDate(d.getDate()-i);
+    if (set.has(d.getTime())) streak++;
+    else break;
   }
   return streak;
 }
 
-// === MONEY HELPERS ===
-function fmtMoney(n){
-  if (!Number.isFinite(n)) return "—";
-  try{
-    return new Intl.NumberFormat(undefined, { style:"currency", currency: settings.currency, maximumFractionDigits: 0 }).format(n);
-  } catch(e){
-    // fallback
-    const sign = n < 0 ? "-" : "";
-    return `${sign}${settings.currency} ${Math.abs(n).toFixed(0)}`;
-  }
-}
-function rToMoney(r){
-  if (!Number.isFinite(r)) return 0;
-  return r * (Number.isFinite(settings.riskPerR) ? settings.riskPerR : 100);
+function currencySymbol(code){
+  const map = {USD:"$", EUR:"€", GBP:"£", CAD:"C$", AUD:"A$", CHF:"CHF"};
+  return map[code] || code + " ";
 }
 
-// === GOALS ===
-function setGoal(period, amount){
-  const n = Number(amount);
-  if (!Number.isFinite(n) || n <= 0) return;
-  settings.goals[period] = n;
-  saveLocalSettings();
-  renderGoals();
+function formatMoney(amount, code){
+  if (!Number.isFinite(amount)) return "—";
+  const sym = currencySymbol(code);
+  const sign = amount > 0 ? "+" : (amount < 0 ? "−" : "");
+  const abs = Math.abs(amount);
+  // keep it clean
+  const formatted = abs >= 1000 ? abs.toFixed(0) : (abs >= 100 ? abs.toFixed(0) : abs.toFixed(2));
+  return `${sign}${sym}${formatted}`;
 }
 
-function syncGoalDropdown(period, goalVal){
-  const sel = document.getElementById(`goal${cap(period)}Select`);
-  const input = document.getElementById(`goal${cap(period)}Input`);
+// === RENDER: DASHBOARD ===
+function renderDashboard(){
+  document.getElementById("greetingText").textContent = getGreeting();
 
-  const optionValues = Array.from(sel.options).map(o=>o.value);
-  const asString = String(Math.round(goalVal));
-
-  if (optionValues.includes(asString)){
-    sel.value = asString;
-    input.classList.remove("show");
-    input.value = String(goalVal);
-  } else {
-    sel.value = "custom";
-    input.classList.add("show");
-    input.value = String(goalVal);
-  }
-}
-
-function initGoalControls(){
-  // dropdowns
-  document.querySelectorAll(".goalSelect").forEach(sel=>{
-    sel.addEventListener("change", ()=>{
-      const period = sel.getAttribute("data-period");
-      const v = sel.value;
-      const input = document.getElementById(`goal${cap(period)}Input`);
-      if (v === "custom"){
-        input.classList.add("show");
-        input.focus();
-      } else {
-        input.classList.remove("show");
-        const n = Number(v);
-        if (Number.isFinite(n) && n > 0) setGoal(period, n);
-      }
-    });
-  });
-
-  // custom inputs
-  ["daily","weekly","monthly"].forEach(period=>{
-    const input = document.getElementById(`goal${cap(period)}Input`);
-    input.addEventListener("change", ()=>{
-      const n = Number(input.value);
-      if (Number.isFinite(n) && n > 0) setGoal(period, n);
-    });
-  });
-}
-
-function initSettingsControls(){
-  const currencySelect = document.getElementById("currencySelect");
-  const riskPerRInput = document.getElementById("riskPerRInput");
-
-  currencySelect.value = settings.currency;
-  riskPerRInput.value = String(settings.riskPerR);
-
-  currencySelect.addEventListener("change", ()=>{
-    settings.currency = currencySelect.value;
-    saveLocalSettings();
-    renderFocus();
-    renderGoals();
-  });
-
-  riskPerRInput.addEventListener("change", ()=>{
-    const n = Number(riskPerRInput.value);
-    if (Number.isFinite(n) && n > 0){
-      settings.riskPerR = n;
-      saveLocalSettings();
-      renderFocus();
-      renderGoals();
-    }
-  });
-}
-
-function periodR(period){
-  const now = new Date();
-  const list = trades.filter(t => t.dt && Number.isFinite(t.r_multiple));
-
-  if (period === "daily"){
-    const y = now.getFullYear(), m = now.getMonth(), d = now.getDate();
-    return list.filter(t => t.dt.getFullYear()===y && t.dt.getMonth()===m && t.dt.getDate()===d)
-      .reduce((a,t)=>a+t.r_multiple,0);
-  }
-
-  if (period === "weekly"){
-    // Mon–Sun
-    const today = new Date(now);
-    const day = (today.getDay() + 6) % 7; // Mon=0
-    const monday = new Date(today);
-    monday.setDate(today.getDate() - day);
-    monday.setHours(0,0,0,0);
-    const sundayEnd = new Date(monday);
-    sundayEnd.setDate(monday.getDate() + 7);
-    return list.filter(t => t.dt >= monday && t.dt < sundayEnd)
-      .reduce((a,t)=>a+t.r_multiple,0);
-  }
-
-  // monthly
-  const y = now.getFullYear(), m = now.getMonth();
-  return list.filter(t => t.dt.getFullYear()===y && t.dt.getMonth()===m)
-    .reduce((a,t)=>a+t.r_multiple,0);
-}
-
-function renderGoals(){
-  // sync controls
-  syncGoalDropdown("daily", settings.goals.daily);
-  syncGoalDropdown("weekly", settings.goals.weekly);
-  syncGoalDropdown("monthly", settings.goals.monthly);
-
-  const dailyMoney = rToMoney(periodR("daily"));
-  const weeklyMoney = rToMoney(periodR("weekly"));
-  const monthlyMoney = rToMoney(periodR("monthly"));
-
-  updateGoalUI("Daily", settings.goals.daily, dailyMoney);
-  updateGoalUI("Weekly", settings.goals.weekly, weeklyMoney);
-  updateGoalUI("Monthly", settings.goals.monthly, monthlyMoney);
-}
-
-function updateGoalUI(label, goalAmountMoney, achievedMoney){
-  const id = label; // "Daily" | "Weekly" | "Monthly"
-  const fill = document.getElementById(`goal${id}Fill`);
-  const leftEl = document.getElementById(`goal${id}Left`);
-  const pctEl = document.getElementById(`goal${id}Pct`);
-
-  const goal = Math.max(1, Number(goalAmountMoney) || 1);
-  const achieved = Number.isFinite(achievedMoney) ? achievedMoney : 0;
-  const pct = clamp((achieved / goal) * 100, 0, 100);
-
-  fill.style.width = `${pct.toFixed(0)}%`;
-
-  const left = goal - achieved;
-  if (left <= 0){
-    leftEl.textContent = `${fmtMoney(0)} Left`;
-    pctEl.textContent = `100%`;
-  } else {
-    leftEl.textContent = `${fmtMoney(left)} Left`;
-    pctEl.textContent = `${pct.toFixed(0)}%`;
-  }
-}
-
-// === RENDER: FOCUS ===
-function renderFocus(){
-  // greeting
-  const greeting = getGreeting();
-  const who = nameFromEmail(user?.email);
-  document.getElementById("focusGreeting").textContent = who ? `${greeting}, ${who}` : greeting;
-
-  // basic aggregates
-  const rVals = trades.map(t => t.r_multiple).filter(v => Number.isFinite(v));
-  const totalTrades = trades.length;
-
-  const totalR = rVals.reduce((a,b)=>a+b,0);
-  const wins = rVals.filter(v => v > 0);
-  const losses = rVals.filter(v => v < 0);
-  const bes = rVals.filter(v => v === 0);
-
-  const sumWins = wins.reduce((a,b)=>a+b,0);
-  const sumLossAbs = Math.abs(losses.reduce((a,b)=>a+b,0));
-  const pf = (sumLossAbs > 0) ? (sumWins / sumLossAbs) : (wins.length ? Infinity : null);
-
-  const decided = wins.length + losses.length;
-  const winRate = decided ? (wins.length / decided) : null;
-
-  // this month R
-  const monthR = periodR("monthly");
-
-  // PnL money (proxy: R × riskPerR)
-  const totalPnL = rToMoney(totalR);
-  const monthPnL = rToMoney(monthR);
-
-  document.getElementById("s_total_pnl").textContent = fmtMoney(totalPnL);
-  document.getElementById("s_total_pnl_hint").textContent = `All time (R: ${formatNumber(totalR)})`;
-
-  document.getElementById("s_month_pnl").textContent = fmtMoney(monthPnL);
-  document.getElementById("s_month_pnl_hint").textContent = `This month (R: ${formatNumber(monthR)})`;
-
-  document.getElementById("s_pf").textContent = pf === null ? "—" : (pf === Infinity ? "∞" : formatNumber(pf));
-  document.getElementById("s_pf_hint").textContent = `From ${rVals.length} trades`;
-
-  document.getElementById("s_winrate").textContent = winRate === null ? "—" : `${(winRate*100).toFixed(1)}%`;
-  document.getElementById("s_winrate_hint").textContent = decided ? `${wins.length}/${decided} decided` : "No decided trades yet";
-
-  document.getElementById("s_total_trades").textContent = String(totalTrades);
-
-  const avgR = rVals.length ? (totalR / rVals.length) : null;
-  document.getElementById("s_avgr").textContent = avgR === null ? "—" : formatNumber(avgR);
-
-  // tier + chips
-  const tier = computeTier(pf, totalR, rVals.length);
-  const tierPill = document.getElementById("tierPill");
-  tierPill.classList.remove("good","neutral","warn");
-  tierPill.classList.add(tier.className);
-  document.getElementById("tierText").textContent = tier.label;
-
-  const streak = computePositiveDayStreak();
-  document.getElementById("streakText").textContent = `${streak} Day${streak===1?"":"s"}`;
-
-  document.getElementById("monthRChip").textContent = `${monthR >= 0 ? "+" : ""}${formatNumber(monthR)}R`;
-
-  // insight
-  renderInsight(pf, totalR, winRate, avgR, rVals.length);
-
-  // recent table
+  // Recent trades table (last 8)
   const recent = trades.slice(0, 8);
-  const body = document.getElementById("recentTradesBody");
 
+  const body = document.getElementById("recentTradesBody");
   if (!recent.length){
     body.innerHTML = `<tr><td class="emptyRow" colspan="8">No trades yet. Add your first one.</td></tr>`;
   } else {
     body.innerHTML = recent.map(row=>{
       const date = row.dt ? fmtDateTime(row.dt) : "—";
       const sym = escapeHtml(row.symbol || "—");
-      const dir = escapeHtml(cap(row.direction || "—"));
+      const dir = escapeHtml(row.direction || "—");
       const rr = row.rr === null ? "—" : formatNumber(row.rr);
       const r = row.r_multiple === null ? "—" : formatNumber(row.r_multiple);
-      const session = escapeHtml(row.session ? cap(row.session) : "—");
+      const session = escapeHtml(row.session || "—");
       const strategy = escapeHtml(row.strategy || "—");
       return `
         <tr>
@@ -2053,42 +1820,238 @@ function renderFocus(){
     });
   }
 
+  // Overall stats
+  const allFinite = trades.map(t=>t.r_multiple).filter(v=>Number.isFinite(v));
+  const totalTrades = trades.length;
+
+  const statsAll = decidedStats(trades);
+  const avgR = allFinite.length ? (allFinite.reduce((a,b)=>a+b,0)/allFinite.length) : null;
+
+  document.getElementById("s_totalTrades").textContent = String(totalTrades);
+  document.getElementById("s_avgr").textContent = avgR === null ? "—" : formatNumber(avgR);
+
+  document.getElementById("s_pf").textContent = statsAll.pf === null ? "—" : (statsAll.pf === Infinity ? "∞" : formatNumber(statsAll.pf));
+  document.getElementById("s_pf_hint").textContent = statsAll.decided ? `From ${statsAll.decided} decided` : "From decided trades";
+
+  document.getElementById("s_winrate").textContent = statsAll.winRate === null ? "—" : `${(statsAll.winRate*100).toFixed(1)}%`;
+  document.getElementById("s_winrate_hint").textContent = statsAll.decided ? `${statsAll.wins}/${statsAll.decided} decided` : "Decided only";
+
+  // Month stats
+  const now = new Date();
+  const mStart = monthStart(now);
+  const mEnd = new Date(now.getFullYear(), now.getMonth()+1, 1);
+  const monthR = sumRBetween(mStart, mEnd);
+
+  // Total R
+  const totalR = trades.reduce((a,t)=>a + (Number.isFinite(t.r_multiple)?t.r_multiple:0), 0);
+
+  // PnL estimate in money
+  const rpr = Number.isFinite(Number(goals.riskPerR)) ? Number(goals.riskPerR) : 0;
+  const cur = goals.currency || "USD";
+  const totalPnl = totalR * rpr;
+  const monthPnl = monthR * rpr;
+
+  document.getElementById("s_totalPnl").textContent = formatMoney(totalPnl, cur);
+  document.getElementById("s_monthPnl").textContent = formatMoney(monthPnl, cur);
+
+  const totalHint = rpr > 0 ? `All-time (≈ ${formatNumber(totalR)}R)` : `All-time (R: ${formatNumber(totalR)})`;
+  const monthHint = rpr > 0 ? `This month (≈ ${formatNumber(monthR)}R)` : `This month (R: ${formatNumber(monthR)})`;
+  document.getElementById("s_totalPnl_hint").textContent = totalHint;
+  document.getElementById("s_monthPnl_hint").textContent = monthHint;
+
+  // Snapshot pills (tier, streak, month)
+  const tier = performanceTier(statsAll.winRate, statsAll.pf, statsAll.total);
+  document.getElementById("tierText").textContent = tier.label;
+  const tierDot = document.getElementById("tierDot");
+  tierDot.classList.toggle("warn", tier.dotClass === "warn");
+  tierDot.classList.toggle("bad", tier.dotClass === "bad");
+
+  const streak = calcStreakDays();
+  document.getElementById("streakText").textContent = `Streak: ${streak} Day${streak===1?"":"s"}`;
+  const monthLabel = (monthR > 0 ? "+" : "") + `${formatNumber(monthR)}R`;
+  document.getElementById("monthText").textContent = `This Month: ${monthLabel}`;
+
+  // Greeting sub line: motivational but honest
+  const sub = statsAll.total >= 10
+    ? `You’re trending ${statsAll.pf !== null && statsAll.pf !== Infinity && statsAll.pf >= 1.2 ? "up" : "forward"} — keep the process tight.`
+    : "Log 10+ trades to unlock more accurate insights.";
+  document.getElementById("greetingSub").textContent = sub;
+
   document.getElementById("recentPill").textContent = "Ready";
   document.getElementById("focusStatus").textContent = "Ready";
 
-  renderGoals();
+  // Draw dashboard charts
+  drawEquityCanvasInto("dashEquityCanvas");
+  drawDonutCanvasInto("dashDonutCanvas", statsAll.wins, statsAll.losses, statsAll.bes);
+
+  // Goals progress
+  renderGoalsProgress();
 }
 
-function renderInsight(pf, totalR, winRate, avgR, n){
-  const pill = document.getElementById("insightPill");
-  const el = document.getElementById("insightText");
+// === GOALS ===
+function loadGoals(){
+  try{
+    const raw = localStorage.getItem(GOALS_KEY);
+    if (!raw) return {...DEFAULT_GOALS};
+    const obj = JSON.parse(raw);
+    return {...DEFAULT_GOALS, ...obj};
+  } catch(e){
+    return {...DEFAULT_GOALS};
+  }
+}
+function saveGoals(){
+  localStorage.setItem(GOALS_KEY, JSON.stringify(goals));
+}
 
-  if (n < 10){
-    pill.textContent = "Setup";
-    el.textContent = "Log 10+ trades and Sessionly will start spotting your edge (best hour, best session, biggest leak).";
+function getGoalAmount(period){
+  // period: "daily"|"weekly"|"monthly"
+  const modeKey = period + "Mode";
+  const customKey = period + "Custom";
+  const baseKey = period;
+
+  if (goals[modeKey] === "custom"){
+    const n = Number(goals[customKey] || 0);
+    return Number.isFinite(n) ? n : 0;
+  }
+  const n = Number(goals[baseKey] || 0);
+  return Number.isFinite(n) ? n : 0;
+}
+
+function renderGoalsUI(){
+  // load saved into controls
+  const curSel = document.getElementById("goalCurrency");
+  const rprEl = document.getElementById("riskPerR");
+  curSel.value = goals.currency || "USD";
+  rprEl.value = String(Number.isFinite(Number(goals.riskPerR)) ? Number(goals.riskPerR) : 0);
+
+  const dailySel = document.getElementById("goalDaily");
+  const weeklySel = document.getElementById("goalWeekly");
+  const monthlySel = document.getElementById("goalMonthly");
+
+  dailySel.value = goals.dailyMode === "custom" ? "custom" : String(goals.daily || 0);
+  weeklySel.value = goals.weeklyMode === "custom" ? "custom" : String(goals.weekly || 0);
+  monthlySel.value = goals.monthlyMode === "custom" ? "custom" : String(goals.monthly || 0);
+
+  document.getElementById("goalDailyCustom").value = String(goals.dailyCustom || 0);
+  document.getElementById("goalWeeklyCustom").value = String(goals.weeklyCustom || 0);
+  document.getElementById("goalMonthlyCustom").value = String(goals.monthlyCustom || 0);
+
+  toggleCustomWrap("daily");
+  toggleCustomWrap("weekly");
+  toggleCustomWrap("monthly");
+}
+
+function toggleCustomWrap(period){
+  const wrap = document.getElementById(period + "CustomWrap");
+  const sel = document.getElementById("goal" + cap(period));
+  const isCustom = sel.value === "custom";
+  wrap.style.display = isCustom ? "block" : "none";
+}
+
+function cap(s){ return s.charAt(0).toUpperCase() + s.slice(1); }
+
+function wireGoals(){
+  const curSel = document.getElementById("goalCurrency");
+  const rprEl = document.getElementById("riskPerR");
+
+  curSel.addEventListener("change", ()=>{
+    goals.currency = curSel.value;
+    saveGoals();
+    renderDashboard();
+  });
+
+  rprEl.addEventListener("input", ()=>{
+    const n = Number(rprEl.value);
+    goals.riskPerR = Number.isFinite(n) ? n : 0;
+    saveGoals();
+    renderDashboard();
+  });
+
+  const bindings = [
+    {period:"daily", selectId:"goalDaily", customId:"goalDailyCustom"},
+    {period:"weekly", selectId:"goalWeekly", customId:"goalWeeklyCustom"},
+    {period:"monthly", selectId:"goalMonthly", customId:"goalMonthlyCustom"},
+  ];
+
+  bindings.forEach(b=>{
+    const sel = document.getElementById(b.selectId);
+    const custom = document.getElementById(b.customId);
+
+    sel.addEventListener("change", ()=>{
+      const v = sel.value;
+      goals[b.period + "Mode"] = (v === "custom") ? "custom" : "preset";
+      goals[b.period] = (v === "custom") ? 0 : Number(v);
+      saveGoals();
+      toggleCustomWrap(b.period);
+      renderDashboard();
+    });
+
+    custom.addEventListener("input", ()=>{
+      const n = Number(custom.value);
+      goals[b.period + "Custom"] = Number.isFinite(n) ? n : 0;
+      saveGoals();
+      renderDashboard();
+    });
+  });
+}
+
+function renderGoalsProgress(){
+  // PnL estimate based on R * riskPerR in selected currency
+  const rpr = Number.isFinite(Number(goals.riskPerR)) ? Number(goals.riskPerR) : 0;
+  const cur = goals.currency || "USD";
+
+  const now = new Date();
+
+  const dStart = startOfDay(now);
+  const dEnd = new Date(dStart); dEnd.setDate(dEnd.getDate()+1);
+  const wStart = weekStartMon(now);
+  const wEnd = new Date(wStart); wEnd.setDate(wEnd.getDate()+7);
+  const mStart = monthStart(now);
+  const mEnd = new Date(now.getFullYear(), now.getMonth()+1, 1);
+
+  const dayR = sumRBetween(dStart, dEnd);
+  const weekR = sumRBetween(wStart, wEnd);
+  const monthR = sumRBetween(mStart, mEnd);
+
+  const dayP = dayR * rpr;
+  const weekP = weekR * rpr;
+  const monthP = monthR * rpr;
+
+  const targets = {
+    daily: getGoalAmount("daily"),
+    weekly: getGoalAmount("weekly"),
+    monthly: getGoalAmount("monthly")
+  };
+
+  setProgress("daily", dayP, targets.daily, cur);
+  setProgress("weekly", weekP, targets.weekly, cur);
+  setProgress("monthly", monthP, targets.monthly, cur);
+
+  const note = rpr > 0
+    ? `PnL is estimated from R using Risk per 1R (${currencySymbol(cur)}${Math.abs(rpr).toFixed(0)}).`
+    : "Set Risk per 1R to convert R into estimated money.";
+  document.getElementById("goalFootNote").textContent = note;
+}
+
+function setProgress(period, current, target, cur){
+  const textEl = document.getElementById(period + "ProgressText");
+  const pctEl = document.getElementById(period + "PercentText");
+  const fillEl = document.getElementById(period + "Fill");
+
+  if (!target || target <= 0){
+    textEl.textContent = "Set a target to track progress.";
+    pctEl.textContent = "—";
+    fillEl.style.width = "0%";
     return;
   }
 
-  if (Number.isFinite(pf) && pf >= 1.5 && totalR > 0){
-    pill.textContent = "Momentum";
-    el.textContent = "You’re in a strong zone. Keep sizing consistent and protect your best hours. Consistency beats intensity.";
-    return;
-  }
+  const pct = Math.max(0, Math.min(100, (current / target) * 100));
+  fillEl.style.width = pct.toFixed(0) + "%";
 
-  if (Number.isFinite(winRate) && winRate < 0.35 && Number.isFinite(avgR) && avgR > 0){
-    pill.textContent = "Edge";
-    el.textContent = "Win rate is low, but your average R is positive. That’s a classic high R:R profile. Don’t overtrade.";
-    return;
-  }
-
-  if (Number.isFinite(pf) && pf < 1.0){
-    pill.textContent = "Fix One Leak";
-    el.textContent = "Your losses are outweighing your wins. Pick one rule to tighten (stops, revenge, or late entries) and retest.";
-    return;
-  }
-
-  pill.textContent = "Progress";
-  el.textContent = "You’re building the base. Tighten the plan slightly and keep tracking. Small improvements compound fast.";
+  const left = target - current;
+  const leftTxt = left > 0 ? `${formatMoney(left, cur)} left` : "Goal reached";
+  textEl.textContent = `${formatMoney(current, cur)} / ${formatMoney(target, cur)} • ${leftTxt}`;
+  pctEl.textContent = `${pct.toFixed(0)}%`;
 }
 
 // === RENDER: TRADES TABLE ===
@@ -2104,10 +2067,10 @@ function renderTradesTable(){
   body.innerHTML = trades.map(row=>{
     const date = row.dt ? fmtDateTime(row.dt) : "—";
     const sym = escapeHtml(row.symbol || "—");
-    const dir = escapeHtml(cap(row.direction || "—"));
+    const dir = escapeHtml(row.direction || "—");
     const rr = row.rr === null ? "—" : formatNumber(row.rr);
     const r = row.r_multiple === null ? "—" : formatNumber(row.r_multiple);
-    const session = escapeHtml(row.session ? cap(row.session) : "—");
+    const session = escapeHtml(row.session || "—");
     const strategy = escapeHtml(row.strategy || "—");
 
     return `
@@ -2141,22 +2104,19 @@ function renderCalendar(){
 
   const modeSwitch = document.getElementById("calModeSwitch");
   modeSwitch.classList.toggle("on", calShowPercent);
-  document.getElementById("calModeLabel").textContent = calShowPercent ? "Show Total R" : "Show Win Rate";
+  document.getElementById("calModeLabel").textContent = calShowPercent ? "Show Total R" : "Show Win/Loss %";
 
-  // DOW headers
   const dowRow = document.getElementById("calDowRow");
   const dows = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
   dowRow.innerHTML = dows.map(d=>`<div class="calDow">${d}</div>`).join("");
 
-  // build daily aggregates for this month
   const daily = buildDailyAgg(calYear, calMonth);
 
-  // month grid (monday first)
   const grid = document.getElementById("calGrid");
   const first = new Date(calYear, calMonth, 1);
   const last = new Date(calYear, calMonth + 1, 0);
 
-  const firstDowMon0 = (first.getDay() + 6) % 7; // convert sun=0 => mon=0
+  const firstDowMon0 = (first.getDay() + 6) % 7;
   const totalCells = 42;
 
   const prevMonthLast = new Date(calYear, calMonth, 0).getDate();
@@ -2306,7 +2266,7 @@ function colorVar(name){
 
 function drawGlassGrid(ctx, w, h){
   ctx.save();
-  ctx.globalAlpha = 0.35;
+  ctx.globalAlpha = 0.28;
   ctx.strokeStyle = colorMix(colorVar("--stroke"), "transparent", 0.0);
   ctx.lineWidth = 1;
 
@@ -2341,25 +2301,29 @@ function drawHourlyCanvas(byHour){
   }
 
   const maxAbs = Math.max(1, ...arr.map(x => Math.abs(x.val)));
-  const pad = 18;
-  const baseY = h/2;
-  const innerW = w - pad*2;
+  const padL = 18;
+  const padR = 18;
+  const padT = 16;
+  const padB = 18;
+
+  const baseY = (h - padT - padB)/2 + padT;
+  const innerW = w - padL - padR;
   const barW = innerW / 24;
 
   ctx.save();
   ctx.strokeStyle = colorVar("--stroke2");
   ctx.globalAlpha = 0.9;
   ctx.beginPath();
-  ctx.moveTo(pad, baseY);
-  ctx.lineTo(w-pad, baseY);
+  ctx.moveTo(padL, baseY);
+  ctx.lineTo(w-padR, baseY);
   ctx.stroke();
   ctx.restore();
 
   arr.forEach((b, i)=>{
-    const x = pad + i*barW + barW*0.22;
+    const x = padL + i*barW + barW*0.22;
     const bw = barW*0.56;
     const norm = b.val / maxAbs;
-    const barH = norm * (h*0.34);
+    const barH = norm * ((h - padT - padB)*0.40);
 
     const y = baseY - Math.max(0, barH);
     const hh = Math.abs(barH);
@@ -2375,7 +2339,7 @@ function drawHourlyCanvas(byHour){
     ctx.globalAlpha = 0.92;
     ctx.fill();
 
-    ctx.globalAlpha = 0.20;
+    ctx.globalAlpha = 0.18;
     ctx.shadowColor = col;
     ctx.shadowBlur = 18;
     ctx.fill();
@@ -2385,7 +2349,11 @@ function drawHourlyCanvas(byHour){
 }
 
 function drawEquityCanvas(){
-  const pack = prepCanvas("equityCanvas");
+  drawEquityCanvasInto("equityCanvas");
+}
+
+function drawEquityCanvasInto(canvasId){
+  const pack = prepCanvas(canvasId);
   if (!pack) return;
   const {ctx,w,h} = pack;
 
@@ -2425,6 +2393,7 @@ function drawEquityCanvas(){
     p.y = pad + (1 - ((p.y - minY)/span))*innerH;
   });
 
+  // baseline
   ctx.save();
   ctx.strokeStyle = colorVar("--stroke2");
   ctx.globalAlpha = 0.85;
@@ -2434,6 +2403,7 @@ function drawEquityCanvas(){
   ctx.stroke();
   ctx.restore();
 
+  // fill
   ctx.save();
   ctx.beginPath();
   ctx.moveTo(pts[0].x, pts[0].y);
@@ -2448,8 +2418,10 @@ function drawEquityCanvas(){
   ctx.fillStyle = fillGrad;
   ctx.globalAlpha = 0.55;
   ctx.fill();
+  ctx.globalAlpha = 1;
   ctx.restore();
 
+  // line
   ctx.save();
   ctx.lineWidth = 3;
   ctx.lineJoin = "round";
@@ -2466,10 +2438,11 @@ function drawEquityCanvas(){
   ctx.stroke();
 
   ctx.shadowColor = colorVar("--accent");
-  ctx.shadowBlur = 16;
+  ctx.shadowBlur = 14;
   ctx.stroke();
   ctx.restore();
 
+  // last dot
   const last = pts[pts.length-1];
   ctx.save();
   ctx.fillStyle = colorVar("--accent2");
@@ -2481,7 +2454,11 @@ function drawEquityCanvas(){
 }
 
 function drawDonutCanvas(winCount, lossCount, beCount){
-  const pack = prepCanvas("donutCanvas");
+  drawDonutCanvasInto("donutCanvas", winCount, lossCount, beCount);
+}
+
+function drawDonutCanvasInto(canvasId, winCount, lossCount, beCount){
+  const pack = prepCanvas(canvasId);
   if (!pack) return;
   const {ctx,w,h} = pack;
 
@@ -2523,7 +2500,7 @@ function drawDonutCanvas(winCount, lossCount, beCount){
     ctx.stroke();
 
     ctx.shadowColor = seg.color;
-    ctx.shadowBlur = 14;
+    ctx.shadowBlur = 12;
     ctx.stroke();
 
     ctx.restore();
@@ -2535,7 +2512,7 @@ function drawDonutCanvas(winCount, lossCount, beCount){
   ctx.globalAlpha = 0.92;
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.font = "980 22px ui-sans-serif, system-ui";
+  ctx.font = "980 20px ui-sans-serif, system-ui";
   ctx.fillText(`${winCount}/${total}`, cx, cy - 8);
   ctx.fillStyle = colorVar("--muted");
   ctx.font = "800 12px ui-sans-serif, system-ui";
@@ -2564,7 +2541,7 @@ function drawCalendarCanvas(){
   const first = new Date(year, month, 1);
   const last = new Date(year, month+1, 0);
 
-  const pad = 16;
+  const pad = 14;
   const cols = 7;
   const rows = 6;
 
@@ -2640,180 +2617,15 @@ function drawCalendarCanvas(){
   }
 }
 
-// === SAVE TRADE ===
-async function saveTrade(){
-  modalMsg.textContent = "";
-  const btn = document.getElementById("saveBtn");
-  btn.disabled = true;
-  btn.textContent = "Saving…";
+<script>
+/* CONTINUATION FROM WHERE YOUR FILE CUT OFF */
 
-  try{
-    const trade_date = document.getElementById("t_date").value;
-    const symbol = document.getElementById("t_symbol").value.trim();
-    const direction = document.getElementById("t_direction").value;
-    const result = document.getElementById("t_result").value;
+// close that partial function safely (it’s not used)
+function RZAlphaStyle(fillStyle, alpha){ return {fillStyle, alpha}; }
 
-    const rrRaw = document.getElementById("t_rr").value;
-    const rRaw = document.getElementById("t_r").value;
-
-    const session = document.getElementById("t_session").value.trim();
-    const strategy = document.getElementById("t_strategy").value.trim();
-    const mistakesRaw = document.getElementById("t_mistakes").value.trim();
-    const notes = document.getElementById("t_notes").value.trim();
-
-    if (!trade_date){ modalMsg.textContent = "Please choose a date."; return; }
-
-    const chosen = new Date(trade_date).getTime();
-    const now = Date.now();
-    if (chosen > now){ modalMsg.textContent = "You can’t log a trade in the future."; return; }
-
-    if (!symbol){ modalMsg.textContent = "Please enter a symbol."; return; }
-
-    const rr = rrRaw === "" ? null : Number(rrRaw);
-    if (rr !== null && !Number.isFinite(rr)){ modalMsg.textContent = "RR must be a number."; return; }
-
-    let r_multiple = (rRaw === "" ? null : Number(rRaw));
-    if (r_multiple !== null && !Number.isFinite(r_multiple)){ modalMsg.textContent = "R multiple must be a number."; return; }
-
-    if (r_multiple !== null && Number.isFinite(r_multiple)){
-      const absR = Math.abs(r_multiple);
-      if (result === "win") r_multiple = absR;
-      if (result === "loss") r_multiple = -absR;
-      if (result === "be") r_multiple = 0;
-    }
-
-    const mistakes = mistakesRaw
-      ? mistakesRaw.split(",").map(s=>s.trim()).filter(Boolean)
-      : [];
-
-    const payload = {
-      user_id: user.id,
-      trade_date: new Date(trade_date).toISOString(),
-      symbol,
-      direction,
-      rr,
-      r_multiple,
-      session: session || null,
-      strategy: strategy || null,
-      mistakes: mistakes.length ? mistakes : null,
-      notes: notes || null
-    };
-
-    const { error } = await sb.from("trades").insert(payload);
-    if (error){
-      modalMsg.textContent = `Save failed: ${error.message}`;
-      return;
-    }
-
-    modalMsg.textContent = "Saved.";
-    closeTradeModal();
-
-    await loadTrades();
-    renderAnalytics();
-    renderCalendar();
-    renderGoals();
-
-  } finally {
-    btn.disabled = false;
-    btn.textContent = "Save Trade";
-  }
-}
-
-// === UI WIRING ===
-function wireUI(){
-  document.getElementById("addTradeBtn").addEventListener("click", openTradeModal);
-  document.getElementById("closeModalBtn").addEventListener("click", closeTradeModal);
-  document.getElementById("modalBackdrop").addEventListener("click", (e)=>{
-    if (e.target === modalBackdrop) closeTradeModal();
-  });
-
-  document.getElementById("saveBtn").addEventListener("click", saveTrade);
-
-  document.getElementById("clearBtn").addEventListener("click", ()=>{
-    modalMsg.textContent = "";
-    document.getElementById("t_symbol").value = "";
-    document.getElementById("t_rr").value = "";
-    document.getElementById("t_r").value = "";
-    document.getElementById("t_session").value = "";
-    document.getElementById("t_strategy").value = "";
-    document.getElementById("t_mistakes").value = "";
-    document.getElementById("t_notes").value = "";
-  });
-
-  document.getElementById("refreshBtn").addEventListener("click", async ()=>{
-    await loadTrades();
-  });
-
-  document.getElementById("toggleThemeBtn").addEventListener("click", ()=>{
-    const cur = document.documentElement.getAttribute("data-theme") || "dark";
-    applyTheme(cur === "dark" ? "light" : "dark");
-    renderAnalytics();
-    renderCalendar();
-  });
-
-  document.getElementById("logoutBtn").addEventListener("click", async ()=>{
-    await sb.auth.signOut();
-    window.location.href = "login.html";
-  });
-
-  // calendar buttons
-  document.getElementById("calPrevBtn").addEventListener("click", ()=>{
-    const d = new Date(calYear, calMonth, 1);
-    d.setMonth(d.getMonth()-1);
-    calYear = d.getFullYear();
-    calMonth = d.getMonth();
-    renderCalendar();
-  });
-  document.getElementById("calNextBtn").addEventListener("click", ()=>{
-    const d = new Date(calYear, calMonth, 1);
-    d.setMonth(d.getMonth()+1);
-    calYear = d.getFullYear();
-    calMonth = d.getMonth();
-    renderCalendar();
-  });
-  document.getElementById("calTodayBtn").addEventListener("click", ()=>{
-    const now = new Date();
-    calYear = now.getFullYear();
-    calMonth = now.getMonth();
-    renderCalendar();
-  });
-  document.getElementById("calModeSwitch").addEventListener("click", ()=>{
-    calShowPercent = !calShowPercent;
-    renderCalendar();
-  });
-
-  // insight refresh
-  document.getElementById("insightRefreshBtn").addEventListener("click", ()=>{
-    renderFocus();
-  });
-
-  window.addEventListener("resize", ()=>{
-    if (document.getElementById("page-analytics").classList.contains("active")){
-      renderAnalytics();
-    }
-  });
-}
-
-// === HELPERS ===
-function fmtDate(d){
-  const opts = { day:"2-digit", month:"short", year:"numeric" };
-  return d.toLocaleDateString(undefined, opts);
-}
-function fmtDateTime(d){
-  const date = fmtDate(d);
-  const hh = String(d.getHours()).padStart(2,"0");
-  const mm = String(d.getMinutes()).padStart(2,"0");
-  return `${date} ${hh}:${mm}`;
-}
-function formatNumber(n){
-  if (!Number.isFinite(n)) return "—";
-  const abs = Math.abs(n);
-  if (abs >= 100) return n.toFixed(0);
-  if (abs >= 10) return n.toFixed(1);
-  return n.toFixed(2);
-}
-function escapeHtml(s){
-  return String(s)
+// === UTILITIES ===
+function escapeHtml(str){
+  return String(str ?? "")
     .replaceAll("&","&amp;")
     .replaceAll("<","&lt;")
     .replaceAll(">","&gt;")
@@ -2821,9 +2633,26 @@ function escapeHtml(s){
     .replaceAll("'","&#039;");
 }
 
+function formatNumber(n){
+  const x = Number(n);
+  if (!Number.isFinite(x)) return "—";
+  const abs = Math.abs(x);
+  if (abs >= 100) return x.toFixed(1);
+  return x.toFixed(2);
+}
+
+function fmtDateTime(d){
+  if (!(d instanceof Date)) return "—";
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,"0");
+  const day = String(d.getDate()).padStart(2,"0");
+  const hh = String(d.getHours()).padStart(2,"0");
+  const mm = String(d.getMinutes()).padStart(2,"0");
+  return `${y}-${m}-${day} ${hh}:${mm}`;
+}
+
 function monthName(m){
-  const names = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-  return names[m] || "—";
+  return ["January","February","March","April","May","June","July","August","September","October","November","December"][m] || "—";
 }
 
 function roundRect(ctx, x, y, w, h, r){
@@ -2837,92 +2666,245 @@ function roundRect(ctx, x, y, w, h, r){
   ctx.closePath();
 }
 
-function colorMix(c1, c2, t){
-  const a = parseColor(c1);
-  const b = parseColor(c2);
-  if (!a || !b) return c1;
-  const r = Math.round(a.r + (b.r - a.r) * t);
-  const g = Math.round(a.g + (b.g - a.g) * t);
-  const b2 = Math.round(a.b + (b.b - a.b) * t);
-  const aa = (a.a + (b.a - a.a) * t);
-  return `rgba(${r},${g},${b2},${aa})`;
+function colorMix(a, b, t){
+  // mix two colors (hex/rgb) to rgb string
+  const ca = parseColor(a);
+  const cb = parseColor(b);
+  const m = {
+    r: Math.round(ca.r + (cb.r - ca.r) * t),
+    g: Math.round(ca.g + (cb.g - ca.g) * t),
+    b: Math.round(ca.b + (cb.b - ca.b) * t),
+  };
+  return `rgb(${m.r},${m.g},${m.b})`;
 }
 
-function parseColor(c){
-  c = String(c).trim();
-  if (!c) return null;
+function parseColor(input){
+  const s = String(input || "").trim();
+  if (!s) return {r:0,g:0,b:0};
 
-  if (c[0] === "#"){
-    const hex = c.slice(1);
+  // css var fallback already resolved by caller usually, but just in case:
+  if (s.startsWith("var(")) return {r:0,g:0,b:0};
+
+  // hex
+  if (s[0] === "#"){
+    const hex = s.slice(1);
     if (hex.length === 3){
       const r = parseInt(hex[0]+hex[0],16);
       const g = parseInt(hex[1]+hex[1],16);
       const b = parseInt(hex[2]+hex[2],16);
-      return {r,g,b,a:1};
+      return {r,g,b};
     }
     if (hex.length === 6){
       const r = parseInt(hex.slice(0,2),16);
       const g = parseInt(hex.slice(2,4),16);
       const b = parseInt(hex.slice(4,6),16);
-      return {r,g,b,a:1};
+      return {r,g,b};
     }
   }
 
-  const m = c.match(/rgba?\(([^)]+)\)/i);
+  // rgb/rgba
+  const m = s.match(/rgba?\(([^)]+)\)/i);
   if (m){
-    const parts = m[1].split(",").map(x=>x.trim());
-    const r = Number(parts[0]);
-    const g = Number(parts[1]);
-    const b = Number(parts[2]);
-    const a = parts[3] !== undefined ? Number(parts[3]) : 1;
-    if ([r,g,b,a].some(x=>Number.isNaN(x))) return null;
-    return {r,g,b,a};
+    const parts = m[1].split(",").map(x=>Number(x.trim()));
+    return {r:parts[0]||0, g:parts[1]||0, b:parts[2]||0};
   }
 
-  try{
-    const tmp = document.createElement("canvas").getContext("2d");
-    tmp.fillStyle = c;
-    const v = tmp.fillStyle;
-    const mm = v.match(/rgba?\(([^)]+)\)/i);
-    if (mm){
-      const parts = mm[1].split(",").map(x=>x.trim());
-      const r = Number(parts[0]);
-      const g = Number(parts[1]);
-      const b = Number(parts[2]);
-      const a = parts[3] !== undefined ? Number(parts[3]) : 1;
-      if ([r,g,b,a].some(x=>Number.isNaN(x))) return null;
-      return {r,g,b,a};
+  // named colors: let browser resolve
+  const tmp = document.createElement("div");
+  tmp.style.color = s;
+  document.body.appendChild(tmp);
+  const cs = getComputedStyle(tmp).color;
+  document.body.removeChild(tmp);
+  return parseColor(cs);
+}
+
+// === SAVE TRADE ===
+async function saveTrade(){
+  modalMsg.textContent = "";
+
+  const tradeDateRaw = document.getElementById("t_date").value;
+  const symbol = document.getElementById("t_symbol").value.trim();
+  const direction = document.getElementById("t_direction").value;
+  const result = document.getElementById("t_result").value;
+  const rrRaw = document.getElementById("t_rr").value;
+  const rRaw = document.getElementById("t_r").value;
+  const session = document.getElementById("t_session").value;
+  const strategy = document.getElementById("t_strategy").value.trim();
+  const mistakesRaw = document.getElementById("t_mistakes").value.trim();
+  const notes = document.getElementById("t_notes").value.trim();
+
+  if (!tradeDateRaw){
+    modalMsg.textContent = "Please select Date and time.";
+    return;
+  }
+  if (!symbol){
+    modalMsg.textContent = "Please enter Symbol.";
+    return;
+  }
+  if (!rRaw){
+    modalMsg.textContent = "Please enter R multiple.";
+    return;
+  }
+
+  let rMultiple = Number(rRaw);
+  if (!Number.isFinite(rMultiple)){
+    modalMsg.textContent = "R multiple must be a number.";
+    return;
+  }
+
+  // store absolute R, apply sign from result
+  if (result === "loss") rMultiple = -Math.abs(rMultiple);
+  if (result === "win") rMultiple = Math.abs(rMultiple);
+  if (result === "be") rMultiple = 0;
+
+  const rr = rrRaw === "" ? null : Number(rrRaw);
+  if (rrRaw !== "" && !Number.isFinite(rr)){
+    modalMsg.textContent = "RR must be a number (or leave empty).";
+    return;
+  }
+
+  const mistakes = mistakesRaw
+    ? mistakesRaw.split(",").map(x=>x.trim()).filter(Boolean)
+    : [];
+
+  // datetime-local -> ISO with local timezone offset corrected
+  const dtLocal = new Date(tradeDateRaw);
+  const iso = new Date(dtLocal.getTime() - dtLocal.getTimezoneOffset()*60000).toISOString();
+
+  const payload = {
+    user_id: user.id,
+    trade_date: iso,
+    symbol,
+    direction,
+    rr,
+    r_multiple: rMultiple,
+    notes,
+    session,
+    strategy,
+    mistakes
+  };
+
+  const btn = document.getElementById("saveBtn");
+  btn.disabled = true;
+  btn.textContent = "Saving…";
+
+  const { error } = await sb.from("trades").insert(payload);
+
+  btn.disabled = false;
+  btn.textContent = "Save Trade";
+
+  if (error){
+    console.error(error);
+    modalMsg.textContent = `Save failed: ${error.message}`;
+    return;
+  }
+
+  closeTradeModal();
+  await loadTrades();
+}
+
+function clearTradeForm(){
+  modalMsg.textContent = "";
+  document.getElementById("t_symbol").value = "";
+  document.getElementById("t_direction").value = "long";
+  document.getElementById("t_result").value = "win";
+  document.getElementById("t_rr").value = "";
+  document.getElementById("t_r").value = "";
+  document.getElementById("t_session").value = "";
+  document.getElementById("t_strategy").value = "";
+  document.getElementById("t_mistakes").value = "";
+  document.getElementById("t_notes").value = "";
+}
+
+// === EVENTS / INIT ===
+function wireUI(){
+  document.getElementById("addTradeBtn").addEventListener("click", openTradeModal);
+  document.getElementById("closeModalBtn").addEventListener("click", closeTradeModal);
+  document.getElementById("clearBtn").addEventListener("click", clearTradeForm);
+  document.getElementById("saveBtn").addEventListener("click", saveTrade);
+
+  modalBackdrop.addEventListener("click", (e)=>{
+    if (e.target === modalBackdrop) closeTradeModal();
+  });
+  window.addEventListener("keydown", (e)=>{
+    if (e.key === "Escape"){
+      if (modalBackdrop.style.display === "flex") closeTradeModal();
+      if (confirmBackdrop.style.display === "flex") closeConfirm();
     }
-  } catch(e){}
+  });
 
-  return null;
+  // theme
+  document.getElementById("toggleThemeBtn").addEventListener("click", ()=>{
+    const current = document.documentElement.getAttribute("data-theme") || "dark";
+    applyTheme(current === "dark" ? "light" : "dark");
+    // re-draw charts so colors update
+    renderDashboard();
+    renderAnalytics();
+    renderCalendar();
+  });
+
+  // logout
+  document.getElementById("logoutBtn").addEventListener("click", async ()=>{
+    await sb.auth.signOut();
+    window.location.href = "login.html";
+  });
+
+  // calendar nav
+  document.getElementById("calPrevBtn").addEventListener("click", ()=>{
+    calMonth -= 1;
+    if (calMonth < 0){ calMonth = 11; calYear -= 1; }
+    renderCalendar();
+  });
+  document.getElementById("calNextBtn").addEventListener("click", ()=>{
+    calMonth += 1;
+    if (calMonth > 11){ calMonth = 0; calYear += 1; }
+    renderCalendar();
+  });
+  document.getElementById("calTodayBtn").addEventListener("click", ()=>{
+    const now = new Date();
+    calYear = now.getFullYear();
+    calMonth = now.getMonth();
+    renderCalendar();
+  });
+
+  document.getElementById("calModeSwitch").addEventListener("click", ()=>{
+    calShowPercent = !calShowPercent;
+    renderCalendar();
+  });
+
+  // goals
+  renderGoalsUI();
+  wireGoals();
+
+  // redraw charts on resize (prevents overlap / wrong sizing)
+  let resizeTimer = null;
+  window.addEventListener("resize", ()=>{
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(()=>{
+      if (document.getElementById("page-focus").classList.contains("active")) renderDashboard();
+      if (document.getElementById("page-analytics").classList.contains("active")) renderAnalytics();
+      if (document.getElementById("page-calendar").classList.contains("active")) renderCalendar();
+    }, 120);
+  });
 }
 
-function cap(s){
-  s = String(s || "");
-  if (!s) return "";
-  return s[0].toUpperCase() + s.slice(1);
-}
-function clamp(v, a, b){
-  return Math.min(b, Math.max(a, v));
-}
-
-// === INIT ===
-(async function init(){
+async function init(){
   initTheme();
   initRouting();
-  wireUI();
 
   const ok = await requireAuth();
   if (!ok) return;
 
-  const now = new Date();
-  calYear = now.getFullYear();
-  calMonth = now.getMonth();
-
+  wireUI();
   await loadTrades();
-  setActiveRoute(location.hash.replace("#","") || "focus");
-})();
+
+  // set default route
+  const fromHash = location.hash.replace("#","").trim();
+  setActiveRoute(fromHash || "focus");
+}
+
+init();
 </script>
+
 </body>
 </html>
