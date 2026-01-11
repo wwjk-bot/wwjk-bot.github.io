@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Sessionly dashboard</title>
+<title>Sessionly Dashboard</title>
 <meta name="description" content="Sessionly dashboard" />
 <style>
 :root{
@@ -63,7 +63,6 @@ radial-gradient(1100px 640px at 18% -6%, color-mix(in srgb, var(--accent) 22%, t
 radial-gradient(900px 540px at 84% 8%, color-mix(in srgb, var(--accent2) 12%, transparent), transparent 66%),
 linear-gradient(180deg, var(--bg) 0%, color-mix(in srgb, var(--bg) 92%, #000 8%) 100%);
 }
-
 [data-theme="light"] body{
 background:
 radial-gradient(900px 500px at 16% 0%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 62%),
@@ -76,13 +75,12 @@ min-height:100vh;
 display:grid;
 grid-template-columns: 280px 1fr;
 }
-
 @media (max-width: 980px){
 .app{grid-template-columns: 1fr;}
 .sidebar{position:sticky; top:0; z-index:50}
 }
 
-/* sidebar */
+/* Sidebar */
 .sidebar{
 padding:22px 18px;
 border-right:1px solid var(--stroke);
@@ -161,7 +159,7 @@ line-height:1.35;
 opacity:.9;
 }
 
-/* main */
+/* Main */
 .main{ padding:28px 26px 44px 26px; }
 .wrap{ max-width: 1140px; margin:0 auto; }
 
@@ -182,7 +180,6 @@ radial-gradient(700px 320px at 84% 6%, color-mix(in srgb, var(--accent2) 12%, tr
 opacity:.65;
 pointer-events:none;
 }
-
 .panelInner{position:relative; padding:22px;}
 .panelHeader{
 display:flex;
@@ -239,7 +236,6 @@ transition: transform .08s ease, filter .18s ease;
 box-shadow: 0 14px 40px color-mix(in srgb, var(--accent) 20%, transparent);
 }
 .cta:hover{transform: translateY(-1px); filter: brightness(1.04);}
-.cta:active{transform: translateY(0px);}
 
 .gridStats{
 margin-top:14px;
@@ -315,13 +311,13 @@ white-space:nowrap;
 .pill.warn{border-color: color-mix(in srgb, var(--warn) 42%, var(--stroke) 58%); }
 .pill.live{border-color: color-mix(in srgb, var(--accent) 42%, var(--stroke) 58%); }
 
-/* table */
+/* Tables */
 table{width:100%; border-collapse:collapse;}
 th,td{padding:10px 10px; border-bottom:1px solid var(--stroke); text-align:left; font-size:14px;}
 th{font-size:12px; text-transform:uppercase; letter-spacing:.4px; opacity:.75;}
 .emptyRow{ color:var(--muted); font-weight:650; padding:14px 10px; }
 
-/* delete icon button */
+/* Delete Icon Button */
 .iconBtn{
 border:1px solid color-mix(in srgb, var(--danger) 40%, var(--stroke) 60%);
 background: color-mix(in srgb, var(--panel) 28%, transparent);
@@ -351,44 +347,7 @@ clip:rect(0,0,0,0);
 white-space:nowrap;border:0;
 }
 
-/* coach card */
-.coachText{ color:var(--text); font-weight:800; line-height:1.45; margin:6px 0 12px 0; }
-.chips{display:flex; flex-wrap:wrap; gap:10px; margin:10px 0 12px 0;}
-.chip{
-font-size:13px;
-font-weight:900;
-border:1px solid var(--stroke);
-background: color-mix(in srgb, var(--panel) 32%, transparent);
-padding:8px 12px;
-border-radius:999px;
-opacity:.98;
-cursor:default;
-transition: transform .08s ease, background .18s ease, border-color .18s ease;
-}
-.chip:hover{
-transform: translateY(-1px);
-background: color-mix(in srgb, var(--accent) 10%, transparent);
-border-color: color-mix(in srgb, var(--accent) 30%, var(--stroke) 70%);
-}
-.mutedLine{color:var(--muted); font-weight:650; font-size:13px; line-height:1.35;}
-.miniBtn{
-width:100%;
-margin-top:12px;
-padding:12px 12px;
-border-radius:16px;
-border:1px solid var(--stroke);
-background: color-mix(in srgb, var(--panel) 34%, transparent);
-font-weight:950;
-cursor:pointer;
-transition: transform .08s ease, background .18s ease, border-color .18s ease;
-}
-.miniBtn:hover{
-transform: translateY(-1px);
-background: color-mix(in srgb, var(--accent2) 10%, transparent);
-border-color: color-mix(in srgb, var(--accent2) 24%, var(--stroke) 76%);
-}
-
-/* dashboard extras */
+/* Dashboard Extras */
 .heroLine{
 font-weight:980;
 letter-spacing:-.4px;
@@ -425,34 +384,35 @@ align-items:center;
 .kicker.bad{border-color: color-mix(in srgb, var(--danger) 30%, var(--stroke) 70%);}
 .kicker.neutral{border-color: color-mix(in srgb, var(--accent) 30%, var(--stroke) 70%);}
 
-.progressWrap{
+/* Goals */
+.goalsWrap{
 margin-top:12px;
 border:1px solid var(--stroke);
 background: color-mix(in srgb, var(--panel) 30%, transparent);
 border-radius:18px;
 padding:12px;
 }
-.progressTop{
+.goalsTop{
 display:flex;
 align-items:center;
 justify-content:space-between;
 gap:12px;
 flex-wrap:wrap;
 }
-.progressTitle{
+.goalsTitle{
 font-weight:980;
 letter-spacing:-.2px;
 }
-.goalEdit{
+.goalsControls{
 display:flex;
 align-items:center;
 gap:10px;
+flex-wrap:wrap;
 color:var(--muted);
 font-weight:850;
 font-size:13px;
 }
-.goalEdit input{
-width:140px;
+.selectLike, .goalsControls input{
 padding:10px 12px;
 border-radius:14px;
 border:1px solid var(--stroke);
@@ -460,6 +420,70 @@ background: color-mix(in srgb, var(--panel) 34%, transparent);
 color:var(--text);
 font-weight:900;
 outline:none;
+}
+.selectLike{
+appearance:none;
+cursor:pointer;
+}
+.goalsGrid{
+margin-top:10px;
+display:grid;
+grid-template-columns: 1fr 1fr 1fr;
+gap:12px;
+}
+@media (max-width: 980px){ .goalsGrid{grid-template-columns: 1fr;} }
+
+.goalBox{
+border:1px solid var(--stroke);
+background: color-mix(in srgb, var(--panel) 28%, transparent);
+border-radius:18px;
+padding:12px;
+}
+.goalRowTop{
+display:flex;
+align-items:flex-start;
+justify-content:space-between;
+gap:10px;
+flex-wrap:wrap;
+}
+.goalName{
+font-weight:980;
+letter-spacing:-.1px;
+}
+.goalSmall{
+margin-top:4px;
+color:var(--muted);
+font-weight:800;
+font-size:12px;
+}
+.goalEditRow{
+display:flex;
+align-items:center;
+gap:10px;
+flex-wrap:wrap;
+}
+.goalEditRow input{
+width:140px;
+}
+.presetRow{
+margin-top:10px;
+display:flex;
+gap:8px;
+flex-wrap:wrap;
+}
+.presetBtn{
+border:1px solid var(--stroke);
+background: color-mix(in srgb, var(--panel) 34%, transparent);
+border-radius:999px;
+padding:8px 10px;
+font-weight:950;
+cursor:pointer;
+transition: transform .08s ease, background .18s ease, border-color .18s ease;
+}
+.presetBtn:hover{
+transform: translateY(-1px);
+background: color-mix(in srgb, var(--accent) 10%, transparent);
+border-color: color-mix(in srgb, var(--accent) 26%, var(--stroke) 74%);
 }
 .bar{
 margin-top:10px;
@@ -486,7 +510,15 @@ color:var(--muted);
 font-weight:800;
 font-size:13px;
 }
+.noticeLine{
+margin-top:10px;
+color:var(--muted);
+font-weight:750;
+font-size:13px;
+line-height:1.35;
+}
 
+/* Charts - Fix Overlap (Hint Below Canvas) */
 .miniCharts{
 margin-top:12px;
 display:grid;
@@ -494,24 +526,30 @@ grid-template-columns: 1fr 1fr;
 gap:12px;
 }
 @media (max-width: 980px){ .miniCharts{grid-template-columns: 1fr;} }
+
 .miniChartBox{
 border:1px dashed color-mix(in srgb, var(--stroke2) 100%, transparent);
 border-radius:18px;
-height:150px;
-position:relative;
+height:170px;
 overflow:hidden;
+display:flex;
+flex-direction:column;
 }
-canvas{display:block; width:100%; height:100%;}
+.miniChartCanvas{
+flex:1 1 auto;
+min-height:120px;
+}
 .chartHint{
-position:absolute;
-inset:auto 12px 10px 12px;
+flex:0 0 auto;
+padding:10px 12px;
+border-top:1px solid var(--stroke);
 font-size:12px;
 color:var(--muted);
 font-weight:800;
-opacity:.92;
+background: color-mix(in srgb, var(--panel) 22%, transparent);
 }
 
-/* analytics layout */
+/* Analytics Charts */
 .gridAnalyticsTop{
 margin-top:12px;
 display:grid;
@@ -531,15 +569,17 @@ gap:12px;
 .chartBox{
 border:1px dashed color-mix(in srgb, var(--stroke2) 100%, transparent);
 border-radius:18px;
-height:240px;
+height:280px;
 display:flex;
-align-items:center;
-justify-content:center;
-position:relative;
+flex-direction:column;
 overflow:hidden;
 }
+.chartCanvas{
+flex:1 1 auto;
+min-height:200px;
+}
 
-/* calendar page */
+/* Calendar */
 .calTop{
 display:flex;
 align-items:center;
@@ -600,7 +640,6 @@ box-shadow: 0 10px 26px rgba(0,0,0,.35);
 transform: translateX(20px);
 background: color-mix(in srgb, var(--accent2) 85%, #000 15%);
 }
-
 .calGrid{
 display:grid;
 grid-template-columns: repeat(7, 1fr);
@@ -625,10 +664,7 @@ position:relative;
 overflow:hidden;
 box-shadow: var(--shadow2);
 }
-.calCell.muted{
-opacity:.35;
-filter:saturate(.7);
-}
+.calCell.muted{opacity:.35; filter:saturate(.7);}
 .calCell::before{
 content:"";
 position:absolute; inset:-2px;
@@ -637,37 +673,19 @@ opacity:.55;
 pointer-events:none;
 }
 .calCellInner{position:relative;}
-.calDay{
-font-weight:980;
-font-size:12px;
-opacity:.92;
-}
-.calMeta{
-margin-top:8px;
-color:var(--muted);
-font-weight:750;
-font-size:12px;
-line-height:1.35;
-}
-.calValue{
-margin-top:8px;
-font-weight:980;
-font-size:14px;
-}
+.calDay{font-weight:980;font-size:12px;opacity:.92;}
+.calMeta{margin-top:8px;color:var(--muted);font-weight:750;font-size:12px;line-height:1.35;}
+.calValue{margin-top:8px;font-weight:980;font-size:14px;}
 .calValue.pos{ color: color-mix(in srgb, var(--accent2) 85%, #fff 15%); }
 .calValue.neg{ color: color-mix(in srgb, var(--danger) 85%, #fff 15%); }
-.calGlowPos{
-background: radial-gradient(240px 120px at 10% 0%, color-mix(in srgb, var(--accent2) 22%, transparent), transparent 70%);
-}
-.calGlowNeg{
-background: radial-gradient(240px 120px at 10% 0%, color-mix(in srgb, var(--danger) 20%, transparent), transparent 70%);
-}
+.calGlowPos{background: radial-gradient(240px 120px at 10% 0%, color-mix(in srgb, var(--accent2) 22%, transparent), transparent 70%);}
+.calGlowNeg{background: radial-gradient(240px 120px at 10% 0%, color-mix(in srgb, var(--danger) 20%, transparent), transparent 70%);}
 .calCell.active{
 outline:2px solid color-mix(in srgb, var(--accent) 55%, transparent);
 box-shadow: 0 22px 70px color-mix(in srgb, var(--accent) 16%, transparent);
 }
 
-/* modal */
+/* Modals */
 .modalBackdrop{
 position:fixed; inset:0;
 background: rgba(0,0,0,.55);
@@ -750,7 +768,6 @@ opacity:.75;
 cursor:pointer;
 filter: drop-shadow(0 0 10px color-mix(in srgb, var(--accent) 35%, transparent));
 }
-
 .modalActions{
 margin-top:12px;
 display:flex;
@@ -777,15 +794,7 @@ color:#fff;
 font-weight:980;
 cursor:pointer;
 }
-.msg{
-margin-top:10px;
-min-height:20px;
-font-size:13px;
-color:var(--muted);
-font-weight:750;
-}
-
-/* pages */
+.msg{margin-top:10px; min-height:20px; font-size:13px; color:var(--muted); font-weight:750;}
 .page{display:none;}
 .page.active{display:block;}
 </style>
@@ -795,115 +804,201 @@ font-weight:750;
 <div class="app">
 <aside class="sidebar">
 <div class="logoRow"><span class="logoDot"></span><span>Sessionly</span></div>
-<div class="signed">signed in as <span id="userEmail">...</span></div>
+<div class="signed">Signed in as <span id="userEmail">...</span></div>
 
 <div class="navGroup">
-<button class="navBtn" data-route="focus"><span>focus</span><span class="tag">daily</span></button>
-<button class="navBtn" data-route="analytics"><span>analytics</span><span class="tag">charts</span></button>
-<button class="navBtn" data-route="calendar"><span>calendar</span><span class="tag">month</span></button>
-<button class="navBtn" data-route="trades"><span>trades</span><span class="tag">table</span></button>
-<button class="navBtn" data-route="journal"><span>journal</span><span class="tag">notes</span></button>
+<button class="navBtn" data-route="focus"><span>Focus</span><span class="tag">Daily</span></button>
+<button class="navBtn" data-route="analytics"><span>Analytics</span><span class="tag">Charts</span></button>
+<button class="navBtn" data-route="calendar"><span>Calendar</span><span class="tag">Month</span></button>
+<button class="navBtn" data-route="trades"><span>Trades</span><span class="tag">Table</span></button>
+<button class="navBtn" data-route="journal"><span>Journal</span><span class="tag">Notes</span></button>
 </div>
 
 <div class="sidebarActions">
-<button class="ghostBtn" id="toggleThemeBtn">toggle theme</button>
-<button class="ghostBtn" id="logoutBtn">log out</button>
+<button class="ghostBtn" id="toggleThemeBtn">Toggle Theme</button>
+<button class="ghostBtn" id="logoutBtn">Log Out</button>
 </div>
 
-<div class="slogan">calm by default, deep when you want it</div>
+<div class="slogan">Calm by default, deep when you want it.</div>
 </aside>
 
 <main class="main">
 <div class="wrap">
 
-<!-- focus page (dashboard) -->
+<!-- Focus page (Dashboard) -->
 <section class="page" id="page-focus">
 <div class="panel">
 <div class="panelInner">
 <div class="panelHeader">
 <div>
-<h1 class="heroLine" id="dashGreeting">good day</h1>
-<div class="heroSub" id="dashSub">here’s your performance snapshot</div>
+<h1 class="heroLine" id="dashGreeting">Good Day</h1>
+<div class="heroSub" id="dashSub">Here’s your performance snapshot</div>
 
 <div class="kickerRow">
-<div class="kicker neutral" id="kickerTier">tier <strong>—</strong></div>
-<div class="kicker" id="kickerStreak">streak <strong>—</strong></div>
-<div class="kicker" id="kickerMonth">this month <strong>—</strong></div>
+<div class="kicker neutral" id="kickerTier">Tier <strong>—</strong></div>
+<div class="kicker" id="kickerStreak">Streak <strong>—</strong></div>
+<div class="kicker" id="kickerMonth">This Month <strong>—</strong></div>
 </div>
 </div>
-<div class="badge"><span class="badgeDot"></span><span id="focusStatus">ready</span></div>
+<div class="badge"><span class="badgeDot"></span><span id="focusStatus">Ready</span></div>
 </div>
 
 <div class="ctaRow">
-<button class="cta" id="addTradeBtn">+ add trade</button>
+<button class="cta" id="addTradeBtn">+ Add Trade</button>
 </div>
 
 <div class="gridStats">
 <div class="statCard">
-<div class="statLabel">total pnl</div>
+<div class="statLabel">Total PnL</div>
 <div class="statValue" id="d_totalPnl">—</div>
-<div class="statHint" id="d_totalPnl_hint">all time</div>
+<div class="statHint" id="d_totalPnl_hint">All Time</div>
 </div>
 <div class="statCard">
-<div class="statLabel">month pnl</div>
+<div class="statLabel">Month PnL</div>
 <div class="statValue" id="d_monthPnl">—</div>
-<div class="statHint" id="d_monthPnl_hint">this month</div>
+<div class="statHint" id="d_monthPnl_hint">This Month</div>
 </div>
 <div class="statCard">
-<div class="statLabel">profit factor</div>
+<div class="statLabel">Profit Factor</div>
 <div class="statValue" id="d_pf">—</div>
-<div class="statHint" id="d_pf_hint">from r multiple</div>
+<div class="statHint" id="d_pf_hint">From R Multiple</div>
 </div>
 <div class="statCard">
-<div class="statLabel">win rate</div>
+<div class="statLabel">Win Rate</div>
 <div class="statValue" id="d_wr">—</div>
-<div class="statHint" id="d_wr_hint">decided trades</div>
+<div class="statHint" id="d_wr_hint">Decided Trades</div>
 </div>
 <div class="statCard">
-<div class="statLabel">total trades</div>
+<div class="statLabel">Total Trades</div>
 <div class="statValue" id="d_trades">—</div>
-<div class="statHint">logged</div>
+<div class="statHint">Logged</div>
 </div>
 <div class="statCard">
-<div class="statLabel">avg r</div>
+<div class="statLabel">Avg R</div>
 <div class="statValue" id="d_avgR">—</div>
-<div class="statHint">per trade</div>
+<div class="statHint">Per Trade</div>
 </div>
 </div>
 
 <div class="gridMain">
 <div class="card">
 <div class="cardHead">
-<h3 class="cardTitle">momentum</h3>
-<span class="pill ok" id="recentPill">ready</span>
+<h3 class="cardTitle">Momentum</h3>
+<span class="pill ok" id="recentPill">Ready</span>
 </div>
 
-<div class="progressWrap">
-<div class="progressTop">
+<!-- Goals -->
+<div class="goalsWrap">
+<div class="goalsTop">
 <div>
-<div class="progressTitle">monthly goal</div>
-<div class="mutedLine" id="goalLine">tracking your progress automatically</div>
+<div class="goalsTitle">Goals</div>
+<div class="noticeLine" id="goalsNote">Set Daily, Weekly, and Monthly targets. Progress updates automatically.</div>
 </div>
-<div class="goalEdit">
-<span>goal</span>
-<input id="goalInput" type="number" step="1" placeholder="2000" />
-</div>
-</div>
-<div class="bar"><div class="barFill" id="goalFill"></div></div>
-<div class="progressMeta">
-<div id="goalLeft">—</div>
-<div id="goalPct">—</div>
+
+<div class="goalsControls">
+<select class="selectLike" id="currencySelect" title="Currency">
+<option value="USD">USD</option>
+<option value="EUR">EUR</option>
+<option value="GBP">GBP</option>
+<option value="AED">AED</option>
+<option value="CAD">CAD</option>
+<option value="AUD">AUD</option>
+</select>
 </div>
 </div>
 
+<div class="goalsGrid">
+<!-- Daily -->
+<div class="goalBox">
+<div class="goalRowTop">
+<div>
+<div class="goalName">Daily Goal</div>
+<div class="goalSmall" id="dailySub">Today</div>
+</div>
+<div class="goalEditRow">
+<input id="goalDailyInput" type="number" step="1" placeholder="100" />
+</div>
+</div>
+
+<div class="presetRow">
+<button class="presetBtn" data-goal="daily" data-val="50">50</button>
+<button class="presetBtn" data-goal="daily" data-val="100">100</button>
+<button class="presetBtn" data-goal="daily" data-val="200">200</button>
+<button class="presetBtn" data-goal="daily" data-val="500">500</button>
+</div>
+
+<div class="bar"><div class="barFill" id="goalDailyFill"></div></div>
+<div class="progressMeta">
+<div id="goalDailyLeft">—</div>
+<div id="goalDailyPct">—</div>
+</div>
+</div>
+
+<!-- Weekly -->
+<div class="goalBox">
+<div class="goalRowTop">
+<div>
+<div class="goalName">Weekly Goal</div>
+<div class="goalSmall" id="weeklySub">This week (Mon–Sun)</div>
+</div>
+<div class="goalEditRow">
+<input id="goalWeeklyInput" type="number" step="1" placeholder="500" />
+</div>
+</div>
+
+<div class="presetRow">
+<button class="presetBtn" data-goal="weekly" data-val="200">200</button>
+<button class="presetBtn" data-goal="weekly" data-val="500">500</button>
+<button class="presetBtn" data-goal="weekly" data-val="1000">1000</button>
+<button class="presetBtn" data-goal="weekly" data-val="2000">2000</button>
+</div>
+
+<div class="bar"><div class="barFill" id="goalWeeklyFill"></div></div>
+<div class="progressMeta">
+<div id="goalWeeklyLeft">—</div>
+<div id="goalWeeklyPct">—</div>
+</div>
+</div>
+
+<!-- Monthly -->
+<div class="goalBox">
+<div class="goalRowTop">
+<div>
+<div class="goalName">Monthly Goal</div>
+<div class="goalSmall" id="monthlySub">This month</div>
+</div>
+<div class="goalEditRow">
+<input id="goalMonthlyInput" type="number" step="1" placeholder="2000" />
+</div>
+</div>
+
+<div class="presetRow">
+<button class="presetBtn" data-goal="monthly" data-val="500">500</button>
+<button class="presetBtn" data-goal="monthly" data-val="1000">1000</button>
+<button class="presetBtn" data-goal="monthly" data-val="2000">2000</button>
+<button class="presetBtn" data-goal="monthly" data-val="5000">5000</button>
+</div>
+
+<div class="bar"><div class="barFill" id="goalMonthlyFill"></div></div>
+<div class="progressMeta">
+<div id="goalMonthlyLeft">—</div>
+<div id="goalMonthlyPct">—</div>
+</div>
+</div>
+</div>
+
+<div class="noticeLine" id="pnlNotice"></div>
+</div>
+
+<!-- Mini charts -->
 <div class="miniCharts">
 <div class="miniChartBox">
-<canvas id="dashEquitySpark"></canvas>
-<div class="chartHint">equity sparkline (last 30 trades)</div>
+<canvas class="miniChartCanvas" id="dashEquitySpark"></canvas>
+<div class="chartHint">Equity Sparkline (Last 30 Trades)</div>
 </div>
 <div class="miniChartBox">
-<canvas id="dashDailyBars"></canvas>
-<div class="chartHint">daily pnl (last 14 days)</div>
+<canvas class="miniChartCanvas" id="dashDailyBars"></canvas>
+<div class="chartHint">Daily PnL (Last 14 Days)</div>
 </div>
 </div>
 
@@ -911,18 +1006,18 @@ font-weight:750;
 <table>
 <thead>
 <tr>
-<th>date</th>
-<th>symbol</th>
-<th>dir</th>
-<th>rr</th>
-<th>r</th>
-<th>session</th>
-<th>strategy</th>
+<th>Date</th>
+<th>Symbol</th>
+<th>Dir</th>
+<th>RR</th>
+<th>R</th>
+<th>Session</th>
+<th>Strategy</th>
 <th style="text-align:right;"></th>
 </tr>
 </thead>
 <tbody id="recentTradesBody">
-<tr><td class="emptyRow" colspan="8">loading…</td></tr>
+<tr><td class="emptyRow" colspan="8">Loading…</td></tr>
 </tbody>
 </table>
 </div>
@@ -930,17 +1025,21 @@ font-weight:750;
 
 <div class="card">
 <div class="cardHead">
-<h3 class="cardTitle">today’s focus</h3>
-<span class="pill live">coach</span>
+<h3 class="cardTitle">Today’s Focus</h3>
+<span class="pill live">Coach</span>
 </div>
-<div class="coachText" id="coachText">log the next trade immediately after closing it, and write one sentence on why you entered</div>
-<div class="chips" id="coachChips">
-<div class="chip">session ny</div>
-<div class="chip">rule max 3 trades</div>
-<div class="chip">goal no revenge</div>
+<div style="color:var(--text); font-weight:800; line-height:1.45; margin:6px 0 12px 0;" id="coachText">
+Log the next trade immediately after closing it, and write one sentence on why you entered.
 </div>
-<div class="mutedLine" id="coachSub">next we’ll generate this from your real patterns and mistakes, for now it’s a placeholder</div>
-<button class="miniBtn" id="refreshBtn">refresh stats</button>
+<div style="display:flex; flex-wrap:wrap; gap:10px; margin:10px 0 12px 0;" id="coachChips">
+<div style="font-size:13px;font-weight:900;border:1px solid var(--stroke);background:color-mix(in srgb, var(--panel) 32%, transparent);padding:8px 12px;border-radius:999px;">Session: NY</div>
+<div style="font-size:13px;font-weight:900;border:1px solid var(--stroke);background:color-mix(in srgb, var(--panel) 32%, transparent);padding:8px 12px;border-radius:999px;">Rule: Max 3 Trades</div>
+<div style="font-size:13px;font-weight:900;border:1px solid var(--stroke);background:color-mix(in srgb, var(--panel) 32%, transparent);padding:8px 12px;border-radius:999px;">Goal: No Revenge</div>
+</div>
+<div class="noticeLine" id="coachSub">
+Next we’ll generate this from your real patterns. For now, it’s a placeholder.
+</div>
+<button class="ghostBtn" id="refreshBtn" style="margin-top:12px;">Refresh Stats</button>
 </div>
 </div>
 
@@ -948,132 +1047,128 @@ font-weight:750;
 </div>
 </section>
 
-<!-- analytics page -->
+<!-- Analytics page -->
 <section class="page" id="page-analytics">
 <div class="panel">
 <div class="panelInner">
 <div class="panelHeader">
 <div>
-<h1 class="title">analytics</h1>
-<div class="subtitle">deep data lives here, focus stays clean</div>
+<h1 class="title">Analytics</h1>
+<div class="subtitle">Deep data lives here. Focus stays clean.</div>
 </div>
-<div class="badge"><span class="badgeDot"></span><span>live</span></div>
+<div class="badge"><span class="badgeDot"></span><span>Live</span></div>
 </div>
 
 <div class="gridAnalyticsTop">
 <div class="statCard">
-<div class="statLabel">profit factor</div>
+<div class="statLabel">Profit Factor</div>
 <div class="statValue" id="a_pf">—</div>
-<div class="statHint" id="a_pf_hint">from r multiple</div>
+<div class="statHint" id="a_pf_hint">From R Multiple</div>
 </div>
 <div class="statCard">
-<div class="statLabel">avg win vs avg loss</div>
+<div class="statLabel">Avg Win vs Avg Loss</div>
 <div class="statValue" id="a_awal">—</div>
-<div class="statHint">avg win r vs avg loss r</div>
+<div class="statHint">Avg Win R vs Avg Loss R</div>
 </div>
 <div class="statCard">
-<div class="statLabel">best hour</div>
+<div class="statLabel">Best Hour</div>
 <div class="statValue" id="a_besthour">—</div>
-<div class="statHint" id="a_besthour_hint">avg r</div>
+<div class="statHint" id="a_besthour_hint">Avg R</div>
 </div>
 </div>
 
 <div class="gridCharts">
 <div class="card">
 <div class="cardHead">
-<h3 class="cardTitle">hourly performance</h3>
-<span class="pill">sessionly</span>
+<h3 class="cardTitle">Hourly Performance</h3>
+<span class="pill">Sessionly</span>
 </div>
 <div class="chartBox">
-<canvas id="hourlyCanvas"></canvas>
-<div class="chartHint">bars = total r per hour</div>
+<canvas class="chartCanvas" id="hourlyCanvas"></canvas>
+<div class="chartHint">Bars = Total R per hour</div>
 </div>
 </div>
 
 <div class="card">
 <div class="cardHead">
-<h3 class="cardTitle">equity curve</h3>
-<span class="pill">trend</span>
+<h3 class="cardTitle">Equity Curve</h3>
+<span class="pill">Trend</span>
 </div>
 <div class="chartBox">
-<canvas id="equityCanvas"></canvas>
-<div class="chartHint">line = cumulative r over time</div>
+<canvas class="chartCanvas" id="equityCanvas"></canvas>
+<div class="chartHint">Line = Cumulative R over time</div>
 </div>
 </div>
 
 <div class="card">
 <div class="cardHead">
-<h3 class="cardTitle">win vs loss distribution</h3>
-<span class="pill">edge</span>
+<h3 class="cardTitle">Win vs Loss Distribution</h3>
+<span class="pill">Edge</span>
 </div>
 <div class="chartBox">
-<canvas id="donutCanvas"></canvas>
-<div class="chartHint">donut = win loss breakeven</div>
+<canvas class="chartCanvas" id="donutCanvas"></canvas>
+<div class="chartHint">Donut = Win / Loss / Breakeven</div>
 </div>
 </div>
 
 <div class="card">
 <div class="cardHead">
-<h3 class="cardTitle">pnl by day</h3>
-<span class="pill">calendar</span>
+<h3 class="cardTitle">PnL by Day</h3>
+<span class="pill">Calendar</span>
 </div>
 <div class="chartBox">
-<canvas id="calendarCanvas"></canvas>
-<div class="chartHint">heat = total r per day</div>
+<canvas class="chartCanvas" id="calendarCanvas"></canvas>
+<div class="chartHint">Heat = Total R per day</div>
 </div>
 </div>
 </div>
 
-<div style="margin-top:10px;color:var(--muted);font-weight:700;font-size:13px;">
-log trades and the charts will update instantly
+<div class="noticeLine" style="margin-top:10px;">
+Log trades and the charts will update instantly.
 </div>
 
 </div>
 </div>
 </section>
 
-<!-- calendar page -->
+<!-- Calendar page -->
 <section class="page" id="page-calendar">
 <div class="panel">
 <div class="panelInner">
 <div class="panelHeader">
 <div>
-<h1 class="title">calendar</h1>
-<div class="subtitle">see your trading days at a glance</div>
+<h1 class="title">Calendar</h1>
+<div class="subtitle">See your trading days at a glance.</div>
 </div>
-<div class="badge"><span class="badgeDot"></span><span id="calBadge">live</span></div>
+<div class="badge"><span class="badgeDot"></span><span id="calBadge">Live</span></div>
 </div>
 
 <div class="card">
 <div class="calTop">
 <div class="calTitleRow">
-<div class="badge" style="gap:10px;">
-<span id="calYear">—</span>
-</div>
-<div class="badge" style="gap:10px;">
-<span id="calMonth">—</span>
-</div>
+<div class="badge" style="gap:10px;"><span id="calYear">—</span></div>
+<div class="badge" style="gap:10px;"><span id="calMonth">—</span></div>
 </div>
 
 <div class="calNav">
-<button class="calBtn" id="calPrevBtn">‹ prev</button>
-<button class="calBtn" id="calTodayBtn">today</button>
-<button class="calBtn" id="calNextBtn">next ›</button>
+<button class="calBtn" id="calPrevBtn">‹ Prev</button>
+<button class="calBtn" id="calTodayBtn">Today</button>
+<button class="calBtn" id="calNextBtn">Next ›</button>
 </div>
 
 <div class="toggleRow">
-<div class="switch" id="calModeSwitch" title="toggle between total R and win/loss%">
+<div class="switch" id="calModeSwitch" title="Toggle between Total R and Win Rate">
 <div class="switchDot"></div>
 </div>
-<div><span id="calModeLabel">show win/loss %</span></div>
+<div><span id="calModeLabel">Show Win Rate</span></div>
 </div>
 </div>
 
 <div class="calGrid" id="calDowRow"></div>
 <div class="calGrid" id="calGrid"></div>
 
-<div class="mutedLine" style="margin-top:12px;">
-each day shows total trades, win rate, and a green or red result
+<div class="noticeLine" style="margin-top:12px;">
+Each day shows total trades, win rate, and a green or red result.
 </div>
 </div>
 
@@ -1081,40 +1176,40 @@ each day shows total trades, win rate, and a green or red result
 </div>
 </section>
 
-<!-- trades page -->
+<!-- Trades page -->
 <section class="page" id="page-trades">
 <div class="panel">
 <div class="panelInner">
 <div class="panelHeader">
 <div>
-<h1 class="title">trades</h1>
-<div class="subtitle">your full list, searchable next</div>
+<h1 class="title">Trades</h1>
+<div class="subtitle">Your full list. Searchable next.</div>
 </div>
 <div class="badge"><span class="badgeDot"></span><span id="tradesCountBadge">0</span></div>
 </div>
 
 <div class="card">
 <div class="cardHead">
-<h3 class="cardTitle">all trades</h3>
-<span class="pill">table</span>
+<h3 class="cardTitle">All Trades</h3>
+<span class="pill">Table</span>
 </div>
 
 <div style="overflow:auto;">
 <table>
 <thead>
 <tr>
-<th>date</th>
-<th>symbol</th>
-<th>dir</th>
-<th>rr</th>
-<th>r</th>
-<th>session</th>
-<th>strategy</th>
+<th>Date</th>
+<th>Symbol</th>
+<th>Dir</th>
+<th>RR</th>
+<th>R</th>
+<th>Session</th>
+<th>Strategy</th>
 <th style="text-align:right;"></th>
 </tr>
 </thead>
 <tbody id="tradesTableBody">
-<tr><td class="emptyRow" colspan="8">loading…</td></tr>
+<tr><td class="emptyRow" colspan="8">Loading…</td></tr>
 </tbody>
 </table>
 </div>
@@ -1124,25 +1219,25 @@ each day shows total trades, win rate, and a green or red result
 </div>
 </section>
 
-<!-- journal page -->
+<!-- Journal page -->
 <section class="page" id="page-journal">
 <div class="panel">
 <div class="panelInner">
 <div class="panelHeader">
 <div>
-<h1 class="title">journal</h1>
-<div class="subtitle">notes and patterns, coming next</div>
+<h1 class="title">Journal</h1>
+<div class="subtitle">Notes and patterns. Coming next.</div>
 </div>
-<div class="badge"><span class="badgeDot"></span><span>soon</span></div>
+<div class="badge"><span class="badgeDot"></span><span>Soon</span></div>
 </div>
 
 <div class="card">
 <div class="cardHead">
-<h3 class="cardTitle">quick note</h3>
-<span class="pill warn">placeholder</span>
+<h3 class="cardTitle">Quick Note</h3>
+<span class="pill warn">Placeholder</span>
 </div>
-<div class="mutedLine">
-next we’ll save daily notes and auto surface your repeating mistakes and best setups
+<div class="noticeLine">
+Next we’ll save daily notes and auto surface your repeating mistakes and best setups.
 </div>
 </div>
 </div>
@@ -1153,91 +1248,91 @@ next we’ll save daily notes and auto surface your repeating mistakes and best 
 </main>
 </div>
 
-<!-- add trade modal -->
+<!-- Add Trade Modal -->
 <div class="modalBackdrop" id="modalBackdrop">
-<div class="modal" role="dialog" aria-modal="true" aria-label="add trade">
+<div class="modal" role="dialog" aria-modal="true" aria-label="Add Trade">
 <div class="modalInner">
 <div class="modalHead">
 <div>
-<h3 class="modalTitle">add trade</h3>
-<div class="subtitle" style="margin-top:4px;">fast logging, clean data</div>
+<h3 class="modalTitle">Add Trade</h3>
+<div class="subtitle" style="margin-top:4px;">Fast logging, clean data.</div>
 </div>
-<button class="closeBtn" id="closeModalBtn">close</button>
+<button class="closeBtn" id="closeModalBtn">Close</button>
 </div>
 
 <div class="formGrid">
 <div>
-<label>date and time</label>
+<label>Date and Time</label>
 <input id="t_date" type="datetime-local" />
 </div>
 
 <div>
-<label>symbol</label>
-<input id="t_symbol" placeholder="xauusd / nasdaq / btc" />
+<label>Symbol</label>
+<input id="t_symbol" placeholder="XAUUSD / NASDAQ / BTC" />
 </div>
 
 <div>
-<label>direction</label>
+<label>Direction</label>
 <select id="t_direction">
-<option value="long">long</option>
-<option value="short">short</option>
+<option value="long">Long</option>
+<option value="short">Short</option>
 </select>
 </div>
 
 <div>
-<label>result</label>
+<label>Result</label>
 <select id="t_result">
-<option value="win">win</option>
-<option value="loss">loss</option>
-<option value="be">breakeven</option>
+<option value="win">Win</option>
+<option value="loss">Loss</option>
+<option value="be">Breakeven</option>
 </select>
 </div>
 
 <div>
-<label>rr (optional)</label>
+<label>RR (Optional)</label>
 <input id="t_rr" type="number" step="0.01" placeholder="1.0" />
 </div>
 
 <div>
-<label>r multiple (enter absolute)</label>
+<label>R Multiple (Enter absolute)</label>
 <input id="t_r" type="number" step="0.01" placeholder="1.3" />
 </div>
 
 <div>
-<label>pnl (optional)</label>
+<label>PnL (Optional)</label>
 <input id="t_pnl" type="number" step="0.01" placeholder="125.00" />
 </div>
 
 <div>
-<label>session (optional)</label>
+<label>Session (Optional)</label>
 <select id="t_session">
 <option value="">—</option>
-<option value="asia">asia</option>
-<option value="london">london</option>
-<option value="ny">ny</option>
-<option value="overlap">overlap</option>
+<option value="asia">Asia</option>
+<option value="london">London</option>
+<option value="ny">NY</option>
+<option value="overlap">Overlap</option>
 </select>
 </div>
 
 <div>
-<label>strategy (optional)</label>
-<input id="t_strategy" placeholder="fvg / breakout / mean reversion" />
+<label>Strategy (Optional)</label>
+<input id="t_strategy" placeholder="FVG / Breakout / Mean Reversion" />
 </div>
 
 <div style="grid-column: 1 / -1;">
-<label>mistakes (optional, comma separated)</label>
-<input id="t_mistakes" placeholder="late entry, revenge, no stop" />
+<label>Mistakes (Optional, comma separated)</label>
+<input id="t_mistakes" placeholder="Late entry, Revenge, No stop" />
 </div>
 
 <div style="grid-column: 1 / -1;">
-<label>notes (optional)</label>
-<textarea id="t_notes" placeholder="why you entered, what you’ll fix next"></textarea>
+<label>Notes (Optional)</label>
+<textarea id="t_notes" placeholder="Why you entered, what you’ll fix next"></textarea>
 </div>
 </div>
 
 <div class="modalActions">
-<button class="ghostBtn" id="clearBtn" style="width:auto;">clear</button>
-<button class="saveBtn" id="saveBtn">save trade</button>
+<button class="ghostBtn" id="clearBtn" style="width:auto;">Clear</button>
+<button class="saveBtn" id="saveBtn">Save Trade</button>
 </div>
 
 <div class="msg" id="modalMsg"></div>
@@ -1245,25 +1340,25 @@ next we’ll save daily notes and auto surface your repeating mistakes and best 
 </div>
 </div>
 
-<!-- confirm delete modal -->
+<!-- Confirm Delete Modal -->
 <div class="modalBackdrop" id="confirmBackdrop">
-<div class="modal" role="dialog" aria-modal="true" aria-label="confirm delete">
+<div class="modal" role="dialog" aria-modal="true" aria-label="Confirm Delete">
 <div class="modalInner">
 <div class="modalHead">
 <div>
-<h3 class="modalTitle" id="confirmTitle">are you sure?</h3>
-<div class="subtitle" style="margin-top:4px;" id="confirmSubtitle">this is permanent and can’t be undone</div>
+<h3 class="modalTitle" id="confirmTitle">Are you sure?</h3>
+<div class="subtitle" style="margin-top:4px;" id="confirmSubtitle">This is permanent and can’t be undone.</div>
 </div>
-<button class="closeBtn" id="confirmCloseBtn">close</button>
+<button class="closeBtn" id="confirmCloseBtn">Close</button>
 </div>
 
-<div class="mutedLine" id="confirmBody" style="margin-top:4px;">
-are you sure you want to delete this trade? this is permanent and can’t be undone
+<div class="noticeLine" id="confirmBody" style="margin-top:4px;">
+Are you sure you want to delete this trade? This is permanent and can’t be undone.
 </div>
 
 <div class="modalActions" style="margin-top:14px;">
-<button class="ghostBtn" id="confirmCancelBtn" style="width:auto;">cancel</button>
-<button class="dangerPrimary" id="confirmOkBtn" style="width:auto;">delete</button>
+<button class="ghostBtn" id="confirmCancelBtn" style="width:auto;">Cancel</button>
+<button class="dangerPrimary" id="confirmOkBtn" style="width:auto;">Delete</button>
 </div>
 
 <div class="msg" id="confirmMsg"></div>
@@ -1271,7 +1366,6 @@ are you sure you want to delete this trade? this is permanent and can’t be und
 </div>
 </div>
 
-<!-- supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
@@ -1282,7 +1376,7 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 /*
 IMPORTANT FOR DELETE:
-you must add a delete policy in supabase, otherwise delete will fail with RLS.
+You must add a delete policy in Supabase, otherwise delete will fail with RLS.
 
 create policy "users can delete own trades"
 on public.trades for delete
@@ -1293,11 +1387,17 @@ using (auth.uid() = user_id);
 let user = null;
 let trades = [];
 let hasPnlColumn = true;
+let hasAnyPnlData = true;
 
-// calendar state
+// Calendar state
 let calYear = new Date().getFullYear();
 let calMonth = new Date().getMonth(); // 0-11
-let calShowPercent = false; // false = show total R, true = show % (win rate)
+let calShowPercent = false; // false = Total R, true = Win Rate
+
+// Goals state
+const GOAL_PERIODS = ["daily","weekly","monthly"];
+const DEFAULT_GOALS = { daily: 100, weekly: 500, monthly: 2000 };
+const DEFAULT_CURRENCY = "USD";
 
 // === THEME ===
 function applyTheme(theme){
@@ -1311,7 +1411,6 @@ applyTheme(saved || "dark");
 
 // === ROUTING ===
 const routes = ["focus","analytics","calendar","trades","journal"];
-
 function setActiveRoute(route){
 if (!routes.includes(route)) route = "focus";
 
@@ -1319,21 +1418,17 @@ routes.forEach(r=>{
 const page = document.getElementById(`page-${r}`);
 if (page) page.classList.toggle("active", r === route);
 });
-
 document.querySelectorAll(".navBtn").forEach(btn=>{
 btn.classList.toggle("active", btn.dataset.route === route);
 });
-
 if (location.hash.replace("#","") !== route){
 history.replaceState(null, "", `#${route}`);
 }
-
 if (route === "focus") renderFocus();
 if (route === "analytics") renderAnalytics();
 if (route === "trades") renderTradesTable();
 if (route === "calendar") renderCalendar();
 }
-
 function initRouting(){
 const fromHash = location.hash.replace("#","").trim();
 setActiveRoute(fromHash || "focus");
@@ -1361,7 +1456,7 @@ window.location.href = "login.html";
 return false;
 }
 user = session.user;
-document.getElementById("userEmail").textContent = user.email || "signed in";
+document.getElementById("userEmail").textContent = user.email || "Signed in";
 return true;
 }
 
@@ -1393,7 +1488,7 @@ modalBackdrop.style.display = "flex";
 }
 function closeTradeModal(){ modalBackdrop.style.display = "none"; }
 
-// confirm modal
+// Confirm modal
 const confirmBackdrop = document.getElementById("confirmBackdrop");
 const confirmTitle = document.getElementById("confirmTitle");
 const confirmSubtitle = document.getElementById("confirmSubtitle");
@@ -1403,16 +1498,14 @@ const confirmOkBtn = document.getElementById("confirmOkBtn");
 const confirmCancelBtn = document.getElementById("confirmCancelBtn");
 const confirmCloseBtn = document.getElementById("confirmCloseBtn");
 
-function closeConfirm(){
-confirmBackdrop.style.display = "none";
-}
+function closeConfirm(){ confirmBackdrop.style.display = "none"; }
 
 function confirmDialog({
-title = "are you sure?",
-subtitle = "this is permanent and can’t be undone",
-body = "are you sure you want to delete this? this is permanent and can’t be undone",
-okText = "delete",
-cancelText = "cancel"
+title = "Are you sure?",
+subtitle = "This is permanent and can’t be undone.",
+body = "Are you sure you want to delete this? This is permanent and can’t be undone.",
+okText = "Delete",
+cancelText = "Cancel"
 } = {}){
 confirmTitle.textContent = title;
 confirmSubtitle.textContent = subtitle;
@@ -1435,9 +1528,7 @@ confirmCloseBtn.removeEventListener("click", onCancel);
 confirmBackdrop.removeEventListener("click", onBg);
 window.removeEventListener("keydown", onEsc);
 }
-function onEsc(e){
-if (e.key === "Escape") onCancel();
-}
+function onEsc(e){ if (e.key === "Escape") onCancel(); }
 
 confirmOkBtn.addEventListener("click", onOk);
 confirmCancelBtn.addEventListener("click", onCancel);
@@ -1459,7 +1550,7 @@ let res = await sb
 .select(hasPnlColumn ? baseSelect : fallbackSelect)
 .eq("user_id", user.id)
 .order("trade_date", { ascending: false })
-.limit(500);
+.limit(800);
 
 if (res.error && hasPnlColumn){
 const msg = String(res.error.message || "");
@@ -1470,26 +1561,28 @@ res = await sb
 .select(fallbackSelect)
 .eq("user_id", user.id)
 .order("trade_date", { ascending: false })
-.limit(500);
+.limit(800);
 }
 }
 
 const { data, error } = res;
-
 if (error){
 console.error(error);
-const pill = document.getElementById("recentPill");
-pill.classList.remove("ok");
-pill.classList.add("warn");
-pill.textContent = "error";
-const body = document.getElementById("recentTradesBody");
-body.innerHTML = `<tr><td class="emptyRow" colspan="8">error loading trades: ${escapeHtml(error.message)}</td></tr>`;
+document.getElementById("recentPill").classList.remove("ok");
+document.getElementById("recentPill").classList.add("warn");
+document.getElementById("recentPill").textContent = "Error";
+document.getElementById("recentTradesBody").innerHTML =
+`<tr><td class="emptyRow" colspan="8">Error loading trades: ${escapeHtml(error.message)}</td></tr>`;
 document.getElementById("tradesTableBody").innerHTML =
-`<tr><td class="emptyRow" colspan="8">error loading trades: ${escapeHtml(error.message)}</td></tr>`;
+`<tr><td class="emptyRow" colspan="8">Error loading trades: ${escapeHtml(error.message)}</td></tr>`;
 return;
 }
 
 trades = (data || []).map(normalizeTrade);
+
+// Determine if we actually have usable PnL values
+hasAnyPnlData = hasPnlColumn && trades.some(t => Number.isFinite(t.pnl));
+
 renderFocus();
 renderAnalytics();
 renderTradesTable();
@@ -1517,16 +1610,16 @@ mistakes: Array.isArray(t.mistakes) ? t.mistakes : (t.mistakes ? [String(t.mista
 // === DELETE TRADE ===
 async function deleteTrade(id){
 const ok = await confirmDialog({
-title: "are you sure to delete?",
-subtitle: "this is permanent and can’t be undone",
-body: "are you sure you want to delete this trade? this is permanent and can’t be undone",
-okText: "delete trade",
-cancelText: "cancel"
+title: "Delete Trade?",
+subtitle: "This is permanent and can’t be undone.",
+body: "Are you sure you want to delete this trade? This is permanent and can’t be undone.",
+okText: "Delete Trade",
+cancelText: "Cancel"
 });
 if (!ok) return;
 
 confirmOkBtn.disabled = true;
-confirmOkBtn.textContent = "deleting…";
+confirmOkBtn.textContent = "Deleting…";
 
 try{
 const { error } = await sb
@@ -1537,9 +1630,9 @@ const { error } = await sb
 
 if (error){
 console.error(error);
-confirmMsg.textContent = `delete failed: ${error.message}`;
+confirmMsg.textContent = `Delete failed: ${error.message}`;
 confirmOkBtn.disabled = false;
-confirmOkBtn.textContent = "delete trade";
+confirmOkBtn.textContent = "Delete Trade";
 return;
 }
 
@@ -1547,7 +1640,7 @@ closeConfirm();
 await loadTrades();
 } finally {
 confirmOkBtn.disabled = false;
-confirmOkBtn.textContent = "delete trade";
+confirmOkBtn.textContent = "Delete Trade";
 }
 }
 
@@ -1560,20 +1653,21 @@ return `
 `;
 }
 
-// === RENDER: FOCUS (DASHBOARD) ===
+// === FOCUS (DASHBOARD) ===
 function renderFocus(){
 setGreeting();
 renderDashboardStats();
+renderGoals();
 renderRecentTradesTable();
 drawDashboardMiniCharts();
 
-document.getElementById("recentPill").textContent = "ready";
-document.getElementById("focusStatus").textContent = "ready";
+document.getElementById("recentPill").textContent = "Ready";
+document.getElementById("focusStatus").textContent = "Ready";
 }
 
 function setGreeting(){
 const h = new Date().getHours();
-const greet = (h < 12) ? "good morning" : (h < 18 ? "good day" : "good evening");
+const greet = (h < 12) ? "Good Morning" : (h < 18 ? "Good Day" : "Good Evening");
 
 let name = "";
 if (user?.email){
@@ -1583,9 +1677,9 @@ name = name ? (name[0].toUpperCase() + name.slice(1)) : "";
 }
 
 document.getElementById("dashGreeting").textContent = name ? `${greet}, ${name}` : greet;
-document.getElementById("dashSub").textContent = hasPnlColumn
-? "here’s your performance snapshot (pnl + r)"
-: "here’s your performance snapshot (r multiple)";
+document.getElementById("dashSub").textContent = hasAnyPnlData
+? "Here’s your performance snapshot (PnL + R)."
+: "Here’s your performance snapshot (R Multiple).";
 }
 
 function renderDashboardStats(){
@@ -1601,108 +1695,101 @@ const wr = decided.length ? (wins.length / decided.length) : null;
 const rVals = trades.map(t => t.r_multiple).filter(v => Number.isFinite(v));
 const avgR = rVals.length ? (rVals.reduce((a,b)=>a+b,0) / rVals.length) : null;
 
-const totalPnl = computeTotalPnlAllTime();
-const monthPnl = computeMonthPnl();
+const totalPnl = computeTotalAllTime();
+const monthPnl = computePeriodTotal("monthly");
 
 document.getElementById("d_totalPnl").textContent = formatMoneyOrR(totalPnl);
-document.getElementById("d_totalPnl_hint").textContent = hasPnlColumn ? "all time pnl" : "all time (using r)";
+document.getElementById("d_totalPnl_hint").textContent = hasAnyPnlData ? "All Time PnL" : "All Time (R)";
 
 document.getElementById("d_monthPnl").textContent = formatMoneyOrR(monthPnl);
-document.getElementById("d_monthPnl_hint").textContent = hasPnlColumn ? "this month pnl" : "this month (using r)";
+document.getElementById("d_monthPnl_hint").textContent = hasAnyPnlData ? "This Month PnL" : "This Month (R)";
 
 document.getElementById("d_pf").textContent = pf === null ? "—" : (pf === Infinity ? "∞" : formatNumber(pf));
-document.getElementById("d_pf_hint").textContent = `from ${rVals.length} trades`;
+document.getElementById("d_pf_hint").textContent = `From ${rVals.length} trades`;
 
 document.getElementById("d_wr").textContent = wr === null ? "—" : `${(wr*100).toFixed(1)}%`;
-document.getElementById("d_wr_hint").textContent = decided.length ? `${wins.length}/${decided.length} decided` : "decided trades";
+document.getElementById("d_wr_hint").textContent = decided.length ? `${wins.length}/${decided.length} decided` : "Decided trades";
 
 document.getElementById("d_trades").textContent = String(trades.length);
 document.getElementById("d_avgR").textContent = avgR === null ? "—" : formatNumber(avgR);
 
 const streak = computeDailyStreak();
-const best = computeBestStreak();
-
 const tier = computeTierLine(pf, wr, totalPnl);
+
 const tierEl = document.getElementById("kickerTier");
-tierEl.innerHTML = `tier <strong>${escapeHtml(tier.label)}</strong>`;
+tierEl.innerHTML = `Tier <strong>${escapeHtml(tier.label)}</strong>`;
 tierEl.classList.remove("good","bad","neutral");
 tierEl.classList.add(tier.tone);
 
-document.getElementById("kickerStreak").innerHTML = `streak <strong>${streak} day${streak===1?"":"s"}</strong>`;
-document.getElementById("kickerMonth").innerHTML = `this month <strong>${escapeHtml(formatMoneyOrR(monthPnl))}</strong>`;
-
-renderGoal(monthPnl, best);
+document.getElementById("kickerStreak").innerHTML = `Streak <strong>${streak} Day${streak===1?"":"s"}</strong>`;
+document.getElementById("kickerMonth").innerHTML = `This Month <strong>${escapeHtml(formatMoneyOrR(monthPnl))}</strong>`;
 }
 
-function renderGoal(monthPnl, bestStreak){
-const key = goalStorageKey();
-const defaultGoal = hasPnlColumn ? 2000 : 50;
-let goal = Number(localStorage.getItem(key) || "");
-if (!Number.isFinite(goal) || goal <= 0) goal = defaultGoal;
-
-const goalInput = document.getElementById("goalInput");
-goalInput.value = String(goal);
-
-const achieved = monthPnl;
-const pct = goal > 0 ? Math.max(0, Math.min(1, achieved / goal)) : 0;
-
-document.getElementById("goalFill").style.width = `${(pct*100).toFixed(1)}%`;
-
-const left = goal - achieved;
-document.getElementById("goalLeft").textContent = left > 0
-? `${formatMoneyOrR(left)} left to goal`
-: `goal hit, keep stacking`;
-
-document.getElementById("goalPct").textContent = `${(pct*100).toFixed(0)}%`;
-
-document.getElementById("goalLine").textContent = `best streak ${bestStreak} day${bestStreak===1?"":"s"} · auto updates as you log trades`;
-}
-
-function goalStorageKey(){
-const uid = user?.id || "anon";
-return `sessionly_goal_${uid}_${hasPnlColumn ? "pnl" : "r"}`;
-}
-
-function computeTotalPnlAllTime(){
-if (hasPnlColumn){
+function computeTotalAllTime(){
+if (hasAnyPnlData){
 const vals = trades.map(t => t.pnl).filter(v => Number.isFinite(v));
-if (vals.length) return vals.reduce((a,b)=>a+b,0);
+return vals.reduce((a,b)=>a+b,0);
 }
 const rVals = trades.map(t => t.r_multiple).filter(v => Number.isFinite(v));
 return rVals.reduce((a,b)=>a+b,0);
 }
 
-function computeMonthPnl(){
+// Period totals: daily/weekly/monthly
+function computePeriodTotal(period){
 const now = new Date();
-const y = now.getFullYear();
-const m = now.getMonth();
+const start = startOfPeriod(now, period);
+const end = endOfPeriod(now, period);
 
-if (hasPnlColumn){
-const vals = trades
-.filter(t => t.dt && t.dt.getFullYear()===y && t.dt.getMonth()===m)
-.map(t => t.pnl)
-.filter(v => Number.isFinite(v));
-if (vals.length) return vals.reduce((a,b)=>a+b,0);
+const slice = trades.filter(t => t.dt && t.dt >= start && t.dt < end);
+
+if (hasAnyPnlData){
+const vals = slice.map(t => t.pnl).filter(v => Number.isFinite(v));
+return vals.reduce((a,b)=>a+b,0);
 }
 
-const rVals = trades
-.filter(t => t.dt && t.dt.getFullYear()===y && t.dt.getMonth()===m)
-.map(t => t.r_multiple)
-.filter(v => Number.isFinite(v));
+const rVals = slice.map(t => t.r_multiple).filter(v => Number.isFinite(v));
 return rVals.reduce((a,b)=>a+b,0);
 }
 
-function computeTierLine(pf, wr, totalPnl){
-const profitable = totalPnl > 0;
+function startOfPeriod(date, period){
+const d = new Date(date);
+if (period === "daily"){
+d.setHours(0,0,0,0);
+return d;
+}
+if (period === "weekly"){
+// Monday start
+const day = (d.getDay() + 6) % 7; // Mon=0
+d.setDate(d.getDate() - day);
+d.setHours(0,0,0,0);
+return d;
+}
+// monthly
+d.setDate(1);
+d.setHours(0,0,0,0);
+return d;
+}
+
+function endOfPeriod(date, period){
+const s = startOfPeriod(date, period);
+const e = new Date(s);
+if (period === "daily"){ e.setDate(e.getDate()+1); return e; }
+if (period === "weekly"){ e.setDate(e.getDate()+7); return e; }
+e.setMonth(e.getMonth()+1);
+return e;
+}
+
+function computeTierLine(pf, wr, total){
+const profitable = total > 0;
 const wrOk = (wr ?? 0) >= 0.45;
 const pfVal = (pf === Infinity) ? 9 : (pf ?? 0);
 
-if (profitable && pfVal >= 2.0) return { label: "top 0.1% momentum", tone:"good" };
-if (profitable && pfVal >= 1.6 && (wrOk || pfVal >= 1.8)) return { label: "top 1% discipline", tone:"good" };
-if (profitable && pfVal >= 1.25) return { label: "top 5% profitable", tone:"good" };
-if (profitable) return { label: "profitable, protect it", tone:"neutral" };
-if (!profitable && trades.length < 10) return { label: "building edge", tone:"neutral" };
-return { label: "comeback mode, stay strict", tone:"bad" };
+if (profitable && pfVal >= 2.0) return { label: "Top 0.1% Momentum", tone:"good" };
+if (profitable && pfVal >= 1.6 && (wrOk || pfVal >= 1.8)) return { label: "Top 1% Discipline", tone:"good" };
+if (profitable && pfVal >= 1.25) return { label: "Top 5% Profitable", tone:"good" };
+if (profitable) return { label: "Profitable — Protect It", tone:"neutral" };
+if (!profitable && trades.length < 10) return { label: "Building Edge", tone:"neutral" };
+return { label: "Comeback Mode — Stay Strict", tone:"bad" };
 }
 
 function computeDailyStreak(){
@@ -1712,7 +1799,6 @@ if (!t.dt) return;
 const key = `${t.dt.getFullYear()}-${String(t.dt.getMonth()+1).padStart(2,"0")}-${String(t.dt.getDate()).padStart(2,"0")}`;
 days.add(key);
 });
-
 let streak = 0;
 let d = new Date();
 for (;;){
@@ -1724,45 +1810,99 @@ d.setDate(d.getDate()-1);
 return streak;
 }
 
-function computeBestStreak(){
-const days = new Set();
-trades.forEach(t=>{
-if (!t.dt) return;
-const key = `${t.dt.getFullYear()}-${String(t.dt.getMonth()+1).padStart(2,"0")}-${String(t.dt.getDate()).padStart(2,"0")}`;
-days.add(key);
-});
-
-const sorted = [...days].sort();
-let best = 0;
-let cur = 0;
-let prev = null;
-
-for (const k of sorted){
-const dt = new Date(k + "T00:00:00");
-if (!prev){
-cur = 1;
-best = Math.max(best, cur);
-prev = dt;
-continue;
+// === GOALS (Daily/Weekly/Monthly + Currency + Presets) ===
+function goalsStorageKeyCurrency(){
+return `sessionly_goal_currency_${user?.id || "anon"}`;
 }
-const diff = Math.round((dt - prev) / 86400000);
-if (diff === 1){
-cur += 1;
+function goalsStorageKey(period){
+return `sessionly_goal_${period}_${user?.id || "anon"}`;
+}
+
+function getCurrency(){
+const sel = document.getElementById("currencySelect");
+let saved = localStorage.getItem(goalsStorageKeyCurrency()) || "";
+if (!saved) saved = DEFAULT_CURRENCY;
+if (sel.value !== saved) sel.value = saved;
+return sel.value;
+}
+function setCurrency(code){
+localStorage.setItem(goalsStorageKeyCurrency(), code);
+renderGoals();
+}
+
+function getGoal(period){
+const raw = localStorage.getItem(goalsStorageKey(period));
+let n = Number(raw);
+if (!Number.isFinite(n) || n <= 0) n = DEFAULT_GOALS[period] || 100;
+return n;
+}
+function setGoal(period, val){
+localStorage.setItem(goalsStorageKey(period), String(val));
+renderGoals();
+}
+
+function renderGoals(){
+const note = document.getElementById("goalsNote");
+const pnlNotice = document.getElementById("pnlNotice");
+const currency = getCurrency();
+
+if (!hasAnyPnlData){
+pnlNotice.textContent = "PnL values aren’t available yet. Goals will track using R as a proxy until you start entering PnL.";
+document.getElementById("currencySelect").disabled = true;
+note.textContent = "Set Daily, Weekly, and Monthly targets. Progress updates automatically (Using R as proxy).";
 } else {
-cur = 1;
-}
-best = Math.max(best, cur);
-prev = dt;
-}
-return best;
+pnlNotice.textContent = "";
+document.getElementById("currencySelect").disabled = false;
+note.textContent = "Set Daily, Weekly, and Monthly targets. Progress updates automatically.";
 }
 
+const dailyTotal = computePeriodTotal("daily");
+const weeklyTotal = computePeriodTotal("weekly");
+const monthlyTotal = computePeriodTotal("monthly");
+
+const dailyGoal = getGoal("daily");
+const weeklyGoal = getGoal("weekly");
+const monthlyGoal = getGoal("monthly");
+
+document.getElementById("goalDailyInput").value = String(dailyGoal);
+document.getElementById("goalWeeklyInput").value = String(weeklyGoal);
+document.getElementById("goalMonthlyInput").value = String(monthlyGoal);
+
+updateGoalUI("daily", dailyTotal, dailyGoal, currency);
+updateGoalUI("weekly", weeklyTotal, weeklyGoal, currency);
+updateGoalUI("monthly", monthlyTotal, monthlyGoal, currency);
+
+document.getElementById("dailySub").textContent = "Today";
+document.getElementById("weeklySub").textContent = "This week (Mon–Sun)";
+document.getElementById("monthlySub").textContent = "This month";
+}
+
+function updateGoalUI(period, achieved, goal, currency){
+const pct = goal > 0 ? Math.max(0, Math.min(1, achieved / goal)) : 0;
+
+const fillEl = document.getElementById(`goal${cap(period)}Fill`);
+fillEl.style.width = `${(pct*100).toFixed(1)}%`;
+
+const left = goal - achieved;
+const leftEl = document.getElementById(`goal${cap(period)}Left`);
+const pctEl = document.getElementById(`goal${cap(period)}Pct`);
+
+leftEl.textContent = left > 0
+? `${formatMoneyOrR(left, currency)} Left`
+: "Goal Hit — Keep Stacking";
+
+pctEl.textContent = `${(pct*100).toFixed(0)}%`;
+}
+
+function cap(s){ return s[0].toUpperCase() + s.slice(1); }
+
+// === RECENT TRADES TABLE ===
 function renderRecentTradesTable(){
 const recent = trades.slice(0, 8);
 const body = document.getElementById("recentTradesBody");
 
 if (!recent.length){
-body.innerHTML = `<tr><td class="emptyRow" colspan="8">no trades yet, add your first one</td></tr>`;
+body.innerHTML = `<tr><td class="emptyRow" colspan="8">No trades yet. Add your first one.</td></tr>`;
 return;
 }
 
@@ -1784,9 +1924,9 @@ return `
 <td>${session}</td>
 <td>${strategy}</td>
 <td style="text-align:right;">
-<button class="iconBtn" data-del="${row.id}" title="delete trade">
+<button class="iconBtn" data-del="${row.id}" title="Delete trade">
 ${trashIconSvg()}
-<span class="srOnly">delete</span>
+<span class="srOnly">Delete</span>
 </button>
 </td>
 </tr>
@@ -1798,6 +1938,7 @@ btn.addEventListener("click", ()=> deleteTrade(btn.getAttribute("data-del")));
 });
 }
 
+// === MINI CHARTS (No overlap now) ===
 function drawDashboardMiniCharts(){
 drawDashEquitySpark();
 drawDashDailyBars();
@@ -1817,7 +1958,7 @@ const sorted = [...trades]
 
 const last = sorted.slice(Math.max(0, sorted.length - 30));
 if (last.length < 2){
-drawEmptyMini(ctx,w,h,"sparkline appears after 2+ trades");
+drawEmptyMini(ctx,w,h,"Sparkline appears after 2+ trades.");
 return;
 }
 
@@ -1857,18 +1998,6 @@ ctx.shadowColor = tone;
 ctx.shadowBlur = 14;
 ctx.stroke();
 ctx.restore();
-
-ctx.save();
-ctx.globalAlpha = 0.18;
-ctx.beginPath();
-ctx.moveTo(pts[0].x, pts[0].yy);
-for (let i=1;i<pts.length;i++) ctx.lineTo(pts[i].x, pts[i].yy);
-ctx.lineTo(pts[pts.length-1].x, pad + innerH);
-ctx.lineTo(pts[0].x, pad + innerH);
-ctx.closePath();
-ctx.fillStyle = colorMix(tone, "transparent", 0.70);
-ctx.fill();
-ctx.restore();
 }
 
 function drawDashDailyBars(){
@@ -1887,7 +2016,7 @@ if (!t.dt) return;
 const key = `${t.dt.getFullYear()}-${String(t.dt.getMonth()+1).padStart(2,"0")}-${String(t.dt.getDate()).padStart(2,"0")}`;
 if (!map.has(key)) return;
 
-const val = hasPnlColumn && Number.isFinite(t.pnl) ? t.pnl : (Number.isFinite(t.r_multiple) ? t.r_multiple : 0);
+const val = (hasAnyPnlData && Number.isFinite(t.pnl)) ? t.pnl : (Number.isFinite(t.r_multiple) ? t.r_multiple : 0);
 map.set(key, (map.get(key)||0) + val);
 });
 
@@ -1897,7 +2026,7 @@ const maxAbs = Math.max(1, ...arr.map(x=>Math.abs(x.val)));
 const pad = 14;
 const innerW = w - pad*2;
 const innerH = h - pad*2;
-const baseY = pad + innerH*0.78;
+const baseY = pad + innerH*0.80;
 
 ctx.save();
 ctx.strokeStyle = colorVar("--stroke2");
@@ -1930,15 +2059,6 @@ grad.addColorStop(1, colorMix(col, "#000000", 0.22));
 ctx.fillStyle = grad;
 ctx.globalAlpha = 0.92;
 ctx.fill();
-
-if (i === arr.length-1){
-ctx.save();
-ctx.fillStyle = colorVar("--muted");
-ctx.globalAlpha = 0.9;
-ctx.font = "850 12px ui-sans-serif, system-ui";
-ctx.fillText(arr[arr.length-1].label, w - pad - 40, pad + 14);
-ctx.restore();
-}
 });
 }
 
@@ -1965,13 +2085,13 @@ out.push({key,label});
 return out;
 }
 
-// === RENDER: TRADES TABLE ===
+// === TRADES PAGE ===
 function renderTradesTable(){
 const body = document.getElementById("tradesTableBody");
 document.getElementById("tradesCountBadge").textContent = String(trades.length);
 
 if (!trades.length){
-body.innerHTML = `<tr><td class="emptyRow" colspan="8">no trades yet</td></tr>`;
+body.innerHTML = `<tr><td class="emptyRow" colspan="8">No trades yet.</td></tr>`;
 return;
 }
 
@@ -1994,9 +2114,9 @@ return `
 <td>${session}</td>
 <td>${strategy}</td>
 <td style="text-align:right;">
-<button class="iconBtn" data-del="${row.id}" title="delete trade">
+<button class="iconBtn" data-del="${row.id}" title="Delete trade">
 ${trashIconSvg()}
-<span class="srOnly">delete</span>
+<span class="srOnly">Delete</span>
 </button>
 </td>
 </tr>
@@ -2008,25 +2128,23 @@ btn.addEventListener("click", ()=> deleteTrade(btn.getAttribute("data-del")));
 });
 }
 
-// === RENDER: CALENDAR ===
+// === CALENDAR ===
 function renderCalendar(){
 document.getElementById("calYear").textContent = String(calYear);
 document.getElementById("calMonth").textContent = monthName(calMonth);
 
 const modeSwitch = document.getElementById("calModeSwitch");
 modeSwitch.classList.toggle("on", calShowPercent);
-document.getElementById("calModeLabel").textContent = calShowPercent ? "show total R" : "show win/loss %";
+document.getElementById("calModeLabel").textContent = calShowPercent ? "Show Total R" : "Show Win Rate";
 
 // DOW headers
 const dowRow = document.getElementById("calDowRow");
-const dows = ["mon","tue","wed","thu","fri","sat","sun"];
+const dows = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
 dowRow.innerHTML = dows.map(d=>`<div class="calDow">${d}</div>`).join("");
 
-// build daily aggregates for this month
+// build daily aggregates
 const daily = buildDailyAgg(calYear, calMonth);
 
-// month grid (monday first)
-const grid = document.getElementById("calGrid");
 const first = new Date(calYear, calMonth, 1);
 const last = new Date(calYear, calMonth + 1, 0);
 
@@ -2074,8 +2192,8 @@ const showVal = calShowPercent
 ? (winRate === null ? "—" : `${(winRate*100).toFixed(0)}%`)
 : (tradesCount ? ((totalR > 0 ? "+" : "") + formatNumber(totalR)) : "—");
 
-const metaLine1 = tradesCount ? `total trades ${tradesCount}` : "no trades";
-const metaLine2 = tradesCount ? `win rate ${winRate === null ? "—" : `${(winRate*100).toFixed(0)}%`}` : "";
+const metaLine1 = tradesCount ? `Total trades: ${tradesCount}` : "No trades";
+const metaLine2 = tradesCount ? `Win rate: ${winRate === null ? "—" : `${(winRate*100).toFixed(0)}%`}` : "";
 
 html += `
 <div class="calCell ${cellMuted ? "muted" : ""} ${glowClass} ${isActive ? "active" : ""}">
@@ -2088,7 +2206,7 @@ html += `
 `;
 }
 
-grid.innerHTML = html;
+document.getElementById("calGrid").innerHTML = html;
 }
 
 function buildDailyAgg(year, month){
@@ -2107,14 +2225,13 @@ cur.sumR += t.r_multiple;
 
 if (t.r_multiple > 0){ cur.wins += 1; cur.decided += 1; }
 else if (t.r_multiple < 0){ cur.losses += 1; cur.decided += 1; }
-else if (t.r_multiple === 0){ /* be */ }
 
 map.set(key, cur);
 });
 return map;
 }
 
-// === RENDER: ANALYTICS ===
+// === ANALYTICS ===
 function renderAnalytics(){
 const rVals = trades.map(t => t.r_multiple).filter(v => Number.isFinite(v));
 const wins = rVals.filter(v => v > 0);
@@ -2126,7 +2243,7 @@ const sumLossAbs = Math.abs(losses.reduce((a,b)=>a+b,0));
 const pf = (sumLossAbs > 0) ? (sumWins / sumLossAbs) : (wins.length ? Infinity : null);
 
 document.getElementById("a_pf").textContent = pf === null ? "—" : (pf === Infinity ? "∞" : formatNumber(pf));
-document.getElementById("a_pf_hint").textContent = `from ${rVals.length} trades`;
+document.getElementById("a_pf_hint").textContent = `From ${rVals.length} trades`;
 
 const avgWin = wins.length ? (sumWins / wins.length) : null;
 const avgLoss = losses.length ? (Math.abs(losses.reduce((a,b)=>a+b,0)) / losses.length) : null;
@@ -2153,7 +2270,7 @@ bestHour = h;
 }
 }
 document.getElementById("a_besthour").textContent = bestHour === null ? "—" : `${String(bestHour).padStart(2,"0")}:00`;
-document.getElementById("a_besthour_hint").textContent = bestHour === null ? "avg r" : `avg r ${formatNumber(bestAvg)}`;
+document.getElementById("a_besthour_hint").textContent = bestHour === null ? "Avg R" : `Avg R ${formatNumber(bestAvg)}`;
 
 drawHourlyCanvas(byHour);
 drawEquityCanvas();
@@ -2161,16 +2278,21 @@ drawDonutCanvas(wins.length, losses.length, bes.length);
 drawCalendarCanvas();
 }
 
-// === CHART HELPERS (no external libs) ===
+// === CHART HELPERS ===
 function prepCanvas(id){
 const c = document.getElementById(id);
 if (!c) return null;
+
+// Use the canvas element's own box (now it has a fixed flex height)
 const rect = c.getBoundingClientRect();
 const dpr = window.devicePixelRatio || 1;
+
 c.width = Math.max(1, Math.floor(rect.width * dpr));
 c.height = Math.max(1, Math.floor(rect.height * dpr));
+
 const ctx = c.getContext("2d");
 ctx.setTransform(dpr,0,0,dpr,0,0);
+
 return {c, ctx, w: rect.width, h: rect.height};
 }
 
@@ -2180,11 +2302,11 @@ return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 
 function drawGlassGrid(ctx, w, h){
 ctx.save();
-ctx.globalAlpha = 0.35;
-ctx.strokeStyle = colorMix(colorVar("--stroke"), "transparent", 0.0);
+ctx.globalAlpha = 0.28;
+ctx.strokeStyle = colorVar("--stroke");
 ctx.lineWidth = 1;
 
-const step = 28;
+const step = 30;
 for (let x=0; x<=w; x+=step){
 ctx.beginPath();
 ctx.moveTo(x, 0);
@@ -2238,8 +2360,7 @@ const barH = norm * (h*0.34);
 const y = baseY - Math.max(0, barH);
 const hh = Math.abs(barH);
 
-const isPos = b.val >= 0;
-const col = isPos ? colorVar("--accent") : colorVar("--danger");
+const col = (b.val >= 0) ? colorVar("--accent") : colorVar("--danger");
 
 roundRect(ctx, x, y, bw, hh, 8);
 const grad = ctx.createLinearGradient(x,y,x,y+hh);
@@ -2248,13 +2369,6 @@ grad.addColorStop(1, colorMix(col, "#000000", 0.22));
 ctx.fillStyle = grad;
 ctx.globalAlpha = 0.92;
 ctx.fill();
-
-ctx.globalAlpha = 0.20;
-ctx.shadowColor = col;
-ctx.shadowBlur = 18;
-ctx.fill();
-ctx.shadowBlur = 0;
-ctx.globalAlpha = 1;
 });
 }
 
@@ -2279,7 +2393,7 @@ ctx.save();
 ctx.fillStyle = colorVar("--muted");
 ctx.globalAlpha = 0.9;
 ctx.font = "700 13px ui-sans-serif, system-ui";
-ctx.fillText("equity curve will appear after 2+ trades", pad, h/2);
+ctx.fillText("Equity curve will appear after 2+ trades.", pad, h/2);
 ctx.restore();
 return;
 }
@@ -2300,31 +2414,6 @@ p.y = pad + (1 - ((p.y - minY)/span))*innerH;
 });
 
 ctx.save();
-ctx.strokeStyle = colorVar("--stroke2");
-ctx.globalAlpha = 0.85;
-ctx.beginPath();
-ctx.moveTo(pad, pad + innerH);
-ctx.lineTo(pad + innerW, pad + innerH);
-ctx.stroke();
-ctx.restore();
-
-ctx.save();
-ctx.beginPath();
-ctx.moveTo(pts[0].x, pts[0].y);
-for (let i=1;i<pts.length;i++) ctx.lineTo(pts[i].x, pts[i].y);
-ctx.lineTo(pts[pts.length-1].x, pad + innerH);
-ctx.lineTo(pts[0].x, pad + innerH);
-ctx.closePath();
-
-const fillGrad = ctx.createLinearGradient(0,pad,0,pad+innerH);
-fillGrad.addColorStop(0, colorMix(colorVar("--accent2"), "transparent", 0.70));
-fillGrad.addColorStop(1, "transparent");
-ctx.fillStyle = fillGrad;
-ctx.globalAlpha = 0.55;
-ctx.fill();
-ctx.restore();
-
-ctx.save();
 ctx.lineWidth = 3;
 ctx.lineJoin = "round";
 ctx.lineCap = "round";
@@ -2340,17 +2429,8 @@ for (let i=1;i<pts.length;i++) ctx.lineTo(pts[i].x, pts[i].y);
 ctx.stroke();
 
 ctx.shadowColor = colorVar("--accent");
-ctx.shadowBlur = 16;
+ctx.shadowBlur = 14;
 ctx.stroke();
-ctx.restore();
-
-const last = pts[pts.length-1];
-ctx.save();
-ctx.fillStyle = colorVar("--accent2");
-ctx.globalAlpha = 0.95;
-ctx.beginPath();
-ctx.arc(last.x, last.y, 4.5, 0, Math.PI*2);
-ctx.fill();
 ctx.restore();
 }
 
@@ -2395,11 +2475,6 @@ ctx.globalAlpha = 0.92;
 ctx.beginPath();
 ctx.arc(cx, cy, r, start, start + ang);
 ctx.stroke();
-
-ctx.shadowColor = seg.color;
-ctx.shadowBlur = 14;
-ctx.stroke();
-
 ctx.restore();
 start += ang;
 });
@@ -2413,7 +2488,7 @@ ctx.font = "980 22px ui-sans-serif, system-ui";
 ctx.fillText(`${winCount}/${total}`, cx, cy - 8);
 ctx.fillStyle = colorVar("--muted");
 ctx.font = "800 12px ui-sans-serif, system-ui";
-ctx.fillText("wins / trades", cx, cy + 14);
+ctx.fillText("Wins / Trades", cx, cy + 14);
 ctx.restore();
 }
 
@@ -2465,18 +2540,14 @@ const y = pad + r*(cellH+cellGap);
 const dayNum = i - offset + 1;
 const inMonth = dayNum >= 1 && dayNum <= last.getDate();
 
-const base = colorMix(colorVar("--panel"), "transparent", 0.35);
-ctx.save();
 roundRect(ctx, x, y, cellW, cellH, 14);
-ctx.fillStyle = base;
+ctx.fillStyle = colorMix(colorVar("--panel"), "transparent", 0.35);
 ctx.globalAlpha = 0.85;
 ctx.fill();
-
 ctx.globalAlpha = 0.85;
 ctx.strokeStyle = colorVar("--stroke");
 ctx.lineWidth = 1;
 ctx.stroke();
-ctx.restore();
 
 if (!inMonth) continue;
 
@@ -2487,30 +2558,16 @@ const val = map.get(key) || 0;
 const strength = Math.min(1, Math.abs(val)/maxAbs);
 if (strength > 0){
 const col = val >= 0 ? colorVar("--accent2") : colorVar("--danger");
-ctx.save();
 roundRect(ctx, x, y, cellW, cellH, 14);
 ctx.fillStyle = colorMix(col, "transparent", 0.65);
 ctx.globalAlpha = 0.55 + strength*0.25;
 ctx.fill();
-ctx.restore();
 }
 
-ctx.save();
 ctx.fillStyle = colorVar("--text");
-ctx.globalAlpha = 0.90;
+ctx.globalAlpha = 0.92;
 ctx.font = "900 12px ui-sans-serif, system-ui";
 ctx.fillText(String(dayNum), x + 10, y + 18);
-ctx.restore();
-
-if (val !== 0){
-ctx.save();
-ctx.fillStyle = colorVar("--text");
-ctx.globalAlpha = 0.88;
-ctx.font = "900 12px ui-sans-serif, system-ui";
-const txt = (val > 0 ? "+" : "") + formatNumber(val);
-ctx.fillText(txt, x + 10, y + cellH - 12);
-ctx.restore();
-}
 }
 }
 
@@ -2519,7 +2576,7 @@ async function saveTrade(){
 modalMsg.textContent = "";
 const btn = document.getElementById("saveBtn");
 btn.disabled = true;
-btn.textContent = "saving…";
+btn.textContent = "Saving…";
 
 try{
 const trade_date = document.getElementById("t_date").value;
@@ -2536,30 +2593,29 @@ const strategy = document.getElementById("t_strategy").value.trim();
 const mistakesRaw = document.getElementById("t_mistakes").value.trim();
 const notes = document.getElementById("t_notes").value.trim();
 
-if (!trade_date){ modalMsg.textContent = "please choose a date"; return; }
+if (!trade_date){ modalMsg.textContent = "Please choose a date."; return; }
 
 const chosen = new Date(trade_date).getTime();
-const now = Date.now();
-if (chosen > now){ modalMsg.textContent = "you can’t log a trade in the future"; return; }
+if (chosen > Date.now()){ modalMsg.textContent = "You can’t log a trade in the future."; return; }
 
-if (!symbol){ modalMsg.textContent = "please enter a symbol"; return; }
+if (!symbol){ modalMsg.textContent = "Please enter a symbol."; return; }
 
 const rr = rrRaw === "" ? null : Number(rrRaw);
-if (rr !== null && !Number.isFinite(rr)){ modalMsg.textContent = "rr must be a number"; return; }
+if (rr !== null && !Number.isFinite(rr)){ modalMsg.textContent = "RR must be a number."; return; }
 
 let r_multiple = (rRaw === "" ? null : Number(rRaw));
-if (r_multiple !== null && !Number.isFinite(r_multiple)){ modalMsg.textContent = "r multiple must be a number"; return; }
+if (r_multiple !== null && !Number.isFinite(r_multiple)){ modalMsg.textContent = "R Multiple must be a number."; return; }
 
 let pnl = (pnlRaw === "" ? null : Number(pnlRaw));
-if (pnl !== null && !Number.isFinite(pnl)){ modalMsg.textContent = "pnl must be a number"; return; }
+if (pnl !== null && !Number.isFinite(pnl)){ modalMsg.textContent = "PnL must be a number."; return; }
 
+// Apply sign from Result
 if (r_multiple !== null && Number.isFinite(r_multiple)){
 const absR = Math.abs(r_multiple);
 if (result === "win") r_multiple = absR;
 if (result === "loss") r_multiple = -absR;
 if (result === "be") r_multiple = 0;
 }
-
 if (pnl !== null && Number.isFinite(pnl)){
 const absP = Math.abs(pnl);
 if (result === "win") pnl = absP;
@@ -2587,20 +2643,17 @@ notes: notes || null
 
 const { error } = await sb.from("trades").insert(payload);
 if (error){
-modalMsg.textContent = `save failed: ${error.message}`;
+modalMsg.textContent = `Save failed: ${error.message}`;
 return;
 }
 
-modalMsg.textContent = "saved";
+modalMsg.textContent = "Saved.";
 closeTradeModal();
 
 await loadTrades();
-renderAnalytics();
-renderCalendar();
-
 } finally {
 btn.disabled = false;
-btn.textContent = "save trade";
+btn.textContent = "Save Trade";
 }
 }
 
@@ -2643,16 +2696,37 @@ await sb.auth.signOut();
 window.location.href = "login.html";
 });
 
-// monthly goal
-document.getElementById("goalInput").addEventListener("change", ()=>{
-const val = Number(document.getElementById("goalInput").value);
-if (Number.isFinite(val) && val > 0){
-localStorage.setItem(goalStorageKey(), String(val));
-renderFocus();
-}
+// Currency change
+document.getElementById("currencySelect").addEventListener("change", (e)=>{
+setCurrency(e.target.value);
 });
 
-// calendar buttons
+// Goal inputs
+document.getElementById("goalDailyInput").addEventListener("change", ()=>{
+const v = Number(document.getElementById("goalDailyInput").value);
+if (Number.isFinite(v) && v > 0) setGoal("daily", v);
+});
+document.getElementById("goalWeeklyInput").addEventListener("change", ()=>{
+const v = Number(document.getElementById("goalWeeklyInput").value);
+if (Number.isFinite(v) && v > 0) setGoal("weekly", v);
+});
+document.getElementById("goalMonthlyInput").addEventListener("change", ()=>{
+const v = Number(document.getElementById("goalMonthlyInput").value);
+if (Number.isFinite(v) && v > 0) setGoal("monthly", v);
+});
+
+// Presets
+document.querySelectorAll(".presetBtn").forEach(btn=>{
+btn.addEventListener("click", ()=>{
+const period = btn.getAttribute("data-goal");
+const val = Number(btn.getAttribute("data-val"));
+if (GOAL_PERIODS.includes(period) && Number.isFinite(val) && val > 0){
+setGoal(period, val);
+}
+});
+});
+
+// Calendar buttons
 document.getElementById("calPrevBtn").addEventListener("click", ()=>{
 const d = new Date(calYear, calMonth, 1);
 d.setMonth(d.getMonth()-1);
@@ -2678,6 +2752,7 @@ calShowPercent = !calShowPercent;
 renderCalendar();
 });
 
+// Resize
 window.addEventListener("resize", ()=>{
 if (document.getElementById("page-analytics").classList.contains("active")){
 renderAnalytics();
@@ -2706,15 +2781,23 @@ if (abs >= 100) return n.toFixed(0);
 if (abs >= 10) return n.toFixed(1);
 return n.toFixed(2);
 }
-function formatMoneyOrR(n){
+function formatMoneyOrR(n, currencyOverride){
 if (!Number.isFinite(n)) return "—";
-if (hasPnlColumn){
+
+if (hasAnyPnlData){
+const cur = currencyOverride || (localStorage.getItem(goalsStorageKeyCurrency()) || DEFAULT_CURRENCY);
+try{
+const fmt = new Intl.NumberFormat(undefined, { style:"currency", currency: cur, maximumFractionDigits: 0 });
+return fmt.format(n);
+} catch(e){
 const sign = n > 0 ? "+" : "";
-return `${sign}$${formatNumber(n)}`;
+return `${sign}${cur} ${formatNumber(n)}`;
+}
 }
 const sign = n > 0 ? "+" : "";
 return `${sign}${formatNumber(n)}R`;
 }
+
 function escapeHtml(s){
 return String(s)
 .replaceAll("&","&amp;")
@@ -2725,7 +2808,7 @@ return String(s)
 }
 
 function monthName(m){
-const names = ["january","february","march","april","may","june","july","august","september","october","november","december"];
+const names = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 return names[m] || "—";
 }
 
