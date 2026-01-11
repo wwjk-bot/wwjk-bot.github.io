@@ -3,1180 +3,878 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Sessionly - trade your best hours</title>
-  <meta name="description" content="Sessionly is a performance system for day traders. Log fast, spot patterns, and get AI coaching to improve." />
+  <title>Sessionly — performance system for traders</title>
+  <meta name="description" content="Log trades fast, review smarter, and improve with AI coaching." />
+
   <style>
     :root{
-      --bg:#05060b;
-      --panel:#0b1020cc;
-      --panel2:#0b1020;
+      --bg:#05060a;
+      --card:#0b1020cc;
+      --card2:#0b1020b3;
       --border:rgba(255,255,255,.10);
-      --border2:rgba(255,255,255,.16);
-      --text:rgba(255,255,255,.92);
-      --muted:rgba(255,255,255,.62);
-      --muted2:rgba(255,255,255,.42);
-      --accent:#37f7b6;
-      --accent2:#7c5cff;
-      --shadow: 0 22px 60px rgba(0,0,0,.55);
-      --shadow2: 0 10px 24px rgba(0,0,0,.45);
-      --radius: 26px;
-      --radius2: 18px;
-      --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      --border2:rgba(255,255,255,.14);
+      --text:#eef2ff;
+      --muted:rgba(238,242,255,.68);
+      --muted2:rgba(238,242,255,.52);
+      --accent:#3ff7b4;
+      --accent2:#3ff7b4;
+      --shadow: 0 18px 70px rgba(0,0,0,.55);
+      --shadow2: 0 10px 40px rgba(0,0,0,.42);
+      --radius:22px;
+      --radius2:16px;
+      --max:1120px;
     }
 
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
       margin:0;
-      font-family:var(--font);
-      background: radial-gradient(1200px 800px at 18% 10%, rgba(124,92,255,.18), transparent 55%),
-                  radial-gradient(900px 650px at 78% 18%, rgba(55,247,182,.14), transparent 55%),
-                  radial-gradient(800px 700px at 50% 88%, rgba(55,247,182,.10), transparent 60%),
-                  var(--bg);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
       color:var(--text);
+      background:var(--bg);
       overflow-x:hidden;
     }
 
-    .bg-wrap{position:fixed; inset:0; pointer-events:none; z-index:-1; overflow:hidden;}
-    .grid{
-      position:absolute; inset:-40%;
+    /* smooth single background (no seams) */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:-20vh -20vw;
+      z-index:-3;
       background:
-        linear-gradient(to right, rgba(255,255,255,.05) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(255,255,255,.05) 1px, transparent 1px);
-      background-size: 54px 54px;
-      transform: rotate(8deg);
-      opacity:.20;
-      animation: gridFloat 18s ease-in-out infinite;
-    }
-    @keyframes gridFloat{
-      0%,100%{transform: translate3d(0,0,0) rotate(8deg) scale(1)}
-      50%{transform: translate3d(-40px,20px,0) rotate(8deg) scale(1.02)}
-    }
-    .orb{
-      position:absolute;
-      width:520px; height:520px;
-      border-radius:999px;
-      background: radial-gradient(circle at 30% 30%, rgba(55,247,182,.28), transparent 62%),
-                  radial-gradient(circle at 70% 70%, rgba(124,92,255,.22), transparent 60%);
-      filter: blur(10px);
-      opacity:.75;
-      mix-blend-mode: screen;
-      animation: orb 14s ease-in-out infinite;
-    }
-    .orb.o1{left:-140px; top:-110px; animation-delay:-3s}
-    .orb.o2{right:-170px; top:40px; width:560px; height:560px; animation-delay:-7s}
-    .orb.o3{left:22%; bottom:-260px; width:680px; height:680px; opacity:.55; animation-delay:-11s}
-    @keyframes orb{
-      0%,100%{transform: translate3d(0,0,0) scale(1)}
-      50%{transform: translate3d(30px,-26px,0) scale(1.06)}
-    }
-    .noise{
-      position:absolute; inset:0;
-      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.15'/%3E%3C/svg%3E");
-      opacity:.25;
-      mix-blend-mode: overlay;
-    }
-    .vignette{
-      position:absolute; inset:-1px;
-      background: radial-gradient(1200px 800px at 50% 25%, transparent 42%, rgba(0,0,0,.70) 78%, rgba(0,0,0,.85));
-      pointer-events:none;
+        radial-gradient(900px 540px at 18% 20%, rgba(124,58,237,.45), transparent 65%),
+        radial-gradient(820px 520px at 80% 22%, rgba(16,185,129,.35), transparent 62%),
+        radial-gradient(900px 680px at 68% 78%, rgba(34,197,94,.18), transparent 60%),
+        radial-gradient(1200px 900px at 40% 92%, rgba(99,102,241,.18), transparent 62%),
+        radial-gradient(1000px 700px at 10% 80%, rgba(8,145,178,.14), transparent 62%);
+      filter: blur(0px) saturate(120%);
+      transform: translateZ(0);
     }
 
-    .container{max-width:1120px; margin:0 auto; padding:0 20px;}
+    /* subtle noise */
+    body::after{
+      content:"";
+      position:fixed;
+      inset:0;
+      z-index:-2;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.28'/%3E%3C/svg%3E");
+      opacity:.06;
+      pointer-events:none;
+      mix-blend-mode:overlay;
+    }
+
+    a{color:inherit; text-decoration:none}
+    .wrap{width:min(var(--max), calc(100% - 40px)); margin:0 auto}
+    .pill{
+      display:inline-flex; align-items:center; gap:10px;
+      padding:10px 14px;
+      border:1px solid var(--border);
+      border-radius:999px;
+      background:rgba(255,255,255,.04);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    }
+    .dot{width:10px;height:10px;border-radius:50%;background:var(--accent); box-shadow:0 0 0 6px rgba(63,247,180,.10)}
+    .muted{color:var(--muted)}
+    .muted2{color:var(--muted2)}
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center;
+      padding:14px 18px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.05);
+      color:var(--text);
+      font-weight:700;
+      letter-spacing:.2px;
+      box-shadow: var(--shadow2);
+      transition: transform .2s ease, border-color .2s ease, background .2s ease, box-shadow .2s ease;
+      cursor:pointer;
+      user-select:none;
+    }
+    .btn:hover{transform: translateY(-2px); border-color: rgba(255,255,255,.18); background:rgba(255,255,255,.07)}
+    .btn.primary{
+      background: linear-gradient(135deg, rgba(63,247,180,.95), rgba(63,247,180,.75));
+      color:#061015;
+      border-color: rgba(63,247,180,.30);
+      box-shadow: 0 18px 60px rgba(63,247,180,.15), 0 18px 70px rgba(0,0,0,.5);
+    }
+    .btn.primary:hover{transform: translateY(-3px); box-shadow: 0 22px 70px rgba(63,247,180,.18), 0 18px 70px rgba(0,0,0,.55)}
+    .btn.ghost{background:rgba(255,255,255,.03)}
     .nav{
-      position:sticky; top:0; z-index:20;
+      position:sticky; top:0;
+      z-index:20;
+      border-bottom:1px solid rgba(255,255,255,.06);
+      background: linear-gradient(to bottom, rgba(5,6,10,.78), rgba(5,6,10,.38));
       backdrop-filter: blur(14px);
-      background: rgba(5,6,11,.55);
-      border-bottom: 1px solid rgba(255,255,255,.06);
     }
     .nav-inner{
-      height:72px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:14px;
+      display:flex; align-items:center; justify-content:space-between;
+      padding:14px 0;
+      gap:16px;
     }
-    .brand{
-      display:flex; align-items:center; gap:10px;
-      text-decoration:none; color:var(--text);
-      font-weight:800; letter-spacing:.2px;
+    .brand{display:flex; align-items:center; gap:10px; font-weight:900; letter-spacing:.2px}
+    .brand .mark{
+      width:12px;height:12px;border-radius:50%;
+      background:var(--accent);
+      box-shadow:0 0 0 6px rgba(63,247,180,.12), 0 10px 30px rgba(63,247,180,.18);
     }
-    .brand .dot{
-      width:10px; height:10px; border-radius:50%;
-      background: var(--accent);
-      box-shadow: 0 0 0 6px rgba(55,247,182,.12);
+    .nav-links{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end}
+    .nav-links a{
+      padding:10px 12px; border-radius:999px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.03);
+      color:rgba(238,242,255,.82);
+      font-weight:650;
+      transition: transform .2s ease, border-color .2s ease, background .2s ease;
     }
-    .nav-links{display:flex; align-items:center; gap:10px;}
-    .chip{
-      display:inline-flex; align-items:center; justify-content:center;
-      padding:8px 12px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.06);
-      color:rgba(255,255,255,.86);
-      font-size:13px;
-      text-decoration:none;
-      transition: .18s ease;
-      white-space:nowrap;
-    }
-    .chip:hover{filter:brightness(1.08); transform: translateY(-1px);}
-    .chip.primary{
-      border-color: rgba(55,247,182,.30);
-      background: rgba(55,247,182,.16);
-      color: rgba(255,255,255,.92);
-    }
+    .nav-links a:hover{transform: translateY(-1px); border-color: rgba(255,255,255,.14); background:rgba(255,255,255,.05)}
 
     .hero{
-      padding:74px 0 44px;
+      padding:64px 0 28px;
+    }
+    .hero-grid{
       display:grid;
       grid-template-columns: 1.1fr .9fr;
-      gap:18px;
+      gap:22px;
       align-items:stretch;
     }
-    .hero-card{
-      border-radius: var(--radius);
-      border:1px solid var(--border);
-      background: linear-gradient(180deg, rgba(11,16,32,.82), rgba(8,11,20,.74));
-      box-shadow: var(--shadow);
-      padding:34px 30px;
-      overflow:hidden;
-      position:relative;
+    @media (max-width: 980px){
+      .hero-grid{grid-template-columns:1fr}
     }
-    .hero-card::before{
+    .panel{
+      border:1px solid rgba(255,255,255,.10);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border-radius:var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      position:relative;
+      overflow:hidden;
+    }
+    .panel::before{
       content:"";
-      position:absolute; inset:-2px;
+      position:absolute; inset:-60px;
       background:
-        radial-gradient(520px 320px at 18% 10%, rgba(124,92,255,.28), transparent 62%),
-        radial-gradient(520px 320px at 86% 20%, rgba(55,247,182,.18), transparent 62%);
-      opacity:.7;
+        radial-gradient(520px 320px at 18% 20%, rgba(63,247,180,.20), transparent 62%),
+        radial-gradient(520px 320px at 78% 30%, rgba(124,58,237,.18), transparent 62%);
+      opacity:.65;
+      filter: blur(12px);
       pointer-events:none;
     }
-    .hero-card > *{position:relative; z-index:2;}
-    .kicker{
-      display:inline-flex; align-items:center; gap:10px;
-      padding:8px 12px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(11,16,32,.55);
-      border-radius:999px;
-      box-shadow: var(--shadow2);
-      color:var(--muted);
-      font-size:13px;
-      letter-spacing:.2px;
-      width:fit-content;
-    }
+    .panel .in{position:relative; padding:28px}
     h1{
-      margin:14px 0 10px;
-      font-size:56px;
+      margin:0 0 12px;
+      font-size: clamp(40px, 5vw, 58px);
       line-height:1.02;
       letter-spacing:-.02em;
     }
-    .lead{
-      margin:0;
-      color:var(--muted);
-      font-size:16px;
-      line-height:1.6;
-      max-width:60ch;
+    .sub{
+      margin:0 0 18px;
+      font-size: 16px;
+      line-height:1.55;
+      color: rgba(238,242,255,.72);
+      max-width: 58ch;
     }
-    .hero-actions{
-      margin-top:18px;
-      display:flex; gap:12px; flex-wrap:wrap;
+    .cta{display:flex; gap:12px; flex-wrap:wrap; margin-top:18px}
+    .mini-cards{
+      display:grid; grid-template-columns:repeat(3,1fr);
+      gap:12px; margin-top:18px;
     }
-    .btn{
-      border:none;
-      cursor:pointer;
-      border-radius: 14px;
-      padding:13px 16px;
-      font-weight:800;
-      font-size:14px;
-      letter-spacing:.2px;
-      text-decoration:none;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      transition: transform .18s ease, filter .18s ease;
-      white-space:nowrap;
-    }
-    .btn.primary{
-      color:#061014;
-      background: linear-gradient(180deg, rgba(55,247,182,1), rgba(55,247,182,.78));
-      box-shadow: 0 14px 26px rgba(55,247,182,.12), 0 18px 40px rgba(0,0,0,.35);
-    }
-    .btn.secondary{
-      color: rgba(255,255,255,.92);
-      background: rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.14);
-      box-shadow: 0 16px 40px rgba(0,0,0,.35);
-    }
-    .btn:hover{ transform: translateY(-1px); filter: brightness(1.04); }
-    .btn:active{ transform: translateY(0px) scale(.99); }
-
-    .mini-feats{
-      margin-top:18px;
-      display:grid;
-      grid-template-columns: repeat(3, minmax(0,1fr));
-      gap:10px;
+    @media (max-width: 620px){
+      .mini-cards{grid-template-columns:1fr}
     }
     .mini{
-      padding:12px 12px;
-      border-radius: 16px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.04);
-      color:rgba(255,255,255,.82);
-      font-size:13px;
-      line-height:1.35;
+      border:1px solid rgba(255,255,255,.08);
+      background: rgba(0,0,0,.18);
+      border-radius:18px;
+      padding:14px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.25);
     }
-    .mini b{color:rgba(255,255,255,.92)}
-    .mini span{color:rgba(255,255,255,.60)}
+    .mini b{display:block; margin-bottom:6px}
+    .mini p{margin:0; color:rgba(238,242,255,.66); line-height:1.4; font-size:13px}
 
     .preview{
-      border-radius: var(--radius);
-      border:1px solid var(--border);
-      background: linear-gradient(180deg, rgba(11,16,32,.68), rgba(8,11,20,.60));
-      box-shadow: var(--shadow);
-      padding:22px;
-      position:relative;
-      overflow:hidden;
-    }
-    .preview::before{
-      content:"";
-      position:absolute; inset:-2px;
-      background: radial-gradient(560px 360px at 60% 20%, rgba(124,92,255,.20), transparent 65%),
-                  radial-gradient(560px 360px at 40% 80%, rgba(55,247,182,.14), transparent 65%);
-      opacity:.8;
-      pointer-events:none;
-    }
-    .preview > *{position:relative; z-index:2;}
-    .preview-box{
-      height:360px;
-      border-radius: 22px;
-      border:1px dashed rgba(255,255,255,.16);
-      background: rgba(255,255,255,.03);
+      min-height: 380px;
       display:flex;
       align-items:center;
       justify-content:center;
-      color:rgba(255,255,255,.50);
+    }
+    .mock{
+      width: calc(100% - 34px);
+      height: 320px;
+      border-radius:22px;
+      border:1px dashed rgba(255,255,255,.16);
+      background: rgba(0,0,0,.20);
+      position:relative;
+      overflow:hidden;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.04);
+    }
+    .mock::before{
+      content:"sessionly app preview";
+      position:absolute; inset:0;
+      display:flex; align-items:center; justify-content:center;
+      color: rgba(238,242,255,.40);
       font-weight:700;
       letter-spacing:.2px;
-      text-transform:lowercase;
-      position:relative;
-      overflow:hidden;
     }
-    .preview-badges{
-      margin-top:14px;
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      justify-content:center;
-    }
-    .tag{
-      display:inline-flex; align-items:center; gap:8px;
-      padding:8px 12px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.06);
-      color:rgba(255,255,255,.78);
-      font-size:13px;
-      white-space:nowrap;
-    }
-    .tag .t-dot{
-      width:8px;height:8px;border-radius:50%;
-      background: rgba(124,92,255,.95);
-      box-shadow: 0 0 0 6px rgba(124,92,255,.12);
-    }
-    .tag.good .t-dot{background: rgba(55,247,182,.95); box-shadow: 0 0 0 6px rgba(55,247,182,.12);}
 
-    .section{padding:54px 0;}
-    .section-title{margin:0 0 10px; font-size:28px; letter-spacing:-.01em;}
-    .section-sub{margin:0 0 18px; color:var(--muted); line-height:1.6; max-width:70ch;}
+    .section{
+      padding:44px 0;
+    }
+    .section h2{
+      margin:0 0 8px;
+      font-size: 28px;
+      letter-spacing:-.01em;
+    }
+    .section p.lead{
+      margin:0 0 18px;
+      color: rgba(238,242,255,.68);
+      line-height:1.6;
+      max-width: 70ch;
+    }
 
-    .logos{
+    /* Social proof */
+    .proof{
       display:grid;
-      grid-template-columns: repeat(5, minmax(0,1fr));
-      gap:10px;
-      opacity:.92;
+      grid-template-columns: 1fr 1fr;
+      gap:14px;
+      margin-top:18px;
     }
-    .logo{
-      border-radius: 16px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.04);
-      padding:12px 12px;
-      color:rgba(255,255,255,.62);
-      font-weight:700;
-      text-align:center;
-      font-size:13px;
-      text-transform:lowercase;
-    }
-
-    .testimonials{
-      margin-top:16px;
-      display:grid;
-      grid-template-columns: repeat(3, minmax(0,1fr));
-      gap:12px;
-    }
-    .tcard{
-      border-radius: var(--radius2);
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.04);
-      padding:16px 16px;
-      box-shadow: 0 16px 40px rgba(0,0,0,.30);
-    }
-    .stars{color:rgba(55,247,182,.92); letter-spacing:1px; font-size:13px;}
-    .quote{margin:10px 0 12px; color:rgba(255,255,255,.78); line-height:1.55; font-size:14px;}
-    .who{color:rgba(255,255,255,.58); font-size:13px;}
-
-    .grid3{
-      display:grid;
-      grid-template-columns: repeat(3, minmax(0,1fr));
-      gap:12px;
-    }
-    .fcard{
-      border-radius: var(--radius2);
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.04);
-      padding:18px 18px;
-      box-shadow: 0 16px 40px rgba(0,0,0,.30);
-      position:relative;
-      overflow:hidden;
-    }
-    .fcard::before{
-      content:"";
-      position:absolute; inset:-2px;
-      background: radial-gradient(380px 240px at 20% 0%, rgba(124,92,255,.18), transparent 60%),
-                  radial-gradient(380px 240px at 90% 10%, rgba(55,247,182,.12), transparent 60%);
-      opacity:.8;
-      pointer-events:none;
-    }
-    .fcard > *{position:relative; z-index:2;}
-    .ficon{
-      width:42px; height:42px;
-      border-radius: 16px;
-      display:flex; align-items:center; justify-content:center;
-      background: rgba(55,247,182,.12);
-      border:1px solid rgba(55,247,182,.22);
-      margin-bottom:10px;
-    }
-    .ficon svg{width:22px;height:22px;fill:rgba(55,247,182,.92)}
-    .fcard h3{margin:0 0 8px; font-size:16px; text-transform:lowercase;}
-    .fcard p{margin:0; color:rgba(255,255,255,.68); line-height:1.55; font-size:14px;}
-
-    /* pricing */
-    .pricing-wrap{
-      border-radius: var(--radius);
+    @media (max-width: 980px){ .proof{grid-template-columns:1fr} }
+    .review{
       border:1px solid rgba(255,255,255,.08);
-      background: rgba(255,255,255,.02);
-      box-shadow: var(--shadow);
-      padding:26px 18px 22px;
+      background: rgba(255,255,255,.03);
+      border-radius:20px;
+      padding:16px;
+      box-shadow: 0 12px 40px rgba(0,0,0,.28);
+      backdrop-filter: blur(10px);
     }
+    .stars{color: rgba(63,247,180,.95); font-weight:900; letter-spacing:.12em}
+    .review p{margin:10px 0 0; color:rgba(238,242,255,.68); line-height:1.5}
+    .review .who{margin-top:10px; color:rgba(238,242,255,.5); font-size:13px}
+
+    /* Pricing */
+    .pricing-shell{
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+      border-radius: 28px;
+      padding:20px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+    }
+
     .pricing-head{
       display:flex;
-      align-items:flex-end;
+      align-items:flex-start;
       justify-content:space-between;
-      gap:12px;
+      gap:14px;
+      margin-bottom: 14px;
       flex-wrap:wrap;
-      padding:0 6px 8px;
     }
 
     .toggle{
-      display:flex;
-      align-items:center;
-      gap:10px;
+      display:flex; align-items:center; gap:12px;
       padding:10px 12px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(11,16,32,.55);
       border-radius:999px;
-      box-shadow: var(--shadow2);
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
     }
-    .toggle .label{font-size:13px; color:var(--muted); user-select:none; white-space:nowrap;}
-    .pill{
+    .toggle span{font-weight:700; color:rgba(238,242,255,.72); font-size:13px}
+    .switch{
       position:relative;
-      width:54px; height:30px;
-      background: rgba(255,255,255,.08);
-      border:1px solid rgba(255,255,255,.12);
+      width:54px;
+      height:30px;
       border-radius:999px;
+      background: rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.12);
       cursor:pointer;
-      transition: .25s ease;
+      flex:0 0 auto;
     }
-    .pill::after{
-      content:"";
-      position:absolute;
-      top:3px; left:3px;
-      width:24px; height:24px;
-      border-radius:999px;
-      background: linear-gradient(180deg, rgba(255,255,255,.95), rgba(255,255,255,.75));
-      box-shadow: 0 10px 18px rgba(0,0,0,.35);
-      transition: .25s ease;
+    .knob{
+      position:absolute; top:50%; left:4px;
+      width:24px; height:24px; border-radius:50%;
+      background: rgba(238,242,255,.90);
+      transform: translateY(-50%);
+      transition: left .22s ease, background .22s ease;
+      box-shadow: 0 10px 20px rgba(0,0,0,.35);
     }
-    .pill.on{
-      background: rgba(55,247,182,.18);
-      border-color: rgba(55,247,182,.40);
-    }
-    .pill.on::after{ left:27px; background: linear-gradient(180deg, rgba(55,247,182,.95), rgba(55,247,182,.70)); }
+    .switch.on{background: rgba(63,247,180,.22); border-color: rgba(63,247,180,.30)}
+    .switch.on .knob{left:26px; background: rgba(63,247,180,.95)}
 
-    /* BIG DEAL BANNER */
-    .deal-banner{
-      display:none;
-      width:100%;
-      border-radius: 20px;
-      border: 1px solid rgba(55,247,182,.34);
-      background: linear-gradient(180deg, rgba(55,247,182,.14), rgba(124,92,255,.10));
-      box-shadow: 0 18px 44px rgba(0,0,0,.38);
-      padding:14px 14px;
-      margin:12px 6px 4px;
-      position:relative;
-      overflow:hidden;
-    }
-    .deal-banner::before{
-      content:"";
-      position:absolute; inset:-2px;
-      background: radial-gradient(520px 240px at 12% 20%, rgba(55,247,182,.22), transparent 62%),
-                  radial-gradient(520px 240px at 88% 10%, rgba(124,92,255,.22), transparent 62%);
-      opacity:.9;
-      pointer-events:none;
-    }
-    .deal-banner > *{position:relative; z-index:2;}
-    .deal-top{
-      display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap;
-    }
-    .deal-left{
-      display:flex; align-items:center; gap:12px; flex-wrap:wrap;
-    }
-    .deal-flag{
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      padding:10px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(55,247,182,.44);
-      background: rgba(55,247,182,.12);
-      box-shadow: 0 14px 28px rgba(0,0,0,.26);
-      font-weight:900;
-      letter-spacing:.2px;
-      color: rgba(255,255,255,.92);
-    }
-    .deal-flag b{
-      font-size:18px;
-      color: var(--accent);
-    }
-    .deal-flag span{
-      font-size:13px;
-      color: rgba(255,255,255,.74);
-      font-weight:800;
-    }
-    .deal-meta{
-      color: rgba(255,255,255,.72);
-      font-size:13px;
-      line-height:1.35;
-      max-width:62ch;
-    }
-    .deal-timer{
+    /* promo box (inside the red box area) */
+    .promoBox{
+      flex:1 1 520px;
       display:flex;
-      flex-direction:column;
-      gap:6px;
-      align-items:flex-end;
-      min-width: 220px;
-    }
-    .timer-pill{
-      display:inline-flex;
       align-items:center;
-      gap:10px;
+      justify-content:space-between;
+      gap:14px;
+      padding:14px 16px;
+      border-radius: 18px;
+      border:1px solid rgba(255,255,255,.10);
+      background: linear-gradient(135deg, rgba(63,247,180,.10), rgba(124,58,237,.10));
+      box-shadow: 0 14px 50px rgba(0,0,0,.35);
+      backdrop-filter: blur(14px);
+      min-width:min(620px, 100%);
+    }
+    .promoLeft{
+      display:flex; flex-direction:column; gap:6px;
+      min-width: 260px;
+    }
+    .promoBig{
+      font-size: 22px;
+      font-weight: 950;
+      letter-spacing:-.02em;
+      color: rgba(63,247,180,.98);
+      line-height:1.05;
+    }
+    .promoBig .small{color: rgba(238,242,255,.86); font-weight:900; font-size:14px; margin-left:6px}
+    .promoText{
+      color: rgba(238,242,255,.72);
+      font-size: 13px;
+      line-height:1.35;
+      max-width: 64ch;
+    }
+    .countPill{
+      display:inline-flex; align-items:center; gap:10px;
       padding:10px 12px;
-      border-radius: 999px;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(11,16,32,.55);
-      box-shadow: 0 14px 28px rgba(0,0,0,.26);
-      font-weight:900;
-      letter-spacing:.2px;
-      color: rgba(255,255,255,.92);
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.22);
+      font-weight:850;
+      color: rgba(238,242,255,.88);
       white-space:nowrap;
     }
-    .timer-pill .dot{
-      width:8px;height:8px;border-radius:999px;
-      background: rgba(255,90,90,.95);
-      box-shadow: 0 0 0 6px rgba(255,90,90,.12);
+    .countPill .warnDot{
+      width:10px;height:10px;border-radius:50%;
+      background: rgba(255,90,90,.92);
+      box-shadow:0 0 0 6px rgba(255,90,90,.12);
     }
+    .countPill .label{color: rgba(238,242,255,.65); font-weight:800; margin-right:2px}
 
-    .plans{
-      margin-top:14px;
+    .cards{
       display:grid;
-      grid-template-columns: repeat(3, minmax(0,1fr));
+      grid-template-columns: repeat(3, 1fr);
       gap:14px;
       align-items:stretch;
+      margin-top: 14px;
     }
-    .plan{
-      border-radius: var(--radius);
-      background: linear-gradient(180deg, rgba(11,16,32,.92), rgba(8,11,20,.86));
-      border:1px solid rgba(255,255,255,.10);
-      box-shadow: var(--shadow);
-      padding:22px 20px 18px;
-      position:relative;
-      overflow:hidden;
-      transition: transform .20s ease, filter .20s ease, border-color .20s ease;
+    @media (max-width: 980px){
+      .promoBox{min-width: 100%}
+      .cards{grid-template-columns:1fr}
     }
-    .plan::before{
-      content:"";
-      position:absolute; inset:-2px;
-      background:
-        radial-gradient(420px 260px at 18% 10%, rgba(124,92,255,.20), transparent 60%),
-        radial-gradient(420px 260px at 86% 20%, rgba(55,247,182,.14), transparent 60%);
-      opacity:.75;
-      pointer-events:none;
-    }
-    .plan > *{position:relative; z-index:2;}
-    .plan:hover{transform: translateY(-6px); border-color: rgba(255,255,255,.18); filter:brightness(1.03);}
-    .plan.popular{
-      border-color: rgba(55,247,182,.38);
-      box-shadow: 0 28px 86px rgba(0,0,0,.62);
-      transform: translateY(-10px) scale(1.03);
-    }
-    .plan.popular:hover{transform: translateY(-14px) scale(1.04); border-color: rgba(55,247,182,.58);}
 
+    .plan{
+      border-radius:22px;
+      border:1px solid rgba(255,255,255,.10);
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      box-shadow: 0 16px 55px rgba(0,0,0,.35);
+      overflow:hidden;
+      position:relative;
+      transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease;
+      backdrop-filter: blur(14px);
+      min-height: 420px;
+    }
+    .plan:hover{
+      transform: translateY(-6px);
+      border-color: rgba(255,255,255,.16);
+      box-shadow: 0 24px 70px rgba(0,0,0,.45);
+    }
+    .plan .pad{padding:18px}
+    .plan .name{font-weight:900; font-size:18px; margin:0 0 8px}
+    .priceRow{display:flex; align-items:baseline; gap:10px; margin:6px 0 6px}
+    .price{
+      font-size: 54px;
+      font-weight: 980;
+      letter-spacing:-.03em;
+      line-height:1;
+    }
+    .per{color: rgba(238,242,255,.60); font-weight:750}
+    .desc{margin:8px 0 12px; color: rgba(238,242,255,.66); line-height:1.5}
+    .list{display:flex; flex-direction:column; gap:10px; margin:12px 0 14px}
+    .li{display:flex; gap:10px; align-items:flex-start; color: rgba(238,242,255,.80); font-weight:650}
+    .tick{
+      width:18px;height:18px;border-radius:6px;
+      background: rgba(63,247,180,.16);
+      border:1px solid rgba(63,247,180,.30);
+      display:inline-flex; align-items:center; justify-content:center;
+      flex:0 0 auto;
+      margin-top:1px;
+      color: rgba(63,247,180,.95);
+      font-size:12px;
+      box-shadow: 0 10px 25px rgba(63,247,180,.10);
+    }
+    .foot{
+      margin-top: 10px;
+      color: rgba(238,242,255,.52);
+      font-size: 12.5px;
+      line-height:1.4;
+    }
+
+    .plan .ctaBtn{
+      width:100%;
+      margin-top: 14px;
+    }
+
+    /* Most popular styling (bigger but not hiding others) */
+    .popular{
+      border-color: rgba(63,247,180,.32);
+      background: linear-gradient(180deg, rgba(63,247,180,.10), rgba(255,255,255,.02));
+      box-shadow: 0 22px 70px rgba(63,247,180,.12), 0 22px 80px rgba(0,0,0,.48);
+      transform: translateY(-6px);
+    }
+    .popular:hover{transform: translateY(-10px)}
     .badge{
       position:absolute;
-      top:14px;
-      right:14px;
-      padding:7px 10px;
+      top:14px; right:14px;
+      padding:8px 12px;
       border-radius:999px;
+      background: rgba(63,247,180,.92);
+      color:#061015;
+      font-weight:950;
       font-size:12px;
-      font-weight:800;
-      letter-spacing:.25px;
-      color:#051014;
-      background: linear-gradient(180deg, rgba(55,247,182,1), rgba(55,247,182,.78));
-      border: 1px solid rgba(55,247,182,.55);
-      box-shadow: 0 16px 28px rgba(0,0,0,.28);
+      letter-spacing:.2px;
+      box-shadow: 0 18px 45px rgba(63,247,180,.18);
     }
 
-    .plan-title{margin:0; font-size:16px; font-weight:800; text-transform:lowercase;}
-
-    .price-row{
-      margin-top:12px;
+    /* inside-card yearly discount chips */
+    .dealRow{
       display:flex;
-      align-items:flex-end;
       gap:10px;
       flex-wrap:wrap;
+      align-items:center;
+      margin-top: 10px;
     }
-    .price{font-size:46px; font-weight:900; letter-spacing:-.02em; line-height:1;}
-    .per{color:var(--muted); font-size:14px; padding-bottom:8px; white-space:nowrap;}
-    .strike{display:none; color:rgba(255,255,255,.40); text-decoration:line-through; font-size:14px; padding-bottom:10px;}
-
-    .save-inline{
-      display:none;
-      margin-left:auto;
+    .chip{
+      display:inline-flex; align-items:center; gap:8px;
       padding:8px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(55,247,182,.34);
-      background: rgba(55,247,182,.12);
-      color: rgba(255,255,255,.90);
-      font-size:12.5px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.22);
+      color: rgba(238,242,255,.86);
       font-weight:900;
-      letter-spacing:.2px;
-      box-shadow: 0 14px 26px rgba(0,0,0,.22);
-      white-space:nowrap;
+      font-size:12px;
     }
-    .save-inline b{ color: var(--accent); }
+    .chip.save{
+      border-color: rgba(63,247,180,.30);
+      background: rgba(63,247,180,.12);
+      color: rgba(238,242,255,.92);
+    }
+    .chip.save b{color: rgba(63,247,180,.95)}
 
-    .plan.popular .price{
-      background: linear-gradient(90deg, rgba(55,247,182,1), rgba(55,247,182,.72));
-      -webkit-background-clip:text;
-      background-clip:text;
-      color:transparent;
-    }
-
-    .desc{margin:12px 0 0; color:var(--muted); font-size:14px; line-height:1.55;}
-    .list{margin:16px 0 0; padding:0; list-style:none; display:flex; flex-direction:column; gap:10px; color:rgba(255,255,255,.78); font-size:14px;}
-    .li{display:flex; gap:10px; align-items:flex-start;}
-    .tick{
-      width:18px; height:18px;
-      border-radius:6px;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      background: rgba(55,247,182,.14);
-      border:1px solid rgba(55,247,182,.22);
-      flex:0 0 18px;
-      margin-top:1px;
-    }
-    .tick svg{width:12px; height:12px; fill:var(--accent)}
-    .cta{
-      margin-top:16px;
-      width:100%;
-      border:none;
-      cursor:pointer;
-      border-radius: 14px;
-      padding:13px 14px;
-      font-weight:900;
-      font-size:14px;
-      letter-spacing:.2px;
-      text-decoration:none;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      transition: transform .18s ease, filter .18s ease;
-    }
-    .cta.primary{
-      color:#061014;
-      background: linear-gradient(180deg, rgba(55,247,182,1), rgba(55,247,182,.78));
-      box-shadow: 0 14px 26px rgba(55,247,182,.12), 0 18px 40px rgba(0,0,0,.35);
-    }
-    .cta.secondary{
-      color: rgba(255,255,255,.92);
-      background: rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.14);
-      box-shadow: 0 16px 40px rgba(0,0,0,.35);
-    }
-    .cta:hover{transform: translateY(-1px); filter:brightness(1.04);}
-    .cta:active{transform: translateY(0px) scale(.99);}
-
-    .trial{
-      margin-top:10px;
-      display:flex;
-      align-items:flex-start;
-      justify-content:flex-start;
-      gap:8px;
-      color:rgba(255,255,255,.70);
-      font-size:12.5px;
-      line-height:1.45;
-    }
-    .spark{
-      width:18px; height:18px;
-      border-radius:8px;
-      background: rgba(124,92,255,.16);
-      border:1px solid rgba(124,92,255,.28);
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      flex:0 0 18px;
-      margin-top:1px;
-    }
-    .spark svg{width:12px;height:12px;fill:rgba(124,92,255,.95)}
-
-    details{
-      border-radius: var(--radius2);
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.04);
-      padding:14px 14px;
-      box-shadow: 0 16px 40px rgba(0,0,0,.30);
-    }
-    details summary{
-      cursor:pointer;
-      font-weight:800;
-      color:rgba(255,255,255,.86);
-      list-style:none;
-    }
-    details summary::-webkit-details-marker{display:none}
-    .faqgrid{
-      display:grid;
-      grid-template-columns: repeat(2, minmax(0,1fr));
-      gap:12px;
-      margin-top:14px;
-    }
-    details p{margin:10px 0 0; color:rgba(255,255,255,.68); line-height:1.6; font-size:14px;}
-
-    footer{
-      padding:38px 0 60px;
-      border-top: 1px solid rgba(255,255,255,.08);
-      color:rgba(255,255,255,.55);
+    .divider{height:1px; background:rgba(255,255,255,.08); margin:22px 0}
+    .footer{
+      padding:40px 0 60px;
+      color: rgba(238,242,255,.56);
       font-size:13px;
     }
-    .footer-row{display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;}
-    .foot-links{display:flex; gap:10px; flex-wrap:wrap;}
-    .foot-links a{color:rgba(255,255,255,.62); text-decoration:none;}
-    .foot-links a:hover{text-decoration:underline}
 
-    @media (max-width: 980px){
-      .hero{grid-template-columns: 1fr; gap:12px; padding-top:46px;}
-      h1{font-size:44px}
-      .mini-feats{grid-template-columns: 1fr; }
-      .logos{grid-template-columns: repeat(2, minmax(0,1fr));}
-      .testimonials{grid-template-columns: 1fr;}
-      .grid3{grid-template-columns: 1fr;}
-      .plans{grid-template-columns: 1fr;}
-      .faqgrid{grid-template-columns: 1fr;}
-      .deal-timer{align-items:flex-start}
-      .plan.popular{transform:none}
-      .save-inline{margin-left:0}
+    /* tiny glow around pricing shell only (no seams) */
+    .pricingGlow{
+      position:relative;
+    }
+    .pricingGlow::before{
+      content:"";
+      position:absolute;
+      inset:-30px;
+      background:
+        radial-gradient(600px 280px at 50% 0%, rgba(63,247,180,.10), transparent 60%),
+        radial-gradient(700px 360px at 60% 110%, rgba(124,58,237,.10), transparent 62%);
+      filter: blur(18px);
+      z-index:-1;
+      pointer-events:none;
     }
   </style>
 </head>
 
 <body>
-  <div class="bg-wrap" aria-hidden="true">
-    <div class="grid"></div>
-    <div class="orb o1"></div>
-    <div class="orb o2"></div>
-    <div class="orb o3"></div>
-    <div class="noise"></div>
-    <div class="vignette"></div>
+  <div class="nav">
+    <div class="wrap nav-inner">
+      <div class="brand">
+        <span class="mark"></span>
+        <span>sessionly</span>
+      </div>
+      <div class="nav-links">
+        <a href="#features">features</a>
+        <a href="#proof">reviews</a>
+        <a href="#pricing">pricing</a>
+        <a href="login.html">open app</a>
+      </div>
+    </div>
   </div>
 
-  <header class="nav">
-    <div class="container">
-      <div class="nav-inner">
-        <a class="brand" href="#top">
-          <span class="dot"></span>
-          <span>sessionly</span>
-        </a>
+  <header class="hero">
+    <div class="wrap hero-grid">
+      <div class="panel">
+        <div class="in">
+          <div class="pill"><span class="dot"></span><span class="muted">a performance system for traders</span></div>
+          <h1>trade your best hours<br/>not your whole day</h1>
+          <p class="sub">
+            log trades fast, spot patterns instantly, and get ai coaching that tells you what to fix next.
+            built for traders who want clarity, not more spreadsheets.
+          </p>
+          <div class="cta">
+            <a class="btn primary" href="login.html">open the app</a>
+            <a class="btn ghost" href="#pricing">see pricing</a>
+          </div>
 
-        <nav class="nav-links">
-          <a class="chip" href="#features">features</a>
-          <a class="chip" href="#proof">proof</a>
-          <a class="chip" href="#pricing">pricing</a>
-          <a class="chip" href="#faq">faq</a>
-          <a class="chip" href="app/index.html">open app</a>
-          <a class="chip primary" href="login.html">log in</a>
-        </nav>
+          <div class="mini-cards" id="features">
+            <div class="mini">
+              <b>1 minute trade logging</b>
+              <p>tap to log symbol, direction, rr, pnl, notes, and tags.</p>
+            </div>
+            <div class="mini">
+              <b>session breakdown</b>
+              <p>see what happens in london vs ny, and identify your best hours.</p>
+            </div>
+            <div class="mini">
+              <b>ai coaching loop</b>
+              <p>weekly direction, mistake patterns, and “what to do next” prompts.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel preview">
+        <div class="in" style="padding:18px">
+          <div class="mock" aria-label="app preview"></div>
+        </div>
       </div>
     </div>
   </header>
 
-  <main id="top">
-    <section class="container hero">
-      <div class="hero-card">
-        <div class="kicker">
-          <span class="dot" style="width:8px;height:8px;"></span>
-          <span>a performance system for day traders</span>
+  <section class="section" id="proof">
+    <div class="wrap">
+      <h2>trusted by traders who want a real improvement loop</h2>
+      <p class="lead">social proof like tradevue, but built around coaching and behavior change, not just reporting.</p>
+
+      <div class="proof">
+        <div class="review">
+          <div class="stars">★★★★★</div>
+          <p>“the weekly coaching summary is what finally made my journal actionable. i can see exactly what to change.”</p>
+          <div class="who">— futures trader</div>
         </div>
-
-        <h1>trade your best hours<br>not your whole day</h1>
-        <p class="lead">
-          log trades fast, tag mistakes, see your patterns, and get ai coaching that tells you exactly what to fix next.
-        </p>
-
-        <div class="hero-actions">
-          <a class="btn primary" href="app/index.html">open the app</a>
-          <a class="btn secondary" href="#pricing">see pricing</a>
-        </div>
-
-        <div class="mini-feats">
-          <div class="mini"><b>1 minute logging</b><br><span>symbol, direction, rr, pnl, notes</span></div>
-          <div class="mini"><b>session breakdown</b><br><span>london, ny, asia + best hours</span></div>
-          <div class="mini"><b>ai coaching</b><br><span>weekly plan + trade review insights</span></div>
+        <div class="review">
+          <div class="stars">★★★★★</div>
+          <p>“i stopped revenge trading because the system calls out my patterns. it feels like a coach, not a spreadsheet.”</p>
+          <div class="who">— index trader</div>
         </div>
       </div>
+    </div>
+  </section>
 
-      <div class="preview">
-        <div class="preview-box">
-          sessionly app preview
-        </div>
-        <div class="preview-badges">
-          <span class="tag good"><span class="t-dot"></span>calendar heatmap</span>
-          <span class="tag"><span class="t-dot"></span>mistake clustering</span>
-          <span class="tag good"><span class="t-dot"></span>weekly focus plan</span>
-        </div>
-      </div>
-    </section>
+  <section class="section" id="pricing">
+    <div class="wrap pricingGlow">
+      <div class="pill"><span class="dot"></span><span class="muted">pricing that pays for itself</span></div>
+      <div style="height:10px"></div>
+      <h2 style="font-size:44px; margin-top:8px">pricing</h2>
+      <p class="lead">choose monthly or yearly. yearly can unlock a limited promo per visitor.</p>
 
-    <section id="proof" class="section">
-      <div class="container">
-        <h2 class="section-title">social proof that feels real</h2>
-        <p class="section-sub">
-          we’re building sessionly to be the first journaling app that goes heavy on ai coaching and practical performance change.
-          this section is ready for your real stats and testimonials as you collect them.
-        </p>
-
-        <div class="logos">
-          <div class="logo">futures</div>
-          <div class="logo">forex</div>
-          <div class="logo">stocks</div>
-          <div class="logo">crypto</div>
-          <div class="logo">prop firms</div>
-        </div>
-
-        <div class="testimonials">
-          <div class="tcard">
-            <div class="stars">★★★★★</div>
-            <div class="quote">“this finally showed me which hours i bleed money, and what mistake keeps repeating.”</div>
-            <div class="who">day trader · ny session</div>
-          </div>
-          <div class="tcard">
-            <div class="stars">★★★★★</div>
-            <div class="quote">“the weekly plan is the difference. i stop guessing what to fix.”</div>
-            <div class="who">scalper · futures</div>
-          </div>
-          <div class="tcard">
-            <div class="stars">★★★★★</div>
-            <div class="quote">“logging is fast enough that i actually do it after every trade.”</div>
-            <div class="who">intraday · london session</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="features" class="section">
-      <div class="container">
-        <h2 class="section-title">what makes sessionly different</h2>
-        <p class="section-sub">
-          competitors are great at analytics. we’re aiming to be even better at the part traders struggle with:
-          turning data into a clear coaching plan.
-        </p>
-
-        <div class="grid3">
-          <div class="fcard">
-            <div class="ficon">
-              <svg viewBox="0 0 24 24"><path d="M12 2l1.6 5.2L19 9l-5.4 1.8L12 16l-1.6-5.2L5 9l5.4-1.8L12 2z"/></svg>
+      <div class="pricing-shell">
+        <div class="pricing-head">
+          <div class="toggle" role="group" aria-label="billing toggle">
+            <span>monthly</span>
+            <div class="switch" id="billingSwitch" aria-label="toggle yearly billing" role="switch" aria-checked="false" tabindex="0">
+              <div class="knob"></div>
             </div>
-            <h3>ai coaching, not just stats</h3>
-            <p>trade review + pattern recognition that turns your week into one clear focus and a plan.</p>
+            <span>yearly</span>
           </div>
 
-          <div class="fcard">
-            <div class="ficon">
-              <svg viewBox="0 0 24 24"><path d="M4 18h16v2H4v-2zm2-3h3V5H6v10zm5 0h3V9h-3v6zm5 0h3V3h-3v12z"/></svg>
+          <!-- promo box (the “red box”) -->
+          <div class="promoBox" id="promoBox" aria-live="polite">
+            <div class="promoLeft">
+              <div class="promoBig">
+                <span id="promoPercent">40%</span>
+                <span class="small">off yearly</span>
+              </div>
+              <div class="promoText" id="promoText">
+                Limited-time deal. Toggle yearly to see discounted yearly totals inside each plan.
+              </div>
             </div>
-            <h3>session + hour edge</h3>
-            <p>see your best and worst hours across london, ny, and asia so you stop overtrading.</p>
-          </div>
-
-          <div class="fcard">
-            <div class="ficon">
-              <svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 100 18 9 9 0 000-18zm1 5v5l4 2-.9 1.8L11 13.9V8h2z"/></svg>
+            <div class="countPill" id="countPill">
+              <span class="warnDot" aria-hidden="true"></span>
+              <span class="label">ends in</span>
+              <span id="countdown">08:00:00</span>
             </div>
-            <h3>fast logging, zero friction</h3>
-            <p>log a trade in under a minute so the system works daily, not “when you remember.”</p>
           </div>
         </div>
-      </div>
-    </section>
 
-    <section id="pricing" class="section">
-      <div class="container">
-        <h2 class="section-title">pricing</h2>
-        <p class="section-sub">choose monthly or yearly. yearly can unlock a limited promo per visitor.</p>
+        <div class="cards">
+          <!-- Starter -->
+          <div class="plan" id="planStarter">
+            <div class="pad">
+              <div class="name">starter</div>
+              <div class="priceRow">
+                <div class="price" id="starterPrice">$19</div>
+                <div class="per" id="starterPer">/ month</div>
+              </div>
+              <div class="desc">for consistency and clean tracking.</div>
 
-        <div class="pricing-wrap">
-          <div class="pricing-head">
-            <div class="toggle">
-              <span class="label">monthly</span>
-              <div class="pill" id="billingToggle" role="switch" aria-checked="false" tabindex="0"></div>
-              <span class="label">yearly</span>
+              <div class="dealRow" id="starterDealRow" style="display:none">
+                <span class="chip" id="starterYearTotal"></span>
+                <span class="chip save" id="starterSave"></span>
+              </div>
+
+              <div class="list">
+                <div class="li"><span class="tick">✓</span>manual trade logging</div>
+                <div class="li"><span class="tick">✓</span>calendar heatmap (win/loss days)</div>
+                <div class="li"><span class="tick">✓</span>basic stats (win rate, rr, pnl)</div>
+                <div class="li"><span class="tick">✓</span>light ai summaries (high level)</div>
+              </div>
+
+              <a class="btn ghost ctaBtn" href="login.html">start</a>
+
+              <div class="foot">best if you want structure and a consistent improvement loop.</div>
             </div>
           </div>
 
-          <div class="deal-banner" id="dealBanner">
-            <div class="deal-top">
-              <div class="deal-left">
-                <div class="deal-flag">
-                  <b id="dealPctBig">40%</b>
-                  <span>off yearly</span>
-                </div>
-                <div class="deal-meta" id="dealMeta">
-                  limited-time launch deal. toggle yearly to see discounted yearly totals inside each plan.
-                </div>
+          <!-- Premium (Most popular) -->
+          <div class="plan popular" id="planPremium">
+            <div class="badge">most popular</div>
+            <div class="pad">
+              <div class="name">premium</div>
+              <div class="priceRow">
+                <div class="price" style="color:rgba(63,247,180,.98)" id="premiumPrice">$49</div>
+                <div class="per" id="premiumPer">/ month</div>
               </div>
-              <div class="deal-timer">
-                <div class="timer-pill">
-                  <span class="dot"></span>
-                  ends in <span id="timerText">08:00:00</span>
-                </div>
+              <div class="desc">the full performance system.</div>
+
+              <div class="dealRow" id="premiumDealRow" style="display:none">
+                <span class="chip" id="premiumYearTotal"></span>
+                <span class="chip save" id="premiumSave"></span>
               </div>
+
+              <div class="list">
+                <div class="li"><span class="tick">✓</span>full ai coaching (trade review)</div>
+                <div class="li"><span class="tick">✓</span>weekly improvement report</div>
+                <div class="li"><span class="tick">✓</span>session breakdown (best hours)</div>
+                <div class="li"><span class="tick">✓</span>mistake clustering + patterns</div>
+                <div class="li"><span class="tick">✓</span>rules, streaks, and accountability</div>
+              </div>
+
+              <a class="btn primary ctaBtn" href="login.html">start</a>
+
+              <div class="foot">7-day free trial (card required).</div>
             </div>
           </div>
 
-          <div class="plans">
-            <article class="plan" aria-label="starter plan">
-              <h3 class="plan-title">starter</h3>
-              <div class="price-row">
-                <div class="price" data-price="starter">$19</div>
-                <div class="strike" data-strike="starter">$228</div>
-                <div class="per" data-per="starter">/ month</div>
-                <div class="save-inline" data-save="starter">saves <b>$0</b></div>
+          <!-- Professional -->
+          <div class="plan" id="planPro">
+            <div class="pad">
+              <div class="name">professional</div>
+              <div class="priceRow">
+                <div class="price" id="proPrice">$99</div>
+                <div class="per" id="proPer">/ month</div>
               </div>
-              <p class="desc">for consistency and clean tracking.</p>
-              <ul class="list">
-                <li class="li"><span class="tick"><svg viewBox="0 0 24 24"><path d="M9.2 16.6 4.9 12.3l1.4-1.4 2.9 2.9 8.5-8.5 1.4 1.4z"/></svg></span>manual trade logging</li>
-                <li class="li"><span class="tick"><svg viewBox="0 0 24 24"><path d="M9.2 16.6 4.9 12.3l1.4-1.4 2.9 2.9 8.5-8.5 1.4 1.4z"/></svg></span>calendar heatmap</li>
-                <li class="li"><span class="tick"><svg viewBox="0 0 24 24"><path d="M9.2 16.6 4.9 12.3l1.4-1.4 2.9 2.9 8.5-8.5 1.4 1.4z"/></svg></span>basic stats</li>
-                <li class="li"><span class="tick"><svg viewBox="0 0 24 24"><path d="M9.2 16.6 4.9 12.3l1.4-1.4 2.9 2.9 8.5-8.5 1.4 1.4z"/></svg></span>light ai summaries</li>
-              </ul>
-              <a class="cta secondary" href="login.html">start</a>
-            </article>
+              <div class="desc">deeper diagnostics and advanced workflows.</div>
 
-            <article class="plan popular" aria-label="premium plan">
-              <div class="badge">most popular</div>
-              <h3 class="plan-title">premium</h3>
-              <div class="price-row">
-                <div class="price" data-price="premium">$49</div>
-                <div class="strike" data-strike="premium">$588</div>
-                <div class="per" data-per="premium">/ month</div>
-                <div class="save-inline" data-save="premium">saves <b>$0</b></div>
+              <div class="dealRow" id="proDealRow" style="display:none">
+                <span class="chip" id="proYearTotal"></span>
+                <span class="chip save" id="proSave"></span>
               </div>
-              <p class="desc">the full performance system.</p>
-              <ul class="list">
-                <li class="li"><span class="tick"><svg viewBox="0 0 24 24"><path d="M9.2 16.6 4.9 12.3l1.4-1.4 2.9 2.9 8.5-8.5 1.4 1.4z"/></svg></span>full ai coaching (trade review)</li>
-                <li class="li"><span class="tick"><svg viewBox="0 0 24 24"><path d="M9.2 16.6 4.9 12.3l1.4-1.4 2.9 2.9 8.5-8.5 1.4 1.4z"/></svg></span>weekly improvement report</li>
-                <li class="li"><span class="tick"><svg viewBox="0 0 24 24"><path d="M9.2 16.6 4.9 12.3l1.4-1.4 2.9 2.9 8.5-8.5 1.4 1.4z"/></svg></span>session breakdown</li>
-                <li class="li"><span class="tick"><svg viewBox="0 0 24 24"><path d="M9.2 16.6 4.9 12.3l1.4-1.4 2.9 2.9 8.5-8.5 1.4 1.4z"/></svg></span>mistake clustering</li>
-                <li class="li"><span class="tick"><svg viewBox="0 0 24 24"><path d="M9.2 16.6 4.9 12.3l1.4-1.4 2.9 2.9 8.5-8.5 1.4 1.4z"/></svg></span>rules and streaks</li>
-              </ul>
-              <a class="cta primary" href="login.html">start</a>
 
-              <div class="trial">
-                <span class="spark"><svg viewBox="0 0 24 24"><path d="M12 2l1.6 5.2L19 9l-5.4 1.8L12 16l-1.6-5.2L5 9l5.4-1.8L12 2z"/></svg></span>
-                7-day free trial (card required).
+              <div class="list">
+                <div class="li"><span class="tick">✓</span>multi-account analysis</div>
+                <div class="li"><span class="tick">✓</span>strategy playbooks + grading</div>
+                <div class="li"><span class="tick">✓</span>deep ai diagnostics + root cause</div>
+                <div class="li"><span class="tick">✓</span>priority features access</div>
+                <div class="li"><span class="tick">✓</span>future broker imports (coming soon)</div>
               </div>
-            </article>
 
-            <article class="plan" aria-label="professional plan">
-              <h3 class="plan-title">professional</h3>
-              <div class="price-row">
-                <div class="price" data-price="pro">$99</div>
-                <div class="strike" data-strike="pro">$1188</div>
-                <div class="per" data-per="pro">/ month</div>
-                <div class="save-inline" data-save="pro">saves <b>$0</b></div>
-              </div>
-              <p class="desc">deeper diagnostics and advanced workflows.</p>
-              <ul class="list">
-                <li class="li"><span class="tick"><svg viewBox="0 0 24 24"><path d="M9.2 16.6 4.9 12.3l1.4-1.4 2.9 2.9 8.5-8.5 1.4 1.4z"/></svg></span>multi-account analysis</li>
-                <li class="li"><span class="tick"><svg viewBox="0 0 24 24"><path d="M9.2 16.6 4.9 12.3l1.4-1.4 2.9 2.9 8.5-8.5 1.4 1.4z"/></svg></span>strategy playbooks + grading</li>
-                <li class="li"><span class="tick"><svg viewBox="0 0 24 24"><path d="M9.2 16.6 4.9 12.3l1.4-1.4 2.9 2.9 8.5-8.5 1.4 1.4z"/></svg></span>deep ai diagnostics</li>
-                <li class="li"><span class="tick"><svg viewBox="0 0 24 24"><path d="M9.2 16.6 4.9 12.3l1.4-1.4 2.9 2.9 8.5-8.5 1.4 1.4z"/></svg></span>priority features access</li>
-                <li class="li"><span class="tick"><svg viewBox="0 0 24 24"><path d="M9.2 16.6 4.9 12.3l1.4-1.4 2.9 2.9 8.5-8.5 1.4 1.4z"/></svg></span>future broker imports (coming soon)</li>
-              </ul>
-              <a class="cta secondary" href="login.html">start</a>
-            </article>
+              <a class="btn ghost ctaBtn" href="login.html">start</a>
+
+              <div class="foot">for serious traders who want the deepest review loop.</div>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
 
-    <section id="faq" class="section">
-      <div class="container">
-        <h2 class="section-title">faq</h2>
-        <p class="section-sub">simple answers you can refine later.</p>
+        <div class="divider"></div>
 
-        <div class="faqgrid">
-          <details>
-            <summary>do you support automatic trade imports?</summary>
-            <p>not yet. it’s planned as a professional feature. for now, sessionly is optimized for fast manual logging so you can build the habit and data quality first.</p>
-          </details>
-          <details>
-            <summary>how does the 7-day trial work?</summary>
-            <p>you add a card at signup and you get 7 days to try it.</p>
-          </details>
-          <details>
-            <summary>is this for futures only?</summary>
-            <p>no. it works for futures, forex, stocks, and crypto. the goal is performance improvement, not broker-specific charts.</p>
-          </details>
-          <details>
-            <summary>can i change plans later?</summary>
-            <p>yes. you can upgrade or downgrade anytime. your trades and stats stay intact.</p>
-          </details>
+        <div class="muted2" style="line-height:1.6">
+          <b style="color:rgba(238,242,255,.72)">note:</b> this page is visual only for now. billing can be wired later (stripe).
+          pricing is structured to support ai coaching depth, not just basic journaling.
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <footer>
-      <div class="container">
-        <div class="footer-row">
-          <div>© <span id="year"></span> sessionly</div>
-          <div class="foot-links">
-            <a href="login.html">log in</a>
-            <a href="app/index.html">open app</a>
-            <a href="#pricing">pricing</a>
-          </div>
+  <section class="section">
+    <div class="wrap">
+      <h2>what makes sessionly different</h2>
+      <p class="lead">
+        most journals stop at “what happened”. sessionly goes heavy on ai coaching: why it happened, what it cost you,
+        and what to change next week.
+      </p>
+
+      <div class="proof">
+        <div class="review">
+          <div class="stars">ai coaching</div>
+          <p>auto summaries, mistake patterns, and prompts that turn your data into decisions.</p>
+          <div class="who">weekly direction, not just charts</div>
+        </div>
+        <div class="review">
+          <div class="stars">behavior-first</div>
+          <p>track rules, streaks, and the real reasons you break your plan, then fix them systematically.</p>
+          <div class="who">built for consistency</div>
         </div>
       </div>
-    </footer>
-  </main>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="wrap">
+      sessionly © <span id="year"></span> • built to help traders improve
+    </div>
+  </footer>
 
   <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
+    // ====== basic helpers ======
+    const $ = (id) => document.getElementById(id);
 
-    const PRICES = {
-      monthly: {
-        starter: { price: 19, per: "/ month" },
-        premium: { price: 49, per: "/ month" },
-        pro:     { price: 99, per: "/ month" }
-      },
-      yearly: {
-        starter: { annual: 19 * 12, per: "/ year" },
-        premium: { annual: 49 * 12, per: "/ year" },
-        pro:     { annual: 99 * 12, per: "/ year" }
-      }
+    const pricing = {
+      starter: 19,
+      premium: 49,
+      pro: 99
     };
 
-    const PROMO = {
-      promoHours: 8,
-      cooldownHours: 24,
-      promoDiscount: 0.40,
-      standardDiscount: 0.30
-    };
+    // promo: 40% off yearly, 8h timer per visitor (from first open)
+    const PROMO_PERCENT = 40; // 40%
+    const PROMO_MS = 8 * 60 * 60 * 1000; // 8 hours
+    const LS_KEY = "sessionly_promo_start_v1";
 
-    const LS_KEY = "sessionly_promo_cycle_v1";
-    const dealBanner = document.getElementById("dealBanner");
-    const dealPctBig = document.getElementById("dealPctBig");
-    const timerText = document.getElementById("timerText");
-
-    const billingToggle = document.getElementById("billingToggle");
-    let mode = "monthly";
-
-    function nowMs(){ return Date.now(); }
-
-    function getCycle(){
-      const raw = localStorage.getItem(LS_KEY);
-      if(raw){
-        try{ return JSON.parse(raw); }catch(e){}
-      }
-      const start = nowMs();
-      const cycle = { phase: "promo", phaseStart: start };
-      localStorage.setItem(LS_KEY, JSON.stringify(cycle));
-      return cycle;
-    }
-
-    function setCycle(cycle){
-      localStorage.setItem(LS_KEY, JSON.stringify(cycle));
-    }
-
-    function computePhase(){
-      const cycle = getCycle();
-      const t = nowMs();
-      const promoMs = PROMO.promoHours * 60 * 60 * 1000;
-      const coolMs  = PROMO.cooldownHours * 60 * 60 * 1000;
-
-      let phase = cycle.phase;
-      let phaseStart = cycle.phaseStart;
-
-      if(phase === "promo"){
-        if(t - phaseStart >= promoMs){
-          phase = "cooldown";
-          phaseStart = phaseStart + promoMs;
-          setCycle({ phase, phaseStart });
-        }
-      }else{
-        if(t - phaseStart >= coolMs){
-          phase = "promo";
-          phaseStart = phaseStart + coolMs;
-          setCycle({ phase, phaseStart });
-        }
-      }
-
-      const phaseLen = (phase === "promo") ? promoMs : coolMs;
-      const phaseEnd = phaseStart + phaseLen;
-
-      return { phase, phaseStart, phaseEnd };
-    }
-
-    function fmtUSD(n){
+    function formatMoney(n){
       return "$" + Math.round(n).toLocaleString("en-US");
     }
 
-    function fmtClock(msLeft){
-      const s = Math.max(0, Math.floor(msLeft/1000));
-      const hh = String(Math.floor(s/3600)).padStart(2,"0");
-      const mm = String(Math.floor((s%3600)/60)).padStart(2,"0");
-      const ss = String(s%60).padStart(2,"0");
-      return `${hh}:${mm}:${ss}`;
+    function formatHMS(ms){
+      const total = Math.max(0, Math.floor(ms / 1000));
+      const h = String(Math.floor(total / 3600)).padStart(2,"0");
+      const m = String(Math.floor((total % 3600) / 60)).padStart(2,"0");
+      const s = String(total % 60).padStart(2,"0");
+      return `${h}:${m}:${s}`;
     }
 
-    function currentYearlyDiscount(){
-      const { phase } = computePhase();
-      return (phase === "promo") ? PROMO.promoDiscount : PROMO.standardDiscount;
+    // ====== promo start time ======
+    function getPromoStart(){
+      let v = localStorage.getItem(LS_KEY);
+      if (!v){
+        const now = Date.now();
+        localStorage.setItem(LS_KEY, String(now));
+        return now;
+      }
+      const parsed = Number(v);
+      return Number.isFinite(parsed) ? parsed : Date.now();
     }
 
-    function promoActive(){
-      const { phase } = computePhase();
-      return phase === "promo";
+    function promoState(){
+      const start = getPromoStart();
+      const end = start + PROMO_MS;
+      const now = Date.now();
+      return {
+        active: now < end,
+        msLeft: end - now,
+        start,
+        end
+      };
     }
 
-    function updateDealUI(){
-      const phaseInfo = computePhase();
+    // ====== billing toggle ======
+    let billing = "monthly"; // monthly | yearly
+    function setSwitchUI(){
+      const sw = $("billingSwitch");
+      const on = billing === "yearly";
+      sw.classList.toggle("on", on);
+      sw.setAttribute("aria-checked", String(on));
+    }
 
-      if(phaseInfo.phase === "promo"){
-        dealBanner.style.display = "block";
-        dealPctBig.textContent = Math.round(PROMO.promoDiscount * 100) + "%";
-        timerText.textContent = fmtClock(phaseInfo.phaseEnd - nowMs());
-      }else{
-        dealBanner.style.display = "none";
+    function updatePrices(){
+      const promo = promoState();
+      const discount = promo.active ? (PROMO_PERCENT / 100) : 0;
+
+      const isYearly = billing === "yearly";
+
+      // show/hide promo box: only show when promo active
+      $("promoBox").style.display = promo.active ? "flex" : "none";
+
+      // per labels
+      $("starterPer").textContent = isYearly ? "/ year" : "/ month";
+      $("premiumPer").textContent = isYearly ? "/ year" : "/ month";
+      $("proPer").textContent = isYearly ? "/ year" : "/ month";
+
+      // compute display
+      for (const key of ["starter","premium","pro"]){
+        const m = pricing[key];
+        const monthlyText = formatMoney(m);
+
+        if (!isYearly){
+          // monthly view
+          if (key === "starter") $("starterPrice").textContent = monthlyText;
+          if (key === "premium") $("premiumPrice").textContent = monthlyText;
+          if (key === "pro") $("proPrice").textContent = monthlyText;
+
+          // hide deal rows in cards
+          $(key + "DealRow").style.display = "none";
+          continue;
+        }
+
+        // yearly view
+        const fullYear = m * 12;
+        const discountedYear = promo.active ? (fullYear * (1 - discount)) : fullYear;
+        const save = promo.active ? (fullYear - discountedYear) : 0;
+
+        const priceText = formatMoney(discountedYear);
+
+        if (key === "starter") $("starterPrice").textContent = priceText;
+        if (key === "premium") $("premiumPrice").textContent = priceText;
+        if (key === "pro") $("proPrice").textContent = priceText;
+
+        // inside-card discount chips only when promo active
+        if (promo.active){
+          $(key + "DealRow").style.display = "flex";
+          $(key + "YearTotal").textContent = `Yearly total ${formatMoney(discountedYear)}`;
+          // IMPORTANT: space after "Saves"
+          $(key + "Save").innerHTML = `<b>Saves</b> ${formatMoney(save)}`;
+        } else {
+          $(key + "DealRow").style.display = "none";
+        }
       }
     }
 
-    function setSaveBadgesVisible(isYearly){
-      document.querySelectorAll("[data-save]").forEach(el=>{
-        el.style.display = isYearly ? "inline-flex" : "none";
-      });
-    }
-
-    function updateSaveBadges(){
-      const off = currentYearlyDiscount();
-      const map = {
-        starter: PRICES.yearly.starter.annual,
-        premium: PRICES.yearly.premium.annual,
-        pro: PRICES.yearly.pro.annual
-      };
-
-      document.querySelectorAll("[data-save]").forEach(el=>{
-        const key = el.getAttribute("data-save");
-        const save = map[key] * off;
-        el.innerHTML = `saves <b>${fmtUSD(save)}</b>`;
-      });
-    }
-
-    function setMode(nextMode){
-      mode = nextMode;
-      const isYearly = mode === "yearly";
-
-      billingToggle.classList.toggle("on", isYearly);
-      billingToggle.setAttribute("aria-checked", String(isYearly));
-
-      updateDealUI();
-      setSaveBadgesVisible(isYearly);
-      if(isYearly) updateSaveBadges();
-
-      document.querySelectorAll("[data-price]").forEach(el=>{
-        const key = el.getAttribute("data-price");
-        if(mode === "monthly"){
-          el.textContent = "$" + PRICES.monthly[key].price;
-        }else{
-          const annual = PRICES.yearly[key].annual;
-          const off = currentYearlyDiscount();
-          el.textContent = fmtUSD(annual * (1 - off));
-        }
-      });
-
-      document.querySelectorAll("[data-strike]").forEach(el=>{
-        const key = el.getAttribute("data-strike");
-        if(mode === "monthly"){
-          el.style.display = "none";
-        }else{
-          const annual = PRICES.yearly[key].annual;
-          el.textContent = fmtUSD(annual);
-          el.style.display = "inline";
-        }
-      });
-
-      document.querySelectorAll("[data-per]").forEach(el=>{
-        const key = el.getAttribute("data-per");
-        el.textContent = mode === "monthly" ? PRICES.monthly[key].per : PRICES.yearly[key].per;
-      });
+    function tickCountdown(){
+      const promo = promoState();
+      if (!promo.active){
+        // promo ended -> ensure UI updates once
+        updatePrices();
+        return;
+      }
+      $("countdown").textContent = formatHMS(promo.msLeft);
+      requestAnimationFrame(tickCountdown);
     }
 
     function toggleBilling(){
-      setMode(mode === "monthly" ? "yearly" : "monthly");
+      billing = (billing === "monthly") ? "yearly" : "monthly";
+      setSwitchUI();
+      updatePrices();
     }
 
-    billingToggle.addEventListener("click", toggleBilling);
-    billingToggle.addEventListener("keydown", (e)=>{
-      if(e.key === "Enter" || e.key === " "){
+    // switch handlers
+    $("billingSwitch").addEventListener("click", toggleBilling);
+    $("billingSwitch").addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " "){
         e.preventDefault();
         toggleBilling();
       }
     });
 
-    function tick(){
-      const before = promoActive();
-      updateDealUI();
-      const after = promoActive();
+    // init
+    $("year").textContent = new Date().getFullYear();
 
-      if(mode === "yearly"){
-        if(before !== after){
-          setMode("yearly");
-        }else{
-          updateSaveBadges();
-        }
-      }
-    }
+    // set promo percent big text
+    $("promoPercent").textContent = `${PROMO_PERCENT}%`;
+    $("promoText").textContent = "Limited-time deal. Toggle yearly to see discounted yearly totals inside each plan.";
 
-    setMode("monthly");
-    setInterval(tick, 1000);
+    setSwitchUI();
+    updatePrices();
+    tickCountdown();
   </script>
 </body>
 </html>
+
