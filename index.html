@@ -494,49 +494,6 @@
       background: rgba(255,90,90,.95);
       box-shadow: 0 0 0 6px rgba(255,90,90,.12);
     }
-    .timer-note{
-      color: rgba(255,255,255,.58);
-      font-size:12.5px;
-      text-align:right;
-    }
-
-    .save-row{
-      margin-top:10px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      flex-wrap:wrap;
-    }
-    .save-grid{
-      display:grid;
-      grid-template-columns: repeat(3, minmax(0,1fr));
-      gap:10px;
-      width:100%;
-    }
-    .save-box{
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.04);
-      padding:10px 10px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      min-height:54px;
-    }
-    .save-box .k{
-      color: rgba(255,255,255,.70);
-      font-size:12.5px;
-      font-weight:800;
-      text-transform:lowercase;
-    }
-    .save-box .v{
-      color: rgba(55,247,182,.92);
-      font-weight:900;
-      letter-spacing:.2px;
-      white-space:nowrap;
-    }
 
     .plans{
       margin-top:14px;
@@ -589,16 +546,41 @@
     }
 
     .plan-title{margin:0; font-size:16px; font-weight:800; text-transform:lowercase;}
-    .price-row{margin-top:12px; display:flex; align-items:flex-end; gap:10px;}
+
+    .price-row{
+      margin-top:12px;
+      display:flex;
+      align-items:flex-end;
+      gap:10px;
+      flex-wrap:wrap;
+    }
     .price{font-size:46px; font-weight:900; letter-spacing:-.02em; line-height:1;}
     .per{color:var(--muted); font-size:14px; padding-bottom:8px; white-space:nowrap;}
     .strike{display:none; color:rgba(255,255,255,.40); text-decoration:line-through; font-size:14px; padding-bottom:10px;}
+
+    .save-inline{
+      display:none;
+      margin-left:auto;
+      padding:8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(55,247,182,.34);
+      background: rgba(55,247,182,.12);
+      color: rgba(255,255,255,.90);
+      font-size:12.5px;
+      font-weight:900;
+      letter-spacing:.2px;
+      box-shadow: 0 14px 26px rgba(0,0,0,.22);
+      white-space:nowrap;
+    }
+    .save-inline b{ color: var(--accent); }
+
     .plan.popular .price{
       background: linear-gradient(90deg, rgba(55,247,182,1), rgba(55,247,182,.72));
       -webkit-background-clip:text;
       background-clip:text;
       color:transparent;
     }
+
     .desc{margin:12px 0 0; color:var(--muted); font-size:14px; line-height:1.55;}
     .list{margin:16px 0 0; padding:0; list-style:none; display:flex; flex-direction:column; gap:10px; color:rgba(255,255,255,.78); font-size:14px;}
     .li{display:flex; gap:10px; align-items:flex-start;}
@@ -709,10 +691,9 @@
       .grid3{grid-template-columns: 1fr;}
       .plans{grid-template-columns: 1fr;}
       .faqgrid{grid-template-columns: 1fr;}
-      .save-grid{grid-template-columns: 1fr;}
       .deal-timer{align-items:flex-start}
-      .timer-note{text-align:left}
       .plan.popular{transform:none}
+      .save-inline{margin-left:0}
     }
   </style>
 </head>
@@ -870,7 +851,6 @@
             </div>
           </div>
 
-          <!-- BIG PROMO BANNER -->
           <div class="deal-banner" id="dealBanner">
             <div class="deal-top">
               <div class="deal-left">
@@ -879,31 +859,13 @@
                   <span>off yearly</span>
                 </div>
                 <div class="deal-meta" id="dealMeta">
-                  limited-time launch deal. turn on yearly to see the discounted yearly totals and your real savings.
+                  limited-time launch deal. toggle yearly to see discounted yearly totals inside each plan.
                 </div>
               </div>
               <div class="deal-timer">
                 <div class="timer-pill">
                   <span class="dot"></span>
                   ends in <span id="timerText">08:00:00</span>
-                </div>
-                <div class="timer-note" id="timerNote">after it ends, it disappears for 24h then returns</div>
-              </div>
-            </div>
-
-            <div class="save-row">
-              <div class="save-grid">
-                <div class="save-box">
-                  <div class="k">starter saves</div>
-                  <div class="v" id="saveStarter">$0</div>
-                </div>
-                <div class="save-box">
-                  <div class="k">premium saves</div>
-                  <div class="v" id="savePremium">$0</div>
-                </div>
-                <div class="save-box">
-                  <div class="k">professional saves</div>
-                  <div class="v" id="savePro">$0</div>
                 </div>
               </div>
             </div>
@@ -916,6 +878,7 @@
                 <div class="price" data-price="starter">$19</div>
                 <div class="strike" data-strike="starter">$228</div>
                 <div class="per" data-per="starter">/ month</div>
+                <div class="save-inline" data-save="starter">saves <b>$0</b></div>
               </div>
               <p class="desc">for consistency and clean tracking.</p>
               <ul class="list">
@@ -934,6 +897,7 @@
                 <div class="price" data-price="premium">$49</div>
                 <div class="strike" data-strike="premium">$588</div>
                 <div class="per" data-per="premium">/ month</div>
+                <div class="save-inline" data-save="premium">saves <b>$0</b></div>
               </div>
               <p class="desc">the full performance system.</p>
               <ul class="list">
@@ -957,6 +921,7 @@
                 <div class="price" data-price="pro">$99</div>
                 <div class="strike" data-strike="pro">$1188</div>
                 <div class="per" data-per="pro">/ month</div>
+                <div class="save-inline" data-save="pro">saves <b>$0</b></div>
               </div>
               <p class="desc">deeper diagnostics and advanced workflows.</p>
               <ul class="list">
@@ -1016,7 +981,6 @@
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
 
-    // base pricing
     const PRICES = {
       monthly: {
         starter: { price: 19, per: "/ month" },
@@ -1030,22 +994,17 @@
       }
     };
 
-    // promo logic:
-    // each visitor gets: 8h promo on first visit -> then 24h cooldown -> then promo returns (cycle repeats)
     const PROMO = {
       promoHours: 8,
       cooldownHours: 24,
-      promoDiscount: 0.40,     // big deal
-      standardDiscount: 0.30   // normal yearly discount when promo is off
+      promoDiscount: 0.40,
+      standardDiscount: 0.30
     };
 
     const LS_KEY = "sessionly_promo_cycle_v1";
     const dealBanner = document.getElementById("dealBanner");
     const dealPctBig = document.getElementById("dealPctBig");
     const timerText = document.getElementById("timerText");
-    const saveStarter = document.getElementById("saveStarter");
-    const savePremium = document.getElementById("savePremium");
-    const savePro = document.getElementById("savePro");
 
     const billingToggle = document.getElementById("billingToggle");
     let mode = "monthly";
@@ -1057,7 +1016,6 @@
       if(raw){
         try{ return JSON.parse(raw); }catch(e){}
       }
-      // start promo immediately on first load
       const start = nowMs();
       const cycle = { phase: "promo", phaseStart: start };
       localStorage.setItem(LS_KEY, JSON.stringify(cycle));
@@ -1077,7 +1035,6 @@
       let phase = cycle.phase;
       let phaseStart = cycle.phaseStart;
 
-      // advance if expired
       if(phase === "promo"){
         if(t - phaseStart >= promoMs){
           phase = "cooldown";
@@ -1132,20 +1089,25 @@
       }
     }
 
-    function updateSavingsUI(){
-      // only show meaningful numbers when yearly is selected
+    function setSaveBadgesVisible(isYearly){
+      document.querySelectorAll("[data-save]").forEach(el=>{
+        el.style.display = isYearly ? "inline-flex" : "none";
+      });
+    }
+
+    function updateSaveBadges(){
       const off = currentYearlyDiscount();
-      const annualStarter = PRICES.yearly.starter.annual;
-      const annualPremium = PRICES.yearly.premium.annual;
-      const annualPro = PRICES.yearly.pro.annual;
+      const map = {
+        starter: PRICES.yearly.starter.annual,
+        premium: PRICES.yearly.premium.annual,
+        pro: PRICES.yearly.pro.annual
+      };
 
-      const saveS = annualStarter * off;
-      const saveP = annualPremium * off;
-      const saveR = annualPro * off;
-
-      saveStarter.textContent = fmtUSD(saveS);
-      savePremium.textContent = fmtUSD(saveP);
-      savePro.textContent = fmtUSD(saveR);
+      document.querySelectorAll("[data-save]").forEach(el=>{
+        const key = el.getAttribute("data-save");
+        const save = map[key] * off;
+        el.innerHTML = `saves <b>${fmtUSD(save)}</b>`;
+      });
     }
 
     function setMode(nextMode){
@@ -1156,10 +1118,11 @@
       billingToggle.setAttribute("aria-checked", String(isYearly));
 
       updateDealUI();
-      updateSavingsUI();
+      setSaveBadgesVisible(isYearly);
+      if(isYearly) updateSaveBadges();
 
       document.querySelectorAll("[data-price]").forEach(el=>{
-        const key = el.getAttribute("data-price"); // starter | premium | pro
+        const key = el.getAttribute("data-price");
         if(mode === "monthly"){
           el.textContent = "$" + PRICES.monthly[key].price;
         }else{
@@ -1198,28 +1161,21 @@
       }
     });
 
-    // timer loop: if promo flips while user stays on page, update pricing live
     function tick(){
       const before = promoActive();
       updateDealUI();
       const after = promoActive();
 
-      if(mode === "yearly" && before !== after){
-        // phase switched while on page, refresh prices and savings
-        setMode("yearly");
-      }else{
-        // update timer text at least
-        if(mode === "yearly"){
-          updateSavingsUI();
+      if(mode === "yearly"){
+        if(before !== after){
+          setMode("yearly");
+        }else{
+          updateSaveBadges();
         }
       }
-
-      requestAnimationFrame(()=>{});
     }
 
     setMode("monthly");
-
-    // update once per second (cleaner than RAF here)
     setInterval(tick, 1000);
   </script>
 </body>
