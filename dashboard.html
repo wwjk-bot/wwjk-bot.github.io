@@ -63,6 +63,7 @@ radial-gradient(1100px 640px at 18% -6%, color-mix(in srgb, var(--accent) 22%, t
 radial-gradient(900px 540px at 84% 8%, color-mix(in srgb, var(--accent2) 12%, transparent), transparent 66%),
 linear-gradient(180deg, var(--bg) 0%, color-mix(in srgb, var(--bg) 92%, #000 8%) 100%);
 }
+
 [data-theme="light"] body{
 background:
 radial-gradient(900px 500px at 16% 0%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 62%),
@@ -75,12 +76,13 @@ min-height:100vh;
 display:grid;
 grid-template-columns: 280px 1fr;
 }
+
 @media (max-width: 980px){
 .app{grid-template-columns: 1fr;}
 .sidebar{position:sticky; top:0; z-index:50}
 }
 
-/* Sidebar */
+/* sidebar */
 .sidebar{
 padding:22px 18px;
 border-right:1px solid var(--stroke);
@@ -159,7 +161,7 @@ line-height:1.35;
 opacity:.9;
 }
 
-/* Main */
+/* main */
 .main{ padding:28px 26px 44px 26px; }
 .wrap{ max-width: 1140px; margin:0 auto; }
 
@@ -180,6 +182,7 @@ radial-gradient(700px 320px at 84% 6%, color-mix(in srgb, var(--accent2) 12%, tr
 opacity:.65;
 pointer-events:none;
 }
+
 .panelInner{position:relative; padding:22px;}
 .panelHeader{
 display:flex;
@@ -194,6 +197,7 @@ font-weight:950;
 letter-spacing:-.6px;
 margin:0;
 line-height:1.05;
+text-transform:none;
 }
 .subtitle{
 margin-top:6px;
@@ -219,6 +223,31 @@ background: var(--accent2);
 box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent2) 16%, transparent);
 }
 
+.snapshotRow{
+margin:10px 0 6px 0;
+display:flex;
+flex-wrap:wrap;
+gap:10px;
+align-items:center;
+}
+.snapshotPill{
+display:inline-flex;
+align-items:center;
+gap:8px;
+padding:8px 12px;
+border-radius:999px;
+border:1px solid var(--stroke);
+background: color-mix(in srgb, var(--panel) 30%, transparent);
+font-weight:900;
+}
+.snapshotPill.good{ border-color: color-mix(in srgb, var(--accent2) 36%, var(--stroke) 64%); }
+.snapshotPill.neutral{ border-color: color-mix(in srgb, var(--accent) 36%, var(--stroke) 64%); }
+.snapshotPill.warn{ border-color: color-mix(in srgb, var(--warn) 44%, var(--stroke) 56%); }
+.snapshotPill .small{
+font-weight:800;
+color:var(--muted);
+}
+
 .ctaRow{ margin-top:12px; display:flex; gap:12px; align-items:center; }
 .cta{
 width:100%;
@@ -236,6 +265,7 @@ transition: transform .08s ease, filter .18s ease;
 box-shadow: 0 14px 40px color-mix(in srgb, var(--accent) 20%, transparent);
 }
 .cta:hover{transform: translateY(-1px); filter: brightness(1.04);}
+.cta:active{transform: translateY(0px);}
 
 .gridStats{
 margin-top:14px;
@@ -244,8 +274,8 @@ grid-template-columns: repeat(6, 1fr);
 gap:12px;
 }
 @media (max-width: 1100px){ .gridStats{grid-template-columns: repeat(3, 1fr);} }
-@media (max-width: 720px){ .gridStats{grid-template-columns: repeat(2, 1fr);} }
-@media (max-width: 520px){ .gridStats{grid-template-columns: 1fr;} }
+@media (max-width: 680px){ .gridStats{grid-template-columns: repeat(2, 1fr);} }
+@media (max-width: 420px){ .gridStats{grid-template-columns: 1fr;} }
 
 .statCard{
 border:1px solid var(--stroke);
@@ -255,7 +285,6 @@ padding:14px 14px;
 box-shadow: var(--shadow2);
 position:relative;
 overflow:hidden;
-min-height:86px;
 }
 .statCard::after{
 content:"";
@@ -265,7 +294,7 @@ opacity:.65;
 pointer-events:none;
 }
 .statLabel{position:relative; font-size:12px; font-weight:950; letter-spacing:.4px; opacity:.85; text-transform:uppercase;}
-.statValue{position:relative; margin-top:8px; font-size:26px; font-weight:980; letter-spacing:-.6px;}
+.statValue{position:relative; margin-top:8px; font-size:28px; font-weight:980; letter-spacing:-.6px;}
 .statHint{position:relative; margin-top:4px; font-size:12px; color:var(--muted); font-weight:650;}
 
 .gridMain{
@@ -311,13 +340,13 @@ white-space:nowrap;
 .pill.warn{border-color: color-mix(in srgb, var(--warn) 42%, var(--stroke) 58%); }
 .pill.live{border-color: color-mix(in srgb, var(--accent) 42%, var(--stroke) 58%); }
 
-/* Tables */
+/* table */
 table{width:100%; border-collapse:collapse;}
 th,td{padding:10px 10px; border-bottom:1px solid var(--stroke); text-align:left; font-size:14px;}
 th{font-size:12px; text-transform:uppercase; letter-spacing:.4px; opacity:.75;}
 .emptyRow{ color:var(--muted); font-weight:650; padding:14px 10px; }
 
-/* Delete Icon Button */
+/* delete icon button */
 .iconBtn{
 border:1px solid color-mix(in srgb, var(--danger) 40%, var(--stroke) 60%);
 background: color-mix(in srgb, var(--panel) 28%, transparent);
@@ -329,7 +358,6 @@ align-items:center;
 justify-content:center;
 gap:8px;
 transition: transform .08s ease, background .18s ease, border-color .18s ease, filter .18s ease;
-position:relative;
 }
 .iconBtn:hover{
 transform: translateY(-1px);
@@ -347,113 +375,144 @@ clip:rect(0,0,0,0);
 white-space:nowrap;border:0;
 }
 
-/* Dashboard Extras */
-.heroLine{
-font-weight:980;
-letter-spacing:-.4px;
-margin:0;
-font-size:34px;
-line-height:1.05;
+/* coach card */
+.coachText{ color:var(--text); font-weight:800; line-height:1.45; margin:6px 0 12px 0; }
+.chips{display:flex; flex-wrap:wrap; gap:10px; margin:10px 0 12px 0;}
+.chip{
+font-size:13px;
+font-weight:900;
+border:1px solid var(--stroke);
+background: color-mix(in srgb, var(--panel) 32%, transparent);
+padding:8px 12px;
+border-radius:999px;
+opacity:.98;
+cursor:default;
+transition: transform .08s ease, background .18s ease, border-color .18s ease;
 }
-.heroSub{
-margin-top:6px;
-color:var(--muted);
-font-weight:750;
-font-size:14px;
+.chip:hover{
+transform: translateY(-1px);
+background: color-mix(in srgb, var(--accent) 10%, transparent);
+border-color: color-mix(in srgb, var(--accent) 30%, var(--stroke) 70%);
 }
-.kickerRow{
+.mutedLine{color:var(--muted); font-weight:650; font-size:13px; line-height:1.35;}
+.miniBtn{
+width:100%;
 margin-top:12px;
-display:flex;
-gap:10px;
-flex-wrap:wrap;
-align-items:center;
-}
-.kicker{
+padding:12px 12px;
+border-radius:16px;
 border:1px solid var(--stroke);
 background: color-mix(in srgb, var(--panel) 34%, transparent);
-border-radius:999px;
-padding:8px 12px;
 font-weight:950;
-font-size:13px;
-display:inline-flex;
-gap:8px;
-align-items:center;
+cursor:pointer;
+transition: transform .08s ease, background .18s ease, border-color .18s ease;
 }
-.kicker strong{font-weight:990}
-.kicker.good{border-color: color-mix(in srgb, var(--accent2) 30%, var(--stroke) 70%);}
-.kicker.bad{border-color: color-mix(in srgb, var(--danger) 30%, var(--stroke) 70%);}
-.kicker.neutral{border-color: color-mix(in srgb, var(--accent) 30%, var(--stroke) 70%);}
+.miniBtn:hover{
+transform: translateY(-1px);
+background: color-mix(in srgb, var(--accent2) 10%, transparent);
+border-color: color-mix(in srgb, var(--accent2) 24%, var(--stroke) 76%);
+}
 
-/* Goals */
-.goalsWrap{
+/* Momentum / Goals */
+.momentumGrid{
+display:grid;
+grid-template-columns: 1.15fr .85fr;
+gap:12px;
 margin-top:12px;
-border:1px solid var(--stroke);
-background: color-mix(in srgb, var(--panel) 30%, transparent);
-border-radius:18px;
-padding:12px;
 }
-.goalsTop{
+@media (max-width: 980px){ .momentumGrid{grid-template-columns: 1fr;} }
+
+.goalHeader{
 display:flex;
 align-items:center;
 justify-content:space-between;
-gap:12px;
+gap:10px;
 flex-wrap:wrap;
+margin-bottom:10px;
 }
-.goalsTitle{
-font-weight:980;
+.goalHeaderLeft{
+display:flex;
+flex-direction:column;
+gap:4px;
+}
+.goalHeadline{
+font-size:16px;
+font-weight:950;
 letter-spacing:-.2px;
 }
-.goalsControls{
+.goalSub{
+font-size:13px;
+color:var(--muted);
+font-weight:700;
+}
+.goalSettings{
 display:flex;
 align-items:center;
 gap:10px;
 flex-wrap:wrap;
-color:var(--muted);
-font-weight:850;
-font-size:13px;
 }
-.selectLike, .goalsControls input{
-padding:10px 12px;
-border-radius:14px;
+
+.selectLike{
 border:1px solid var(--stroke);
 background: color-mix(in srgb, var(--panel) 34%, transparent);
+border-radius: 14px;
+padding:10px 12px;
 color:var(--text);
 font-weight:900;
 outline:none;
-}
-.selectLike{
-appearance:none;
 cursor:pointer;
 }
+
+.inputLike{
+border:1px solid var(--stroke);
+background: color-mix(in srgb, var(--panel) 34%, transparent);
+border-radius: 14px;
+padding:10px 12px;
+color:var(--text);
+font-weight:900;
+outline:none;
+width: 130px;
+}
+
 .goalsGrid{
-margin-top:10px;
 display:grid;
 grid-template-columns: 1fr 1fr 1fr;
 gap:12px;
+margin-top:12px;
 }
 @media (max-width: 980px){ .goalsGrid{grid-template-columns: 1fr;} }
 
 .goalBox{
 border:1px solid var(--stroke);
-background: color-mix(in srgb, var(--panel) 28%, transparent);
-border-radius:18px;
-padding:12px;
+background: color-mix(in srgb, var(--panel) 30%, transparent);
+border-radius: 18px;
+padding:14px;
+box-shadow: var(--shadow2);
+position:relative;
+overflow:hidden;
+}
+.goalBox::before{
+content:"";
+position:absolute; inset:-2px;
+background: radial-gradient(260px 120px at 10% 0%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 70%);
+opacity:.55;
+pointer-events:none;
 }
 .goalRowTop{
+position:relative;
 display:flex;
 align-items:flex-start;
 justify-content:space-between;
 gap:10px;
-flex-wrap:wrap;
 }
 .goalName{
 font-weight:980;
+font-size:15px;
 letter-spacing:-.1px;
 }
 .goalSmall{
-margin-top:4px;
+margin-top:3px;
 color:var(--muted);
-font-weight:800;
+font-weight:750;
 font-size:12px;
 }
 .goalEditRow{
@@ -461,95 +520,42 @@ display:flex;
 align-items:center;
 gap:10px;
 flex-wrap:wrap;
+justify-content:flex-end;
 }
-.goalEditRow input{
-width:140px;
+.goalEditRow .selectLike{ min-width: 150px; }
+.goalCustomInput{
+display:none;
+width: 150px;
 }
-.presetRow{
-margin-top:10px;
-display:flex;
-gap:8px;
-flex-wrap:wrap;
-}
-.presetBtn{
-border:1px solid var(--stroke);
-background: color-mix(in srgb, var(--panel) 34%, transparent);
-border-radius:999px;
-padding:8px 10px;
-font-weight:950;
-cursor:pointer;
-transition: transform .08s ease, background .18s ease, border-color .18s ease;
-}
-.presetBtn:hover{
-transform: translateY(-1px);
-background: color-mix(in srgb, var(--accent) 10%, transparent);
-border-color: color-mix(in srgb, var(--accent) 26%, var(--stroke) 74%);
-}
+.goalCustomInput.show{ display:block; }
+
 .bar{
-margin-top:10px;
+margin-top:12px;
 height:12px;
 border-radius:999px;
 border:1px solid var(--stroke);
-background: color-mix(in srgb, var(--panel) 26%, transparent);
+background: color-mix(in srgb, var(--panel) 28%, transparent);
 overflow:hidden;
+position:relative;
 }
 .barFill{
 height:100%;
 width:0%;
-border-radius:999px;
-background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 85%, #000 15%), color-mix(in srgb, var(--accent2) 70%, #000 30%));
-box-shadow: 0 14px 34px color-mix(in srgb, var(--accent) 18%, transparent);
+background: linear-gradient(90deg, color-mix(in srgb, var(--accent2) 80%, #000 20%), color-mix(in srgb, var(--accent) 65%, #000 35%));
+box-shadow: 0 10px 26px color-mix(in srgb, var(--accent2) 14%, transparent);
 }
 .progressMeta{
-margin-top:8px;
-display:flex;
-justify-content:space-between;
-gap:12px;
-flex-wrap:wrap;
-color:var(--muted);
-font-weight:800;
-font-size:13px;
-}
-.noticeLine{
 margin-top:10px;
-color:var(--muted);
-font-weight:750;
-font-size:13px;
-line-height:1.35;
-}
-
-/* Charts - Fix Overlap (Hint Below Canvas) */
-.miniCharts{
-margin-top:12px;
-display:grid;
-grid-template-columns: 1fr 1fr;
-gap:12px;
-}
-@media (max-width: 980px){ .miniCharts{grid-template-columns: 1fr;} }
-
-.miniChartBox{
-border:1px dashed color-mix(in srgb, var(--stroke2) 100%, transparent);
-border-radius:18px;
-height:170px;
-overflow:hidden;
 display:flex;
-flex-direction:column;
-}
-.miniChartCanvas{
-flex:1 1 auto;
-min-height:120px;
-}
-.chartHint{
-flex:0 0 auto;
-padding:10px 12px;
-border-top:1px solid var(--stroke);
-font-size:12px;
+align-items:center;
+justify-content:space-between;
+gap:10px;
 color:var(--muted);
 font-weight:800;
-background: color-mix(in srgb, var(--panel) 22%, transparent);
+font-size:13px;
 }
 
-/* Analytics Charts */
+/* analytics layout */
 .gridAnalyticsTop{
 margin-top:12px;
 display:grid;
@@ -566,20 +572,31 @@ gap:12px;
 }
 @media (max-width: 980px){ .gridCharts{grid-template-columns: 1fr;} }
 
+/* chart box: reserve a footer area so hint never overlaps chart */
 .chartBox{
 border:1px dashed color-mix(in srgb, var(--stroke2) 100%, transparent);
 border-radius:18px;
-height:280px;
-display:flex;
-flex-direction:column;
+height:240px;
+position:relative;
 overflow:hidden;
+background: color-mix(in srgb, var(--panel) 12%, transparent);
 }
 .chartCanvas{
-flex:1 1 auto;
-min-height:200px;
+position:absolute;
+inset:12px 12px 44px 12px; /* bottom space reserved */
+}
+.chartCanvas canvas{ width:100%; height:100%; display:block; }
+.chartHint{
+position:absolute;
+left:12px; right:12px; bottom:10px;
+font-size:12px;
+color:var(--muted);
+font-weight:750;
+opacity:.95;
+pointer-events:none;
 }
 
-/* Calendar */
+/* calendar page */
 .calTop{
 display:flex;
 align-items:center;
@@ -640,6 +657,7 @@ box-shadow: 0 10px 26px rgba(0,0,0,.35);
 transform: translateX(20px);
 background: color-mix(in srgb, var(--accent2) 85%, #000 15%);
 }
+
 .calGrid{
 display:grid;
 grid-template-columns: repeat(7, 1fr);
@@ -664,7 +682,10 @@ position:relative;
 overflow:hidden;
 box-shadow: var(--shadow2);
 }
-.calCell.muted{opacity:.35; filter:saturate(.7);}
+.calCell.muted{
+opacity:.35;
+filter:saturate(.7);
+}
 .calCell::before{
 content:"";
 position:absolute; inset:-2px;
@@ -673,19 +694,37 @@ opacity:.55;
 pointer-events:none;
 }
 .calCellInner{position:relative;}
-.calDay{font-weight:980;font-size:12px;opacity:.92;}
-.calMeta{margin-top:8px;color:var(--muted);font-weight:750;font-size:12px;line-height:1.35;}
-.calValue{margin-top:8px;font-weight:980;font-size:14px;}
+.calDay{
+font-weight:980;
+font-size:12px;
+opacity:.92;
+}
+.calMeta{
+margin-top:8px;
+color:var(--muted);
+font-weight:750;
+font-size:12px;
+line-height:1.35;
+}
+.calValue{
+margin-top:8px;
+font-weight:980;
+font-size:14px;
+}
 .calValue.pos{ color: color-mix(in srgb, var(--accent2) 85%, #fff 15%); }
 .calValue.neg{ color: color-mix(in srgb, var(--danger) 85%, #fff 15%); }
-.calGlowPos{background: radial-gradient(240px 120px at 10% 0%, color-mix(in srgb, var(--accent2) 22%, transparent), transparent 70%);}
-.calGlowNeg{background: radial-gradient(240px 120px at 10% 0%, color-mix(in srgb, var(--danger) 20%, transparent), transparent 70%);}
+.calGlowPos{
+background: radial-gradient(240px 120px at 10% 0%, color-mix(in srgb, var(--accent2) 22%, transparent), transparent 70%);
+}
+.calGlowNeg{
+background: radial-gradient(240px 120px at 10% 0%, color-mix(in srgb, var(--danger) 20%, transparent), transparent 70%);
+}
 .calCell.active{
 outline:2px solid color-mix(in srgb, var(--accent) 55%, transparent);
 box-shadow: 0 22px 70px color-mix(in srgb, var(--accent) 16%, transparent);
 }
 
-/* Modals */
+/* modal */
 .modalBackdrop{
 position:fixed; inset:0;
 background: rgba(0,0,0,.55);
@@ -768,6 +807,7 @@ opacity:.75;
 cursor:pointer;
 filter: drop-shadow(0 0 10px color-mix(in srgb, var(--accent) 35%, transparent));
 }
+
 .modalActions{
 margin-top:12px;
 display:flex;
@@ -794,7 +834,15 @@ color:#fff;
 font-weight:980;
 cursor:pointer;
 }
-.msg{margin-top:10px; min-height:20px; font-size:13px; color:var(--muted); font-weight:750;}
+.msg{
+margin-top:10px;
+min-height:20px;
+font-size:13px;
+color:var(--muted);
+font-weight:750;
+}
+
+/* pages */
 .page{display:none;}
 .page.active{display:block;}
 </style>
@@ -803,569 +851,580 @@ cursor:pointer;
 <body>
 <div class="app">
 <aside class="sidebar">
-<div class="logoRow"><span class="logoDot"></span><span>Sessionly</span></div>
-<div class="signed">Signed in as <span id="userEmail">...</span></div>
+  <div class="logoRow"><span class="logoDot"></span><span>Sessionly</span></div>
+  <div class="signed">Signed in as <span id="userEmail">...</span></div>
 
-<div class="navGroup">
-<button class="navBtn" data-route="focus"><span>Focus</span><span class="tag">Daily</span></button>
-<button class="navBtn" data-route="analytics"><span>Analytics</span><span class="tag">Charts</span></button>
-<button class="navBtn" data-route="calendar"><span>Calendar</span><span class="tag">Month</span></button>
-<button class="navBtn" data-route="trades"><span>Trades</span><span class="tag">Table</span></button>
-<button class="navBtn" data-route="journal"><span>Journal</span><span class="tag">Notes</span></button>
-</div>
+  <div class="navGroup">
+    <button class="navBtn" data-route="focus"><span>Focus</span><span class="tag">Daily</span></button>
+    <button class="navBtn" data-route="analytics"><span>Analytics</span><span class="tag">Charts</span></button>
+    <button class="navBtn" data-route="calendar"><span>Calendar</span><span class="tag">Month</span></button>
+    <button class="navBtn" data-route="trades"><span>Trades</span><span class="tag">Table</span></button>
+    <button class="navBtn" data-route="journal"><span>Journal</span><span class="tag">Notes</span></button>
+  </div>
 
-<div class="sidebarActions">
-<button class="ghostBtn" id="toggleThemeBtn">Toggle Theme</button>
-<button class="ghostBtn" id="logoutBtn">Log Out</button>
-</div>
+  <div class="sidebarActions">
+    <button class="ghostBtn" id="toggleThemeBtn">Toggle Theme</button>
+    <button class="ghostBtn" id="logoutBtn">Log Out</button>
+  </div>
 
-<div class="slogan">Calm by default, deep when you want it.</div>
+  <div class="slogan">Calm by default, deep when you want it.</div>
 </aside>
 
 <main class="main">
 <div class="wrap">
 
-<!-- Focus page (Dashboard) -->
+<!-- focus page -->
 <section class="page" id="page-focus">
-<div class="panel">
-<div class="panelInner">
-<div class="panelHeader">
-<div>
-<h1 class="heroLine" id="dashGreeting">Good Day</h1>
-<div class="heroSub" id="dashSub">Here’s your performance snapshot</div>
+  <div class="panel">
+    <div class="panelInner">
+      <div class="panelHeader">
+        <div>
+          <h1 class="title" id="focusGreeting">Good day</h1>
+          <div class="subtitle" id="focusSubtitle">Your performance snapshot, clean and motivating.</div>
 
-<div class="kickerRow">
-<div class="kicker neutral" id="kickerTier">Tier <strong>—</strong></div>
-<div class="kicker" id="kickerStreak">Streak <strong>—</strong></div>
-<div class="kicker" id="kickerMonth">This Month <strong>—</strong></div>
-</div>
-</div>
-<div class="badge"><span class="badgeDot"></span><span id="focusStatus">Ready</span></div>
-</div>
+          <div class="snapshotRow">
+            <div class="snapshotPill neutral" id="tierPill">
+              <span id="tierText">Tier: —</span>
+            </div>
+            <div class="snapshotPill neutral">
+              <span>Streak</span>
+              <span class="small" id="streakText">—</span>
+            </div>
+            <div class="snapshotPill neutral">
+              <span>This Month</span>
+              <span class="small" id="monthRChip">—</span>
+            </div>
+          </div>
+        </div>
+        <div class="badge"><span class="badgeDot"></span><span id="focusStatus">Ready</span></div>
+      </div>
 
-<div class="ctaRow">
-<button class="cta" id="addTradeBtn">+ Add Trade</button>
-</div>
+      <div class="ctaRow">
+        <button class="cta" id="addTradeBtn">+ Add Trade</button>
+      </div>
 
-<div class="gridStats">
-<div class="statCard">
-<div class="statLabel">Total PnL</div>
-<div class="statValue" id="d_totalPnl">—</div>
-<div class="statHint" id="d_totalPnl_hint">All Time</div>
-</div>
-<div class="statCard">
-<div class="statLabel">Month PnL</div>
-<div class="statValue" id="d_monthPnl">—</div>
-<div class="statHint" id="d_monthPnl_hint">This Month</div>
-</div>
-<div class="statCard">
-<div class="statLabel">Profit Factor</div>
-<div class="statValue" id="d_pf">—</div>
-<div class="statHint" id="d_pf_hint">From R Multiple</div>
-</div>
-<div class="statCard">
-<div class="statLabel">Win Rate</div>
-<div class="statValue" id="d_wr">—</div>
-<div class="statHint" id="d_wr_hint">Decided Trades</div>
-</div>
-<div class="statCard">
-<div class="statLabel">Total Trades</div>
-<div class="statValue" id="d_trades">—</div>
-<div class="statHint">Logged</div>
-</div>
-<div class="statCard">
-<div class="statLabel">Avg R</div>
-<div class="statValue" id="d_avgR">—</div>
-<div class="statHint">Per Trade</div>
-</div>
-</div>
+      <div class="gridStats">
+        <div class="statCard">
+          <div class="statLabel">Total PnL</div>
+          <div class="statValue" id="s_total_pnl">—</div>
+          <div class="statHint" id="s_total_pnl_hint">All time</div>
+        </div>
 
-<div class="gridMain">
-<div class="card">
-<div class="cardHead">
-<h3 class="cardTitle">Momentum</h3>
-<span class="pill ok" id="recentPill">Ready</span>
-</div>
+        <div class="statCard">
+          <div class="statLabel">Month PnL</div>
+          <div class="statValue" id="s_month_pnl">—</div>
+          <div class="statHint" id="s_month_pnl_hint">This month</div>
+        </div>
 
-<!-- Goals -->
-<div class="goalsWrap">
-<div class="goalsTop">
-<div>
-<div class="goalsTitle">Goals</div>
-<div class="noticeLine" id="goalsNote">Set Daily, Weekly, and Monthly targets. Progress updates automatically.</div>
-</div>
+        <div class="statCard">
+          <div class="statLabel">Profit Factor</div>
+          <div class="statValue" id="s_pf">—</div>
+          <div class="statHint" id="s_pf_hint">From R multiples</div>
+        </div>
 
-<div class="goalsControls">
-<select class="selectLike" id="currencySelect" title="Currency">
-<option value="USD">USD</option>
-<option value="EUR">EUR</option>
-<option value="GBP">GBP</option>
-<option value="AED">AED</option>
-<option value="CAD">CAD</option>
-<option value="AUD">AUD</option>
-</select>
-</div>
-</div>
+        <div class="statCard">
+          <div class="statLabel">Win Rate</div>
+          <div class="statValue" id="s_winrate">—</div>
+          <div class="statHint" id="s_winrate_hint">Decided trades</div>
+        </div>
 
-<div class="goalsGrid">
-<!-- Daily -->
-<div class="goalBox">
-<div class="goalRowTop">
-<div>
-<div class="goalName">Daily Goal</div>
-<div class="goalSmall" id="dailySub">Today</div>
-</div>
-<div class="goalEditRow">
-<input id="goalDailyInput" type="number" step="1" placeholder="100" />
-</div>
-</div>
+        <div class="statCard">
+          <div class="statLabel">Total Trades</div>
+          <div class="statValue" id="s_total_trades">—</div>
+          <div class="statHint">Logged</div>
+        </div>
 
-<div class="presetRow">
-<button class="presetBtn" data-goal="daily" data-val="50">50</button>
-<button class="presetBtn" data-goal="daily" data-val="100">100</button>
-<button class="presetBtn" data-goal="daily" data-val="200">200</button>
-<button class="presetBtn" data-goal="daily" data-val="500">500</button>
-</div>
+        <div class="statCard">
+          <div class="statLabel">Avg R</div>
+          <div class="statValue" id="s_avgr">—</div>
+          <div class="statHint">Per trade</div>
+        </div>
+      </div>
 
-<div class="bar"><div class="barFill" id="goalDailyFill"></div></div>
-<div class="progressMeta">
-<div id="goalDailyLeft">—</div>
-<div id="goalDailyPct">—</div>
-</div>
-</div>
+      <div class="momentumGrid">
+        <div class="card">
+          <div class="cardHead">
+            <h3 class="cardTitle">Momentum</h3>
+            <span class="pill ok" id="momentumPill">Ready</span>
+          </div>
 
-<!-- Weekly -->
-<div class="goalBox">
-<div class="goalRowTop">
-<div>
-<div class="goalName">Weekly Goal</div>
-<div class="goalSmall" id="weeklySub">This week (Mon–Sun)</div>
-</div>
-<div class="goalEditRow">
-<input id="goalWeeklyInput" type="number" step="1" placeholder="500" />
-</div>
-</div>
+          <div class="goalHeader">
+            <div class="goalHeaderLeft">
+              <div class="goalHeadline">Goals</div>
+              <div class="goalSub">Set targets in money. Progress uses your R × risk-per-R.</div>
+            </div>
 
-<div class="presetRow">
-<button class="presetBtn" data-goal="weekly" data-val="200">200</button>
-<button class="presetBtn" data-goal="weekly" data-val="500">500</button>
-<button class="presetBtn" data-goal="weekly" data-val="1000">1000</button>
-<button class="presetBtn" data-goal="weekly" data-val="2000">2000</button>
-</div>
+            <div class="goalSettings">
+              <select class="selectLike" id="currencySelect" title="Currency">
+                <option value="USD">USD</option>
+                <option value="EUR">EUR</option>
+                <option value="GBP">GBP</option>
+              </select>
 
-<div class="bar"><div class="barFill" id="goalWeeklyFill"></div></div>
-<div class="progressMeta">
-<div id="goalWeeklyLeft">—</div>
-<div id="goalWeeklyPct">—</div>
-</div>
-</div>
+              <input class="inputLike" id="riskPerRInput" type="number" step="1" min="1" title="Risk per 1R" placeholder="Risk/1R" />
+            </div>
+          </div>
 
-<!-- Monthly -->
-<div class="goalBox">
-<div class="goalRowTop">
-<div>
-<div class="goalName">Monthly Goal</div>
-<div class="goalSmall" id="monthlySub">This month</div>
-</div>
-<div class="goalEditRow">
-<input id="goalMonthlyInput" type="number" step="1" placeholder="2000" />
-</div>
-</div>
+          <div class="goalsGrid">
+            <!-- Daily -->
+            <div class="goalBox">
+              <div class="goalRowTop">
+                <div>
+                  <div class="goalName">Daily Goal</div>
+                  <div class="goalSmall">Today</div>
+                </div>
+                <div class="goalEditRow">
+                  <select class="selectLike goalSelect" id="goalDailySelect" data-period="daily">
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                    <option value="200">200</option>
+                    <option value="500">500</option>
+                    <option value="1000">1000</option>
+                    <option value="custom">Custom…</option>
+                  </select>
+                  <input id="goalDailyInput" class="inputLike goalCustomInput" type="number" step="1" placeholder="Enter amount" />
+                </div>
+              </div>
+              <div class="bar"><div class="barFill" id="goalDailyFill"></div></div>
+              <div class="progressMeta">
+                <div id="goalDailyLeft">—</div>
+                <div id="goalDailyPct">—</div>
+              </div>
+            </div>
 
-<div class="presetRow">
-<button class="presetBtn" data-goal="monthly" data-val="500">500</button>
-<button class="presetBtn" data-goal="monthly" data-val="1000">1000</button>
-<button class="presetBtn" data-goal="monthly" data-val="2000">2000</button>
-<button class="presetBtn" data-goal="monthly" data-val="5000">5000</button>
-</div>
+            <!-- Weekly -->
+            <div class="goalBox">
+              <div class="goalRowTop">
+                <div>
+                  <div class="goalName">Weekly Goal</div>
+                  <div class="goalSmall">This week (Mon–Sun)</div>
+                </div>
+                <div class="goalEditRow">
+                  <select class="selectLike goalSelect" id="goalWeeklySelect" data-period="weekly">
+                    <option value="200">200</option>
+                    <option value="500">500</option>
+                    <option value="1000">1000</option>
+                    <option value="2000">2000</option>
+                    <option value="5000">5000</option>
+                    <option value="custom">Custom…</option>
+                  </select>
+                  <input id="goalWeeklyInput" class="inputLike goalCustomInput" type="number" step="1" placeholder="Enter amount" />
+                </div>
+              </div>
+              <div class="bar"><div class="barFill" id="goalWeeklyFill"></div></div>
+              <div class="progressMeta">
+                <div id="goalWeeklyLeft">—</div>
+                <div id="goalWeeklyPct">—</div>
+              </div>
+            </div>
 
-<div class="bar"><div class="barFill" id="goalMonthlyFill"></div></div>
-<div class="progressMeta">
-<div id="goalMonthlyLeft">—</div>
-<div id="goalMonthlyPct">—</div>
-</div>
-</div>
-</div>
+            <!-- Monthly -->
+            <div class="goalBox">
+              <div class="goalRowTop">
+                <div>
+                  <div class="goalName">Monthly Goal</div>
+                  <div class="goalSmall">This month</div>
+                </div>
+                <div class="goalEditRow">
+                  <select class="selectLike goalSelect" id="goalMonthlySelect" data-period="monthly">
+                    <option value="500">500</option>
+                    <option value="1000">1000</option>
+                    <option value="2000">2000</option>
+                    <option value="5000">5000</option>
+                    <option value="10000">10000</option>
+                    <option value="custom">Custom…</option>
+                  </select>
+                  <input id="goalMonthlyInput" class="inputLike goalCustomInput" type="number" step="1" placeholder="Enter amount" />
+                </div>
+              </div>
+              <div class="bar"><div class="barFill" id="goalMonthlyFill"></div></div>
+              <div class="progressMeta">
+                <div id="goalMonthlyLeft">—</div>
+                <div id="goalMonthlyPct">—</div>
+              </div>
+            </div>
+          </div>
 
-<div class="noticeLine" id="pnlNotice"></div>
-</div>
+          <div class="mutedLine" style="margin-top:10px;">
+            Tip: Set “Risk/1R” to match your real risk size (example: 100). Your PnL and goals will feel realistic.
+          </div>
+        </div>
 
-<!-- Mini charts -->
-<div class="miniCharts">
-<div class="miniChartBox">
-<canvas class="miniChartCanvas" id="dashEquitySpark"></canvas>
-<div class="chartHint">Equity Sparkline (Last 30 Trades)</div>
-</div>
-<div class="miniChartBox">
-<canvas class="miniChartCanvas" id="dashDailyBars"></canvas>
-<div class="chartHint">Daily PnL (Last 14 Days)</div>
-</div>
-</div>
+        <div class="card">
+          <div class="cardHead">
+            <h3 class="cardTitle">Today’s Focus</h3>
+            <span class="pill live">Coach</span>
+          </div>
+          <div class="coachText">Log the next trade immediately after closing it, and write one sentence on why you entered.</div>
+          <div class="chips">
+            <div class="chip">Session: NY</div>
+            <div class="chip">Rule: Max 3 Trades</div>
+            <div class="chip">Goal: No Revenge</div>
+          </div>
+          <div class="mutedLine">Next we’ll generate this from your real patterns. For now, it’s a placeholder.</div>
+          <button class="miniBtn" id="refreshBtn">Refresh Stats</button>
+        </div>
+      </div>
 
-<div style="margin-top:12px; overflow:auto;">
-<table>
-<thead>
-<tr>
-<th>Date</th>
-<th>Symbol</th>
-<th>Dir</th>
-<th>RR</th>
-<th>R</th>
-<th>Session</th>
-<th>Strategy</th>
-<th style="text-align:right;"></th>
-</tr>
-</thead>
-<tbody id="recentTradesBody">
-<tr><td class="emptyRow" colspan="8">Loading…</td></tr>
-</tbody>
-</table>
-</div>
-</div>
+      <div class="gridMain">
+        <div class="card">
+          <div class="cardHead">
+            <h3 class="cardTitle">Recent Trades</h3>
+            <span class="pill ok" id="recentPill">Ready</span>
+          </div>
 
-<div class="card">
-<div class="cardHead">
-<h3 class="cardTitle">Today’s Focus</h3>
-<span class="pill live">Coach</span>
-</div>
-<div style="color:var(--text); font-weight:800; line-height:1.45; margin:6px 0 12px 0;" id="coachText">
-Log the next trade immediately after closing it, and write one sentence on why you entered.
-</div>
-<div style="display:flex; flex-wrap:wrap; gap:10px; margin:10px 0 12px 0;" id="coachChips">
-<div style="font-size:13px;font-weight:900;border:1px solid var(--stroke);background:color-mix(in srgb, var(--panel) 32%, transparent);padding:8px 12px;border-radius:999px;">Session: NY</div>
-<div style="font-size:13px;font-weight:900;border:1px solid var(--stroke);background:color-mix(in srgb, var(--panel) 32%, transparent);padding:8px 12px;border-radius:999px;">Rule: Max 3 Trades</div>
-<div style="font-size:13px;font-weight:900;border:1px solid var(--stroke);background:color-mix(in srgb, var(--panel) 32%, transparent);padding:8px 12px;border-radius:999px;">Goal: No Revenge</div>
-</div>
-<div class="noticeLine" id="coachSub">
-Next we’ll generate this from your real patterns. For now, it’s a placeholder.
-</div>
-<button class="ghostBtn" id="refreshBtn" style="margin-top:12px;">Refresh Stats</button>
-</div>
-</div>
+          <div style="overflow:auto;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Symbol</th>
+                  <th>Dir</th>
+                  <th>RR</th>
+                  <th>R</th>
+                  <th>Session</th>
+                  <th>Strategy</th>
+                  <th style="text-align:right;"></th>
+                </tr>
+              </thead>
+              <tbody id="recentTradesBody">
+                <tr><td class="emptyRow" colspan="8">Loading…</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
 
-</div>
-</div>
+        <div class="card">
+          <div class="cardHead">
+            <h3 class="cardTitle">Quick Insight</h3>
+            <span class="pill" id="insightPill">Sessionly</span>
+          </div>
+          <div class="mutedLine" id="insightText">Add trades to unlock your personalized insight.</div>
+          <button class="miniBtn" id="insightRefreshBtn" style="margin-top:12px;">Regenerate Insight</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
 </section>
 
-<!-- Analytics page -->
+<!-- analytics page -->
 <section class="page" id="page-analytics">
-<div class="panel">
-<div class="panelInner">
-<div class="panelHeader">
-<div>
-<h1 class="title">Analytics</h1>
-<div class="subtitle">Deep data lives here. Focus stays clean.</div>
-</div>
-<div class="badge"><span class="badgeDot"></span><span>Live</span></div>
-</div>
+  <div class="panel">
+    <div class="panelInner">
+      <div class="panelHeader">
+        <div>
+          <h1 class="title">Analytics</h1>
+          <div class="subtitle">Deep data lives here. Focus stays clean.</div>
+        </div>
+        <div class="badge"><span class="badgeDot"></span><span>Live</span></div>
+      </div>
 
-<div class="gridAnalyticsTop">
-<div class="statCard">
-<div class="statLabel">Profit Factor</div>
-<div class="statValue" id="a_pf">—</div>
-<div class="statHint" id="a_pf_hint">From R Multiple</div>
-</div>
-<div class="statCard">
-<div class="statLabel">Avg Win vs Avg Loss</div>
-<div class="statValue" id="a_awal">—</div>
-<div class="statHint">Avg Win R vs Avg Loss R</div>
-</div>
-<div class="statCard">
-<div class="statLabel">Best Hour</div>
-<div class="statValue" id="a_besthour">—</div>
-<div class="statHint" id="a_besthour_hint">Avg R</div>
-</div>
-</div>
+      <div class="gridAnalyticsTop">
+        <div class="statCard">
+          <div class="statLabel">Profit Factor</div>
+          <div class="statValue" id="a_pf">—</div>
+          <div class="statHint" id="a_pf_hint">From R multiple</div>
+        </div>
+        <div class="statCard">
+          <div class="statLabel">Avg Win vs Avg Loss</div>
+          <div class="statValue" id="a_awal">—</div>
+          <div class="statHint">Avg win R vs avg loss R</div>
+        </div>
+        <div class="statCard">
+          <div class="statLabel">Best Hour</div>
+          <div class="statValue" id="a_besthour">—</div>
+          <div class="statHint" id="a_besthour_hint">Avg R</div>
+        </div>
+      </div>
 
-<div class="gridCharts">
-<div class="card">
-<div class="cardHead">
-<h3 class="cardTitle">Hourly Performance</h3>
-<span class="pill">Sessionly</span>
-</div>
-<div class="chartBox">
-<canvas class="chartCanvas" id="hourlyCanvas"></canvas>
-<div class="chartHint">Bars = Total R per hour</div>
-</div>
-</div>
+      <div class="gridCharts">
+        <div class="card">
+          <div class="cardHead">
+            <h3 class="cardTitle">Hourly Performance</h3>
+            <span class="pill">R</span>
+          </div>
+          <div class="chartBox">
+            <div class="chartCanvas"><canvas id="hourlyCanvas"></canvas></div>
+            <div class="chartHint">Bars = Total R per hour</div>
+          </div>
+        </div>
 
-<div class="card">
-<div class="cardHead">
-<h3 class="cardTitle">Equity Curve</h3>
-<span class="pill">Trend</span>
-</div>
-<div class="chartBox">
-<canvas class="chartCanvas" id="equityCanvas"></canvas>
-<div class="chartHint">Line = Cumulative R over time</div>
-</div>
-</div>
+        <div class="card">
+          <div class="cardHead">
+            <h3 class="cardTitle">Equity Curve</h3>
+            <span class="pill">R</span>
+          </div>
+          <div class="chartBox">
+            <div class="chartCanvas"><canvas id="equityCanvas"></canvas></div>
+            <div class="chartHint">Line = Cumulative R over time</div>
+          </div>
+        </div>
 
-<div class="card">
-<div class="cardHead">
-<h3 class="cardTitle">Win vs Loss Distribution</h3>
-<span class="pill">Edge</span>
-</div>
-<div class="chartBox">
-<canvas class="chartCanvas" id="donutCanvas"></canvas>
-<div class="chartHint">Donut = Win / Loss / Breakeven</div>
-</div>
-</div>
+        <div class="card">
+          <div class="cardHead">
+            <h3 class="cardTitle">Win / Loss / BE</h3>
+            <span class="pill">Edge</span>
+          </div>
+          <div class="chartBox">
+            <div class="chartCanvas"><canvas id="donutCanvas"></canvas></div>
+            <div class="chartHint">Distribution by outcome</div>
+          </div>
+        </div>
 
-<div class="card">
-<div class="cardHead">
-<h3 class="cardTitle">PnL by Day</h3>
-<span class="pill">Calendar</span>
-</div>
-<div class="chartBox">
-<canvas class="chartCanvas" id="calendarCanvas"></canvas>
-<div class="chartHint">Heat = Total R per day</div>
-</div>
-</div>
-</div>
+        <div class="card">
+          <div class="cardHead">
+            <h3 class="cardTitle">PnL by Day</h3>
+            <span class="pill">Heat</span>
+          </div>
+          <div class="chartBox">
+            <div class="chartCanvas"><canvas id="calendarCanvas"></canvas></div>
+            <div class="chartHint">Heat = Total R per day (current month)</div>
+          </div>
+        </div>
+      </div>
 
-<div class="noticeLine" style="margin-top:10px;">
-Log trades and the charts will update instantly.
-</div>
-
-</div>
-</div>
+      <div style="margin-top:10px;color:var(--muted);font-weight:700;font-size:13px;">
+        Log trades and the charts will update instantly.
+      </div>
+    </div>
+  </div>
 </section>
 
-<!-- Calendar page -->
+<!-- calendar page -->
 <section class="page" id="page-calendar">
-<div class="panel">
-<div class="panelInner">
-<div class="panelHeader">
-<div>
-<h1 class="title">Calendar</h1>
-<div class="subtitle">See your trading days at a glance.</div>
-</div>
-<div class="badge"><span class="badgeDot"></span><span id="calBadge">Live</span></div>
-</div>
+  <div class="panel">
+    <div class="panelInner">
+      <div class="panelHeader">
+        <div>
+          <h1 class="title">Calendar</h1>
+          <div class="subtitle">See your trading days at a glance.</div>
+        </div>
+        <div class="badge"><span class="badgeDot"></span><span id="calBadge">Live</span></div>
+      </div>
 
-<div class="card">
-<div class="calTop">
-<div class="calTitleRow">
-<div class="badge" style="gap:10px;"><span id="calYear">—</span></div>
-<div class="badge" style="gap:10px;"><span id="calMonth">—</span></div>
-</div>
+      <div class="card">
+        <div class="calTop">
+          <div class="calTitleRow">
+            <div class="badge" style="gap:10px;">
+              <span id="calYear">—</span>
+            </div>
+            <div class="badge" style="gap:10px;">
+              <span id="calMonth">—</span>
+            </div>
+          </div>
 
-<div class="calNav">
-<button class="calBtn" id="calPrevBtn">‹ Prev</button>
-<button class="calBtn" id="calTodayBtn">Today</button>
-<button class="calBtn" id="calNextBtn">Next ›</button>
-</div>
+          <div class="calNav">
+            <button class="calBtn" id="calPrevBtn">‹ Prev</button>
+            <button class="calBtn" id="calTodayBtn">Today</button>
+            <button class="calBtn" id="calNextBtn">Next ›</button>
+          </div>
 
-<div class="toggleRow">
-<div class="switch" id="calModeSwitch" title="Toggle between Total R and Win Rate">
-<div class="switchDot"></div>
-</div>
-<div><span id="calModeLabel">Show Win Rate</span></div>
-</div>
-</div>
+          <div class="toggleRow">
+            <div class="switch" id="calModeSwitch" title="Toggle between total R and win rate">
+              <div class="switchDot"></div>
+            </div>
+            <div><span id="calModeLabel">Show Win Rate</span></div>
+          </div>
+        </div>
 
-<div class="calGrid" id="calDowRow"></div>
-<div class="calGrid" id="calGrid"></div>
+        <div class="calGrid" id="calDowRow"></div>
+        <div class="calGrid" id="calGrid"></div>
 
-<div class="noticeLine" style="margin-top:12px;">
-Each day shows total trades, win rate, and a green or red result.
-</div>
-</div>
-
-</div>
-</div>
+        <div class="mutedLine" style="margin-top:12px;">
+          Each day shows total trades, win rate, and a green/red result.
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
-<!-- Trades page -->
+<!-- trades page -->
 <section class="page" id="page-trades">
-<div class="panel">
-<div class="panelInner">
-<div class="panelHeader">
-<div>
-<h1 class="title">Trades</h1>
-<div class="subtitle">Your full list. Searchable next.</div>
-</div>
-<div class="badge"><span class="badgeDot"></span><span id="tradesCountBadge">0</span></div>
-</div>
+  <div class="panel">
+    <div class="panelInner">
+      <div class="panelHeader">
+        <div>
+          <h1 class="title">Trades</h1>
+          <div class="subtitle">Your full list (search coming next).</div>
+        </div>
+        <div class="badge"><span class="badgeDot"></span><span id="tradesCountBadge">0</span></div>
+      </div>
 
-<div class="card">
-<div class="cardHead">
-<h3 class="cardTitle">All Trades</h3>
-<span class="pill">Table</span>
-</div>
+      <div class="card">
+        <div class="cardHead">
+          <h3 class="cardTitle">All Trades</h3>
+          <span class="pill">Table</span>
+        </div>
 
-<div style="overflow:auto;">
-<table>
-<thead>
-<tr>
-<th>Date</th>
-<th>Symbol</th>
-<th>Dir</th>
-<th>RR</th>
-<th>R</th>
-<th>Session</th>
-<th>Strategy</th>
-<th style="text-align:right;"></th>
-</tr>
-</thead>
-<tbody id="tradesTableBody">
-<tr><td class="emptyRow" colspan="8">Loading…</td></tr>
-</tbody>
-</table>
-</div>
+        <div style="overflow:auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Symbol</th>
+                <th>Dir</th>
+                <th>RR</th>
+                <th>R</th>
+                <th>Session</th>
+                <th>Strategy</th>
+                <th style="text-align:right;"></th>
+              </tr>
+            </thead>
+            <tbody id="tradesTableBody">
+              <tr><td class="emptyRow" colspan="8">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
 
-</div>
-</div>
-</div>
+      </div>
+    </div>
+  </div>
 </section>
 
-<!-- Journal page -->
+<!-- journal page -->
 <section class="page" id="page-journal">
-<div class="panel">
-<div class="panelInner">
-<div class="panelHeader">
-<div>
-<h1 class="title">Journal</h1>
-<div class="subtitle">Notes and patterns. Coming next.</div>
-</div>
-<div class="badge"><span class="badgeDot"></span><span>Soon</span></div>
-</div>
+  <div class="panel">
+    <div class="panelInner">
+      <div class="panelHeader">
+        <div>
+          <h1 class="title">Journal</h1>
+          <div class="subtitle">Notes and patterns, coming next.</div>
+        </div>
+        <div class="badge"><span class="badgeDot"></span><span>Soon</span></div>
+      </div>
 
-<div class="card">
-<div class="cardHead">
-<h3 class="cardTitle">Quick Note</h3>
-<span class="pill warn">Placeholder</span>
-</div>
-<div class="noticeLine">
-Next we’ll save daily notes and auto surface your repeating mistakes and best setups.
-</div>
-</div>
-</div>
-</div>
+      <div class="card">
+        <div class="cardHead">
+          <h3 class="cardTitle">Quick Note</h3>
+          <span class="pill warn">Placeholder</span>
+        </div>
+        <div class="mutedLine">
+          Next we’ll save daily notes and auto-surface your repeating mistakes and best setups.
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
 </div>
 </main>
 </div>
 
-<!-- Add Trade Modal -->
+<!-- add trade modal -->
 <div class="modalBackdrop" id="modalBackdrop">
-<div class="modal" role="dialog" aria-modal="true" aria-label="Add Trade">
-<div class="modalInner">
-<div class="modalHead">
-<div>
-<h3 class="modalTitle">Add Trade</h3>
-<div class="subtitle" style="margin-top:4px;">Fast logging, clean data.</div>
-</div>
-<button class="closeBtn" id="closeModalBtn">Close</button>
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Add trade">
+    <div class="modalInner">
+      <div class="modalHead">
+        <div>
+          <h3 class="modalTitle">Add Trade</h3>
+          <div class="subtitle" style="margin-top:4px;">Fast logging, clean data.</div>
+        </div>
+        <button class="closeBtn" id="closeModalBtn">Close</button>
+      </div>
+
+      <div class="formGrid">
+        <div>
+          <label>Date and Time</label>
+          <input id="t_date" type="datetime-local" />
+        </div>
+
+        <div>
+          <label>Symbol</label>
+          <input id="t_symbol" placeholder="XAUUSD / NASDAQ / BTC" />
+        </div>
+
+        <div>
+          <label>Direction</label>
+          <select id="t_direction">
+            <option value="long">Long</option>
+            <option value="short">Short</option>
+          </select>
+        </div>
+
+        <div>
+          <label>Result</label>
+          <select id="t_result">
+            <option value="win">Win</option>
+            <option value="loss">Loss</option>
+            <option value="be">Breakeven</option>
+          </select>
+        </div>
+
+        <div>
+          <label>RR (Optional)</label>
+          <input id="t_rr" type="number" step="0.01" placeholder="1.0" />
+        </div>
+
+        <div>
+          <label>R Multiple (Enter absolute)</label>
+          <input id="t_r" type="number" step="0.01" placeholder="1.3" />
+        </div>
+
+        <div>
+          <label>Session (Optional)</label>
+          <select id="t_session">
+            <option value="">—</option>
+            <option value="asia">Asia</option>
+            <option value="london">London</option>
+            <option value="ny">NY</option>
+            <option value="overlap">Overlap</option>
+          </select>
+        </div>
+
+        <div>
+          <label>Strategy (Optional)</label>
+          <input id="t_strategy" placeholder="FVG / Breakout / Mean Reversion" />
+        </div>
+
+        <div style="grid-column: 1 / -1;">
+          <label>Mistakes (Optional, comma separated)</label>
+          <input id="t_mistakes" placeholder="Late entry, revenge, no stop" />
+        </div>
+
+        <div style="grid-column: 1 / -1;">
+          <label>Notes (Optional)</label>
+          <textarea id="t_notes" placeholder="Why you entered, what you’ll fix next"></textarea>
+        </div>
+      </div>
+
+      <div class="modalActions">
+        <button class="ghostBtn" id="clearBtn" style="width:auto;">Clear</button>
+        <button class="saveBtn" id="saveBtn">Save Trade</button>
+      </div>
+
+      <div class="msg" id="modalMsg"></div>
+    </div>
+  </div>
 </div>
 
-<div class="formGrid">
-<div>
-<label>Date and Time</label>
-<input id="t_date" type="datetime-local" />
-</div>
-
-<div>
-<label>Symbol</label>
-<input id="t_symbol" placeholder="XAUUSD / NASDAQ / BTC" />
-</div>
-
-<div>
-<label>Direction</label>
-<select id="t_direction">
-<option value="long">Long</option>
-<option value="short">Short</option>
-</select>
-</div>
-
-<div>
-<label>Result</label>
-<select id="t_result">
-<option value="win">Win</option>
-<option value="loss">Loss</option>
-<option value="be">Breakeven</option>
-</select>
-</div>
-
-<div>
-<label>RR (Optional)</label>
-<input id="t_rr" type="number" step="0.01" placeholder="1.0" />
-</div>
-
-<div>
-<label>R Multiple (Enter absolute)</label>
-<input id="t_r" type="number" step="0.01" placeholder="1.3" />
-</div>
-
-<div>
-<label>PnL (Optional)</label>
-<input id="t_pnl" type="number" step="0.01" placeholder="125.00" />
-</div>
-
-<div>
-<label>Session (Optional)</label>
-<select id="t_session">
-<option value="">—</option>
-<option value="asia">Asia</option>
-<option value="london">London</option>
-<option value="ny">NY</option>
-<option value="overlap">Overlap</option>
-</select>
-</div>
-
-<div>
-<label>Strategy (Optional)</label>
-<input id="t_strategy" placeholder="FVG / Breakout / Mean Reversion" />
-</div>
-
-<div style="grid-column: 1 / -1;">
-<label>Mistakes (Optional, comma separated)</label>
-<input id="t_mistakes" placeholder="Late entry, Revenge, No stop" />
-</div>
-
-<div style="grid-column: 1 / -1;">
-<label>Notes (Optional)</label>
-<textarea id="t_notes" placeholder="Why you entered, what you’ll fix next"></textarea>
-</div>
-</div>
-
-<div class="modalActions">
-<button class="ghostBtn" id="clearBtn" style="width:auto;">Clear</button>
-<button class="saveBtn" id="saveBtn">Save Trade</button>
-</div>
-
-<div class="msg" id="modalMsg"></div>
-</div>
-</div>
-</div>
-
-<!-- Confirm Delete Modal -->
+<!-- confirm delete modal -->
 <div class="modalBackdrop" id="confirmBackdrop">
-<div class="modal" role="dialog" aria-modal="true" aria-label="Confirm Delete">
-<div class="modalInner">
-<div class="modalHead">
-<div>
-<h3 class="modalTitle" id="confirmTitle">Are you sure?</h3>
-<div class="subtitle" style="margin-top:4px;" id="confirmSubtitle">This is permanent and can’t be undone.</div>
-</div>
-<button class="closeBtn" id="confirmCloseBtn">Close</button>
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Confirm delete">
+    <div class="modalInner">
+      <div class="modalHead">
+        <div>
+          <h3 class="modalTitle" id="confirmTitle">Are you sure?</h3>
+          <div class="subtitle" style="margin-top:4px;" id="confirmSubtitle">This is permanent and can’t be undone.</div>
+        </div>
+        <button class="closeBtn" id="confirmCloseBtn">Close</button>
+      </div>
+
+      <div class="mutedLine" id="confirmBody" style="margin-top:4px;">
+        Are you sure you want to delete this trade? This is permanent and can’t be undone.
+      </div>
+
+      <div class="modalActions" style="margin-top:14px;">
+        <button class="ghostBtn" id="confirmCancelBtn" style="width:auto;">Cancel</button>
+        <button class="dangerPrimary" id="confirmOkBtn" style="width:auto;">Delete</button>
+      </div>
+
+      <div class="msg" id="confirmMsg"></div>
+    </div>
+  </div>
 </div>
 
-<div class="noticeLine" id="confirmBody" style="margin-top:4px;">
-Are you sure you want to delete this trade? This is permanent and can’t be undone.
-</div>
-
-<div class="modalActions" style="margin-top:14px;">
-<button class="ghostBtn" id="confirmCancelBtn" style="width:auto;">Cancel</button>
-<button class="dangerPrimary" id="confirmOkBtn" style="width:auto;">Delete</button>
-</div>
-
-<div class="msg" id="confirmMsg"></div>
-</div>
-</div>
-</div>
-
+<!-- supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
@@ -1386,78 +1445,115 @@ using (auth.uid() = user_id);
 // === STATE ===
 let user = null;
 let trades = [];
-let hasPnlColumn = true;
-let hasAnyPnlData = true;
 
-// Calendar state
+// calendar state
 let calYear = new Date().getFullYear();
 let calMonth = new Date().getMonth(); // 0-11
-let calShowPercent = false; // false = Total R, true = Win Rate
+let calShowPercent = false; // false = show total R, true = show % (win rate)
 
-// Goals state
-const GOAL_PERIODS = ["daily","weekly","monthly"];
-const DEFAULT_GOALS = { daily: 100, weekly: 500, monthly: 2000 };
-const DEFAULT_CURRENCY = "USD";
+// local settings
+let settings = {
+currency: "USD",
+riskPerR: 100,
+goals: { daily: 100, weekly: 500, monthly: 2000 }
+};
 
 // === THEME ===
 function applyTheme(theme){
-document.documentElement.setAttribute("data-theme", theme);
-localStorage.setItem("sessionly_theme", theme);
+  document.documentElement.setAttribute("data-theme", theme);
+  localStorage.setItem("sessionly_theme", theme);
 }
 function initTheme(){
-const saved = localStorage.getItem("sessionly_theme");
-applyTheme(saved || "dark");
+  const saved = localStorage.getItem("sessionly_theme");
+  applyTheme(saved || "dark");
 }
 
 // === ROUTING ===
 const routes = ["focus","analytics","calendar","trades","journal"];
+
 function setActiveRoute(route){
-if (!routes.includes(route)) route = "focus";
+  if (!routes.includes(route)) route = "focus";
 
-routes.forEach(r=>{
-const page = document.getElementById(`page-${r}`);
-if (page) page.classList.toggle("active", r === route);
-});
-document.querySelectorAll(".navBtn").forEach(btn=>{
-btn.classList.toggle("active", btn.dataset.route === route);
-});
-if (location.hash.replace("#","") !== route){
-history.replaceState(null, "", `#${route}`);
+  routes.forEach(r=>{
+    const page = document.getElementById(`page-${r}`);
+    if (page) page.classList.toggle("active", r === route);
+  });
+
+  document.querySelectorAll(".navBtn").forEach(btn=>{
+    btn.classList.toggle("active", btn.dataset.route === route);
+  });
+
+  if (location.hash.replace("#","") !== route){
+    history.replaceState(null, "", `#${route}`);
+  }
+
+  if (route === "analytics") renderAnalytics();
+  if (route === "trades") renderTradesTable();
+  if (route === "calendar") renderCalendar();
+  if (route === "focus") renderFocus();
 }
-if (route === "focus") renderFocus();
-if (route === "analytics") renderAnalytics();
-if (route === "trades") renderTradesTable();
-if (route === "calendar") renderCalendar();
-}
+
 function initRouting(){
-const fromHash = location.hash.replace("#","").trim();
-setActiveRoute(fromHash || "focus");
+  const fromHash = location.hash.replace("#","").trim();
+  setActiveRoute(fromHash || "focus");
 
-window.addEventListener("hashchange", ()=>{
-const r = location.hash.replace("#","").trim();
-setActiveRoute(r || "focus");
-});
+  window.addEventListener("hashchange", ()=>{
+    const r = location.hash.replace("#","").trim();
+    setActiveRoute(r || "focus");
+  });
 
-document.querySelectorAll(".navBtn").forEach(btn=>{
-btn.addEventListener("click", ()=>{
-setActiveRoute(btn.dataset.route);
-});
-});
+  document.querySelectorAll(".navBtn").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      setActiveRoute(btn.dataset.route);
+    });
+  });
 }
 
 // === AUTH GUARD ===
 async function requireAuth(){
-const { data, error } = await sb.auth.getSession();
-if (error) console.error(error);
+  const { data, error } = await sb.auth.getSession();
+  if (error) console.error(error);
 
-const session = data?.session;
-if (!session){
-window.location.href = "login.html";
-return false;
+  const session = data?.session;
+  if (!session){
+    window.location.href = "login.html";
+    return false;
+  }
+  user = session.user;
+  document.getElementById("userEmail").textContent = user.email || "Signed in";
+
+  // load per-user local settings
+  loadLocalSettings();
+  initGoalControls();
+  initSettingsControls();
+
+  return true;
 }
-user = session.user;
-document.getElementById("userEmail").textContent = user.email || "Signed in";
-return true;
+
+// === LOCAL SETTINGS ===
+function settingsKey(){
+  return `sessionly_settings_${user?.id || "anon"}`;
+}
+function loadLocalSettings(){
+  try{
+    const raw = localStorage.getItem(settingsKey());
+    if (!raw) return;
+    const parsed = JSON.parse(raw);
+    settings = {
+      currency: parsed.currency || settings.currency,
+      riskPerR: Number.isFinite(Number(parsed.riskPerR)) ? Number(parsed.riskPerR) : settings.riskPerR,
+      goals: {
+        daily: Number.isFinite(Number(parsed?.goals?.daily)) ? Number(parsed.goals.daily) : settings.goals.daily,
+        weekly: Number.isFinite(Number(parsed?.goals?.weekly)) ? Number(parsed.goals.weekly) : settings.goals.weekly,
+        monthly: Number.isFinite(Number(parsed?.goals?.monthly)) ? Number(parsed.goals.monthly) : settings.goals.monthly,
+      }
+    };
+  } catch(e){}
+}
+function saveLocalSettings(){
+  try{
+    localStorage.setItem(settingsKey(), JSON.stringify(settings));
+  } catch(e){}
 }
 
 // === MODALS ===
@@ -1465,30 +1561,29 @@ const modalBackdrop = document.getElementById("modalBackdrop");
 const modalMsg = document.getElementById("modalMsg");
 
 function openTradeModal(){
-modalMsg.textContent = "";
-const now = new Date();
-const iso = new Date(now.getTime() - now.getTimezoneOffset()*60000).toISOString().slice(0,16);
+  modalMsg.textContent = "";
+  const now = new Date();
+  const iso = new Date(now.getTime() - now.getTimezoneOffset()*60000).toISOString().slice(0,16);
 
-const dateEl = document.getElementById("t_date");
-dateEl.value = iso;
-dateEl.max = iso;
+  const dateEl = document.getElementById("t_date");
+  dateEl.value = iso;
+  dateEl.max = iso;
 
-document.getElementById("t_symbol").value = "";
-document.getElementById("t_direction").value = "long";
-document.getElementById("t_result").value = "win";
-document.getElementById("t_rr").value = "";
-document.getElementById("t_r").value = "";
-document.getElementById("t_pnl").value = "";
-document.getElementById("t_session").value = "";
-document.getElementById("t_strategy").value = "";
-document.getElementById("t_mistakes").value = "";
-document.getElementById("t_notes").value = "";
+  document.getElementById("t_symbol").value = "";
+  document.getElementById("t_direction").value = "long";
+  document.getElementById("t_result").value = "win";
+  document.getElementById("t_rr").value = "";
+  document.getElementById("t_r").value = "";
+  document.getElementById("t_session").value = "";
+  document.getElementById("t_strategy").value = "";
+  document.getElementById("t_mistakes").value = "";
+  document.getElementById("t_notes").value = "";
 
-modalBackdrop.style.display = "flex";
+  modalBackdrop.style.display = "flex";
 }
 function closeTradeModal(){ modalBackdrop.style.display = "none"; }
 
-// Confirm modal
+// confirm modal
 const confirmBackdrop = document.getElementById("confirmBackdrop");
 const confirmTitle = document.getElementById("confirmTitle");
 const confirmSubtitle = document.getElementById("confirmSubtitle");
@@ -1498,1407 +1593,1335 @@ const confirmOkBtn = document.getElementById("confirmOkBtn");
 const confirmCancelBtn = document.getElementById("confirmCancelBtn");
 const confirmCloseBtn = document.getElementById("confirmCloseBtn");
 
-function closeConfirm(){ confirmBackdrop.style.display = "none"; }
+function closeConfirm(){
+  confirmBackdrop.style.display = "none";
+}
 
 function confirmDialog({
-title = "Are you sure?",
-subtitle = "This is permanent and can’t be undone.",
-body = "Are you sure you want to delete this? This is permanent and can’t be undone.",
-okText = "Delete",
-cancelText = "Cancel"
+  title = "Are you sure?",
+  subtitle = "This is permanent and can’t be undone.",
+  body = "Are you sure you want to delete this? This is permanent and can’t be undone.",
+  okText = "Delete",
+  cancelText = "Cancel"
 } = {}){
-confirmTitle.textContent = title;
-confirmSubtitle.textContent = subtitle;
-confirmBody.textContent = body;
-confirmMsg.textContent = "";
-confirmOkBtn.textContent = okText;
-confirmCancelBtn.textContent = cancelText;
+  confirmTitle.textContent = title;
+  confirmSubtitle.textContent = subtitle;
+  confirmBody.textContent = body;
+  confirmMsg.textContent = "";
+  confirmOkBtn.textContent = okText;
+  confirmCancelBtn.textContent = cancelText;
 
-confirmBackdrop.style.display = "flex";
+  confirmBackdrop.style.display = "flex";
 
-return new Promise((resolve)=>{
-const onOk = ()=>{ cleanup(); closeConfirm(); resolve(true); };
-const onCancel = ()=>{ cleanup(); closeConfirm(); resolve(false); };
-const onBg = (e)=>{ if (e.target === confirmBackdrop) onCancel(); };
+  return new Promise((resolve)=>{
+    const onOk = ()=>{ cleanup(); closeConfirm(); resolve(true); };
+    const onCancel = ()=>{ cleanup(); closeConfirm(); resolve(false); };
+    const onBg = (e)=>{ if (e.target === confirmBackdrop) onCancel(); };
 
-function cleanup(){
-confirmOkBtn.removeEventListener("click", onOk);
-confirmCancelBtn.removeEventListener("click", onCancel);
-confirmCloseBtn.removeEventListener("click", onCancel);
-confirmBackdrop.removeEventListener("click", onBg);
-window.removeEventListener("keydown", onEsc);
-}
-function onEsc(e){ if (e.key === "Escape") onCancel(); }
+    function cleanup(){
+      confirmOkBtn.removeEventListener("click", onOk);
+      confirmCancelBtn.removeEventListener("click", onCancel);
+      confirmCloseBtn.removeEventListener("click", onCancel);
+      confirmBackdrop.removeEventListener("click", onBg);
+      window.removeEventListener("keydown", onEsc);
+    }
+    function onEsc(e){
+      if (e.key === "Escape") onCancel();
+    }
 
-confirmOkBtn.addEventListener("click", onOk);
-confirmCancelBtn.addEventListener("click", onCancel);
-confirmCloseBtn.addEventListener("click", onCancel);
-confirmBackdrop.addEventListener("click", onBg);
-window.addEventListener("keydown", onEsc);
-});
+    confirmOkBtn.addEventListener("click", onOk);
+    confirmCancelBtn.addEventListener("click", onCancel);
+    confirmCloseBtn.addEventListener("click", onCancel);
+    confirmBackdrop.addEventListener("click", onBg);
+    window.addEventListener("keydown", onEsc);
+  });
 }
 
 // === DATA LOAD ===
 async function loadTrades(){
-if (!user) return;
+  if (!user) return;
 
-const baseSelect = "id, trade_date, symbol, direction, rr, r_multiple, pnl, notes, session, strategy, mistakes, created_at";
-const fallbackSelect = "id, trade_date, symbol, direction, rr, r_multiple, notes, session, strategy, mistakes, created_at";
+  const { data, error } = await sb
+    .from("trades")
+    .select("id, trade_date, symbol, direction, rr, r_multiple, notes, session, strategy, mistakes, created_at")
+    .eq("user_id", user.id)
+    .order("trade_date", { ascending: false })
+    .limit(500);
 
-let res = await sb
-.from("trades")
-.select(hasPnlColumn ? baseSelect : fallbackSelect)
-.eq("user_id", user.id)
-.order("trade_date", { ascending: false })
-.limit(800);
+  if (error){
+    console.error(error);
+    const pill = document.getElementById("recentPill");
+    pill.classList.remove("ok");
+    pill.classList.add("warn");
+    pill.textContent = "Error";
+    const body = document.getElementById("recentTradesBody");
+    body.innerHTML = `<tr><td class="emptyRow" colspan="8">Error loading trades: ${escapeHtml(error.message)}</td></tr>`;
+    document.getElementById("tradesTableBody").innerHTML =
+      `<tr><td class="emptyRow" colspan="8">Error loading trades: ${escapeHtml(error.message)}</td></tr>`;
+    return;
+  }
 
-if (res.error && hasPnlColumn){
-const msg = String(res.error.message || "");
-if (msg.toLowerCase().includes("column") && msg.toLowerCase().includes("pnl") && msg.toLowerCase().includes("does not exist")){
-hasPnlColumn = false;
-res = await sb
-.from("trades")
-.select(fallbackSelect)
-.eq("user_id", user.id)
-.order("trade_date", { ascending: false })
-.limit(800);
-}
-}
-
-const { data, error } = res;
-if (error){
-console.error(error);
-document.getElementById("recentPill").classList.remove("ok");
-document.getElementById("recentPill").classList.add("warn");
-document.getElementById("recentPill").textContent = "Error";
-document.getElementById("recentTradesBody").innerHTML =
-`<tr><td class="emptyRow" colspan="8">Error loading trades: ${escapeHtml(error.message)}</td></tr>`;
-document.getElementById("tradesTableBody").innerHTML =
-`<tr><td class="emptyRow" colspan="8">Error loading trades: ${escapeHtml(error.message)}</td></tr>`;
-return;
-}
-
-trades = (data || []).map(normalizeTrade);
-
-// Determine if we actually have usable PnL values
-hasAnyPnlData = hasPnlColumn && trades.some(t => Number.isFinite(t.pnl));
-
-renderFocus();
-renderAnalytics();
-renderTradesTable();
-renderCalendar();
+  trades = (data || []).map(normalizeTrade);
+  renderFocus();
+  renderAnalytics();
+  renderTradesTable();
+  renderCalendar();
 }
 
 function normalizeTrade(t){
-const dt = t.trade_date ? new Date(t.trade_date) : null;
-return {
-id: t.id,
-trade_date: t.trade_date,
-dt,
-symbol: t.symbol || "",
-direction: t.direction || "",
-rr: (t.rr === null || t.rr === undefined) ? null : Number(t.rr),
-r_multiple: (t.r_multiple === null || t.r_multiple === undefined) ? null : Number(t.r_multiple),
-pnl: (t.pnl === null || t.pnl === undefined) ? null : Number(t.pnl),
-notes: t.notes || "",
-session: t.session || "",
-strategy: t.strategy || "",
-mistakes: Array.isArray(t.mistakes) ? t.mistakes : (t.mistakes ? [String(t.mistakes)] : []),
-};
+  const dt = t.trade_date ? new Date(t.trade_date) : null;
+  return {
+    id: t.id,
+    trade_date: t.trade_date,
+    dt,
+    symbol: t.symbol || "",
+    direction: t.direction || "",
+    rr: (t.rr === null || t.rr === undefined) ? null : Number(t.rr),
+    r_multiple: (t.r_multiple === null || t.r_multiple === undefined) ? null : Number(t.r_multiple),
+    notes: t.notes || "",
+    session: t.session || "",
+    strategy: t.strategy || "",
+    mistakes: Array.isArray(t.mistakes) ? t.mistakes : (t.mistakes ? [String(t.mistakes)] : []),
+  };
 }
 
 // === DELETE TRADE ===
 async function deleteTrade(id){
-const ok = await confirmDialog({
-title: "Delete Trade?",
-subtitle: "This is permanent and can’t be undone.",
-body: "Are you sure you want to delete this trade? This is permanent and can’t be undone.",
-okText: "Delete Trade",
-cancelText: "Cancel"
-});
-if (!ok) return;
+  const ok = await confirmDialog({
+    title: "Delete this trade?",
+    subtitle: "This is permanent and can’t be undone.",
+    body: "Are you sure you want to delete this trade? This is permanent and can’t be undone.",
+    okText: "Delete Trade",
+    cancelText: "Cancel"
+  });
+  if (!ok) return;
 
-confirmOkBtn.disabled = true;
-confirmOkBtn.textContent = "Deleting…";
+  confirmOkBtn.disabled = true;
+  confirmOkBtn.textContent = "Deleting…";
 
-try{
-const { error } = await sb
-.from("trades")
-.delete()
-.eq("id", id)
-.eq("user_id", user.id);
+  try{
+    const { error } = await sb
+      .from("trades")
+      .delete()
+      .eq("id", id)
+      .eq("user_id", user.id);
 
-if (error){
-console.error(error);
-confirmMsg.textContent = `Delete failed: ${error.message}`;
-confirmOkBtn.disabled = false;
-confirmOkBtn.textContent = "Delete Trade";
-return;
-}
+    if (error){
+      console.error(error);
+      confirmMsg.textContent = `Delete failed: ${error.message}`;
+      confirmOkBtn.disabled = false;
+      confirmOkBtn.textContent = "Delete Trade";
+      return;
+    }
 
-closeConfirm();
-await loadTrades();
-} finally {
-confirmOkBtn.disabled = false;
-confirmOkBtn.textContent = "Delete Trade";
-}
+    closeConfirm();
+    await loadTrades();
+  } finally {
+    confirmOkBtn.disabled = false;
+    confirmOkBtn.textContent = "Delete Trade";
+  }
 }
 
 function trashIconSvg(){
-return `
-<svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-<path d="M9 3h6m-8 4h10m-9 0l1 14h6l1-14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M10 11v6M14 11v6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-</svg>
-`;
+  return `
+  <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <path d="M9 3h6m-8 4h10m-9 0l1 14h6l1-14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M10 11v6M14 11v6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  </svg>
+  `;
 }
 
-// === FOCUS (DASHBOARD) ===
-function renderFocus(){
-setGreeting();
-renderDashboardStats();
-renderGoals();
-renderRecentTradesTable();
-drawDashboardMiniCharts();
-
-document.getElementById("recentPill").textContent = "Ready";
-document.getElementById("focusStatus").textContent = "Ready";
+// === GREETING / TIER / STREAK ===
+function getGreeting(){
+  const h = new Date().getHours();
+  if (h < 12) return "Good morning";
+  if (h < 18) return "Good afternoon";
+  return "Good evening";
+}
+function nameFromEmail(email){
+  if (!email) return "";
+  const base = String(email).split("@")[0] || "";
+  const pretty = base.replace(/[._-]+/g, " ").trim();
+  if (!pretty) return "";
+  return pretty.split(" ").map(w => w ? (w[0].toUpperCase()+w.slice(1)) : "").join(" ");
 }
 
-function setGreeting(){
-const h = new Date().getHours();
-const greet = (h < 12) ? "Good Morning" : (h < 18 ? "Good Day" : "Good Evening");
-
-let name = "";
-if (user?.email){
-name = user.email.split("@")[0] || "";
-name = name.replace(/[._-]+/g, " ").trim();
-name = name ? (name[0].toUpperCase() + name.slice(1)) : "";
+function computeTier(pf, totalR, totalTrades){
+  // simple incentive tiers, based on what you have (R + PF + sample size)
+  if (!Number.isFinite(pf) || totalTrades < 10){
+    return { label: "Tier: Getting Started", className: "neutral" };
+  }
+  if (pf >= 2.0 && totalR > 0){
+    return { label: "Tier: Top 1% Profitable", className: "good" };
+  }
+  if (pf >= 1.5 && totalR > 0){
+    return { label: "Tier: Top 5% Profitable", className: "good" };
+  }
+  if (pf >= 1.2 && totalR > 0){
+    return { label: "Tier: Building an Edge", className: "neutral" };
+  }
+  return { label: "Tier: Keep Refining", className: "warn" };
 }
 
-document.getElementById("dashGreeting").textContent = name ? `${greet}, ${name}` : greet;
-document.getElementById("dashSub").textContent = hasAnyPnlData
-? "Here’s your performance snapshot (PnL + R)."
-: "Here’s your performance snapshot (R Multiple).";
+function dailyAggMap(){
+  const map = new Map();
+  trades.forEach(t=>{
+    if (!t.dt || !Number.isFinite(t.r_multiple)) return;
+    const key = `${t.dt.getFullYear()}-${String(t.dt.getMonth()+1).padStart(2,"0")}-${String(t.dt.getDate()).padStart(2,"0")}`;
+    map.set(key, (map.get(key)||0) + t.r_multiple);
+  });
+  return map;
 }
 
-function renderDashboardStats(){
-const decided = trades.filter(t => Number.isFinite(t.r_multiple) && t.r_multiple !== 0);
-const wins = decided.filter(t => (t.r_multiple ?? 0) > 0);
-const losses = decided.filter(t => (t.r_multiple ?? 0) < 0);
+function computePositiveDayStreak(){
+  const map = dailyAggMap();
+  const today = new Date();
+  let streak = 0;
 
-const sumWins = wins.reduce((a,t)=> a + (t.r_multiple ?? 0), 0);
-const sumLossAbs = Math.abs(losses.reduce((a,t)=> a + (t.r_multiple ?? 0), 0));
-const pf = (sumLossAbs > 0) ? (sumWins / sumLossAbs) : (wins.length ? Infinity : null);
-
-const wr = decided.length ? (wins.length / decided.length) : null;
-const rVals = trades.map(t => t.r_multiple).filter(v => Number.isFinite(v));
-const avgR = rVals.length ? (rVals.reduce((a,b)=>a+b,0) / rVals.length) : null;
-
-const totalPnl = computeTotalAllTime();
-const monthPnl = computePeriodTotal("monthly");
-
-document.getElementById("d_totalPnl").textContent = formatMoneyOrR(totalPnl);
-document.getElementById("d_totalPnl_hint").textContent = hasAnyPnlData ? "All Time PnL" : "All Time (R)";
-
-document.getElementById("d_monthPnl").textContent = formatMoneyOrR(monthPnl);
-document.getElementById("d_monthPnl_hint").textContent = hasAnyPnlData ? "This Month PnL" : "This Month (R)";
-
-document.getElementById("d_pf").textContent = pf === null ? "—" : (pf === Infinity ? "∞" : formatNumber(pf));
-document.getElementById("d_pf_hint").textContent = `From ${rVals.length} trades`;
-
-document.getElementById("d_wr").textContent = wr === null ? "—" : `${(wr*100).toFixed(1)}%`;
-document.getElementById("d_wr_hint").textContent = decided.length ? `${wins.length}/${decided.length} decided` : "Decided trades";
-
-document.getElementById("d_trades").textContent = String(trades.length);
-document.getElementById("d_avgR").textContent = avgR === null ? "—" : formatNumber(avgR);
-
-const streak = computeDailyStreak();
-const tier = computeTierLine(pf, wr, totalPnl);
-
-const tierEl = document.getElementById("kickerTier");
-tierEl.innerHTML = `Tier <strong>${escapeHtml(tier.label)}</strong>`;
-tierEl.classList.remove("good","bad","neutral");
-tierEl.classList.add(tier.tone);
-
-document.getElementById("kickerStreak").innerHTML = `Streak <strong>${streak} Day${streak===1?"":"s"}</strong>`;
-document.getElementById("kickerMonth").innerHTML = `This Month <strong>${escapeHtml(formatMoneyOrR(monthPnl))}</strong>`;
+  for (let i=0; i<3650; i++){
+    const d = new Date(today);
+    d.setDate(today.getDate() - i);
+    const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+    if (!map.has(key)) break;              // no trading day -> streak ends
+    const val = map.get(key) || 0;
+    if (val <= 0) break;                   // not positive -> streak ends
+    streak += 1;
+  }
+  return streak;
 }
 
-function computeTotalAllTime(){
-if (hasAnyPnlData){
-const vals = trades.map(t => t.pnl).filter(v => Number.isFinite(v));
-return vals.reduce((a,b)=>a+b,0);
+// === MONEY HELPERS ===
+function fmtMoney(n){
+  if (!Number.isFinite(n)) return "—";
+  try{
+    return new Intl.NumberFormat(undefined, { style:"currency", currency: settings.currency, maximumFractionDigits: 0 }).format(n);
+  } catch(e){
+    // fallback
+    const sign = n < 0 ? "-" : "";
+    return `${sign}${settings.currency} ${Math.abs(n).toFixed(0)}`;
+  }
 }
-const rVals = trades.map(t => t.r_multiple).filter(v => Number.isFinite(v));
-return rVals.reduce((a,b)=>a+b,0);
-}
-
-// Period totals: daily/weekly/monthly
-function computePeriodTotal(period){
-const now = new Date();
-const start = startOfPeriod(now, period);
-const end = endOfPeriod(now, period);
-
-const slice = trades.filter(t => t.dt && t.dt >= start && t.dt < end);
-
-if (hasAnyPnlData){
-const vals = slice.map(t => t.pnl).filter(v => Number.isFinite(v));
-return vals.reduce((a,b)=>a+b,0);
+function rToMoney(r){
+  if (!Number.isFinite(r)) return 0;
+  return r * (Number.isFinite(settings.riskPerR) ? settings.riskPerR : 100);
 }
 
-const rVals = slice.map(t => t.r_multiple).filter(v => Number.isFinite(v));
-return rVals.reduce((a,b)=>a+b,0);
+// === GOALS ===
+function setGoal(period, amount){
+  const n = Number(amount);
+  if (!Number.isFinite(n) || n <= 0) return;
+  settings.goals[period] = n;
+  saveLocalSettings();
+  renderGoals();
 }
 
-function startOfPeriod(date, period){
-const d = new Date(date);
-if (period === "daily"){
-d.setHours(0,0,0,0);
-return d;
-}
-if (period === "weekly"){
-// Monday start
-const day = (d.getDay() + 6) % 7; // Mon=0
-d.setDate(d.getDate() - day);
-d.setHours(0,0,0,0);
-return d;
-}
-// monthly
-d.setDate(1);
-d.setHours(0,0,0,0);
-return d;
+function syncGoalDropdown(period, goalVal){
+  const sel = document.getElementById(`goal${cap(period)}Select`);
+  const input = document.getElementById(`goal${cap(period)}Input`);
+
+  const optionValues = Array.from(sel.options).map(o=>o.value);
+  const asString = String(Math.round(goalVal));
+
+  if (optionValues.includes(asString)){
+    sel.value = asString;
+    input.classList.remove("show");
+    input.value = String(goalVal);
+  } else {
+    sel.value = "custom";
+    input.classList.add("show");
+    input.value = String(goalVal);
+  }
 }
 
-function endOfPeriod(date, period){
-const s = startOfPeriod(date, period);
-const e = new Date(s);
-if (period === "daily"){ e.setDate(e.getDate()+1); return e; }
-if (period === "weekly"){ e.setDate(e.getDate()+7); return e; }
-e.setMonth(e.getMonth()+1);
-return e;
+function initGoalControls(){
+  // dropdowns
+  document.querySelectorAll(".goalSelect").forEach(sel=>{
+    sel.addEventListener("change", ()=>{
+      const period = sel.getAttribute("data-period");
+      const v = sel.value;
+      const input = document.getElementById(`goal${cap(period)}Input`);
+      if (v === "custom"){
+        input.classList.add("show");
+        input.focus();
+      } else {
+        input.classList.remove("show");
+        const n = Number(v);
+        if (Number.isFinite(n) && n > 0) setGoal(period, n);
+      }
+    });
+  });
+
+  // custom inputs
+  ["daily","weekly","monthly"].forEach(period=>{
+    const input = document.getElementById(`goal${cap(period)}Input`);
+    input.addEventListener("change", ()=>{
+      const n = Number(input.value);
+      if (Number.isFinite(n) && n > 0) setGoal(period, n);
+    });
+  });
 }
 
-function computeTierLine(pf, wr, total){
-const profitable = total > 0;
-const wrOk = (wr ?? 0) >= 0.45;
-const pfVal = (pf === Infinity) ? 9 : (pf ?? 0);
+function initSettingsControls(){
+  const currencySelect = document.getElementById("currencySelect");
+  const riskPerRInput = document.getElementById("riskPerRInput");
 
-if (profitable && pfVal >= 2.0) return { label: "Top 0.1% Momentum", tone:"good" };
-if (profitable && pfVal >= 1.6 && (wrOk || pfVal >= 1.8)) return { label: "Top 1% Discipline", tone:"good" };
-if (profitable && pfVal >= 1.25) return { label: "Top 5% Profitable", tone:"good" };
-if (profitable) return { label: "Profitable — Protect It", tone:"neutral" };
-if (!profitable && trades.length < 10) return { label: "Building Edge", tone:"neutral" };
-return { label: "Comeback Mode — Stay Strict", tone:"bad" };
-}
+  currencySelect.value = settings.currency;
+  riskPerRInput.value = String(settings.riskPerR);
 
-function computeDailyStreak(){
-const days = new Set();
-trades.forEach(t=>{
-if (!t.dt) return;
-const key = `${t.dt.getFullYear()}-${String(t.dt.getMonth()+1).padStart(2,"0")}-${String(t.dt.getDate()).padStart(2,"0")}`;
-days.add(key);
-});
-let streak = 0;
-let d = new Date();
-for (;;){
-const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
-if (!days.has(key)) break;
-streak += 1;
-d.setDate(d.getDate()-1);
-}
-return streak;
+  currencySelect.addEventListener("change", ()=>{
+    settings.currency = currencySelect.value;
+    saveLocalSettings();
+    renderFocus();
+    renderGoals();
+  });
+
+  riskPerRInput.addEventListener("change", ()=>{
+    const n = Number(riskPerRInput.value);
+    if (Number.isFinite(n) && n > 0){
+      settings.riskPerR = n;
+      saveLocalSettings();
+      renderFocus();
+      renderGoals();
+    }
+  });
 }
 
-// === GOALS (Daily/Weekly/Monthly + Currency + Presets) ===
-function goalsStorageKeyCurrency(){
-return `sessionly_goal_currency_${user?.id || "anon"}`;
-}
-function goalsStorageKey(period){
-return `sessionly_goal_${period}_${user?.id || "anon"}`;
-}
+function periodR(period){
+  const now = new Date();
+  const list = trades.filter(t => t.dt && Number.isFinite(t.r_multiple));
 
-function getCurrency(){
-const sel = document.getElementById("currencySelect");
-let saved = localStorage.getItem(goalsStorageKeyCurrency()) || "";
-if (!saved) saved = DEFAULT_CURRENCY;
-if (sel.value !== saved) sel.value = saved;
-return sel.value;
-}
-function setCurrency(code){
-localStorage.setItem(goalsStorageKeyCurrency(), code);
-renderGoals();
-}
+  if (period === "daily"){
+    const y = now.getFullYear(), m = now.getMonth(), d = now.getDate();
+    return list.filter(t => t.dt.getFullYear()===y && t.dt.getMonth()===m && t.dt.getDate()===d)
+      .reduce((a,t)=>a+t.r_multiple,0);
+  }
 
-function getGoal(period){
-const raw = localStorage.getItem(goalsStorageKey(period));
-let n = Number(raw);
-if (!Number.isFinite(n) || n <= 0) n = DEFAULT_GOALS[period] || 100;
-return n;
-}
-function setGoal(period, val){
-localStorage.setItem(goalsStorageKey(period), String(val));
-renderGoals();
+  if (period === "weekly"){
+    // Mon–Sun
+    const today = new Date(now);
+    const day = (today.getDay() + 6) % 7; // Mon=0
+    const monday = new Date(today);
+    monday.setDate(today.getDate() - day);
+    monday.setHours(0,0,0,0);
+    const sundayEnd = new Date(monday);
+    sundayEnd.setDate(monday.getDate() + 7);
+    return list.filter(t => t.dt >= monday && t.dt < sundayEnd)
+      .reduce((a,t)=>a+t.r_multiple,0);
+  }
+
+  // monthly
+  const y = now.getFullYear(), m = now.getMonth();
+  return list.filter(t => t.dt.getFullYear()===y && t.dt.getMonth()===m)
+    .reduce((a,t)=>a+t.r_multiple,0);
 }
 
 function renderGoals(){
-const note = document.getElementById("goalsNote");
-const pnlNotice = document.getElementById("pnlNotice");
-const currency = getCurrency();
+  // sync controls
+  syncGoalDropdown("daily", settings.goals.daily);
+  syncGoalDropdown("weekly", settings.goals.weekly);
+  syncGoalDropdown("monthly", settings.goals.monthly);
 
-if (!hasAnyPnlData){
-pnlNotice.textContent = "PnL values aren’t available yet. Goals will track using R as a proxy until you start entering PnL.";
-document.getElementById("currencySelect").disabled = true;
-note.textContent = "Set Daily, Weekly, and Monthly targets. Progress updates automatically (Using R as proxy).";
-} else {
-pnlNotice.textContent = "";
-document.getElementById("currencySelect").disabled = false;
-note.textContent = "Set Daily, Weekly, and Monthly targets. Progress updates automatically.";
+  const dailyMoney = rToMoney(periodR("daily"));
+  const weeklyMoney = rToMoney(periodR("weekly"));
+  const monthlyMoney = rToMoney(periodR("monthly"));
+
+  updateGoalUI("Daily", settings.goals.daily, dailyMoney);
+  updateGoalUI("Weekly", settings.goals.weekly, weeklyMoney);
+  updateGoalUI("Monthly", settings.goals.monthly, monthlyMoney);
 }
 
-const dailyTotal = computePeriodTotal("daily");
-const weeklyTotal = computePeriodTotal("weekly");
-const monthlyTotal = computePeriodTotal("monthly");
+function updateGoalUI(label, goalAmountMoney, achievedMoney){
+  const id = label; // "Daily" | "Weekly" | "Monthly"
+  const fill = document.getElementById(`goal${id}Fill`);
+  const leftEl = document.getElementById(`goal${id}Left`);
+  const pctEl = document.getElementById(`goal${id}Pct`);
 
-const dailyGoal = getGoal("daily");
-const weeklyGoal = getGoal("weekly");
-const monthlyGoal = getGoal("monthly");
+  const goal = Math.max(1, Number(goalAmountMoney) || 1);
+  const achieved = Number.isFinite(achievedMoney) ? achievedMoney : 0;
+  const pct = clamp((achieved / goal) * 100, 0, 100);
 
-document.getElementById("goalDailyInput").value = String(dailyGoal);
-document.getElementById("goalWeeklyInput").value = String(weeklyGoal);
-document.getElementById("goalMonthlyInput").value = String(monthlyGoal);
+  fill.style.width = `${pct.toFixed(0)}%`;
 
-updateGoalUI("daily", dailyTotal, dailyGoal, currency);
-updateGoalUI("weekly", weeklyTotal, weeklyGoal, currency);
-updateGoalUI("monthly", monthlyTotal, monthlyGoal, currency);
-
-document.getElementById("dailySub").textContent = "Today";
-document.getElementById("weeklySub").textContent = "This week (Mon–Sun)";
-document.getElementById("monthlySub").textContent = "This month";
+  const left = goal - achieved;
+  if (left <= 0){
+    leftEl.textContent = `${fmtMoney(0)} Left`;
+    pctEl.textContent = `100%`;
+  } else {
+    leftEl.textContent = `${fmtMoney(left)} Left`;
+    pctEl.textContent = `${pct.toFixed(0)}%`;
+  }
 }
 
-function updateGoalUI(period, achieved, goal, currency){
-const pct = goal > 0 ? Math.max(0, Math.min(1, achieved / goal)) : 0;
+// === RENDER: FOCUS ===
+function renderFocus(){
+  // greeting
+  const greeting = getGreeting();
+  const who = nameFromEmail(user?.email);
+  document.getElementById("focusGreeting").textContent = who ? `${greeting}, ${who}` : greeting;
 
-const fillEl = document.getElementById(`goal${cap(period)}Fill`);
-fillEl.style.width = `${(pct*100).toFixed(1)}%`;
+  // basic aggregates
+  const rVals = trades.map(t => t.r_multiple).filter(v => Number.isFinite(v));
+  const totalTrades = trades.length;
 
-const left = goal - achieved;
-const leftEl = document.getElementById(`goal${cap(period)}Left`);
-const pctEl = document.getElementById(`goal${cap(period)}Pct`);
+  const totalR = rVals.reduce((a,b)=>a+b,0);
+  const wins = rVals.filter(v => v > 0);
+  const losses = rVals.filter(v => v < 0);
+  const bes = rVals.filter(v => v === 0);
 
-leftEl.textContent = left > 0
-? `${formatMoneyOrR(left, currency)} Left`
-: "Goal Hit — Keep Stacking";
+  const sumWins = wins.reduce((a,b)=>a+b,0);
+  const sumLossAbs = Math.abs(losses.reduce((a,b)=>a+b,0));
+  const pf = (sumLossAbs > 0) ? (sumWins / sumLossAbs) : (wins.length ? Infinity : null);
 
-pctEl.textContent = `${(pct*100).toFixed(0)}%`;
+  const decided = wins.length + losses.length;
+  const winRate = decided ? (wins.length / decided) : null;
+
+  // this month R
+  const monthR = periodR("monthly");
+
+  // PnL money (proxy: R × riskPerR)
+  const totalPnL = rToMoney(totalR);
+  const monthPnL = rToMoney(monthR);
+
+  document.getElementById("s_total_pnl").textContent = fmtMoney(totalPnL);
+  document.getElementById("s_total_pnl_hint").textContent = `All time (R: ${formatNumber(totalR)})`;
+
+  document.getElementById("s_month_pnl").textContent = fmtMoney(monthPnL);
+  document.getElementById("s_month_pnl_hint").textContent = `This month (R: ${formatNumber(monthR)})`;
+
+  document.getElementById("s_pf").textContent = pf === null ? "—" : (pf === Infinity ? "∞" : formatNumber(pf));
+  document.getElementById("s_pf_hint").textContent = `From ${rVals.length} trades`;
+
+  document.getElementById("s_winrate").textContent = winRate === null ? "—" : `${(winRate*100).toFixed(1)}%`;
+  document.getElementById("s_winrate_hint").textContent = decided ? `${wins.length}/${decided} decided` : "No decided trades yet";
+
+  document.getElementById("s_total_trades").textContent = String(totalTrades);
+
+  const avgR = rVals.length ? (totalR / rVals.length) : null;
+  document.getElementById("s_avgr").textContent = avgR === null ? "—" : formatNumber(avgR);
+
+  // tier + chips
+  const tier = computeTier(pf, totalR, rVals.length);
+  const tierPill = document.getElementById("tierPill");
+  tierPill.classList.remove("good","neutral","warn");
+  tierPill.classList.add(tier.className);
+  document.getElementById("tierText").textContent = tier.label;
+
+  const streak = computePositiveDayStreak();
+  document.getElementById("streakText").textContent = `${streak} Day${streak===1?"":"s"}`;
+
+  document.getElementById("monthRChip").textContent = `${monthR >= 0 ? "+" : ""}${formatNumber(monthR)}R`;
+
+  // insight
+  renderInsight(pf, totalR, winRate, avgR, rVals.length);
+
+  // recent table
+  const recent = trades.slice(0, 8);
+  const body = document.getElementById("recentTradesBody");
+
+  if (!recent.length){
+    body.innerHTML = `<tr><td class="emptyRow" colspan="8">No trades yet. Add your first one.</td></tr>`;
+  } else {
+    body.innerHTML = recent.map(row=>{
+      const date = row.dt ? fmtDateTime(row.dt) : "—";
+      const sym = escapeHtml(row.symbol || "—");
+      const dir = escapeHtml(cap(row.direction || "—"));
+      const rr = row.rr === null ? "—" : formatNumber(row.rr);
+      const r = row.r_multiple === null ? "—" : formatNumber(row.r_multiple);
+      const session = escapeHtml(row.session ? cap(row.session) : "—");
+      const strategy = escapeHtml(row.strategy || "—");
+      return `
+        <tr>
+          <td>${date}</td>
+          <td>${sym}</td>
+          <td>${dir}</td>
+          <td>${rr}</td>
+          <td>${r}</td>
+          <td>${session}</td>
+          <td>${strategy}</td>
+          <td style="text-align:right;">
+            <button class="iconBtn" data-del="${row.id}" title="Delete trade">
+              ${trashIconSvg()}
+              <span class="srOnly">Delete</span>
+            </button>
+          </td>
+        </tr>
+      `;
+    }).join("");
+
+    body.querySelectorAll("button[data-del]").forEach(btn=>{
+      btn.addEventListener("click", ()=> deleteTrade(btn.getAttribute("data-del")));
+    });
+  }
+
+  document.getElementById("recentPill").textContent = "Ready";
+  document.getElementById("focusStatus").textContent = "Ready";
+
+  renderGoals();
 }
 
-function cap(s){ return s[0].toUpperCase() + s.slice(1); }
+function renderInsight(pf, totalR, winRate, avgR, n){
+  const pill = document.getElementById("insightPill");
+  const el = document.getElementById("insightText");
 
-// === RECENT TRADES TABLE ===
-function renderRecentTradesTable(){
-const recent = trades.slice(0, 8);
-const body = document.getElementById("recentTradesBody");
+  if (n < 10){
+    pill.textContent = "Setup";
+    el.textContent = "Log 10+ trades and Sessionly will start spotting your edge (best hour, best session, biggest leak).";
+    return;
+  }
 
-if (!recent.length){
-body.innerHTML = `<tr><td class="emptyRow" colspan="8">No trades yet. Add your first one.</td></tr>`;
-return;
+  if (Number.isFinite(pf) && pf >= 1.5 && totalR > 0){
+    pill.textContent = "Momentum";
+    el.textContent = "You’re in a strong zone. Keep sizing consistent and protect your best hours. Consistency beats intensity.";
+    return;
+  }
+
+  if (Number.isFinite(winRate) && winRate < 0.35 && Number.isFinite(avgR) && avgR > 0){
+    pill.textContent = "Edge";
+    el.textContent = "Win rate is low, but your average R is positive. That’s a classic high R:R profile. Don’t overtrade.";
+    return;
+  }
+
+  if (Number.isFinite(pf) && pf < 1.0){
+    pill.textContent = "Fix One Leak";
+    el.textContent = "Your losses are outweighing your wins. Pick one rule to tighten (stops, revenge, or late entries) and retest.";
+    return;
+  }
+
+  pill.textContent = "Progress";
+  el.textContent = "You’re building the base. Tighten the plan slightly and keep tracking. Small improvements compound fast.";
 }
 
-body.innerHTML = recent.map(row=>{
-const date = row.dt ? fmtDateTime(row.dt) : "—";
-const sym = escapeHtml(row.symbol || "—");
-const dir = escapeHtml(row.direction || "—");
-const rr = row.rr === null ? "—" : formatNumber(row.rr);
-const r = row.r_multiple === null ? "—" : formatNumber(row.r_multiple);
-const session = escapeHtml(row.session || "—");
-const strategy = escapeHtml(row.strategy || "—");
-return `
-<tr>
-<td>${date}</td>
-<td>${sym}</td>
-<td>${dir}</td>
-<td>${rr}</td>
-<td>${r}</td>
-<td>${session}</td>
-<td>${strategy}</td>
-<td style="text-align:right;">
-<button class="iconBtn" data-del="${row.id}" title="Delete trade">
-${trashIconSvg()}
-<span class="srOnly">Delete</span>
-</button>
-</td>
-</tr>
-`;
-}).join("");
-
-body.querySelectorAll("button[data-del]").forEach(btn=>{
-btn.addEventListener("click", ()=> deleteTrade(btn.getAttribute("data-del")));
-});
-}
-
-// === MINI CHARTS (No overlap now) ===
-function drawDashboardMiniCharts(){
-drawDashEquitySpark();
-drawDashDailyBars();
-}
-
-function drawDashEquitySpark(){
-const pack = prepCanvas("dashEquitySpark");
-if (!pack) return;
-const {ctx,w,h} = pack;
-
-ctx.clearRect(0,0,w,h);
-drawGlassGrid(ctx,w,h);
-
-const sorted = [...trades]
-.filter(t => t.dt && Number.isFinite(t.r_multiple))
-.sort((a,b)=> a.dt - b.dt);
-
-const last = sorted.slice(Math.max(0, sorted.length - 30));
-if (last.length < 2){
-drawEmptyMini(ctx,w,h,"Sparkline appears after 2+ trades.");
-return;
-}
-
-let cum = 0;
-const pts = last.map((t,i)=>{
-cum += (t.r_multiple ?? 0);
-return {i, y:cum};
-});
-
-const pad = 14;
-const innerW = w - pad*2;
-const innerH = h - pad*2;
-
-const minY = Math.min(...pts.map(p=>p.y));
-const maxY = Math.max(...pts.map(p=>p.y));
-const span = Math.max(1e-9, maxY - minY);
-
-pts.forEach((p, idx)=>{
-p.x = pad + (idx/(pts.length-1))*innerW;
-p.yy = pad + (1 - ((p.y - minY)/span))*innerH;
-});
-
-const lastVal = pts[pts.length-1].y;
-const tone = lastVal >= 0 ? colorVar("--accent2") : colorVar("--danger");
-
-ctx.save();
-ctx.beginPath();
-ctx.moveTo(pts[0].x, pts[0].yy);
-for (let i=1;i<pts.length;i++) ctx.lineTo(pts[i].x, pts[i].yy);
-ctx.lineWidth = 3;
-ctx.lineJoin = "round";
-ctx.lineCap = "round";
-ctx.strokeStyle = tone;
-ctx.globalAlpha = 0.95;
-ctx.stroke();
-ctx.shadowColor = tone;
-ctx.shadowBlur = 14;
-ctx.stroke();
-ctx.restore();
-}
-
-function drawDashDailyBars(){
-const pack = prepCanvas("dashDailyBars");
-if (!pack) return;
-const {ctx,w,h} = pack;
-
-ctx.clearRect(0,0,w,h);
-drawGlassGrid(ctx,w,h);
-
-const days = buildLastNDays(14);
-const map = new Map(days.map(d=>[d.key,0]));
-
-trades.forEach(t=>{
-if (!t.dt) return;
-const key = `${t.dt.getFullYear()}-${String(t.dt.getMonth()+1).padStart(2,"0")}-${String(t.dt.getDate()).padStart(2,"0")}`;
-if (!map.has(key)) return;
-
-const val = (hasAnyPnlData && Number.isFinite(t.pnl)) ? t.pnl : (Number.isFinite(t.r_multiple) ? t.r_multiple : 0);
-map.set(key, (map.get(key)||0) + val);
-});
-
-const arr = days.map(d=>({ key:d.key, label:d.label, val: map.get(d.key) || 0 }));
-const maxAbs = Math.max(1, ...arr.map(x=>Math.abs(x.val)));
-
-const pad = 14;
-const innerW = w - pad*2;
-const innerH = h - pad*2;
-const baseY = pad + innerH*0.80;
-
-ctx.save();
-ctx.strokeStyle = colorVar("--stroke2");
-ctx.globalAlpha = 0.9;
-ctx.beginPath();
-ctx.moveTo(pad, baseY);
-ctx.lineTo(w-pad, baseY);
-ctx.stroke();
-ctx.restore();
-
-const barW = innerW / arr.length;
-
-arr.forEach((b,i)=>{
-const x = pad + i*barW + barW*0.18;
-const bw = barW*0.64;
-
-const norm = b.val / maxAbs;
-const barH = norm * (innerH*0.55);
-
-const y = baseY - Math.max(0, barH);
-const hh = Math.abs(barH);
-
-const isPos = b.val >= 0;
-const col = isPos ? colorVar("--accent2") : colorVar("--danger");
-
-roundRect(ctx, x, y, bw, hh, 8);
-const grad = ctx.createLinearGradient(x,y,x,y+hh);
-grad.addColorStop(0, colorMix(col, "#ffffff", 0.10));
-grad.addColorStop(1, colorMix(col, "#000000", 0.22));
-ctx.fillStyle = grad;
-ctx.globalAlpha = 0.92;
-ctx.fill();
-});
-}
-
-function drawEmptyMini(ctx,w,h,text){
-ctx.save();
-ctx.fillStyle = colorVar("--muted");
-ctx.globalAlpha = 0.92;
-ctx.font = "800 13px ui-sans-serif, system-ui";
-ctx.fillText(text, 14, h/2);
-ctx.restore();
-}
-
-function buildLastNDays(n){
-const out = [];
-const d = new Date();
-d.setHours(0,0,0,0);
-for (let i=n-1;i>=0;i--){
-const x = new Date(d);
-x.setDate(x.getDate()-i);
-const key = `${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,"0")}-${String(x.getDate()).padStart(2,"0")}`;
-const label = `${String(x.getDate()).padStart(2,"0")}/${String(x.getMonth()+1).padStart(2,"0")}`;
-out.push({key,label});
-}
-return out;
-}
-
-// === TRADES PAGE ===
+// === RENDER: TRADES TABLE ===
 function renderTradesTable(){
-const body = document.getElementById("tradesTableBody");
-document.getElementById("tradesCountBadge").textContent = String(trades.length);
+  const body = document.getElementById("tradesTableBody");
+  document.getElementById("tradesCountBadge").textContent = String(trades.length);
 
-if (!trades.length){
-body.innerHTML = `<tr><td class="emptyRow" colspan="8">No trades yet.</td></tr>`;
-return;
+  if (!trades.length){
+    body.innerHTML = `<tr><td class="emptyRow" colspan="8">No trades yet.</td></tr>`;
+    return;
+  }
+
+  body.innerHTML = trades.map(row=>{
+    const date = row.dt ? fmtDateTime(row.dt) : "—";
+    const sym = escapeHtml(row.symbol || "—");
+    const dir = escapeHtml(cap(row.direction || "—"));
+    const rr = row.rr === null ? "—" : formatNumber(row.rr);
+    const r = row.r_multiple === null ? "—" : formatNumber(row.r_multiple);
+    const session = escapeHtml(row.session ? cap(row.session) : "—");
+    const strategy = escapeHtml(row.strategy || "—");
+
+    return `
+      <tr>
+        <td>${date}</td>
+        <td>${sym}</td>
+        <td>${dir}</td>
+        <td>${rr}</td>
+        <td>${r}</td>
+        <td>${session}</td>
+        <td>${strategy}</td>
+        <td style="text-align:right;">
+          <button class="iconBtn" data-del="${row.id}" title="Delete trade">
+            ${trashIconSvg()}
+            <span class="srOnly">Delete</span>
+          </button>
+        </td>
+      </tr>
+    `;
+  }).join("");
+
+  body.querySelectorAll("button[data-del]").forEach(btn=>{
+    btn.addEventListener("click", ()=> deleteTrade(btn.getAttribute("data-del")));
+  });
 }
 
-body.innerHTML = trades.map(row=>{
-const date = row.dt ? fmtDateTime(row.dt) : "—";
-const sym = escapeHtml(row.symbol || "—");
-const dir = escapeHtml(row.direction || "—");
-const rr = row.rr === null ? "—" : formatNumber(row.rr);
-const r = row.r_multiple === null ? "—" : formatNumber(row.r_multiple);
-const session = escapeHtml(row.session || "—");
-const strategy = escapeHtml(row.strategy || "—");
-
-return `
-<tr>
-<td>${date}</td>
-<td>${sym}</td>
-<td>${dir}</td>
-<td>${rr}</td>
-<td>${r}</td>
-<td>${session}</td>
-<td>${strategy}</td>
-<td style="text-align:right;">
-<button class="iconBtn" data-del="${row.id}" title="Delete trade">
-${trashIconSvg()}
-<span class="srOnly">Delete</span>
-</button>
-</td>
-</tr>
-`;
-}).join("");
-
-body.querySelectorAll("button[data-del]").forEach(btn=>{
-btn.addEventListener("click", ()=> deleteTrade(btn.getAttribute("data-del")));
-});
-}
-
-// === CALENDAR ===
+// === RENDER: CALENDAR ===
 function renderCalendar(){
-document.getElementById("calYear").textContent = String(calYear);
-document.getElementById("calMonth").textContent = monthName(calMonth);
+  document.getElementById("calYear").textContent = String(calYear);
+  document.getElementById("calMonth").textContent = monthName(calMonth);
 
-const modeSwitch = document.getElementById("calModeSwitch");
-modeSwitch.classList.toggle("on", calShowPercent);
-document.getElementById("calModeLabel").textContent = calShowPercent ? "Show Total R" : "Show Win Rate";
+  const modeSwitch = document.getElementById("calModeSwitch");
+  modeSwitch.classList.toggle("on", calShowPercent);
+  document.getElementById("calModeLabel").textContent = calShowPercent ? "Show Total R" : "Show Win Rate";
 
-// DOW headers
-const dowRow = document.getElementById("calDowRow");
-const dows = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
-dowRow.innerHTML = dows.map(d=>`<div class="calDow">${d}</div>`).join("");
+  // DOW headers
+  const dowRow = document.getElementById("calDowRow");
+  const dows = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+  dowRow.innerHTML = dows.map(d=>`<div class="calDow">${d}</div>`).join("");
 
-// build daily aggregates
-const daily = buildDailyAgg(calYear, calMonth);
+  // build daily aggregates for this month
+  const daily = buildDailyAgg(calYear, calMonth);
 
-const first = new Date(calYear, calMonth, 1);
-const last = new Date(calYear, calMonth + 1, 0);
+  // month grid (monday first)
+  const grid = document.getElementById("calGrid");
+  const first = new Date(calYear, calMonth, 1);
+  const last = new Date(calYear, calMonth + 1, 0);
 
-const firstDowMon0 = (first.getDay() + 6) % 7; // convert sun=0 => mon=0
-const totalCells = 42;
+  const firstDowMon0 = (first.getDay() + 6) % 7; // convert sun=0 => mon=0
+  const totalCells = 42;
 
-const prevMonthLast = new Date(calYear, calMonth, 0).getDate();
-const daysInMonth = last.getDate();
+  const prevMonthLast = new Date(calYear, calMonth, 0).getDate();
+  const daysInMonth = last.getDate();
 
-const today = new Date();
-const isThisMonth = today.getFullYear() === calYear && today.getMonth() === calMonth;
+  const today = new Date();
+  const isThisMonth = today.getFullYear() === calYear && today.getMonth() === calMonth;
 
-let html = "";
-for (let i=0;i<totalCells;i++){
-const dayNum = i - firstDowMon0 + 1;
+  let html = "";
+  for (let i=0;i<totalCells;i++){
+    const dayNum = i - firstDowMon0 + 1;
 
-let inMonth = dayNum >= 1 && dayNum <= daysInMonth;
-let displayDay = dayNum;
-let cellMuted = false;
+    let inMonth = dayNum >= 1 && dayNum <= daysInMonth;
+    let displayDay = dayNum;
+    let cellMuted = false;
 
-if (!inMonth){
-cellMuted = true;
-if (dayNum < 1){
-displayDay = prevMonthLast + dayNum;
-} else {
-displayDay = dayNum - daysInMonth;
-}
-}
+    if (!inMonth){
+      cellMuted = true;
+      if (dayNum < 1){
+        displayDay = prevMonthLast + dayNum;
+      } else {
+        displayDay = dayNum - daysInMonth;
+      }
+    }
 
-let key = null;
-if (inMonth){
-key = `${calYear}-${String(calMonth+1).padStart(2,"0")}-${String(dayNum).padStart(2,"0")}`;
-}
+    let key = null;
+    if (inMonth){
+      key = `${calYear}-${String(calMonth+1).padStart(2,"0")}-${String(dayNum).padStart(2,"0")}`;
+    }
 
-const agg = key ? daily.get(key) : null;
-const tradesCount = agg ? agg.count : 0;
-const winRate = agg && agg.decided ? (agg.wins/agg.decided) : null;
-const totalR = agg ? agg.sumR : 0;
+    const agg = key ? daily.get(key) : null;
+    const tradesCount = agg ? agg.count : 0;
+    const winRate = agg && agg.decided ? (agg.wins/agg.decided) : null;
+    const totalR = agg ? agg.sumR : 0;
 
-const isActive = inMonth && isThisMonth && dayNum === today.getDate();
-const valClass = totalR > 0 ? "pos" : (totalR < 0 ? "neg" : "");
-const glowClass = totalR > 0 ? "calGlowPos" : (totalR < 0 ? "calGlowNeg" : "");
+    const isActive = inMonth && isThisMonth && dayNum === today.getDate();
+    const valClass = totalR > 0 ? "pos" : (totalR < 0 ? "neg" : "");
+    const glowClass = totalR > 0 ? "calGlowPos" : (totalR < 0 ? "calGlowNeg" : "");
 
-const showVal = calShowPercent
-? (winRate === null ? "—" : `${(winRate*100).toFixed(0)}%`)
-: (tradesCount ? ((totalR > 0 ? "+" : "") + formatNumber(totalR)) : "—");
+    const showVal = calShowPercent
+      ? (winRate === null ? "—" : `${(winRate*100).toFixed(0)}%`)
+      : (tradesCount ? ((totalR > 0 ? "+" : "") + formatNumber(totalR)) : "—");
 
-const metaLine1 = tradesCount ? `Total trades: ${tradesCount}` : "No trades";
-const metaLine2 = tradesCount ? `Win rate: ${winRate === null ? "—" : `${(winRate*100).toFixed(0)}%`}` : "";
+    const metaLine1 = tradesCount ? `Total trades: ${tradesCount}` : "No trades";
+    const metaLine2 = tradesCount ? `Win rate: ${winRate === null ? "—" : `${(winRate*100).toFixed(0)}%`}` : "";
 
-html += `
-<div class="calCell ${cellMuted ? "muted" : ""} ${glowClass} ${isActive ? "active" : ""}">
-<div class="calCellInner">
-<div class="calDay">${displayDay}</div>
-<div class="calMeta">${escapeHtml(metaLine1)}${metaLine2 ? "<br/>"+escapeHtml(metaLine2) : ""}</div>
-<div class="calValue ${valClass}">${escapeHtml(showVal)}</div>
-</div>
-</div>
-`;
-}
+    html += `
+      <div class="calCell ${cellMuted ? "muted" : ""} ${glowClass} ${isActive ? "active" : ""}">
+        <div class="calCellInner">
+          <div class="calDay">${displayDay}</div>
+          <div class="calMeta">${escapeHtml(metaLine1)}${metaLine2 ? "<br/>"+escapeHtml(metaLine2) : ""}</div>
+          <div class="calValue ${valClass}">${escapeHtml(showVal)}</div>
+        </div>
+      </div>
+    `;
+  }
 
-document.getElementById("calGrid").innerHTML = html;
+  grid.innerHTML = html;
 }
 
 function buildDailyAgg(year, month){
-const map = new Map();
-trades.forEach(t=>{
-if (!t.dt) return;
-if (t.dt.getFullYear() !== year) return;
-if (t.dt.getMonth() !== month) return;
-if (!Number.isFinite(t.r_multiple)) return;
+  const map = new Map();
+  trades.forEach(t=>{
+    if (!t.dt) return;
+    if (t.dt.getFullYear() !== year) return;
+    if (t.dt.getMonth() !== month) return;
+    if (!Number.isFinite(t.r_multiple)) return;
 
-const key = `${t.dt.getFullYear()}-${String(t.dt.getMonth()+1).padStart(2,"0")}-${String(t.dt.getDate()).padStart(2,"0")}`;
-const cur = map.get(key) || {count:0,sumR:0,wins:0,losses:0,decided:0};
+    const key = `${t.dt.getFullYear()}-${String(t.dt.getMonth()+1).padStart(2,"0")}-${String(t.dt.getDate()).padStart(2,"0")}`;
+    const cur = map.get(key) || {count:0,sumR:0,wins:0,losses:0,decided:0};
 
-cur.count += 1;
-cur.sumR += t.r_multiple;
+    cur.count += 1;
+    cur.sumR += t.r_multiple;
 
-if (t.r_multiple > 0){ cur.wins += 1; cur.decided += 1; }
-else if (t.r_multiple < 0){ cur.losses += 1; cur.decided += 1; }
+    if (t.r_multiple > 0){ cur.wins += 1; cur.decided += 1; }
+    else if (t.r_multiple < 0){ cur.losses += 1; cur.decided += 1; }
+    else if (t.r_multiple === 0){ /* BE */ }
 
-map.set(key, cur);
-});
-return map;
+    map.set(key, cur);
+  });
+  return map;
 }
 
-// === ANALYTICS ===
+// === RENDER: ANALYTICS ===
 function renderAnalytics(){
-const rVals = trades.map(t => t.r_multiple).filter(v => Number.isFinite(v));
-const wins = rVals.filter(v => v > 0);
-const losses = rVals.filter(v => v < 0);
-const bes = rVals.filter(v => v === 0);
+  const rVals = trades.map(t => t.r_multiple).filter(v => Number.isFinite(v));
+  const wins = rVals.filter(v => v > 0);
+  const losses = rVals.filter(v => v < 0);
+  const bes = rVals.filter(v => v === 0);
 
-const sumWins = wins.reduce((a,b)=>a+b,0);
-const sumLossAbs = Math.abs(losses.reduce((a,b)=>a+b,0));
-const pf = (sumLossAbs > 0) ? (sumWins / sumLossAbs) : (wins.length ? Infinity : null);
+  const sumWins = wins.reduce((a,b)=>a+b,0);
+  const sumLossAbs = Math.abs(losses.reduce((a,b)=>a+b,0));
+  const pf = (sumLossAbs > 0) ? (sumWins / sumLossAbs) : (wins.length ? Infinity : null);
 
-document.getElementById("a_pf").textContent = pf === null ? "—" : (pf === Infinity ? "∞" : formatNumber(pf));
-document.getElementById("a_pf_hint").textContent = `From ${rVals.length} trades`;
+  document.getElementById("a_pf").textContent = pf === null ? "—" : (pf === Infinity ? "∞" : formatNumber(pf));
+  document.getElementById("a_pf_hint").textContent = `From ${rVals.length} trades`;
 
-const avgWin = wins.length ? (sumWins / wins.length) : null;
-const avgLoss = losses.length ? (Math.abs(losses.reduce((a,b)=>a+b,0)) / losses.length) : null;
-document.getElementById("a_awal").textContent =
-(avgWin === null || avgLoss === null) ? "—" : `${formatNumber(avgWin)} / ${formatNumber(avgLoss)}`;
+  const avgWin = wins.length ? (sumWins / wins.length) : null;
+  const avgLoss = losses.length ? (Math.abs(losses.reduce((a,b)=>a+b,0)) / losses.length) : null;
+  document.getElementById("a_awal").textContent =
+    (avgWin === null || avgLoss === null) ? "—" : `${formatNumber(avgWin)} / ${formatNumber(avgLoss)}`;
 
-const byHour = new Map();
-trades.forEach(t=>{
-if (!t.dt || !Number.isFinite(t.r_multiple)) return;
-const h = t.dt.getHours();
-const cur = byHour.get(h) || {sum:0,count:0};
-cur.sum += t.r_multiple;
-cur.count += 1;
-byHour.set(h, cur);
-});
+  const byHour = new Map();
+  trades.forEach(t=>{
+    if (!t.dt || !Number.isFinite(t.r_multiple)) return;
+    const h = t.dt.getHours();
+    const cur = byHour.get(h) || {sum:0,count:0};
+    cur.sum += t.r_multiple;
+    cur.count += 1;
+    byHour.set(h, cur);
+  });
 
-let bestHour = null;
-let bestAvg = -Infinity;
-for (const [h, v] of byHour.entries()){
-const avg = v.sum / Math.max(1, v.count);
-if (avg > bestAvg){
-bestAvg = avg;
-bestHour = h;
+  let bestHour = null;
+  let bestAvg = -Infinity;
+  for (const [h, v] of byHour.entries()){
+    const avg = v.sum / Math.max(1, v.count);
+    if (avg > bestAvg){
+      bestAvg = avg;
+      bestHour = h;
+    }
+  }
+  document.getElementById("a_besthour").textContent = bestHour === null ? "—" : `${String(bestHour).padStart(2,"0")}:00`;
+  document.getElementById("a_besthour_hint").textContent = bestHour === null ? "Avg R" : `Avg R ${formatNumber(bestAvg)}`;
+
+  drawHourlyCanvas(byHour);
+  drawEquityCanvas();
+  drawDonutCanvas(wins.length, losses.length, bes.length);
+  drawCalendarCanvas();
 }
-}
-document.getElementById("a_besthour").textContent = bestHour === null ? "—" : `${String(bestHour).padStart(2,"0")}:00`;
-document.getElementById("a_besthour_hint").textContent = bestHour === null ? "Avg R" : `Avg R ${formatNumber(bestAvg)}`;
 
-drawHourlyCanvas(byHour);
-drawEquityCanvas();
-drawDonutCanvas(wins.length, losses.length, bes.length);
-drawCalendarCanvas();
-}
-
-// === CHART HELPERS ===
+// === CHART HELPERS (no external libs) ===
 function prepCanvas(id){
-const c = document.getElementById(id);
-if (!c) return null;
-
-// Use the canvas element's own box (now it has a fixed flex height)
-const rect = c.getBoundingClientRect();
-const dpr = window.devicePixelRatio || 1;
-
-c.width = Math.max(1, Math.floor(rect.width * dpr));
-c.height = Math.max(1, Math.floor(rect.height * dpr));
-
-const ctx = c.getContext("2d");
-ctx.setTransform(dpr,0,0,dpr,0,0);
-
-return {c, ctx, w: rect.width, h: rect.height};
+  const c = document.getElementById(id);
+  if (!c) return null;
+  const rect = c.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+  c.width = Math.max(1, Math.floor(rect.width * dpr));
+  c.height = Math.max(1, Math.floor(rect.height * dpr));
+  const ctx = c.getContext("2d");
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  return {c, ctx, w: rect.width, h: rect.height};
 }
 
 function colorVar(name){
-return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 }
 
 function drawGlassGrid(ctx, w, h){
-ctx.save();
-ctx.globalAlpha = 0.28;
-ctx.strokeStyle = colorVar("--stroke");
-ctx.lineWidth = 1;
+  ctx.save();
+  ctx.globalAlpha = 0.35;
+  ctx.strokeStyle = colorMix(colorVar("--stroke"), "transparent", 0.0);
+  ctx.lineWidth = 1;
 
-const step = 30;
-for (let x=0; x<=w; x+=step){
-ctx.beginPath();
-ctx.moveTo(x, 0);
-ctx.lineTo(x, h);
-ctx.stroke();
-}
-for (let y=0; y<=h; y+=step){
-ctx.beginPath();
-ctx.moveTo(0, y);
-ctx.lineTo(w, y);
-ctx.stroke();
-}
-ctx.restore();
+  const step = 28;
+  for (let x=0; x<=w; x+=step){
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, h);
+    ctx.stroke();
+  }
+  for (let y=0; y<=h; y+=step){
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(w, y);
+    ctx.stroke();
+  }
+  ctx.restore();
 }
 
 function drawHourlyCanvas(byHour){
-const pack = prepCanvas("hourlyCanvas");
-if (!pack) return;
-const {ctx,w,h} = pack;
+  const pack = prepCanvas("hourlyCanvas");
+  if (!pack) return;
+  const {ctx,w,h} = pack;
 
-ctx.clearRect(0,0,w,h);
-drawGlassGrid(ctx,w,h);
+  ctx.clearRect(0,0,w,h);
+  drawGlassGrid(ctx,w,h);
 
-const arr = [];
-for (let i=0;i<24;i++){
-const v = byHour.get(i);
-arr.push({h:i, val: v ? v.sum : 0});
-}
+  const arr = [];
+  for (let i=0;i<24;i++){
+    const v = byHour.get(i);
+    arr.push({h:i, val: v ? v.sum : 0});
+  }
 
-const maxAbs = Math.max(1, ...arr.map(x => Math.abs(x.val)));
-const pad = 18;
-const baseY = h/2;
-const innerW = w - pad*2;
-const barW = innerW / 24;
+  const maxAbs = Math.max(1, ...arr.map(x => Math.abs(x.val)));
+  const pad = 18;
+  const baseY = h/2;
+  const innerW = w - pad*2;
+  const barW = innerW / 24;
 
-ctx.save();
-ctx.strokeStyle = colorVar("--stroke2");
-ctx.globalAlpha = 0.9;
-ctx.beginPath();
-ctx.moveTo(pad, baseY);
-ctx.lineTo(w-pad, baseY);
-ctx.stroke();
-ctx.restore();
+  ctx.save();
+  ctx.strokeStyle = colorVar("--stroke2");
+  ctx.globalAlpha = 0.9;
+  ctx.beginPath();
+  ctx.moveTo(pad, baseY);
+  ctx.lineTo(w-pad, baseY);
+  ctx.stroke();
+  ctx.restore();
 
-arr.forEach((b, i)=>{
-const x = pad + i*barW + barW*0.22;
-const bw = barW*0.56;
-const norm = b.val / maxAbs;
-const barH = norm * (h*0.34);
+  arr.forEach((b, i)=>{
+    const x = pad + i*barW + barW*0.22;
+    const bw = barW*0.56;
+    const norm = b.val / maxAbs;
+    const barH = norm * (h*0.34);
 
-const y = baseY - Math.max(0, barH);
-const hh = Math.abs(barH);
+    const y = baseY - Math.max(0, barH);
+    const hh = Math.abs(barH);
 
-const col = (b.val >= 0) ? colorVar("--accent") : colorVar("--danger");
+    const isPos = b.val >= 0;
+    const col = isPos ? colorVar("--accent") : colorVar("--danger");
 
-roundRect(ctx, x, y, bw, hh, 8);
-const grad = ctx.createLinearGradient(x,y,x,y+hh);
-grad.addColorStop(0, colorMix(col, "#ffffff", 0.12));
-grad.addColorStop(1, colorMix(col, "#000000", 0.22));
-ctx.fillStyle = grad;
-ctx.globalAlpha = 0.92;
-ctx.fill();
-});
+    roundRect(ctx, x, y, bw, hh, 8);
+    const grad = ctx.createLinearGradient(x,y,x,y+hh);
+    grad.addColorStop(0, colorMix(col, "#ffffff", 0.12));
+    grad.addColorStop(1, colorMix(col, "#000000", 0.22));
+    ctx.fillStyle = grad;
+    ctx.globalAlpha = 0.92;
+    ctx.fill();
+
+    ctx.globalAlpha = 0.20;
+    ctx.shadowColor = col;
+    ctx.shadowBlur = 18;
+    ctx.fill();
+    ctx.shadowBlur = 0;
+    ctx.globalAlpha = 1;
+  });
 }
 
 function drawEquityCanvas(){
-const pack = prepCanvas("equityCanvas");
-if (!pack) return;
-const {ctx,w,h} = pack;
+  const pack = prepCanvas("equityCanvas");
+  if (!pack) return;
+  const {ctx,w,h} = pack;
 
-ctx.clearRect(0,0,w,h);
-drawGlassGrid(ctx,w,h);
+  ctx.clearRect(0,0,w,h);
+  drawGlassGrid(ctx,w,h);
 
-const sorted = [...trades]
-.filter(t => t.dt && Number.isFinite(t.r_multiple))
-.sort((a,b)=> a.dt - b.dt);
+  const sorted = [...trades]
+    .filter(t => t.dt && Number.isFinite(t.r_multiple))
+    .sort((a,b)=> a.dt - b.dt);
 
-const pad = 18;
-const innerW = w - pad*2;
-const innerH = h - pad*2;
+  const pad = 18;
+  const innerW = w - pad*2;
+  const innerH = h - pad*2;
 
-if (sorted.length < 2){
-ctx.save();
-ctx.fillStyle = colorVar("--muted");
-ctx.globalAlpha = 0.9;
-ctx.font = "700 13px ui-sans-serif, system-ui";
-ctx.fillText("Equity curve will appear after 2+ trades.", pad, h/2);
-ctx.restore();
-return;
-}
+  if (sorted.length < 2){
+    ctx.save();
+    ctx.fillStyle = colorVar("--muted");
+    ctx.globalAlpha = 0.9;
+    ctx.font = "700 13px ui-sans-serif, system-ui";
+    ctx.fillText("Equity curve will appear after 2+ trades.", pad, h/2);
+    ctx.restore();
+    return;
+  }
 
-let cum = 0;
-const pts = sorted.map(t=>{
-cum += t.r_multiple;
-return {x:0, y:cum};
-});
+  let cum = 0;
+  const pts = sorted.map(t=>{
+    cum += t.r_multiple;
+    return {x:0, y:cum};
+  });
 
-const minY = Math.min(...pts.map(p=>p.y));
-const maxY = Math.max(...pts.map(p=>p.y));
-const span = Math.max(1e-9, maxY - minY);
+  const minY = Math.min(...pts.map(p=>p.y));
+  const maxY = Math.max(...pts.map(p=>p.y));
+  const span = Math.max(1e-9, maxY - minY);
 
-pts.forEach((p,i)=>{
-p.x = pad + (i/(pts.length-1))*innerW;
-p.y = pad + (1 - ((p.y - minY)/span))*innerH;
-});
+  pts.forEach((p,i)=>{
+    p.x = pad + (i/(pts.length-1))*innerW;
+    p.y = pad + (1 - ((p.y - minY)/span))*innerH;
+  });
 
-ctx.save();
-ctx.lineWidth = 3;
-ctx.lineJoin = "round";
-ctx.lineCap = "round";
-const lineGrad = ctx.createLinearGradient(pad,0,pad+innerW,0);
-lineGrad.addColorStop(0, colorVar("--accent"));
-lineGrad.addColorStop(1, colorVar("--accent2"));
-ctx.strokeStyle = lineGrad;
-ctx.globalAlpha = 0.95;
+  ctx.save();
+  ctx.strokeStyle = colorVar("--stroke2");
+  ctx.globalAlpha = 0.85;
+  ctx.beginPath();
+  ctx.moveTo(pad, pad + innerH);
+  ctx.lineTo(pad + innerW, pad + innerH);
+  ctx.stroke();
+  ctx.restore();
 
-ctx.beginPath();
-ctx.moveTo(pts[0].x, pts[0].y);
-for (let i=1;i<pts.length;i++) ctx.lineTo(pts[i].x, pts[i].y);
-ctx.stroke();
+  ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(pts[0].x, pts[0].y);
+  for (let i=1;i<pts.length;i++) ctx.lineTo(pts[i].x, pts[i].y);
+  ctx.lineTo(pts[pts.length-1].x, pad + innerH);
+  ctx.lineTo(pts[0].x, pad + innerH);
+  ctx.closePath();
 
-ctx.shadowColor = colorVar("--accent");
-ctx.shadowBlur = 14;
-ctx.stroke();
-ctx.restore();
+  const fillGrad = ctx.createLinearGradient(0,pad,0,pad+innerH);
+  fillGrad.addColorStop(0, colorMix(colorVar("--accent2"), "transparent", 0.70));
+  fillGrad.addColorStop(1, "transparent");
+  ctx.fillStyle = fillGrad;
+  ctx.globalAlpha = 0.55;
+  ctx.fill();
+  ctx.restore();
+
+  ctx.save();
+  ctx.lineWidth = 3;
+  ctx.lineJoin = "round";
+  ctx.lineCap = "round";
+  const lineGrad = ctx.createLinearGradient(pad,0,pad+innerW,0);
+  lineGrad.addColorStop(0, colorVar("--accent"));
+  lineGrad.addColorStop(1, colorVar("--accent2"));
+  ctx.strokeStyle = lineGrad;
+  ctx.globalAlpha = 0.95;
+
+  ctx.beginPath();
+  ctx.moveTo(pts[0].x, pts[0].y);
+  for (let i=1;i<pts.length;i++) ctx.lineTo(pts[i].x, pts[i].y);
+  ctx.stroke();
+
+  ctx.shadowColor = colorVar("--accent");
+  ctx.shadowBlur = 16;
+  ctx.stroke();
+  ctx.restore();
+
+  const last = pts[pts.length-1];
+  ctx.save();
+  ctx.fillStyle = colorVar("--accent2");
+  ctx.globalAlpha = 0.95;
+  ctx.beginPath();
+  ctx.arc(last.x, last.y, 4.5, 0, Math.PI*2);
+  ctx.fill();
+  ctx.restore();
 }
 
 function drawDonutCanvas(winCount, lossCount, beCount){
-const pack = prepCanvas("donutCanvas");
-if (!pack) return;
-const {ctx,w,h} = pack;
+  const pack = prepCanvas("donutCanvas");
+  if (!pack) return;
+  const {ctx,w,h} = pack;
 
-ctx.clearRect(0,0,w,h);
-drawGlassGrid(ctx,w,h);
+  ctx.clearRect(0,0,w,h);
+  drawGlassGrid(ctx,w,h);
 
-const total = Math.max(1, winCount + lossCount + beCount);
-const cx = w/2, cy = h/2;
-const r = Math.min(w,h)*0.30;
-const thick = Math.max(10, r*0.28);
+  const total = Math.max(1, winCount + lossCount + beCount);
+  const cx = w/2, cy = h/2;
+  const r = Math.min(w,h)*0.30;
+  const thick = Math.max(10, r*0.28);
 
-const arcs = [
-{val: winCount, color: colorVar("--accent2")},
-{val: lossCount, color: colorVar("--danger")},
-{val: beCount, color: colorVar("--accent")}
-];
+  const arcs = [
+    {val: winCount, color: colorVar("--accent2")},
+    {val: lossCount, color: colorVar("--danger")},
+    {val: beCount, color: colorVar("--accent")}
+  ];
 
-ctx.save();
-ctx.strokeStyle = colorVar("--stroke2");
-ctx.globalAlpha = 0.9;
-ctx.lineWidth = thick;
-ctx.beginPath();
-ctx.arc(cx, cy, r, 0, Math.PI*2);
-ctx.stroke();
-ctx.restore();
+  ctx.save();
+  ctx.strokeStyle = colorVar("--stroke2");
+  ctx.globalAlpha = 0.9;
+  ctx.lineWidth = thick;
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI*2);
+  ctx.stroke();
+  ctx.restore();
 
-let start = -Math.PI/2;
-arcs.forEach(seg=>{
-const ang = (seg.val / total) * Math.PI*2;
-if (ang <= 0) return;
+  let start = -Math.PI/2;
+  arcs.forEach(seg=>{
+    const ang = (seg.val / total) * Math.PI*2;
+    if (ang <= 0) return;
 
-ctx.save();
-ctx.lineWidth = thick;
-ctx.lineCap = "round";
-ctx.strokeStyle = seg.color;
-ctx.globalAlpha = 0.92;
-ctx.beginPath();
-ctx.arc(cx, cy, r, start, start + ang);
-ctx.stroke();
-ctx.restore();
-start += ang;
-});
+    ctx.save();
+    ctx.lineWidth = thick;
+    ctx.lineCap = "round";
+    ctx.strokeStyle = seg.color;
+    ctx.globalAlpha = 0.92;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, start, start + ang);
+    ctx.stroke();
 
-ctx.save();
-ctx.fillStyle = colorVar("--text");
-ctx.globalAlpha = 0.92;
-ctx.textAlign = "center";
-ctx.textBaseline = "middle";
-ctx.font = "980 22px ui-sans-serif, system-ui";
-ctx.fillText(`${winCount}/${total}`, cx, cy - 8);
-ctx.fillStyle = colorVar("--muted");
-ctx.font = "800 12px ui-sans-serif, system-ui";
-ctx.fillText("Wins / Trades", cx, cy + 14);
-ctx.restore();
+    ctx.shadowColor = seg.color;
+    ctx.shadowBlur = 14;
+    ctx.stroke();
+
+    ctx.restore();
+    start += ang;
+  });
+
+  ctx.save();
+  ctx.fillStyle = colorVar("--text");
+  ctx.globalAlpha = 0.92;
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.font = "980 22px ui-sans-serif, system-ui";
+  ctx.fillText(`${winCount}/${total}`, cx, cy - 8);
+  ctx.fillStyle = colorVar("--muted");
+  ctx.font = "800 12px ui-sans-serif, system-ui";
+  ctx.fillText("Wins / Trades", cx, cy + 14);
+  ctx.restore();
 }
 
 function drawCalendarCanvas(){
-const pack = prepCanvas("calendarCanvas");
-if (!pack) return;
-const {ctx,w,h} = pack;
+  const pack = prepCanvas("calendarCanvas");
+  if (!pack) return;
+  const {ctx,w,h} = pack;
 
-ctx.clearRect(0,0,w,h);
-drawGlassGrid(ctx,w,h);
+  ctx.clearRect(0,0,w,h);
+  drawGlassGrid(ctx,w,h);
 
-const map = new Map();
-trades.forEach(t=>{
-if (!t.dt || !Number.isFinite(t.r_multiple)) return;
-const key = `${t.dt.getFullYear()}-${String(t.dt.getMonth()+1).padStart(2,"0")}-${String(t.dt.getDate()).padStart(2,"0")}`;
-map.set(key, (map.get(key)||0) + t.r_multiple);
-});
+  const map = new Map();
+  trades.forEach(t=>{
+    if (!t.dt || !Number.isFinite(t.r_multiple)) return;
+    const key = `${t.dt.getFullYear()}-${String(t.dt.getMonth()+1).padStart(2,"0")}-${String(t.dt.getDate()).padStart(2,"0")}`;
+    map.set(key, (map.get(key)||0) + t.r_multiple);
+  });
 
-const now = new Date();
-const year = now.getFullYear();
-const month = now.getMonth();
-const first = new Date(year, month, 1);
-const last = new Date(year, month+1, 0);
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth();
+  const first = new Date(year, month, 1);
+  const last = new Date(year, month+1, 0);
 
-const pad = 16;
-const cols = 7;
-const rows = 6;
+  const pad = 16;
+  const cols = 7;
+  const rows = 6;
 
-const cellGap = 8;
-const cellW = (w - pad*2 - cellGap*(cols-1)) / cols;
-const cellH = (h - pad*2 - cellGap*(rows-1)) / rows;
+  const cellGap = 8;
+  const cellW = (w - pad*2 - cellGap*(cols-1)) / cols;
+  const cellH = (h - pad*2 - cellGap*(rows-1)) / rows;
 
-let maxAbs = 1;
-for (let d=1; d<=last.getDate(); d++){
-const dt = new Date(year, month, d);
-const key = `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,"0")}-${String(dt.getDate()).padStart(2,"0")}`;
-const val = map.get(key) || 0;
-maxAbs = Math.max(maxAbs, Math.abs(val));
-}
+  let maxAbs = 1;
+  for (let d=1; d<=last.getDate(); d++){
+    const dt = new Date(year, month, d);
+    const key = `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,"0")}-${String(dt.getDate()).padStart(2,"0")}`;
+    const val = map.get(key) || 0;
+    maxAbs = Math.max(maxAbs, Math.abs(val));
+  }
 
-const offset = first.getDay();
+  const offset = first.getDay(); // Sun=0
 
-for (let i=0;i<rows*cols;i++){
-const r = Math.floor(i/cols);
-const c = i%cols;
-const x = pad + c*(cellW+cellGap);
-const y = pad + r*(cellH+cellGap);
+  for (let i=0;i<rows*cols;i++){
+    const r = Math.floor(i/cols);
+    const c = i%cols;
+    const x = pad + c*(cellW+cellGap);
+    const y = pad + r*(cellH+cellGap);
 
-const dayNum = i - offset + 1;
-const inMonth = dayNum >= 1 && dayNum <= last.getDate();
+    const dayNum = i - offset + 1;
+    const inMonth = dayNum >= 1 && dayNum <= last.getDate();
 
-roundRect(ctx, x, y, cellW, cellH, 14);
-ctx.fillStyle = colorMix(colorVar("--panel"), "transparent", 0.35);
-ctx.globalAlpha = 0.85;
-ctx.fill();
-ctx.globalAlpha = 0.85;
-ctx.strokeStyle = colorVar("--stroke");
-ctx.lineWidth = 1;
-ctx.stroke();
+    const base = colorMix(colorVar("--panel"), "transparent", 0.35);
+    ctx.save();
+    roundRect(ctx, x, y, cellW, cellH, 14);
+    ctx.fillStyle = base;
+    ctx.globalAlpha = 0.85;
+    ctx.fill();
 
-if (!inMonth) continue;
+    ctx.globalAlpha = 0.85;
+    ctx.strokeStyle = colorVar("--stroke");
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    ctx.restore();
 
-const dt = new Date(year, month, dayNum);
-const key = `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,"0")}-${String(dt.getDate()).padStart(2,"0")}`;
-const val = map.get(key) || 0;
+    if (!inMonth) continue;
 
-const strength = Math.min(1, Math.abs(val)/maxAbs);
-if (strength > 0){
-const col = val >= 0 ? colorVar("--accent2") : colorVar("--danger");
-roundRect(ctx, x, y, cellW, cellH, 14);
-ctx.fillStyle = colorMix(col, "transparent", 0.65);
-ctx.globalAlpha = 0.55 + strength*0.25;
-ctx.fill();
-}
+    const dt = new Date(year, month, dayNum);
+    const key = `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,"0")}-${String(dt.getDate()).padStart(2,"0")}`;
+    const val = map.get(key) || 0;
 
-ctx.fillStyle = colorVar("--text");
-ctx.globalAlpha = 0.92;
-ctx.font = "900 12px ui-sans-serif, system-ui";
-ctx.fillText(String(dayNum), x + 10, y + 18);
-}
+    const strength = Math.min(1, Math.abs(val)/maxAbs);
+    if (strength > 0){
+      const col = val >= 0 ? colorVar("--accent2") : colorVar("--danger");
+      ctx.save();
+      roundRect(ctx, x, y, cellW, cellH, 14);
+      ctx.fillStyle = colorMix(col, "transparent", 0.65);
+      ctx.globalAlpha = 0.55 + strength*0.25;
+      ctx.fill();
+      ctx.restore();
+    }
+
+    ctx.save();
+    ctx.fillStyle = colorVar("--text");
+    ctx.globalAlpha = 0.90;
+    ctx.font = "900 12px ui-sans-serif, system-ui";
+    ctx.fillText(String(dayNum), x + 10, y + 18);
+    ctx.restore();
+
+    if (val !== 0){
+      ctx.save();
+      ctx.fillStyle = colorVar("--text");
+      ctx.globalAlpha = 0.88;
+      ctx.font = "900 12px ui-sans-serif, system-ui";
+      const txt = (val > 0 ? "+" : "") + formatNumber(val);
+      ctx.fillText(txt, x + 10, y + cellH - 12);
+      ctx.restore();
+    }
+  }
 }
 
 // === SAVE TRADE ===
 async function saveTrade(){
-modalMsg.textContent = "";
-const btn = document.getElementById("saveBtn");
-btn.disabled = true;
-btn.textContent = "Saving…";
+  modalMsg.textContent = "";
+  const btn = document.getElementById("saveBtn");
+  btn.disabled = true;
+  btn.textContent = "Saving…";
 
-try{
-const trade_date = document.getElementById("t_date").value;
-const symbol = document.getElementById("t_symbol").value.trim();
-const direction = document.getElementById("t_direction").value;
-const result = document.getElementById("t_result").value;
+  try{
+    const trade_date = document.getElementById("t_date").value;
+    const symbol = document.getElementById("t_symbol").value.trim();
+    const direction = document.getElementById("t_direction").value;
+    const result = document.getElementById("t_result").value;
 
-const rrRaw = document.getElementById("t_rr").value;
-const rRaw = document.getElementById("t_r").value;
-const pnlRaw = document.getElementById("t_pnl").value;
+    const rrRaw = document.getElementById("t_rr").value;
+    const rRaw = document.getElementById("t_r").value;
 
-const session = document.getElementById("t_session").value.trim();
-const strategy = document.getElementById("t_strategy").value.trim();
-const mistakesRaw = document.getElementById("t_mistakes").value.trim();
-const notes = document.getElementById("t_notes").value.trim();
+    const session = document.getElementById("t_session").value.trim();
+    const strategy = document.getElementById("t_strategy").value.trim();
+    const mistakesRaw = document.getElementById("t_mistakes").value.trim();
+    const notes = document.getElementById("t_notes").value.trim();
 
-if (!trade_date){ modalMsg.textContent = "Please choose a date."; return; }
+    if (!trade_date){ modalMsg.textContent = "Please choose a date."; return; }
 
-const chosen = new Date(trade_date).getTime();
-if (chosen > Date.now()){ modalMsg.textContent = "You can’t log a trade in the future."; return; }
+    const chosen = new Date(trade_date).getTime();
+    const now = Date.now();
+    if (chosen > now){ modalMsg.textContent = "You can’t log a trade in the future."; return; }
 
-if (!symbol){ modalMsg.textContent = "Please enter a symbol."; return; }
+    if (!symbol){ modalMsg.textContent = "Please enter a symbol."; return; }
 
-const rr = rrRaw === "" ? null : Number(rrRaw);
-if (rr !== null && !Number.isFinite(rr)){ modalMsg.textContent = "RR must be a number."; return; }
+    const rr = rrRaw === "" ? null : Number(rrRaw);
+    if (rr !== null && !Number.isFinite(rr)){ modalMsg.textContent = "RR must be a number."; return; }
 
-let r_multiple = (rRaw === "" ? null : Number(rRaw));
-if (r_multiple !== null && !Number.isFinite(r_multiple)){ modalMsg.textContent = "R Multiple must be a number."; return; }
+    let r_multiple = (rRaw === "" ? null : Number(rRaw));
+    if (r_multiple !== null && !Number.isFinite(r_multiple)){ modalMsg.textContent = "R multiple must be a number."; return; }
 
-let pnl = (pnlRaw === "" ? null : Number(pnlRaw));
-if (pnl !== null && !Number.isFinite(pnl)){ modalMsg.textContent = "PnL must be a number."; return; }
+    if (r_multiple !== null && Number.isFinite(r_multiple)){
+      const absR = Math.abs(r_multiple);
+      if (result === "win") r_multiple = absR;
+      if (result === "loss") r_multiple = -absR;
+      if (result === "be") r_multiple = 0;
+    }
 
-// Apply sign from Result
-if (r_multiple !== null && Number.isFinite(r_multiple)){
-const absR = Math.abs(r_multiple);
-if (result === "win") r_multiple = absR;
-if (result === "loss") r_multiple = -absR;
-if (result === "be") r_multiple = 0;
-}
-if (pnl !== null && Number.isFinite(pnl)){
-const absP = Math.abs(pnl);
-if (result === "win") pnl = absP;
-if (result === "loss") pnl = -absP;
-if (result === "be") pnl = 0;
-}
+    const mistakes = mistakesRaw
+      ? mistakesRaw.split(",").map(s=>s.trim()).filter(Boolean)
+      : [];
 
-const mistakes = mistakesRaw
-? mistakesRaw.split(",").map(s=>s.trim()).filter(Boolean)
-: [];
+    const payload = {
+      user_id: user.id,
+      trade_date: new Date(trade_date).toISOString(),
+      symbol,
+      direction,
+      rr,
+      r_multiple,
+      session: session || null,
+      strategy: strategy || null,
+      mistakes: mistakes.length ? mistakes : null,
+      notes: notes || null
+    };
 
-const payload = {
-user_id: user.id,
-trade_date: new Date(trade_date).toISOString(),
-symbol,
-direction,
-rr,
-r_multiple,
-pnl: (hasPnlColumn ? pnl : null),
-session: session || null,
-strategy: strategy || null,
-mistakes: mistakes.length ? mistakes : null,
-notes: notes || null
-};
+    const { error } = await sb.from("trades").insert(payload);
+    if (error){
+      modalMsg.textContent = `Save failed: ${error.message}`;
+      return;
+    }
 
-const { error } = await sb.from("trades").insert(payload);
-if (error){
-modalMsg.textContent = `Save failed: ${error.message}`;
-return;
-}
+    modalMsg.textContent = "Saved.";
+    closeTradeModal();
 
-modalMsg.textContent = "Saved.";
-closeTradeModal();
+    await loadTrades();
+    renderAnalytics();
+    renderCalendar();
+    renderGoals();
 
-await loadTrades();
-} finally {
-btn.disabled = false;
-btn.textContent = "Save Trade";
-}
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Save Trade";
+  }
 }
 
 // === UI WIRING ===
 function wireUI(){
-document.getElementById("addTradeBtn").addEventListener("click", openTradeModal);
-document.getElementById("closeModalBtn").addEventListener("click", closeTradeModal);
-document.getElementById("modalBackdrop").addEventListener("click", (e)=>{
-if (e.target === modalBackdrop) closeTradeModal();
-});
+  document.getElementById("addTradeBtn").addEventListener("click", openTradeModal);
+  document.getElementById("closeModalBtn").addEventListener("click", closeTradeModal);
+  document.getElementById("modalBackdrop").addEventListener("click", (e)=>{
+    if (e.target === modalBackdrop) closeTradeModal();
+  });
 
-document.getElementById("saveBtn").addEventListener("click", saveTrade);
+  document.getElementById("saveBtn").addEventListener("click", saveTrade);
 
-document.getElementById("clearBtn").addEventListener("click", ()=>{
-modalMsg.textContent = "";
-document.getElementById("t_symbol").value = "";
-document.getElementById("t_rr").value = "";
-document.getElementById("t_r").value = "";
-document.getElementById("t_pnl").value = "";
-document.getElementById("t_session").value = "";
-document.getElementById("t_strategy").value = "";
-document.getElementById("t_mistakes").value = "";
-document.getElementById("t_notes").value = "";
-});
+  document.getElementById("clearBtn").addEventListener("click", ()=>{
+    modalMsg.textContent = "";
+    document.getElementById("t_symbol").value = "";
+    document.getElementById("t_rr").value = "";
+    document.getElementById("t_r").value = "";
+    document.getElementById("t_session").value = "";
+    document.getElementById("t_strategy").value = "";
+    document.getElementById("t_mistakes").value = "";
+    document.getElementById("t_notes").value = "";
+  });
 
-document.getElementById("refreshBtn").addEventListener("click", async ()=>{
-await loadTrades();
-});
+  document.getElementById("refreshBtn").addEventListener("click", async ()=>{
+    await loadTrades();
+  });
 
-document.getElementById("toggleThemeBtn").addEventListener("click", ()=>{
-const cur = document.documentElement.getAttribute("data-theme") || "dark";
-applyTheme(cur === "dark" ? "light" : "dark");
-renderAnalytics();
-renderCalendar();
-renderFocus();
-});
+  document.getElementById("toggleThemeBtn").addEventListener("click", ()=>{
+    const cur = document.documentElement.getAttribute("data-theme") || "dark";
+    applyTheme(cur === "dark" ? "light" : "dark");
+    renderAnalytics();
+    renderCalendar();
+  });
 
-document.getElementById("logoutBtn").addEventListener("click", async ()=>{
-await sb.auth.signOut();
-window.location.href = "login.html";
-});
+  document.getElementById("logoutBtn").addEventListener("click", async ()=>{
+    await sb.auth.signOut();
+    window.location.href = "login.html";
+  });
 
-// Currency change
-document.getElementById("currencySelect").addEventListener("change", (e)=>{
-setCurrency(e.target.value);
-});
+  // calendar buttons
+  document.getElementById("calPrevBtn").addEventListener("click", ()=>{
+    const d = new Date(calYear, calMonth, 1);
+    d.setMonth(d.getMonth()-1);
+    calYear = d.getFullYear();
+    calMonth = d.getMonth();
+    renderCalendar();
+  });
+  document.getElementById("calNextBtn").addEventListener("click", ()=>{
+    const d = new Date(calYear, calMonth, 1);
+    d.setMonth(d.getMonth()+1);
+    calYear = d.getFullYear();
+    calMonth = d.getMonth();
+    renderCalendar();
+  });
+  document.getElementById("calTodayBtn").addEventListener("click", ()=>{
+    const now = new Date();
+    calYear = now.getFullYear();
+    calMonth = now.getMonth();
+    renderCalendar();
+  });
+  document.getElementById("calModeSwitch").addEventListener("click", ()=>{
+    calShowPercent = !calShowPercent;
+    renderCalendar();
+  });
 
-// Goal inputs
-document.getElementById("goalDailyInput").addEventListener("change", ()=>{
-const v = Number(document.getElementById("goalDailyInput").value);
-if (Number.isFinite(v) && v > 0) setGoal("daily", v);
-});
-document.getElementById("goalWeeklyInput").addEventListener("change", ()=>{
-const v = Number(document.getElementById("goalWeeklyInput").value);
-if (Number.isFinite(v) && v > 0) setGoal("weekly", v);
-});
-document.getElementById("goalMonthlyInput").addEventListener("change", ()=>{
-const v = Number(document.getElementById("goalMonthlyInput").value);
-if (Number.isFinite(v) && v > 0) setGoal("monthly", v);
-});
+  // insight refresh
+  document.getElementById("insightRefreshBtn").addEventListener("click", ()=>{
+    renderFocus();
+  });
 
-// Presets
-document.querySelectorAll(".presetBtn").forEach(btn=>{
-btn.addEventListener("click", ()=>{
-const period = btn.getAttribute("data-goal");
-const val = Number(btn.getAttribute("data-val"));
-if (GOAL_PERIODS.includes(period) && Number.isFinite(val) && val > 0){
-setGoal(period, val);
-}
-});
-});
-
-// Calendar buttons
-document.getElementById("calPrevBtn").addEventListener("click", ()=>{
-const d = new Date(calYear, calMonth, 1);
-d.setMonth(d.getMonth()-1);
-calYear = d.getFullYear();
-calMonth = d.getMonth();
-renderCalendar();
-});
-document.getElementById("calNextBtn").addEventListener("click", ()=>{
-const d = new Date(calYear, calMonth, 1);
-d.setMonth(d.getMonth()+1);
-calYear = d.getFullYear();
-calMonth = d.getMonth();
-renderCalendar();
-});
-document.getElementById("calTodayBtn").addEventListener("click", ()=>{
-const now = new Date();
-calYear = now.getFullYear();
-calMonth = now.getMonth();
-renderCalendar();
-});
-document.getElementById("calModeSwitch").addEventListener("click", ()=>{
-calShowPercent = !calShowPercent;
-renderCalendar();
-});
-
-// Resize
-window.addEventListener("resize", ()=>{
-if (document.getElementById("page-analytics").classList.contains("active")){
-renderAnalytics();
-}
-if (document.getElementById("page-focus").classList.contains("active")){
-drawDashboardMiniCharts();
-}
-});
+  window.addEventListener("resize", ()=>{
+    if (document.getElementById("page-analytics").classList.contains("active")){
+      renderAnalytics();
+    }
+  });
 }
 
 // === HELPERS ===
 function fmtDate(d){
-const opts = { day:"2-digit", month:"short", year:"numeric" };
-return d.toLocaleDateString(undefined, opts);
+  const opts = { day:"2-digit", month:"short", year:"numeric" };
+  return d.toLocaleDateString(undefined, opts);
 }
 function fmtDateTime(d){
-const date = fmtDate(d);
-const hh = String(d.getHours()).padStart(2,"0");
-const mm = String(d.getMinutes()).padStart(2,"0");
-return `${date} ${hh}:${mm}`;
+  const date = fmtDate(d);
+  const hh = String(d.getHours()).padStart(2,"0");
+  const mm = String(d.getMinutes()).padStart(2,"0");
+  return `${date} ${hh}:${mm}`;
 }
 function formatNumber(n){
-if (!Number.isFinite(n)) return "—";
-const abs = Math.abs(n);
-if (abs >= 100) return n.toFixed(0);
-if (abs >= 10) return n.toFixed(1);
-return n.toFixed(2);
+  if (!Number.isFinite(n)) return "—";
+  const abs = Math.abs(n);
+  if (abs >= 100) return n.toFixed(0);
+  if (abs >= 10) return n.toFixed(1);
+  return n.toFixed(2);
 }
-function formatMoneyOrR(n, currencyOverride){
-if (!Number.isFinite(n)) return "—";
-
-if (hasAnyPnlData){
-const cur = currencyOverride || (localStorage.getItem(goalsStorageKeyCurrency()) || DEFAULT_CURRENCY);
-try{
-const fmt = new Intl.NumberFormat(undefined, { style:"currency", currency: cur, maximumFractionDigits: 0 });
-return fmt.format(n);
-} catch(e){
-const sign = n > 0 ? "+" : "";
-return `${sign}${cur} ${formatNumber(n)}`;
-}
-}
-const sign = n > 0 ? "+" : "";
-return `${sign}${formatNumber(n)}R`;
-}
-
 function escapeHtml(s){
-return String(s)
-.replaceAll("&","&amp;")
-.replaceAll("<","&lt;")
-.replaceAll(">","&gt;")
-.replaceAll('"',"&quot;")
-.replaceAll("'","&#039;");
+  return String(s)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
 }
 
 function monthName(m){
-const names = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-return names[m] || "—";
+  const names = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  return names[m] || "—";
 }
 
 function roundRect(ctx, x, y, w, h, r){
-const rr = Math.min(r, w/2, h/2);
-ctx.beginPath();
-ctx.moveTo(x+rr, y);
-ctx.arcTo(x+w, y, x+w, y+h, rr);
-ctx.arcTo(x+w, y+h, x, y+h, rr);
-ctx.arcTo(x, y+h, x, y, rr);
-ctx.arcTo(x, y, x+w, y, rr);
-ctx.closePath();
+  const rr = Math.min(r, w/2, h/2);
+  ctx.beginPath();
+  ctx.moveTo(x+rr, y);
+  ctx.arcTo(x+w, y, x+w, y+h, rr);
+  ctx.arcTo(x+w, y+h, x, y+h, rr);
+  ctx.arcTo(x, y+h, x, y, rr);
+  ctx.arcTo(x, y, x+w, y, rr);
+  ctx.closePath();
 }
 
 function colorMix(c1, c2, t){
-const a = parseColor(c1);
-const b = parseColor(c2);
-if (!a || !b) return c1;
-const r = Math.round(a.r + (b.r - a.r) * t);
-const g = Math.round(a.g + (b.g - a.g) * t);
-const b2 = Math.round(a.b + (b.b - a.b) * t);
-const aa = (a.a + (b.a - a.a) * t);
-return `rgba(${r},${g},${b2},${aa})`;
+  const a = parseColor(c1);
+  const b = parseColor(c2);
+  if (!a || !b) return c1;
+  const r = Math.round(a.r + (b.r - a.r) * t);
+  const g = Math.round(a.g + (b.g - a.g) * t);
+  const b2 = Math.round(a.b + (b.b - a.b) * t);
+  const aa = (a.a + (b.a - a.a) * t);
+  return `rgba(${r},${g},${b2},${aa})`;
 }
 
 function parseColor(c){
-c = String(c).trim();
-if (!c) return null;
+  c = String(c).trim();
+  if (!c) return null;
 
-if (c[0] === "#"){
-const hex = c.slice(1);
-if (hex.length === 3){
-const r = parseInt(hex[0]+hex[0],16);
-const g = parseInt(hex[1]+hex[1],16);
-const b = parseInt(hex[2]+hex[2],16);
-return {r,g,b,a:1};
-}
-if (hex.length === 6){
-const r = parseInt(hex.slice(0,2),16);
-const g = parseInt(hex.slice(2,4),16);
-const b = parseInt(hex.slice(4,6),16);
-return {r,g,b,a:1};
-}
+  if (c[0] === "#"){
+    const hex = c.slice(1);
+    if (hex.length === 3){
+      const r = parseInt(hex[0]+hex[0],16);
+      const g = parseInt(hex[1]+hex[1],16);
+      const b = parseInt(hex[2]+hex[2],16);
+      return {r,g,b,a:1};
+    }
+    if (hex.length === 6){
+      const r = parseInt(hex.slice(0,2),16);
+      const g = parseInt(hex.slice(2,4),16);
+      const b = parseInt(hex.slice(4,6),16);
+      return {r,g,b,a:1};
+    }
+  }
+
+  const m = c.match(/rgba?\(([^)]+)\)/i);
+  if (m){
+    const parts = m[1].split(",").map(x=>x.trim());
+    const r = Number(parts[0]);
+    const g = Number(parts[1]);
+    const b = Number(parts[2]);
+    const a = parts[3] !== undefined ? Number(parts[3]) : 1;
+    if ([r,g,b,a].some(x=>Number.isNaN(x))) return null;
+    return {r,g,b,a};
+  }
+
+  try{
+    const tmp = document.createElement("canvas").getContext("2d");
+    tmp.fillStyle = c;
+    const v = tmp.fillStyle;
+    const mm = v.match(/rgba?\(([^)]+)\)/i);
+    if (mm){
+      const parts = mm[1].split(",").map(x=>x.trim());
+      const r = Number(parts[0]);
+      const g = Number(parts[1]);
+      const b = Number(parts[2]);
+      const a = parts[3] !== undefined ? Number(parts[3]) : 1;
+      if ([r,g,b,a].some(x=>Number.isNaN(x))) return null;
+      return {r,g,b,a};
+    }
+  } catch(e){}
+
+  return null;
 }
 
-const m = c.match(/rgba?\(([^)]+)\)/i);
-if (m){
-const parts = m[1].split(",").map(x=>x.trim());
-const r = Number(parts[0]);
-const g = Number(parts[1]);
-const b = Number(parts[2]);
-const a = parts[3] !== undefined ? Number(parts[3]) : 1;
-if ([r,g,b,a].some(x=>Number.isNaN(x))) return null;
-return {r,g,b,a};
+function cap(s){
+  s = String(s || "");
+  if (!s) return "";
+  return s[0].toUpperCase() + s.slice(1);
 }
-
-try{
-const tmp = document.createElement("canvas").getContext("2d");
-tmp.fillStyle = c;
-const v = tmp.fillStyle;
-const mm = v.match(/rgba?\(([^)]+)\)/i);
-if (mm){
-const parts = mm[1].split(",").map(x=>x.trim());
-const r = Number(parts[0]);
-const g = Number(parts[1]);
-const b = Number(parts[2]);
-const a = parts[3] !== undefined ? Number(parts[3]) : 1;
-if ([r,g,b,a].some(x=>Number.isNaN(x))) return null;
-return {r,g,b,a};
-}
-} catch(e){}
-
-return null;
+function clamp(v, a, b){
+  return Math.min(b, Math.max(a, v));
 }
 
 // === INIT ===
 (async function init(){
-initTheme();
-initRouting();
-wireUI();
+  initTheme();
+  initRouting();
+  wireUI();
 
-const ok = await requireAuth();
-if (!ok) return;
+  const ok = await requireAuth();
+  if (!ok) return;
 
-const now = new Date();
-calYear = now.getFullYear();
-calMonth = now.getMonth();
+  const now = new Date();
+  calYear = now.getFullYear();
+  calMonth = now.getMonth();
 
-await loadTrades();
-setActiveRoute(location.hash.replace("#","") || "focus");
+  await loadTrades();
+  setActiveRoute(location.hash.replace("#","") || "focus");
 })();
 </script>
 </body>
