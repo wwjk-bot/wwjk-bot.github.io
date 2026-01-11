@@ -1,118 +1,331 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Sessionly - performance system for day traders</title>
-  <meta name="description" content="Sessionly is a mobile-first trading journal + habits system for day traders." />
-  <style>
-    :root{
-      --bg:#0b0f14;
-      --card:#111826;
-      --text:#e8eef7;
-      --muted:#a8b3c5;
-      --accent:#3ddc97;
-      --line:#22304a;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-      background: radial-gradient(1200px 600px at 20% 0%, rgba(61,220,151,.12), transparent 60%),
-                  radial-gradient(900px 500px at 80% 20%, rgba(61,220,151,.08), transparent 60%),
-                  var(--bg);
-      color:var(--text);
-      padding:28px;
-    }
-    .top{display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:24px;}
-    .brand{display:flex; align-items:center; gap:10px; font-weight:800;}
-    .dot{width:10px; height:10px; border-radius:999px; background:var(--accent); box-shadow:0 0 0 6px rgba(61,220,151,.10);}
-    .nav{display:flex; gap:10px; flex-wrap:wrap;}
-    .pill{border:1px solid rgba(34,48,74,.9); background: rgba(11,15,20,.45); padding:8px 12px; border-radius:999px; color:var(--text); text-decoration:none; font-weight:600;}
-    .wrap{max-width:1080px; margin:0 auto;}
-    .hero{display:grid; grid-template-columns: 1.1fr .9fr; gap:18px; align-items:stretch;}
-    @media (max-width: 920px){ .hero{grid-template-columns:1fr;} }
-    .card{
-      background: rgba(17,24,38,.88);
-      border:1px solid rgba(34,48,74,.9);
-      border-radius:18px;
-      padding:22px;
-      box-shadow: 0 20px 60px rgba(0,0,0,.45);
-    }
-    h1{font-size:56px; line-height:1.02; margin:0 0 12px 0;}
-    @media (max-width: 520px){ h1{font-size:40px;} }
-    p{margin:0; color:var(--muted); line-height:1.5; font-size:16px;}
-    .btns{display:flex; gap:10px; flex-wrap:wrap; margin-top:16px;}
-    .btn{
-      display:inline-flex; align-items:center; justify-content:center;
-      padding:12px 14px; border-radius:14px; font-weight:800; text-decoration:none;
-      border:1px solid rgba(34,48,74,.9);
-      background: rgba(11,15,20,.55); color:var(--text);
-    }
-    .btn.primary{background: var(--accent); color:#0b0f14; border-color: transparent;}
-    .mock{min-height:360px; display:flex; align-items:center; justify-content:center; color:rgba(232,238,247,.45); font-weight:800; border:1px dashed rgba(34,48,74,.9);}
-    .mini{display:grid; grid-template-columns: repeat(3, 1fr); gap:12px; margin-top:14px;}
-    @media (max-width: 920px){ .mini{grid-template-columns:1fr;} }
-    .mini .card{padding:14px;}
-    .mini h3{margin:0 0 6px 0;}
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sessionly — Trade Less. Trade Better.</title>
+
+<style>
+:root{
+  --bg:#070b12;
+  --panel:#0d1422;
+  --panel-2:#111a2e;
+  --border:#1f2a44;
+  --text:#e6ebf5;
+  --muted:#9aa4bf;
+  --accent:#4cffb3;
+  --danger:#ff5c5c;
+  --gold:#ffd166;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+  background:radial-gradient(1200px 600px at 50% -200px,#102040,#070b12);
+  color:var(--text);
+}
+
+a{text-decoration:none;color:inherit}
+
+.container{
+  max-width:1200px;
+  margin:0 auto;
+  padding:48px 24px;
+}
+
+/* NAV */
+nav{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.logo{
+  font-weight:700;
+  letter-spacing:.4px;
+}
+.nav-actions a{
+  margin-left:12px;
+  padding:10px 16px;
+  border-radius:10px;
+  font-size:14px;
+}
+.btn{
+  border:1px solid var(--border);
+}
+.btn-primary{
+  background:var(--accent);
+  color:#03110a;
+  font-weight:600;
+  border:none;
+}
+
+/* HERO */
+.hero{
+  display:grid;
+  grid-template-columns:1.1fr .9fr;
+  gap:40px;
+  margin-top:80px;
+}
+.hero h1{
+  font-size:52px;
+  line-height:1.05;
+  margin:0 0 16px;
+}
+.hero p{
+  color:var(--muted);
+  font-size:18px;
+  max-width:520px;
+}
+.hero-actions{
+  margin-top:32px;
+}
+.hero-actions a{
+  margin-right:12px;
+  padding:14px 22px;
+  border-radius:14px;
+  font-weight:600;
+}
+.preview{
+  background:linear-gradient(180deg,#0e1628,#0a1020);
+  border:1px solid var(--border);
+  border-radius:18px;
+  height:320px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:var(--muted);
+}
+
+/* TRUST */
+.trust{
+  margin-top:80px;
+  text-align:center;
+  color:var(--muted);
+}
+.trust strong{color:var(--text)}
+.stars{color:var(--gold)}
+
+/* FEATURES */
+.features{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:24px;
+  margin-top:80px;
+}
+.card{
+  background:linear-gradient(180deg,#0e1628,#0a1020);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:24px;
+}
+.card h3{
+  margin:0 0 8px;
+}
+.card p{
+  margin:0;
+  color:var(--muted);
+  font-size:14px;
+}
+
+/* PRICING */
+.pricing{
+  margin-top:100px;
+}
+.pricing h2{
+  text-align:center;
+  font-size:40px;
+  margin-bottom:12px;
+}
+.pricing p{
+  text-align:center;
+  color:var(--muted);
+  margin-bottom:48px;
+}
+.plans{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:24px;
+}
+.plan{
+  background:linear-gradient(180deg,#0e1628,#0a1020);
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:28px;
+  position:relative;
+}
+.plan.popular{
+  border:1px solid var(--accent);
+  box-shadow:0 0 0 1px rgba(76,255,179,.3);
+}
+.badge{
+  position:absolute;
+  top:-12px;
+  left:50%;
+  transform:translateX(-50%);
+  background:var(--accent);
+  color:#03110a;
+  padding:6px 12px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:700;
+}
+.price{
+  font-size:36px;
+  font-weight:700;
+}
+.plan ul{
+  list-style:none;
+  padding:0;
+  margin:20px 0;
+}
+.plan li{
+  margin-bottom:10px;
+  color:var(--muted);
+  font-size:14px;
+}
+.plan a{
+  display:block;
+  text-align:center;
+  padding:14px;
+  border-radius:14px;
+  font-weight:600;
+  background:var(--accent);
+  color:#03110a;
+}
+
+/* CTA */
+.cta{
+  margin:120px 0 80px;
+  text-align:center;
+}
+.cta h2{
+  font-size:42px;
+}
+.cta p{
+  color:var(--muted);
+  margin:16px 0 32px;
+}
+footer{
+  text-align:center;
+  color:var(--muted);
+  font-size:13px;
+  padding-bottom:40px;
+}
+
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr}
+  .features,.plans{grid-template-columns:1fr}
+  .hero h1{font-size:40px}
+}
+</style>
 </head>
+
 <body>
-  <div class="wrap">
-    <div class="top">
-      <div class="brand"><span class="dot"></span>Sessionly</div>
-      <div class="nav">
-       <a class="pill" href="./login.html">open app</a>
-        <a class="pill" href="#features">features</a>
-        <a class="pill" href="#pricing">pricing</a>
-      </div>
-    </div>
 
-    <div class="hero">
-      <div class="card">
-        <h1>trade your best hours<br/>not your whole day</h1>
-        <p>Sessionly is a performance system for day traders log trades fast tag mistakes track sessions and get a weekly what to fix next report</p>
-        <div class="btns">
-          <a class="btn primary" href="./login.html">open the app</a>
-          <a class="btn" href="#features">see what it does</a>
-        </div>
+<div class="container">
+<nav>
+  <div class="logo">● Sessionly</div>
+  <div class="nav-actions">
+    <a href="login.html" class="btn">log in</a>
+    <a href="app/index.html" class="btn-primary">open app</a>
+  </div>
+</nav>
 
-        <div class="mini" id="features">
-          <div class="card">
-            <h3>1 minute trade logging</h3>
-            <p>tap to log symbol direction rr pnl notes and screenshots</p>
-          </div>
-          <div class="card">
-            <h3>session breakdown</h3>
-            <p>see what happens in london ny and your best and worst hours</p>
-          </div>
-          <div class="card">
-            <h3>weekly plan</h3>
-            <p>a simple summary plus one clear focus for next week</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="mock">sessionly app preview</div>
-      </div>
+<section class="hero">
+  <div>
+    <h1>trade your best hours<br>not your whole day</h1>
+    <p>
+      Sessionly is a performance system for traders who want fewer mistakes,
+      clearer rules, and real feedback — powered by AI coaching.
+    </p>
+    <div class="hero-actions">
+      <a href="login.html" class="btn-primary">get started</a>
+      <a href="#pricing" class="btn">see pricing</a>
     </div>
   </div>
+  <div class="preview">
+    app preview
+  </div>
+</section>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-    const supabaseUrl = "https://oucikdsngvdhimquclcz.supabase.co";
-    const supabaseKey = "sb_publishable_gMETcAB_TRLGd8hqx48KRA_yXxE7U6v";
-    const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
+<div class="trust">
+  trusted by <strong>serious traders</strong><br>
+  <span class="stars">★★★★★</span> performance-focused feedback
+</div>
 
-    async function kickToDashboardIfLoggedIn() {
-      const { data } = await sb.auth.getSession();
-      if (data && data.session) {
-        window.location.href = "./dashboard.html";
-      }
-    }
+<section class="features">
+  <div class="card">
+    <h3>1-minute trade logging</h3>
+    <p>log trades fast without breaking focus</p>
+  </div>
+  <div class="card">
+    <h3>AI coaching</h3>
+    <p>understand patterns mistakes and what to fix next</p>
+  </div>
+  <div class="card">
+    <h3>session intelligence</h3>
+    <p>see which hours make or break your performance</p>
+  </div>
+</section>
 
-    kickToDashboardIfLoggedIn();
-  </script>
+<section id="pricing" class="pricing">
+  <h2>pricing</h2>
+  <p>less than one bad trading day</p>
+
+  <div class="plans">
+    <div class="plan">
+      <h3>starter</h3>
+      <div class="price">$25</div>
+      <ul>
+        <li>manual trade logging</li>
+        <li>calendar heatmap</li>
+        <li>basic stats</li>
+        <li>light AI summaries</li>
+      </ul>
+      <a href="login.html">start</a>
+    </div>
+
+    <div class="plan popular">
+      <div class="badge">most popular</div>
+      <h3>premium</h3>
+      <div class="price">$70</div>
+      <ul>
+        <li>full AI coaching</li>
+        <li>weekly improvement report</li>
+        <li>session breakdown</li>
+        <li>mistake clustering</li>
+        <li>rules and streaks</li>
+      </ul>
+      <a href="login.html">start</a>
+    </div>
+
+    <div class="plan">
+      <h3>professional</h3>
+      <div class="price">$125</div>
+      <ul>
+        <li>multi-account analysis</li>
+        <li>strategy playbooks</li>
+        <li>deep AI diagnostics</li>
+        <li>priority features</li>
+        <li>future broker imports</li>
+      </ul>
+      <a href="login.html">start</a>
+    </div>
+  </div>
+</section>
+
+<section class="cta">
+  <h2>stop guessing. start improving.</h2>
+  <p>your performance system is one login away</p>
+  <a href="login.html" class="btn-primary">open sessionly</a>
+</section>
+
+<footer>
+  © sessionly
+</footer>
+
+</div>
+
 </body>
 </html>
