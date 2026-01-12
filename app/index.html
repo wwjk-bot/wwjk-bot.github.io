@@ -62,35 +62,21 @@
     }
     button.primary{background:var(--accent); color:#0b0f14; border-color: transparent;}
     .msg{margin-top:10px; color:var(--muted); font-size:13px;}
-    .err{color:var(--danger); font-weight:700;}
-    .ok{color:var(--accent); font-weight:700;}
+    .err{color:var(--danger); font-weight:800;}
+    .ok{color:var(--accent); font-weight:800;}
     table{width:100%; border-collapse:collapse; margin-top:10px;}
     th,td{padding:10px 8px; border-bottom:1px solid rgba(34,48,74,.7); font-size:13px;}
     th{color:var(--muted); text-align:left; font-weight:800;}
     .toprow{display:flex; align-items:center; justify-content:space-between; gap:12px;}
     .link{color:var(--text); text-decoration:underline;}
     .small{font-size:12px; color:var(--muted);}
-    .pill{
-      display:inline-flex; align-items:center; gap:8px;
-      padding:8px 10px;
-      border-radius:999px;
-      border:1px solid rgba(34,48,74,.9);
-      background: rgba(11,15,20,.35);
-      color: rgba(232,238,247,.92);
-      font-weight:900;
-      font-size:12px;
-      text-decoration:none;
-    }
   </style>
 </head>
 <body>
   <div class="wrap">
     <div class="toprow">
       <div class="brand"><span class="dot"></span>Sessionly</div>
-      <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-        <a class="pill" href="../index.html">back to site</a>
-        <a class="pill" href="./focus.html" title="focus page (coming next)">focus</a>
-      </div>
+      <a class="link" href="https://wwjk-bot.github.io/">back to site</a>
     </div>
 
     <div class="grid">
@@ -99,21 +85,22 @@
         <div class="row">
           <div>
             <label>email</label>
-            <input id="email" type="email" placeholder="you@email.com" autocomplete="email" />
+            <input id="email" type="email" placeholder="you@email.com" />
           </div>
           <div>
             <label>password</label>
-            <input id="password" type="password" placeholder="min 6 characters" autocomplete="current-password" />
+            <input id="password" type="password" placeholder="min 6 characters" />
           </div>
         </div>
 
         <div class="btns">
-          <button class="primary" id="loginBtn" type="button">login</button>
-          <button id="signupBtn" type="button">create account</button>
-          <button id="logoutBtn" type="button" style="display:none;">logout</button>
+          <button class="primary" id="loginBtn">login</button>
+          <button id="signupBtn">create account</button>
+          <button id="logoutBtn" style="display:none;">logout</button>
         </div>
 
         <div class="msg" id="authMsg">accounts are free for now</div>
+        <div class="small" id="debug"></div>
       </div>
 
       <div class="card" id="appCard" style="display:none;">
@@ -148,7 +135,7 @@
         <textarea id="notes" placeholder="what happened what to fix"></textarea>
 
         <div class="btns">
-          <button class="primary" id="addTradeBtn" type="button">add trade</button>
+          <button class="primary" id="addTradeBtn">add trade</button>
         </div>
 
         <div class="msg" id="dashMsg"></div>
@@ -173,11 +160,10 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    // ---------- supabase ----------
+    // IMPORTANT:
+    // SUPABASE_ANON_KEY MUST be the anon public key that starts with "eyJ..."
+    // from Supabase Dashboard -> Project Settings -> API -> anon public
     const SUPABASE_URL = "https://oucikdsngvdhimquclcz.supabase.co";
-
-    // IMPORTANT: paste the anon public key from Supabase -> Project Settings -> API
-    // it should start with "eyJ"
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im91Y2lrZHNuZ3ZkaGltcXVjbGN6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc4NzI0MDcsImV4cCI6MjA4MzQ0ODQwN30.5OqS8vRIVMXC5jvVfPVbxgMSOtM_93-1YtclOLWeAws";
 
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -188,20 +174,21 @@
     const appCard  = $("appCard");
 
     function setAuthMsg(text, type){
-      $("authMsg").innerHTML =
-        type === "err" ? `<span class="err">${text}</span>` :
-        type === "ok"  ? `<span class="ok">${text}</span>` : text;
+      $("authMsg").innerHTML = type === "err" ? `<span class="err">${text}</span>` :
+                               type === "ok"  ? `<span class="ok">${text}</span>` : text;
     }
     function setDashMsg(text, type){
-      $("dashMsg").innerHTML =
-        type === "err" ? `<span class="err">${text}</span>` :
-        type === "ok"  ? `<span class="ok">${text}</span>` : text;
+      $("dashMsg").innerHTML = type === "err" ? `<span class="err">${text}</span>` :
+                               type === "ok"  ? `<span class="ok">${text}</span>` : text;
+    }
+    function setDebug(text){
+      $("debug").textContent = text || "";
     }
 
     async function refreshUI(){
       const { data, error } = await supabaseClient.auth.getSession();
       if(error){
-        setAuthMsg(error.message || "session error", "err");
+        setAuthMsg(error.message, "err");
         return;
       }
 
@@ -223,37 +210,75 @@
 
     async function login(){
       setAuthMsg("logging in…");
-      const email = $("email").value.trim();
-      const password = $("password").value;
+      setDebug("");
 
-      if(!email){ setAuthMsg("enter email", "err"); return; }
-      if(!password || password.length < 6){ setAuthMsg("enter password (min 6)", "err"); return; }
+      try{
+        const email = $("email").value.trim();
+        const password = $("password").value;
 
-      const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
-      if(error){ setAuthMsg(error.message, "err"); return; }
+        if(!email) { setAuthMsg("enter email", "err"); return; }
+        if(!password) { setAuthMsg("enter password", "err"); return; }
 
-      setAuthMsg("logged in", "ok");
-      await refreshUI();
+        // hard timeout so it can’t spin forever
+        const timeout = new Promise((_, rej) =>
+          setTimeout(() => rej(new Error("timeout: no response from supabase (check anon key + auth url settings)")), 8000)
+        );
+
+        const req = supabaseClient.auth.signInWithPassword({ email, password });
+        const res = await Promise.race([req, timeout]);
+
+        if(res?.error){
+          setAuthMsg(res.error.message || "login error", "err");
+          return;
+        }
+
+        setAuthMsg("logged in", "ok");
+        await refreshUI();
+      }catch(e){
+        setAuthMsg(e?.message || String(e), "err");
+      }
     }
 
     async function signup(){
       setAuthMsg("creating account…");
-      const email = $("email").value.trim();
-      const password = $("password").value;
+      setDebug("");
 
-      if(!email){ setAuthMsg("enter email", "err"); return; }
-      if(!password || password.length < 6){ setAuthMsg("password must be at least 6 characters", "err"); return; }
+      try{
+        const email = $("email").value.trim();
+        const password = $("password").value;
 
-      const { error } = await supabaseClient.auth.signUp({
-        email,
-        password,
-        options: {
-          emailRedirectTo: "https://wwjk-bot.github.io/confirm.html"
+        if(!email) { setAuthMsg("enter email", "err"); return; }
+        if(!password || password.length < 6) { setAuthMsg("password must be 6+ chars", "err"); return; }
+
+        // Make sure these are allowed in Supabase Auth URL configuration:
+        // Site URL: https://wwjk-bot.github.io
+        // Redirect URLs include:
+        // - https://wwjk-bot.github.io/confirm.html
+        // - https://wwjk-bot.github.io/app/index.html
+        const { data, error } = await supabaseClient.auth.signUp({
+          email,
+          password,
+          options: {
+            emailRedirectTo: "https://wwjk-bot.github.io/confirm.html"
+          }
+        });
+
+        if(error){
+          setAuthMsg(error.message, "err");
+          return;
         }
-      });
 
-      if(error){ setAuthMsg(error.message, "err"); return; }
-      setAuthMsg("check your email to confirm, then come back and log in", "ok");
+        // if email confirmations are OFF, user may already be signed in
+        if(data?.session){
+          setAuthMsg("account created and signed in", "ok");
+          await refreshUI();
+          return;
+        }
+
+        setAuthMsg("check your email to confirm, then you’ll be sent into the app", "ok");
+      }catch(e){
+        setAuthMsg(e?.message || String(e), "err");
+      }
     }
 
     async function logout(){
@@ -264,7 +289,11 @@
     async function addTrade(){
       setDashMsg("saving…");
 
-      const { data } = await supabaseClient.auth.getSession();
+      const { data, error: sesErr } = await supabaseClient.auth.getSession();
+      if(sesErr){
+        setDashMsg(sesErr.message, "err");
+        return;
+      }
       const session = data?.session;
       if(!session){ setDashMsg("not logged in", "err"); return; }
 
@@ -293,7 +322,7 @@
     function renderTrades(list){
       const rows = $("rows");
       rows.innerHTML = "";
-      (list || []).forEach(t => {
+      list.forEach(t => {
         const tr = document.createElement("tr");
         const d = new Date(t.trade_date || t.created_at || Date.now());
         tr.innerHTML = `
@@ -323,12 +352,19 @@
       setDashMsg((data && data.length) ? "" : "no trades yet. add your first trade on the left.");
     }
 
+    // wire up UI
     $("loginBtn").addEventListener("click", login);
     $("signupBtn").addEventListener("click", signup);
     $("logoutBtn").addEventListener("click", logout);
     $("addTradeBtn").addEventListener("click", addTrade);
 
-    supabaseClient.auth.onAuthStateChange(() => refreshUI());
+    // show auth changes instantly
+    supabaseClient.auth.onAuthStateChange((event) => {
+      setDebug("auth event: " + event);
+      refreshUI();
+    });
+
+    // boot
     refreshUI();
   </script>
 </body>
