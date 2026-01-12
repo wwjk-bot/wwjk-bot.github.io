@@ -7,12 +7,12 @@
   <style>
     :root{
       --bg:#0b0f14;
-      --card:#111826;
       --text:#e8eef7;
       --muted:#a8b3c5;
       --accent:#3ddc97;
       --line:#22304a;
       --danger:#ff7a7a;
+      --card: rgba(17,24,38,.88);
     }
     *{box-sizing:border-box}
     body{
@@ -25,12 +25,14 @@
       padding:28px;
     }
     .wrap{max-width:1080px; margin:0 auto;}
-    .brand{display:flex; align-items:center; gap:10px; font-weight:900; margin-bottom:16px;}
+    .toprow{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:16px;}
+    .brand{display:flex; align-items:center; gap:10px; font-weight:900;}
     .dot{width:10px; height:10px; border-radius:999px; background:var(--accent); box-shadow:0 0 0 6px rgba(61,220,151,.10);}
+    .link{color:var(--text); text-decoration:underline;}
     .grid{display:grid; grid-template-columns: 1fr 1fr; gap:18px;}
     @media (max-width: 920px){ .grid{grid-template-columns:1fr;} }
     .card{
-      background: rgba(17,24,38,.88);
+      background: var(--card);
       border:1px solid rgba(34,48,74,.9);
       border-radius:18px;
       padding:18px;
@@ -62,14 +64,23 @@
     }
     button.primary{background:var(--accent); color:#0b0f14; border-color: transparent;}
     .msg{margin-top:10px; color:var(--muted); font-size:13px;}
-    .err{color:var(--danger); font-weight:700;}
-    .ok{color:var(--accent); font-weight:700;}
+    .err{color:var(--danger); font-weight:800;}
+    .ok{color:var(--accent); font-weight:800;}
     table{width:100%; border-collapse:collapse; margin-top:10px;}
     th,td{padding:10px 8px; border-bottom:1px solid rgba(34,48,74,.7); font-size:13px;}
     th{color:var(--muted); text-align:left; font-weight:800;}
-    .toprow{display:flex; align-items:center; justify-content:space-between; gap:12px;}
-    .link{color:var(--text); text-decoration:underline;}
-    .small{font-size:12px; color:var(--muted);}
+    .small{font-size:12px; color:var(--muted); margin-top:10px;}
+    .diag{
+      margin-top:12px;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.20);
+      font-size:12px;
+      color: rgba(255,255,255,.72);
+      line-height:1.45;
+      word-break:break-word;
+    }
   </style>
 </head>
 <body>
@@ -82,6 +93,7 @@
     <div class="grid">
       <div class="card" id="authCard">
         <h2>login</h2>
+
         <div class="row">
           <div>
             <label>email</label>
@@ -100,6 +112,7 @@
         </div>
 
         <div class="msg" id="authMsg">accounts are free for now</div>
+        <div class="diag" id="diagBox" style="display:none;"></div>
       </div>
 
       <div class="card" id="appCard" style="display:none;">
@@ -157,36 +170,58 @@
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- use UMD build (reliable for plain HTML) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.1/dist/umd/supabase.min.js"></script>
   <script>
-    // IMPORTANT:
-    // Use the Supabase "anon public" key from Project Settings -> API.
-    // If you pasted a key that starts with "sb_publishable_", replace it with the anon public key.
     const SUPABASE_URL = "https://oucikdsngvdhimquclcz.supabase.co";
     const SUPABASE_ANON_KEY = "sb_publishable_gMETcAB_TRLGd8hqx48KRA_yXxE7U6v";
 
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
     const $ = (id) => document.getElementById(id);
+
+    function setBox(elId, text, type){
+      const el = $(elId);
+      el.innerHTML = type === "err" ? `<span class="err">${text}</span>` :
+                     type === "ok"  ? `<span class="ok">${text}</span>` : text;
+    }
+    function showDiag(text){
+      const d = $("diagBox");
+      d.style.display = "block";
+      d.textContent = text;
+    }
+    function hideDiag(){
+      $("diagBox").style.display = "none";
+      $("diagBox").textContent = "";
+    }
+
+    // timeout helper so it never hangs forever
+    async function withTimeout(promise, ms, timeoutMsg){
+      let t;
+      const timeout = new Promise((_, reject) => {
+        t = setTimeout(() => reject(new Error(timeoutMsg || "request timed out")), ms);
+      });
+      try{
+        return await Promise.race([promise, timeout]);
+      } finally {
+        clearTimeout(t);
+      }
+    }
+
+    // create client
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true
+      }
+    });
 
     const authCard = $("authCard");
     const appCard  = $("appCard");
 
-    function setAuthMsg(text, type){
-      $("authMsg").innerHTML = type === "err" ? `<span class="err">${text}</span>` :
-                               type === "ok"  ? `<span class="ok">${text}</span>` : text;
-    }
-    function setDashMsg(text, type){
-      $("dashMsg").innerHTML = type === "err" ? `<span class="err">${text}</span>` :
-                               type === "ok"  ? `<span class="ok">${text}</span>` : text;
-    }
-
     async function refreshUI(){
       try{
-        const { data, error } = await supabaseClient.auth.getSession();
-        if(error) throw error;
-
-        const session = data?.session;
+        const res = await withTimeout(supabaseClient.auth.getSession(), 12000, "getSession timed out");
+        const session = res?.data?.session;
 
         if(session){
           authCard.style.display = "none";
@@ -198,72 +233,104 @@
           authCard.style.display = "block";
           appCard.style.display = "none";
           $("logoutBtn").style.display = "none";
-          setAuthMsg("accounts are free for now");
+          setBox("authMsg","accounts are free for now");
         }
       }catch(e){
         console.error("refreshUI error:", e);
-        setAuthMsg(e?.message || "session error (check console)", "err");
+        setBox("authMsg", (e && e.message) ? e.message : "session error", "err");
+        showDiag("refreshUI failed. open devtools console + network. most common: supabase request blocked or key is wrong.");
       }
     }
 
     async function login(){
+      hideDiag();
+
       const email = $("email").value.trim();
       const password = $("password").value;
 
-      setAuthMsg("logging in…");
-      try{
-        const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
-        if(error) throw error;
+      if(!email){ setBox("authMsg","please enter email","err"); return; }
+      if(!password){ setBox("authMsg","please enter password","err"); return; }
 
-        setAuthMsg("logged in", "ok");
+      setBox("authMsg","logging in…");
+
+      try{
+        const result = await withTimeout(
+          supabaseClient.auth.signInWithPassword({ email, password }),
+          12000,
+          "login request timed out (blocked request or wrong key/origin)"
+        );
+
+        if(result?.error){
+          throw result.error;
+        }
+
+        setBox("authMsg","logged in","ok");
         await refreshUI();
       }catch(e){
         console.error("login error:", e);
-        setAuthMsg(e?.message || "login failed (check console)", "err");
+        setBox("authMsg", (e && e.message) ? e.message : "login failed", "err");
+        showDiag(
+          "if this keeps timing out:\n" +
+          "1) your supabase key is not the anon/public key, replace it\n" +
+          "2) or the request is blocked (adblock/privacy), try incognito\n" +
+          "3) or your supabase project is paused\n" +
+          "4) check devtools -> network for a call to /auth/v1/token"
+        );
       }
     }
 
     async function signup(){
+      hideDiag();
+
       const email = $("email").value.trim();
       const password = $("password").value;
 
-      setAuthMsg("creating account…");
-      try{
-        const { error } = await supabaseClient.auth.signUp({
-          email,
-          password,
-          options: {
-            emailRedirectTo: "https://wwjk-bot.github.io/confirm.html"
-          }
-        });
-        if(error) throw error;
+      if(!email){ setBox("authMsg","please enter email","err"); return; }
+      if(!password){ setBox("authMsg","please enter password","err"); return; }
+      if(password.length < 6){ setBox("authMsg","password must be at least 6 characters","err"); return; }
 
-        setAuthMsg("check your email to confirm, then you’ll be sent into the app", "ok");
+      setBox("authMsg","creating account…");
+
+      try{
+        const result = await withTimeout(
+          supabaseClient.auth.signUp({
+            email,
+            password,
+            options: { emailRedirectTo: "https://wwjk-bot.github.io/confirm.html" }
+          }),
+          12000,
+          "signup request timed out"
+        );
+
+        if(result?.error){
+          throw result.error;
+        }
+
+        setBox("authMsg","check your email to confirm, then you’ll be sent into the app","ok");
       }catch(e){
         console.error("signup error:", e);
-        setAuthMsg(e?.message || "signup failed (check console)", "err");
+        setBox("authMsg", (e && e.message) ? e.message : "signup failed", "err");
       }
     }
 
     async function logout(){
+      hideDiag();
       try{
-        const { error } = await supabaseClient.auth.signOut();
-        if(error) throw error;
+        const res = await withTimeout(supabaseClient.auth.signOut(), 12000, "logout timed out");
+        if(res?.error) throw res.error;
         await refreshUI();
       }catch(e){
         console.error("logout error:", e);
-        setAuthMsg(e?.message || "logout failed (check console)", "err");
+        setBox("authMsg", (e && e.message) ? e.message : "logout failed", "err");
       }
     }
 
     async function addTrade(){
-      setDashMsg("saving…");
+      setBox("dashMsg","saving…");
       try{
-        const { data, error: sessionErr } = await supabaseClient.auth.getSession();
-        if(sessionErr) throw sessionErr;
-
-        const session = data?.session;
-        if(!session){ setDashMsg("not logged in", "err"); return; }
+        const sess = await withTimeout(supabaseClient.auth.getSession(), 12000, "getSession timed out");
+        const session = sess?.data?.session;
+        if(!session){ setBox("dashMsg","not logged in","err"); return; }
 
         const trade = {
           user_id: session.user.id,
@@ -275,26 +342,26 @@
           notes: $("notes").value.trim()
         };
 
-        const { error } = await supabaseClient.from("trades").insert(trade);
-        if(error) throw error;
+        const ins = await withTimeout(supabaseClient.from("trades").insert(trade), 12000, "insert timed out");
+        if(ins?.error) throw ins.error;
 
         $("symbol").value = "";
         $("rr").value = "";
         $("pnl").value = "";
         $("notes").value = "";
 
-        setDashMsg("saved", "ok");
+        setBox("dashMsg","saved","ok");
         await loadTrades();
       }catch(e){
         console.error("addTrade error:", e);
-        setDashMsg(e?.message || "save failed (check console)", "err");
+        setBox("dashMsg", (e && e.message) ? e.message : "save failed", "err");
       }
     }
 
     function renderTrades(list){
       const rows = $("rows");
       rows.innerHTML = "";
-      list.forEach(t => {
+      (list || []).forEach(t => {
         const tr = document.createElement("tr");
         const d = new Date(t.trade_date || t.created_at || Date.now());
         tr.innerHTML = `
@@ -309,22 +376,26 @@
     }
 
     async function loadTrades(){
-      setDashMsg("loading…");
+      setBox("dashMsg","loading…");
       try{
-        const { data, error } = await supabaseClient
-          .from("trades")
-          .select("*")
-          .order("trade_date", { ascending: false })
-          .order("created_at", { ascending: false })
-          .limit(50);
+        const q = await withTimeout(
+          supabaseClient
+            .from("trades")
+            .select("*")
+            .order("trade_date", { ascending: false })
+            .order("created_at", { ascending: false })
+            .limit(50),
+          12000,
+          "loadTrades timed out"
+        );
 
-        if(error) throw error;
+        if(q?.error) throw q.error;
 
-        renderTrades(data || []);
-        setDashMsg((data && data.length) ? "" : "no trades yet. add your first trade on the left.");
+        renderTrades(q.data || []);
+        setBox("dashMsg", (q.data && q.data.length) ? "" : "no trades yet. add your first trade on the left.");
       }catch(e){
         console.error("loadTrades error:", e);
-        setDashMsg(e?.message || "load failed (check console)", "err");
+        setBox("dashMsg", (e && e.message) ? e.message : "load failed", "err");
       }
     }
 
@@ -338,4 +409,3 @@
   </script>
 </body>
 </html>
-
