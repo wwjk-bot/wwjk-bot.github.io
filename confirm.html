@@ -99,10 +99,10 @@
 
         H1.innerHTML = `<span class="ok">email confirmed</span>`;
         P.textContent = "taking you to your dashboard…";
-        setMsg(`redirecting to <a class="link" href="https://wwjk-bot.github.io/app/">https://wwjk-bot.github.io/app/</a> in 2 seconds`);
+        setMsg(`redirecting to <a class="link" href="./dashboard.html">dashboard</a> in 2 seconds`);
 
         setTimeout(() => {
-          window.location.href = "https://wwjk-bot.github.io/app/";
+          window.location.href = "./dashboard.html";
         }, 2000);
 
       }catch(e){
