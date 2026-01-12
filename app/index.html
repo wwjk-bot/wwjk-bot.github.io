@@ -159,8 +159,12 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
+    // IMPORTANT:
+    // Use the Supabase "anon public" key from Project Settings -> API.
+    // If you pasted a key that starts with "sb_publishable_", replace it with the anon public key.
     const SUPABASE_URL = "https://oucikdsngvdhimquclcz.supabase.co";
     const SUPABASE_ANON_KEY = "sb_publishable_gMETcAB_TRLGd8hqx48KRA_yXxE7U6v";
+
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     const $ = (id) => document.getElementById(id);
@@ -178,85 +182,113 @@
     }
 
     async function refreshUI(){
-      const { data } = await supabaseClient.auth.getSession();
-      const session = data?.session;
+      try{
+        const { data, error } = await supabaseClient.auth.getSession();
+        if(error) throw error;
 
-      if(session){
-        authCard.style.display = "none";
-        appCard.style.display = "block";
-        $("logoutBtn").style.display = "inline-block";
-        $("hint").textContent = "signed in as " + session.user.email;
-        await loadTrades();
-      }else{
-        authCard.style.display = "block";
-        appCard.style.display = "none";
-        $("logoutBtn").style.display = "none";
-        setAuthMsg("accounts are free for now");
+        const session = data?.session;
+
+        if(session){
+          authCard.style.display = "none";
+          appCard.style.display = "block";
+          $("logoutBtn").style.display = "inline-block";
+          $("hint").textContent = "signed in as " + session.user.email;
+          await loadTrades();
+        }else{
+          authCard.style.display = "block";
+          appCard.style.display = "none";
+          $("logoutBtn").style.display = "none";
+          setAuthMsg("accounts are free for now");
+        }
+      }catch(e){
+        console.error("refreshUI error:", e);
+        setAuthMsg(e?.message || "session error (check console)", "err");
       }
     }
 
     async function login(){
-      setAuthMsg("logging in…");
       const email = $("email").value.trim();
       const password = $("password").value;
 
-      const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
-      if(error){ setAuthMsg(error.message, "err"); return; }
-      setAuthMsg("logged in", "ok");
-      await refreshUI();
+      setAuthMsg("logging in…");
+      try{
+        const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+        if(error) throw error;
+
+        setAuthMsg("logged in", "ok");
+        await refreshUI();
+      }catch(e){
+        console.error("login error:", e);
+        setAuthMsg(e?.message || "login failed (check console)", "err");
+      }
     }
 
     async function signup(){
-      setAuthMsg("creating account…");
-
       const email = $("email").value.trim();
       const password = $("password").value;
 
-      // ✅ STEP 2 IS HERE: emailRedirectTo points to confirm.html
-      const { error } = await supabaseClient.auth.signUp({
-        email,
-        password,
-        options: {
-          emailRedirectTo: "https://wwjk-bot.github.io/confirm.html"
-        }
-      });
+      setAuthMsg("creating account…");
+      try{
+        const { error } = await supabaseClient.auth.signUp({
+          email,
+          password,
+          options: {
+            emailRedirectTo: "https://wwjk-bot.github.io/confirm.html"
+          }
+        });
+        if(error) throw error;
 
-      if(error){ setAuthMsg(error.message, "err"); return; }
-
-      setAuthMsg("check your email to confirm, then you’ll be sent into the app", "ok");
+        setAuthMsg("check your email to confirm, then you’ll be sent into the app", "ok");
+      }catch(e){
+        console.error("signup error:", e);
+        setAuthMsg(e?.message || "signup failed (check console)", "err");
+      }
     }
 
     async function logout(){
-      await supabaseClient.auth.signOut();
-      await refreshUI();
+      try{
+        const { error } = await supabaseClient.auth.signOut();
+        if(error) throw error;
+        await refreshUI();
+      }catch(e){
+        console.error("logout error:", e);
+        setAuthMsg(e?.message || "logout failed (check console)", "err");
+      }
     }
 
     async function addTrade(){
       setDashMsg("saving…");
-      const { data } = await supabaseClient.auth.getSession();
-      const session = data?.session;
-      if(!session){ setDashMsg("not logged in", "err"); return; }
+      try{
+        const { data, error: sessionErr } = await supabaseClient.auth.getSession();
+        if(sessionErr) throw sessionErr;
 
-      const trade = {
-        user_id: session.user.id,
-        trade_date: new Date().toISOString(),
-        symbol: $("symbol").value.trim(),
-        direction: $("direction").value,
-        rr: Number($("rr").value || 0),
-        pnl: Number($("pnl").value || 0),
-        notes: $("notes").value.trim()
-      };
+        const session = data?.session;
+        if(!session){ setDashMsg("not logged in", "err"); return; }
 
-      const { error } = await supabaseClient.from("trades").insert(trade);
-      if(error){ setDashMsg(error.message, "err"); return; }
+        const trade = {
+          user_id: session.user.id,
+          trade_date: new Date().toISOString(),
+          symbol: $("symbol").value.trim(),
+          direction: $("direction").value,
+          rr: Number($("rr").value || 0),
+          pnl: Number($("pnl").value || 0),
+          notes: $("notes").value.trim()
+        };
 
-      $("symbol").value = "";
-      $("rr").value = "";
-      $("pnl").value = "";
-      $("notes").value = "";
+        const { error } = await supabaseClient.from("trades").insert(trade);
+        if(error) throw error;
 
-      setDashMsg("saved", "ok");
-      await loadTrades();
+        $("symbol").value = "";
+        $("rr").value = "";
+        $("pnl").value = "";
+        $("notes").value = "";
+
+        setDashMsg("saved", "ok");
+        await loadTrades();
+      }catch(e){
+        console.error("addTrade error:", e);
+        setDashMsg(e?.message || "save failed (check console)", "err");
+      }
     }
 
     function renderTrades(list){
@@ -278,17 +310,22 @@
 
     async function loadTrades(){
       setDashMsg("loading…");
-      const { data, error } = await supabaseClient
-        .from("trades")
-        .select("*")
-        .order("trade_date", { ascending: false })
-        .order("created_at", { ascending: false })
-        .limit(50);
+      try{
+        const { data, error } = await supabaseClient
+          .from("trades")
+          .select("*")
+          .order("trade_date", { ascending: false })
+          .order("created_at", { ascending: false })
+          .limit(50);
 
-      if(error){ setDashMsg(error.message, "err"); return; }
+        if(error) throw error;
 
-      renderTrades(data || []);
-      setDashMsg((data && data.length) ? "" : "no trades yet. add your first trade on the left.");
+        renderTrades(data || []);
+        setDashMsg((data && data.length) ? "" : "no trades yet. add your first trade on the left.");
+      }catch(e){
+        console.error("loadTrades error:", e);
+        setDashMsg(e?.message || "load failed (check console)", "err");
+      }
     }
 
     $("loginBtn").addEventListener("click", login);
@@ -301,3 +338,4 @@
   </script>
 </body>
 </html>
+
