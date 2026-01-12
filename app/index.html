@@ -3,13 +3,15 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Sessionly - app</title>
+  <title>Sessionly - login</title>
   <style>
     :root{
       --bg:#0b0f14;
+      --card:#111826;
       --text:#e8eef7;
       --muted:#a8b3c5;
       --accent:#3ddc97;
+      --line:#22304a;
       --danger:#ff7a7a;
     }
     *{box-sizing:border-box}
@@ -21,12 +23,14 @@
                   var(--bg);
       color:var(--text);
       padding:28px;
+      min-height:100vh;
     }
     .wrap{max-width:1080px; margin:0 auto;}
     .toprow{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:16px;}
     .brand{display:flex; align-items:center; gap:10px; font-weight:900;}
     .dot{width:10px; height:10px; border-radius:999px; background:var(--accent); box-shadow:0 0 0 6px rgba(61,220,151,.10);}
     .link{color:var(--text); text-decoration:underline;}
+    .grid{display:grid; grid-template-columns: 1fr; gap:18px;}
     .card{
       max-width:560px;
       background: rgba(17,24,38,.88);
@@ -59,12 +63,14 @@
       cursor:pointer;
     }
     button.primary{background:var(--accent); color:#0b0f14; border-color: transparent;}
+    button:disabled{opacity:.55; cursor:not-allowed;}
     .msg{margin-top:10px; color:var(--muted); font-size:13px;}
     .err{color:var(--danger); font-weight:800;}
     .ok{color:var(--accent); font-weight:800;}
-    .small{margin-top:8px; font-size:12px; color:rgba(232,238,247,.65);}
+    .small{font-size:12px; color:var(--muted); margin-top:8px;}
   </style>
 </head>
+
 <body>
   <div class="wrap">
     <div class="toprow">
@@ -72,27 +78,30 @@
       <a class="link" href="https://wwjk-bot.github.io/">back to site</a>
     </div>
 
-    <div class="card">
-      <h2>login</h2>
+    <div class="grid">
+      <div class="card" id="authCard">
+        <h2>login</h2>
 
-      <div class="row">
-        <div>
-          <label>email</label>
-          <input id="email" type="email" placeholder="you@email.com" />
+        <div class="row">
+          <div>
+            <label>email</label>
+            <input id="email" type="email" placeholder="you@email.com" autocomplete="email" />
+          </div>
+          <div>
+            <label>password</label>
+            <input id="password" type="password" placeholder="min 6 characters" autocomplete="current-password" />
+          </div>
         </div>
-        <div>
-          <label>password</label>
-          <input id="password" type="password" placeholder="min 6 characters" />
+
+        <div class="btns">
+          <button class="primary" id="loginBtn">login</button>
+          <button id="signupBtn">create account</button>
+          <button id="logoutBtn" style="display:none;">logout</button>
         </div>
-      </div>
 
-      <div class="btns">
-        <button class="primary" id="loginBtn">login</button>
-        <button id="signupBtn">create account</button>
+        <div class="msg" id="authMsg">accounts are free for now</div>
+        <div class="small" id="sessionHint"></div>
       </div>
-
-      <div class="msg" id="authMsg">accounts are free for now</div>
-      <div class="small" id="debugLine"></div>
     </div>
   </div>
 
@@ -100,108 +109,152 @@
   <script>
     const SUPABASE_URL = "https://oucikdsngvdhimquclcz.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im91Y2lrZHNuZ3ZkaGltcXVjbGN6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc4NzI0MDcsImV4cCI6MjA4MzQ0ODQwN30.5OqS8vRIVMXC5jvVfPVbxgMSOtM_93-1YtclOLWeAws";
+
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     const $ = (id) => document.getElementById(id);
 
-    function isAbortLike(err){
-      const s = String(err || "");
-      const name = String(err?.name || "");
-      const msg = String(err?.message || "");
-      return name === "AbortError" || msg.includes("signal is aborted") || s.includes("AbortError");
-    }
+    const loginBtn = $("loginBtn");
+    const signupBtn = $("signupBtn");
+    const logoutBtn = $("logoutBtn");
 
-    // ignore abort errors globally so they don't break the page
-    window.addEventListener("unhandledrejection", (e) => {
-      if (isAbortLike(e.reason)) {
-        e.preventDefault();
-        return;
-      }
-    });
-    window.addEventListener("error", (e) => {
-      if (isAbortLike(e.error)) {
-        e.preventDefault();
-        return;
-      }
-    });
-
-    function setMsg(text, type){
+    function setAuthMsg(text, type){
       $("authMsg").innerHTML =
         type === "err" ? `<span class="err">${text}</span>` :
-        type === "ok"  ? `<span class="ok">${text}</span>` : text;
+        type === "ok"  ? `<span class="ok">${text}</span>` :
+        text;
+    }
+
+    function setBusy(b){
+      loginBtn.disabled = b;
+      signupBtn.disabled = b;
+      logoutBtn.disabled = b;
     }
 
     function goFocus(){
-      // app/ -> app/focus.html
+      // IMPORTANT
+      // this assumes you created /app/focus.html
+      // if your focus.html is in root, change to "../focus.html"
       window.location.href = "./focus.html";
     }
 
-    // 1) if already logged in, go straight to focus
-    (async () => {
-      try{
-        const { data } = await supabaseClient.auth.getSession();
-        if (data?.session) {
-          $("debugLine").textContent = "already signed in, redirecting…";
-          goFocus();
-        }
-      }catch(err){
-        if (!isAbortLike(err)) console.error(err);
+    async function refreshUI(){
+      const { data, error } = await supabaseClient.auth.getSession();
+      if(error){
+        setAuthMsg(error.message || "could not get session", "err");
+        return;
       }
-    })();
+      const session = data && data.session ? data.session : null;
 
-    // 2) after login, redirect on the auth event (no extra getSession calls)
-    supabaseClient.auth.onAuthStateChange((event, session) => {
-      console.log("auth event:", event);
-      if (session?.user?.id) $("debugLine").textContent = "session user id: " + session.user.id;
+      if(session){
+        logoutBtn.style.display = "inline-block";
+        $("sessionHint").textContent = "session user id: " + session.user.id;
 
-      if (event === "SIGNED_IN") {
-        setMsg("signed in, redirecting…", "ok");
-        setTimeout(goFocus, 150);
+        // auto send to focus
+        setTimeout(goFocus, 0);
+      }else{
+        logoutBtn.style.display = "none";
+        $("sessionHint").textContent = "";
       }
-    });
+    }
 
     async function login(){
       try{
-        setMsg("logging in…");
+        setBusy(true);
+        setAuthMsg("logging in...");
+
         const email = $("email").value.trim();
         const password = $("password").value;
 
         const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-        if (error) { setMsg(error.message, "err"); return; }
 
-        if (data?.session?.user?.id) $("debugLine").textContent = "session user id: " + data.session.user.id;
-        // do not redirect here, the auth event will handle it
-      }catch(err){
-        if (isAbortLike(err)) return;
-        setMsg("login crashed, check console", "err");
-        console.error("login crash:", err);
+        if(error){
+          setAuthMsg(error.message, "err");
+          setBusy(false);
+          return;
+        }
+
+        const userId = data && data.user ? data.user.id : "";
+        setAuthMsg("logged in", "ok");
+        if(userId) $("sessionHint").textContent = "session user id: " + userId;
+
+        // do not rely only on onAuthStateChange
+        // go immediately
+        setTimeout(goFocus, 0);
+      }catch(e){
+        // AbortError can happen if the page navigates while a request is still resolving
+        // if we are already signed in, just redirect
+        if(String(e && e.name) === "AbortError"){
+          setAuthMsg("logged in", "ok");
+          setTimeout(goFocus, 0);
+        }else{
+          setAuthMsg((e && e.message) ? e.message : "login crashed, check console", "err");
+          console.error(e);
+        }
+      }finally{
+        setBusy(false);
       }
     }
 
     async function signup(){
       try{
-        setMsg("creating account…");
+        setBusy(true);
+        setAuthMsg("creating account...");
+
         const email = $("email").value.trim();
         const password = $("password").value;
 
         const { error } = await supabaseClient.auth.signUp({
           email,
           password,
-          options: { emailRedirectTo: "https://wwjk-bot.github.io/confirm.html" }
+          options:{
+            emailRedirectTo: "https://wwjk-bot.github.io/app/confirm.html"
+          }
         });
 
-        if (error) { setMsg(error.message, "err"); return; }
-        setMsg("check your email to confirm, then you’ll be sent into the app", "ok");
-      }catch(err){
-        if (isAbortLike(err)) return;
-        setMsg("signup crashed, check console", "err");
-        console.error("signup crash:", err);
+        if(error){
+          setAuthMsg(error.message, "err");
+          setBusy(false);
+          return;
+        }
+
+        setAuthMsg("check your email to confirm, then you’ll be sent into the app", "ok");
+      }catch(e){
+        setAuthMsg((e && e.message) ? e.message : "signup crashed, check console", "err");
+        console.error(e);
+      }finally{
+        setBusy(false);
       }
     }
 
-    $("loginBtn").addEventListener("click", login);
-    $("signupBtn").addEventListener("click", signup);
+    async function logout(){
+      try{
+        setBusy(true);
+        await supabaseClient.auth.signOut();
+        setAuthMsg("logged out");
+        $("sessionHint").textContent = "";
+      }catch(e){
+        setAuthMsg((e && e.message) ? e.message : "logout crashed", "err");
+        console.error(e);
+      }finally{
+        setBusy(false);
+      }
+    }
+
+    loginBtn.addEventListener("click", login);
+    signupBtn.addEventListener("click", signup);
+    logoutBtn.addEventListener("click", logout);
+
+    // when signed in in another tab or after confirm.html
+    supabaseClient.auth.onAuthStateChange((event) => {
+      if(event === "SIGNED_IN"){
+        setTimeout(goFocus, 0);
+      }
+    });
+
+    refreshUI();
   </script>
 </body>
 </html>
+
 
