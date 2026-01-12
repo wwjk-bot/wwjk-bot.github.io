@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Sessionly - app</title>
+  <title>Sessionly - login</title>
   <style>
     :root{
       --bg:#0b0f14;
@@ -18,27 +18,30 @@
     body{
       margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-      background: radial-gradient(1200px 600px at 20% 0%, rgba(61,220,151,.12), transparent 60%),
-                  radial-gradient(900px 500px at 80% 20%, rgba(61,220,151,.08), transparent 60%),
-                  var(--bg);
+      background:
+        radial-gradient(1200px 600px at 20% 0%, rgba(61,220,151,.12), transparent 60%),
+        radial-gradient(900px 500px at 80% 20%, rgba(61,220,151,.08), transparent 60%),
+        var(--bg);
       color:var(--text);
       padding:28px;
     }
     .wrap{max-width:1080px; margin:0 auto;}
+    .toprow{display:flex; align-items:center; justify-content:space-between; gap:12px;}
     .brand{display:flex; align-items:center; gap:10px; font-weight:900; margin-bottom:16px;}
     .dot{width:10px; height:10px; border-radius:999px; background:var(--accent); box-shadow:0 0 0 6px rgba(61,220,151,.10);}
-    .grid{display:grid; grid-template-columns: 1fr 1fr; gap:18px;}
-    @media (max-width: 920px){ .grid{grid-template-columns:1fr;} }
+    .link{color:var(--text); text-decoration:underline;}
+    .grid{display:grid; grid-template-columns: 1fr; gap:18px; margin-top:12px;}
     .card{
       background: rgba(17,24,38,.88);
       border:1px solid rgba(34,48,74,.9);
       border-radius:18px;
       padding:18px;
       box-shadow: 0 20px 60px rgba(0,0,0,.45);
+      max-width:560px;
     }
     h2{margin:0 0 12px 0;}
     label{display:block; font-size:12px; color:var(--muted); margin:10px 0 6px;}
-    input, select, textarea{
+    input{
       width:100%;
       padding:12px 12px;
       border-radius:14px;
@@ -47,7 +50,6 @@
       color:var(--text);
       outline:none;
     }
-    textarea{min-height:90px; resize:vertical;}
     .row{display:grid; grid-template-columns: 1fr 1fr; gap:12px;}
     @media (max-width: 520px){ .row{grid-template-columns:1fr;} }
     .btns{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;}
@@ -64,12 +66,7 @@
     .msg{margin-top:10px; color:var(--muted); font-size:13px;}
     .err{color:var(--danger); font-weight:800;}
     .ok{color:var(--accent); font-weight:800;}
-    table{width:100%; border-collapse:collapse; margin-top:10px;}
-    th,td{padding:10px 8px; border-bottom:1px solid rgba(34,48,74,.7); font-size:13px;}
-    th{color:var(--muted); text-align:left; font-weight:800;}
-    .toprow{display:flex; align-items:center; justify-content:space-between; gap:12px;}
-    .link{color:var(--text); text-decoration:underline;}
-    .small{font-size:12px; color:var(--muted);}
+    .tiny{margin-top:8px; font-size:12px; color:rgba(255,255,255,.55);}
   </style>
 </head>
 <body>
@@ -82,14 +79,15 @@
     <div class="grid">
       <div class="card" id="authCard">
         <h2>login</h2>
+
         <div class="row">
           <div>
             <label>email</label>
-            <input id="email" type="email" placeholder="you@email.com" />
+            <input id="email" type="email" placeholder="you@email.com" autocomplete="email" />
           </div>
           <div>
             <label>password</label>
-            <input id="password" type="password" placeholder="min 6 characters" />
+            <input id="password" type="password" placeholder="min 6 characters" autocomplete="current-password" />
           </div>
         </div>
 
@@ -99,70 +97,15 @@
           <button id="logoutBtn" style="display:none;">logout</button>
         </div>
 
-        <div class="msg" id="authMsg">accounts are free for now</div>
-        <div class="small" id="debug"></div>
-      </div>
-
-      <div class="card" id="appCard" style="display:none;">
-        <h2>log a trade</h2>
-
-        <div class="row">
-          <div>
-            <label>symbol</label>
-            <input id="symbol" placeholder="XAUUSD / ES / NQ" />
-          </div>
-          <div>
-            <label>direction</label>
-            <select id="direction">
-              <option value="long">long</option>
-              <option value="short">short</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="row">
-          <div>
-            <label>rr</label>
-            <input id="rr" type="number" step="0.1" placeholder="1" />
-          </div>
-          <div>
-            <label>pnl</label>
-            <input id="pnl" type="number" step="0.01" placeholder="0" />
-          </div>
-        </div>
-
-        <label>notes</label>
-        <textarea id="notes" placeholder="what happened what to fix"></textarea>
-
-        <div class="btns">
-          <button class="primary" id="addTradeBtn">add trade</button>
-        </div>
-
-        <div class="msg" id="dashMsg"></div>
-
-        <table>
-          <thead>
-            <tr>
-              <th>date</th>
-              <th>symbol</th>
-              <th>dir</th>
-              <th>rr</th>
-              <th>pnl</th>
-            </tr>
-          </thead>
-          <tbody id="rows"></tbody>
-        </table>
-
-        <div class="small" id="hint"></div>
+        <div class="msg" id="authMsg">tip: open this page via https://wwjk-bot.github.io/app/ not github.com/blob</div>
+        <div class="tiny" id="debugMsg"></div>
       </div>
     </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    // IMPORTANT:
-    // SUPABASE_ANON_KEY MUST be the anon public key that starts with "eyJ..."
-    // from Supabase Dashboard -> Project Settings -> API -> anon public
+    // IMPORTANT: test only on https://wwjk-bot.github.io/app/ (not github.com/blob)
     const SUPABASE_URL = "https://oucikdsngvdhimquclcz.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im91Y2lrZHNuZ3ZkaGltcXVjbGN6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc4NzI0MDcsImV4cCI6MjA4MzQ0ODQwN30.5OqS8vRIVMXC5jvVfPVbxgMSOtM_93-1YtclOLWeAws";
 
@@ -170,202 +113,121 @@
 
     const $ = (id) => document.getElementById(id);
 
-    const authCard = $("authCard");
-    const appCard  = $("appCard");
+    function setMsg(text, type){
+      $("authMsg").innerHTML =
+        type === "err" ? `<span class="err">${text}</span>` :
+        type === "ok"  ? `<span class="ok">${text}</span>` : text;
+    }
 
-    function setAuthMsg(text, type){
-      $("authMsg").innerHTML = type === "err" ? `<span class="err">${text}</span>` :
-                               type === "ok"  ? `<span class="ok">${text}</span>` : text;
+    function debug(text){
+      $("debugMsg").textContent = text || "";
     }
-    function setDashMsg(text, type){
-      $("dashMsg").innerHTML = type === "err" ? `<span class="err">${text}</span>` :
-                               type === "ok"  ? `<span class="ok">${text}</span>` : text;
-    }
-    function setDebug(text){
-      $("debug").textContent = text || "";
+
+    async function goAfterLogin(){
+      // your focus.html is in the repo root, so from /app/ we go up one level
+      window.location.href = "../focus.html";
     }
 
     async function refreshUI(){
       const { data, error } = await supabaseClient.auth.getSession();
       if(error){
-        setAuthMsg(error.message, "err");
+        console.error("getSession error:", error);
+        setMsg(error.message || "session error", "err");
         return;
       }
 
       const session = data?.session;
 
       if(session){
-        authCard.style.display = "none";
-        appCard.style.display = "block";
         $("logoutBtn").style.display = "inline-block";
-        $("hint").textContent = "signed in as " + session.user.email;
-        await loadTrades();
+        setMsg("logged in, sending you to focus…", "ok");
+        await goAfterLogin();
       }else{
-        authCard.style.display = "block";
-        appCard.style.display = "none";
         $("logoutBtn").style.display = "none";
-        setAuthMsg("accounts are free for now");
+        setMsg("enter your email and password to log in");
       }
     }
 
     async function login(){
-      setAuthMsg("logging in…");
-      setDebug("");
-
       try{
+        setMsg("logging in…");
+        debug("");
+
         const email = $("email").value.trim();
         const password = $("password").value;
 
-        if(!email) { setAuthMsg("enter email", "err"); return; }
-        if(!password) { setAuthMsg("enter password", "err"); return; }
+        // quick validation
+        if(!email) return setMsg("please enter your email", "err");
+        if(!password) return setMsg("please enter your password", "err");
 
-        // hard timeout so it can’t spin forever
-        const timeout = new Promise((_, rej) =>
-          setTimeout(() => rej(new Error("timeout: no response from supabase (check anon key + auth url settings)")), 8000)
-        );
+        const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
 
-        const req = supabaseClient.auth.signInWithPassword({ email, password });
-        const res = await Promise.race([req, timeout]);
-
-        if(res?.error){
-          setAuthMsg(res.error.message || "login error", "err");
+        if(error){
+          console.error("login error:", error);
+          setMsg(error.message || "login failed", "err");
           return;
         }
 
-        setAuthMsg("logged in", "ok");
+        // if it succeeds, we should have a session
+        debug("session user id: " + (data?.user?.id || "unknown"));
         await refreshUI();
       }catch(e){
-        setAuthMsg(e?.message || String(e), "err");
+        console.error("login crash:", e);
+        setMsg("login crashed, check console", "err");
       }
     }
 
     async function signup(){
-      setAuthMsg("creating account…");
-      setDebug("");
-
       try{
+        setMsg("creating account…");
+        debug("");
+
         const email = $("email").value.trim();
         const password = $("password").value;
 
-        if(!email) { setAuthMsg("enter email", "err"); return; }
-        if(!password || password.length < 6) { setAuthMsg("password must be 6+ chars", "err"); return; }
+        if(!email) return setMsg("please enter your email", "err");
+        if(!password) return setMsg("please enter your password", "err");
 
-        // Make sure these are allowed in Supabase Auth URL configuration:
-        // Site URL: https://wwjk-bot.github.io
-        // Redirect URLs include:
-        // - https://wwjk-bot.github.io/confirm.html
-        // - https://wwjk-bot.github.io/app/index.html
-        const { data, error } = await supabaseClient.auth.signUp({
+        const { error } = await supabaseClient.auth.signUp({
           email,
           password,
           options: {
+            // confirm.html is in root
             emailRedirectTo: "https://wwjk-bot.github.io/confirm.html"
           }
         });
 
         if(error){
-          setAuthMsg(error.message, "err");
+          console.error("signup error:", error);
+          setMsg(error.message || "signup failed", "err");
           return;
         }
 
-        // if email confirmations are OFF, user may already be signed in
-        if(data?.session){
-          setAuthMsg("account created and signed in", "ok");
-          await refreshUI();
-          return;
-        }
-
-        setAuthMsg("check your email to confirm, then you’ll be sent into the app", "ok");
+        setMsg("check your email to confirm, then refresh this page and log in", "ok");
       }catch(e){
-        setAuthMsg(e?.message || String(e), "err");
+        console.error("signup crash:", e);
+        setMsg("signup crashed, check console", "err");
       }
     }
 
     async function logout(){
       await supabaseClient.auth.signOut();
+      setMsg("logged out");
       await refreshUI();
     }
 
-    async function addTrade(){
-      setDashMsg("saving…");
-
-      const { data, error: sesErr } = await supabaseClient.auth.getSession();
-      if(sesErr){
-        setDashMsg(sesErr.message, "err");
-        return;
-      }
-      const session = data?.session;
-      if(!session){ setDashMsg("not logged in", "err"); return; }
-
-      const trade = {
-        user_id: session.user.id,
-        trade_date: new Date().toISOString(),
-        symbol: $("symbol").value.trim(),
-        direction: $("direction").value,
-        rr: Number($("rr").value || 0),
-        pnl: Number($("pnl").value || 0),
-        notes: $("notes").value.trim()
-      };
-
-      const { error } = await supabaseClient.from("trades").insert(trade);
-      if(error){ setDashMsg(error.message, "err"); return; }
-
-      $("symbol").value = "";
-      $("rr").value = "";
-      $("pnl").value = "";
-      $("notes").value = "";
-
-      setDashMsg("saved", "ok");
-      await loadTrades();
-    }
-
-    function renderTrades(list){
-      const rows = $("rows");
-      rows.innerHTML = "";
-      list.forEach(t => {
-        const tr = document.createElement("tr");
-        const d = new Date(t.trade_date || t.created_at || Date.now());
-        tr.innerHTML = `
-          <td>${d.toLocaleString()}</td>
-          <td>${(t.symbol||"").toUpperCase()}</td>
-          <td>${t.direction || ""}</td>
-          <td>${t.rr ?? ""}</td>
-          <td>${t.pnl ?? ""}</td>
-        `;
-        rows.appendChild(tr);
-      });
-    }
-
-    async function loadTrades(){
-      setDashMsg("loading…");
-
-      const { data, error } = await supabaseClient
-        .from("trades")
-        .select("*")
-        .order("trade_date", { ascending: false })
-        .order("created_at", { ascending: false })
-        .limit(50);
-
-      if(error){ setDashMsg(error.message, "err"); return; }
-
-      renderTrades(data || []);
-      setDashMsg((data && data.length) ? "" : "no trades yet. add your first trade on the left.");
-    }
-
-    // wire up UI
     $("loginBtn").addEventListener("click", login);
     $("signupBtn").addEventListener("click", signup);
     $("logoutBtn").addEventListener("click", logout);
-    $("addTradeBtn").addEventListener("click", addTrade);
 
-    // show auth changes instantly
+    // if auth state changes, update
     supabaseClient.auth.onAuthStateChange((event) => {
-      setDebug("auth event: " + event);
+      console.log("auth event:", event);
       refreshUI();
     });
 
-    // boot
     refreshUI();
   </script>
 </body>
 </html>
+
