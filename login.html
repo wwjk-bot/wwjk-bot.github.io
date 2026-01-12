@@ -1,123 +1,479 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Sessionly - log in</title>
-  <style>
-    :root{--bg:#0b0f14;--card:#111826;--text:#e8eef7;--muted:#a8b3c5;--accent:#3ddc97;--line:#22304a;}
-    *{box-sizing:border-box}
-    body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;background:var(--bg);color:var(--text);padding:28px;}
-    .wrap{max-width:520px;margin:0 auto;}
-    .card{background:rgba(17,24,38,.9);border:1px solid rgba(34,48,74,.9);border-radius:18px;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.45);}
-    h1{margin:0 0 10px 0;font-size:34px;}
-    p{margin:0 0 16px 0;color:var(--muted);line-height:1.5;}
-    label{display:block;font-weight:700;margin:12px 0 6px 0;}
-    input{width:100%;padding:12px 12px;border-radius:12px;border:1px solid rgba(34,48,74,.9);background:rgba(11,15,20,.55);color:var(--text);outline:none;}
-    .row{display:flex;gap:10px;align-items:center;margin-top:14px;flex-wrap:wrap;}
-    button{cursor:pointer;padding:12px 14px;border-radius:14px;font-weight:900;border:1px solid rgba(34,48,74,.9);background:var(--accent);color:#0b0f14;}
-    a{color:var(--text);text-decoration:none;font-weight:800;}
-    .msg{margin-top:12px;color:var(--muted);min-height:22px;}
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Sessionly Login</title>
+<meta name="description" content="Sessionly login" />
+<style>
+:root{
+  --bg:#f6f7fb;
+  --bg2:#f1f3fa;
+  --panel:#ffffff;
+  --card:#ffffff;
+  --stroke:rgba(15,23,42,.10);
+  --stroke2:rgba(15,23,42,.14);
+  --text:#0b1222;
+  --muted:rgba(11,18,34,.62);
+  --accent:#5b21b6;
+  --accent2:#16a34a;
+  --danger:#ef4444;
+  --shadow: 0 18px 60px rgba(15, 23, 42, .10);
+  --radius:16px;
+}
+[data-theme="dark"]{
+  --bg:#070a12;
+  --bg2:#0b1020;
+  --panel:#0b1020;
+  --card:rgba(12,18,36,.86);
+  --stroke:rgba(160,180,230,.14);
+  --stroke2:rgba(160,180,230,.20);
+  --text:#eaf0ff;
+  --muted:rgba(234,240,255,.66);
+  --accent:#7c3aed;
+  --accent2:#22c55e;
+  --danger:#ef4444;
+  --shadow: 0 22px 70px rgba(0,0,0,.42);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+  color:var(--text);
+  background: linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+}
+.shell{
+  width:min(980px, 100%);
+  display:grid;
+  grid-template-columns: 1.1fr .9fr;
+  gap:14px;
+}
+@media (max-width: 900px){ .shell{grid-template-columns:1fr;} }
+
+.card{
+  border:1px solid var(--stroke);
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, var(--card) 0%, color-mix(in srgb, var(--card) 86%, transparent) 100%);
+  box-shadow: var(--shadow);
+  overflow:hidden;
+}
+.cardInner{padding:18px;}
+
+.brandRow{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-weight:950;
+  letter-spacing:.2px;
+}
+.logoMark{
+  width:28px;height:28px;border-radius:10px;
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--accent) 88%, #000 12%),
+    color-mix(in srgb, var(--accent2) 75%, #000 25%)
+  );
+  box-shadow: 0 10px 24px color-mix(in srgb, var(--accent) 18%, transparent);
+}
+.themeBtn{
+  border:1px solid var(--stroke);
+  background: color-mix(in srgb, var(--panel) 80%, transparent);
+  color:var(--text);
+  border-radius:12px;
+  padding:9px 12px;
+  font-weight:900;
+  cursor:pointer;
+  transition: transform .08s ease, background .14s ease, border-color .14s ease;
+}
+.themeBtn:hover{
+  transform: translateY(-1px);
+  background: color-mix(in srgb, var(--accent) 7%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 18%, var(--stroke) 82%);
+}
+
+.h1{margin:14px 0 6px 0; font-size:22px; font-weight:980; letter-spacing:-.3px;}
+.sub{margin:0 0 14px 0; color:var(--muted); font-weight:750; line-height:1.35; font-size:13px;}
+
+label{
+  display:block;
+  font-size:11px;
+  font-weight:950;
+  text-transform:uppercase;
+  letter-spacing:.35px;
+  color:var(--muted);
+  margin:0 0 6px 2px;
+}
+input{
+  width:100%;
+  padding:12px 12px;
+  border-radius:12px;
+  border:1px solid var(--stroke);
+  background: color-mix(in srgb, var(--panel) 85%, transparent);
+  color:var(--text);
+  font-weight:800;
+  outline:none;
+}
+.row{display:grid; grid-template-columns: 1fr 1fr; gap:10px;}
+@media (max-width: 520px){ .row{grid-template-columns:1fr;} }
+
+.btnRow{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+.btn{
+  border:1px solid var(--stroke);
+  background: color-mix(in srgb, var(--panel) 82%, transparent);
+  color:var(--text);
+  border-radius:12px;
+  padding:10px 12px;
+  font-weight:950;
+  cursor:pointer;
+  transition: transform .08s ease, background .14s ease, border-color .14s ease;
+}
+.btn:hover{
+  transform: translateY(-1px);
+  background: color-mix(in srgb, var(--accent) 7%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 18%, var(--stroke) 82%);
+}
+.btnPrimary{
+  border-color: color-mix(in srgb, var(--accent) 24%, var(--stroke) 76%);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+.btnGreen{
+  border-color: color-mix(in srgb, var(--accent2) 22%, var(--stroke) 78%);
+  background: color-mix(in srgb, var(--accent2) 10%, transparent);
+}
+.btnDanger{
+  border-color: color-mix(in srgb, var(--danger) 26%, var(--stroke) 74%);
+  background: color-mix(in srgb, var(--danger) 10%, transparent);
+}
+.btn[disabled]{opacity:.55; cursor:not-allowed; transform:none}
+
+.smallLink{
+  margin-top:10px;
+  font-size:12px;
+  color:var(--muted);
+  font-weight:750;
+  line-height:1.35;
+}
+.smallLink a{color: color-mix(in srgb, var(--accent) 75%, var(--text) 25%); font-weight:900; text-decoration:none;}
+.smallLink a:hover{text-decoration:underline;}
+
+.msg{
+  margin-top:12px;
+  min-height:18px;
+  font-size:12px;
+  color:var(--muted);
+  font-weight:750;
+}
+
+.rightPanel{
+  position:relative;
+  min-height: 380px;
+  background:
+    radial-gradient(900px 600px at 20% 10%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 60%),
+    radial-gradient(900px 600px at 80% 90%, color-mix(in srgb, var(--accent2) 16%, transparent), transparent 55%),
+    linear-gradient(180deg, color-mix(in srgb, var(--panel) 88%, transparent), transparent);
+}
+.rightPanel .cardInner{height:100%}
+.kpiGrid{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:10px;
+  margin-top:14px;
+}
+.kpi{
+  border:1px solid var(--stroke);
+  border-radius:14px;
+  background: color-mix(in srgb, var(--panel) 78%, transparent);
+  padding:12px;
+}
+.kpiLabel{
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.35px;
+  color:var(--muted);
+  font-weight:950;
+}
+.kpiVal{
+  margin-top:6px;
+  font-size:18px;
+  font-weight:980;
+  letter-spacing:-.3px;
+}
+.note{
+  margin-top:12px;
+  border:1px solid var(--stroke);
+  border-radius:14px;
+  padding:12px;
+  background: color-mix(in srgb, var(--panel) 78%, transparent);
+  color:var(--muted);
+  font-weight:750;
+  font-size:12px;
+  line-height:1.35;
+}
+.spinner{
+  width:18px;height:18px;border-radius:999px;
+  border:2px solid color-mix(in srgb, var(--stroke2) 60%, transparent);
+  border-top-color: color-mix(in srgb, var(--accent) 65%, transparent);
+  animation: spin .9s linear infinite;
+  display:none;
+}
+@keyframes spin{ to { transform: rotate(360deg); } }
+.loading .spinner{display:inline-block}
+</style>
 </head>
+
 <body>
-  <div class="wrap">
-    <div class="card">
-      <h1>log in</h1>
-      <p>access your dashboard and start tracking trades</p>
+<div class="shell">
+  <div class="card">
+    <div class="cardInner">
+      <div class="brandRow">
+        <div class="brand"><div class="logoMark"></div><div>Sessionly</div></div>
+        <button class="themeBtn" id="toggleThemeBtn">Theme</button>
+      </div>
 
-      <label for="email">email</label>
-      <input id="email" type="email" autocomplete="email" />
-
-      <label for="password">password</label>
-      <input id="password" type="password" autocomplete="current-password" />
+      <h1 class="h1">Log in</h1>
+      <p class="sub">Access your dashboard and your trades. If your email isn’t confirmed yet, check your inbox and confirm first.</p>
 
       <div class="row">
-        <button id="loginBtn">log in</button>
-        <a href="./index.html">back</a>
+        <div>
+          <label>Email</label>
+          <input id="email" type="email" autocomplete="email" placeholder="you@email.com" />
+        </div>
+        <div>
+          <label>Password</label>
+          <input id="password" type="password" autocomplete="current-password" placeholder="••••••••" />
+        </div>
+      </div>
+
+      <div class="btnRow" id="btnRow">
+        <button class="btn btnPrimary" id="loginBtn"><span class="spinner" id="spin1"></span> Log in</button>
+        <button class="btn btnGreen" id="signupBtn"><span class="spinner" id="spin2"></span> Create account</button>
+        <button class="btn" id="resetBtn"><span class="spinner" id="spin3"></span> Reset password</button>
+      </div>
+
+      <div class="smallLink" id="linkRow">
+        By continuing you agree to your own rules.
+        <br />
+        Having issues? Open the console to see exact errors.
       </div>
 
       <div class="msg" id="msg"></div>
     </div>
   </div>
 
+  <div class="card rightPanel">
+    <div class="cardInner">
+      <div style="font-weight:980; font-size:18px; letter-spacing:-.2px;">Trade cleaner</div>
+      <div class="sub" style="margin-top:6px;">Log your trades fast, track performance, and fix leaks.</div>
+
+      <div class="kpiGrid">
+        <div class="kpi"><div class="kpiLabel">Timer</div><div class="kpiVal" id="timerVal">7h 38m 23s</div></div>
+        <div class="kpi"><div class="kpiLabel">Focus</div><div class="kpiVal">Consistency</div></div>
+        <div class="kpi"><div class="kpiLabel">Edge</div><div class="kpiVal">Tracked</div></div>
+        <div class="kpi"><div class="kpiLabel">Data</div><div class="kpiVal">Clean</div></div>
+      </div>
+
+      <div class="note">
+        Tip: if you ever get redirected to <b>/app/dashboard</b> and it 404s, it means some page is using a wrong path.
+        All redirects here go to <b>/dashboard.html</b> only.
+      </div>
+    </div>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  const supabaseUrl = "https://oucikdsngvdhimquclcz.supabase.co";
-  const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im91Y2lrZHNuZ3ZkaGltcXVjbGN6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc4NzI0MDcsImV4cCI6MjA4MzQ0ODQwN30.5OqS8vRIVMXC5jvVfPVbxgMSOtM_93-1YtclOLWeAws";
+const SUPABASE_URL = "https://oucikdsngvdhimquclcz.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im91Y2lrZHNuZ3ZkaGltcXVjbGN6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc4NzI0MDcsImV4cCI6MjA4MzQ0ODQwN30.5OqS8vRIVMXC5jvVfPVbxgMSOtM_93-1YtclOLWeAws";
 
-  const msg = document.getElementById("msg");
-  const btn = document.getElementById("loginBtn");
-
-  // show any unexpected errors on the page
-  window.addEventListener("error", (e) => {
-    msg.textContent = "error: " + (e.message || "unknown error");
-  });
-
-  // make sure the library loaded
-  if (!window.supabase) {
-    msg.textContent = "error: supabase library did not load (cdn blocked)";
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+    storageKey: "sessionly_auth"
   }
+});
 
-  const sb = window.supabase.createClient(supabaseUrl, supabaseKey);
+const msg = document.getElementById("msg");
+const btnRow = document.getElementById("btnRow");
+const emailEl = document.getElementById("email");
+const passEl = document.getElementById("password");
 
-  async function kickToDashboardIfLoggedIn() {
-    try {
-      const { data, error } = await sb.auth.getSession();
-      if (error) {
-        msg.textContent = "session error: " + error.message;
-        return;
-      }
-      if (data && data.session) window.location.href = "./dashboard.html";
-    } catch (e) {
-      msg.textContent = "session crash: " + (e.message || e);
-    }
+function setMsg(text, isError=false){
+  msg.textContent = text || "";
+  msg.style.color = isError ? "var(--danger)" : "var(--muted)";
+}
+
+function setLoading(isLoading){
+  if (isLoading) btnRow.classList.add("loading");
+  else btnRow.classList.remove("loading");
+
+  document.querySelectorAll("#btnRow button").forEach(b => b.disabled = isLoading);
+}
+
+function applyTheme(theme){
+  document.documentElement.setAttribute("data-theme", theme);
+  localStorage.setItem("sessionly_theme", theme);
+}
+function initTheme(){
+  const saved = localStorage.getItem("sessionly_theme");
+  applyTheme(saved || "light");
+}
+
+function startFakeTimer(){
+  // counts down from 7h 38m 23s
+  let total = (7*3600) + (38*60) + 23;
+  const el = document.getElementById("timerVal");
+
+  function tick(){
+    total = Math.max(0, total - 1);
+    const h = Math.floor(total/3600);
+    const m = Math.floor((total%3600)/60);
+    const s = total%60;
+    el.textContent = `${h}h ${m}m ${s}s`;
   }
-  kickToDashboardIfLoggedIn();
+  setInterval(tick, 1000);
+}
 
-  btn.addEventListener("click", async (e) => {
-    e.preventDefault();
-    btn.disabled = true;
-    msg.textContent = "logging in...";
+function ensureNotEmpty(){
+  const email = emailEl.value.trim();
+  const pass = passEl.value;
+  if (!email){ setMsg("Please enter your email.", true); return null; }
+  if (!pass){ setMsg("Please enter your password.", true); return null; }
+  return { email, pass };
+}
 
-    try {
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value;
+// IMPORTANT: always redirect to ROOT /dashboard.html (no /app/)
+function goDashboard(){
+  window.location.replace("/dashboard.html");
+}
 
-      if (!email || !password) {
-        msg.textContent = "please enter email and password";
-        btn.disabled = false;
-        return;
-      }
+async function precheckSession(){
+  setMsg("");
+  const { data } = await sb.auth.getSession();
+  if (data?.session){
+    goDashboard();
+  }
+}
 
-      // add a timeout so it can’t hang forever
-      const loginPromise = sb.auth.signInWithPassword({ email, password });
-      const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error("login timed out (network blocked)")), 12000)
-      );
+async function login(){
+  const v = ensureNotEmpty();
+  if (!v) return;
 
-      const { data, error } = await Promise.race([loginPromise, timeoutPromise]);
+  setLoading(true);
+  setMsg("Logging in…");
 
-      if (error) {
-        msg.textContent = "login error: " + error.message;
-        btn.disabled = false;
-        return;
-      }
+  try{
+    const { data, error } = await sb.auth.signInWithPassword({
+      email: v.email,
+      password: v.pass
+    });
 
-      // confirm session exists before redirect
-      const { data: sData, error: sErr } = await sb.auth.getSession();
-      if (sErr || !sData.session) {
-        msg.textContent = "logged in but no session saved, try hard refresh";
-        btn.disabled = false;
-        return;
-      }
-
-      window.location.href = "./dashboard.html";
-    } catch (e2) {
-      msg.textContent = "login crash: " + (e2.message || e2);
-      btn.disabled = false;
+    if (error){
+      setMsg(error.message, true);
+      return;
     }
-  });
+
+    if (data?.user){
+      setMsg("Success. Redirecting…");
+      goDashboard();
+      return;
+    }
+
+    setMsg("Logged in. Redirecting…");
+    goDashboard();
+  } finally {
+    setLoading(false);
+  }
+}
+
+async function signup(){
+  const v = ensureNotEmpty();
+  if (!v) return;
+
+  setLoading(true);
+  setMsg("Creating account…");
+
+  try{
+    const { data, error } = await sb.auth.signUp({
+      email: v.email,
+      password: v.pass,
+      options: {
+        // confirm email will bring them back to ROOT confirm page
+        emailRedirectTo: `${window.location.origin}/confirm.html`
+      }
+    });
+
+    if (error){
+      setMsg(error.message, true);
+      return;
+    }
+
+    // If email confirmations are ON, user won't have a session yet.
+    setMsg("Account created. Please check your email and confirm before logging in.");
+  } finally {
+    setLoading(false);
+  }
+}
+
+async function resetPassword(){
+  const email = emailEl.value.trim();
+  if (!email){ setMsg("Please enter your email first.", true); return; }
+
+  setLoading(true);
+  setMsg("Sending reset email…");
+
+  try{
+    const { error } = await sb.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/confirm.html`
+    });
+
+    if (error){
+      setMsg(error.message, true);
+      return;
+    }
+
+    setMsg("Password reset email sent. Check your inbox.");
+  } finally {
+    setLoading(false);
+  }
+}
+
+// theme
+document.getElementById("toggleThemeBtn").addEventListener("click", ()=>{
+  const cur = document.documentElement.getAttribute("data-theme") || "light";
+  applyTheme(cur === "dark" ? "light" : "dark");
+});
+
+// actions
+document.getElementById("loginBtn").addEventListener("click", login);
+document.getElementById("signupBtn").addEventListener("click", signup);
+document.getElementById("resetBtn").addEventListener("click", resetPassword);
+
+document.addEventListener("keydown", (e)=>{
+  if (e.key === "Enter") login();
+});
+
+(async function init(){
+  initTheme();
+  startFakeTimer();
+  await precheckSession();
+})();
 </script>
 </body>
 </html>
+
