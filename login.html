@@ -288,8 +288,8 @@ input{
       </div>
 
       <div class="note">
-        Tip: if you ever get redirected to <b>/app/dashboard</b> and it 404s, it means some page is using a wrong path.
-        All redirects here go to <b>/dashboard.html</b> only.
+        Tip: if you ever get redirected to <b>/dashboard#focus.html</b> and it 404s, it means some page is using a wrong path.
+        All redirects here go to <b>/dashboard#focus.html</b> only.
       </div>
     </div>
   </div>
@@ -359,7 +359,7 @@ function ensureNotEmpty(){
 
 // IMPORTANT: always redirect to ROOT /dashboard.html (no /app/)
 function goDashboard(){
-  window.location.replace("/dashboard.html");
+  window.location.replace("/dashboard#focus.html");
 }
 
 async function precheckSession(){
