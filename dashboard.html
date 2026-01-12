@@ -7,7 +7,7 @@
 <meta name="description" content="Sessionly dashboard" />
 <style>
 /* =========================================================
-   SESSIONLY CLEAN UI (trader-vue-ish cleanliness, not copied)
+   SESSIONLY CLEAN UI
    ========================================================= */
 
 :root{
@@ -75,9 +75,49 @@ body{
   overflow-x:hidden;
 }
 
-/* prevent any flash while auth decides */
-.app{ visibility:hidden; }
-body.appReady .app{ visibility:visible; }
+/* boot overlay to prevent flicker */
+#bootOverlay{
+  position:fixed;
+  inset:0;
+  z-index:2000;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background: linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+}
+.bootCard{
+  border:1px solid var(--stroke);
+  border-radius:18px;
+  padding:18px 18px;
+  background: color-mix(in srgb, var(--panel) 86%, transparent);
+  box-shadow: var(--shadow);
+  min-width: 320px;
+}
+.bootTitle{
+  font-weight:980;
+  letter-spacing:-.2px;
+  margin:0 0 6px 0;
+}
+.bootSub{
+  margin:0;
+  color:var(--muted);
+  font-weight:750;
+  font-size:12px;
+  line-height:1.35;
+}
+.bootRow{
+  margin-top:12px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.spinner{
+  width:18px;height:18px;border-radius:999px;
+  border:2px solid color-mix(in srgb, var(--stroke2) 60%, transparent);
+  border-top-color: color-mix(in srgb, var(--accent) 65%, transparent);
+  animation: spin .9s linear infinite;
+}
+@keyframes spin{ to { transform: rotate(360deg); } }
 
 /* layout */
 .app{
@@ -237,7 +277,7 @@ body.appReady .app{ visibility:visible; }
 .main{ padding:18px 18px 40px 18px; }
 .wrap{ max-width: 1160px; margin:0 auto; }
 
-/* topbar like a SaaS */
+/* topbar */
 .topbar{
   display:flex;
   align-items:center;
@@ -315,7 +355,6 @@ body.appReady .app{ visibility:visible; }
   background: linear-gradient(180deg, var(--card) 0%, var(--card2) 100%);
   box-shadow: var(--shadow2);
 }
-
 .cardInner{ padding:16px; }
 
 .sectionTitleRow{
@@ -419,6 +458,7 @@ tbody tr:hover td{
   align-items:center;
   justify-content:center;
   transition: transform .08s ease, background .14s ease, border-color .14s ease;
+  position:relative;
 }
 .iconBtn:hover{
   transform: translateY(-1px);
@@ -431,7 +471,7 @@ tbody tr:hover td{
   clip:rect(0,0,0,0);white-space:nowrap;border:0;
 }
 
-/* calendar grid (cleaner) */
+/* calendar grid */
 .calTop{
   display:flex;
   align-items:center;
@@ -531,7 +571,7 @@ tbody tr:hover td{
 .calValue.pos{color: color-mix(in srgb, var(--accent2) 85%, var(--text) 15%);}
 .calValue.neg{color: color-mix(in srgb, var(--danger) 85%, var(--text) 15%);}
 
-/* chart boxes */
+/* charts */
 .gridCharts{
   margin-top:12px;
   display:grid;
@@ -674,7 +714,7 @@ textarea{min-height:96px; resize:vertical;}
 .page{display:none;}
 .page.active{display:block;}
 
-/* tiny helpers */
+/* helpers */
 .rowGap{height:12px}
 .hr{
   height:1px;
@@ -685,7 +725,16 @@ textarea{min-height:96px; resize:vertical;}
 </head>
 
 <body>
-<div class="app">
+<!-- prevents flicker + auth redirect loops -->
+<div id="bootOverlay" aria-live="polite">
+  <div class="bootCard">
+    <p class="bootTitle">loading sessionly</p>
+    <p class="bootSub">checking your session and loading your trades</p>
+    <div class="bootRow"><div class="spinner"></div><p class="bootSub" id="bootMsg">auth</p></div>
+  </div>
+</div>
+
+<div class="app" id="appRoot" style="visibility:hidden;">
   <aside class="sidebar">
     <div class="sidebarHeader">
       <div class="brand">
@@ -742,7 +791,6 @@ textarea{min-height:96px; resize:vertical;}
 
   <main class="main">
     <div class="wrap">
-
       <div class="topbar">
         <div class="topbarLeft">
           <h2 class="h1" id="topTitle">Dashboard</h2>
@@ -759,6 +807,7 @@ textarea{min-height:96px; resize:vertical;}
         </div>
       </div>
 
+      <!-- FOCUS / DASHBOARD -->
       <section class="page" id="page-focus">
         <div class="card">
           <div class="cardInner">
@@ -902,6 +951,7 @@ textarea{min-height:96px; resize:vertical;}
         </div>
       </section>
 
+      <!-- ANALYTICS -->
       <section class="page" id="page-analytics">
         <div class="card">
           <div class="cardInner">
@@ -945,6 +995,7 @@ textarea{min-height:96px; resize:vertical;}
         </div>
       </section>
 
+      <!-- CALENDAR -->
       <section class="page" id="page-calendar">
         <div class="card">
           <div class="cardInner">
@@ -980,6 +1031,7 @@ textarea{min-height:96px; resize:vertical;}
         </div>
       </section>
 
+      <!-- TRADES -->
       <section class="page" id="page-trades">
         <div class="card">
           <div class="cardInner">
@@ -1015,6 +1067,7 @@ textarea{min-height:96px; resize:vertical;}
         </div>
       </section>
 
+      <!-- JOURNAL -->
       <section class="page" id="page-journal">
         <div class="card">
           <div class="cardInner">
@@ -1156,6 +1209,7 @@ textarea{min-height:96px; resize:vertical;}
 // === CONFIG ===
 const SUPABASE_URL = "https://oucikdsngvdhimquclcz.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im91Y2lrZHNuZ3ZkaGltcXVjbGN6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc4NzI0MDcsImV4cCI6MjA4MzQ0ODQwN30.5OqS8vRIVMXC5jvVfPVbxgMSOtM_93-1YtclOLWeAws";
+
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
   auth: {
     persistSession: true,
@@ -1189,6 +1243,16 @@ let settings = {
 
 // date range UI (visual for now)
 let rangeDays = 30;
+
+// boot ui
+const bootOverlay = document.getElementById("bootOverlay");
+const bootMsg = document.getElementById("bootMsg");
+const appRoot = document.getElementById("appRoot");
+function setBoot(text){ if (bootMsg) bootMsg.textContent = text || ""; }
+function showApp(){
+  if (bootOverlay) bootOverlay.style.display = "none";
+  if (appRoot) appRoot.style.visibility = "visible";
+}
 
 // === THEME ===
 function applyTheme(theme){
@@ -1228,7 +1292,8 @@ function setActiveRoute(route){
 
   setTopTitle(route);
 
-  if (location.hash.replace("#","") !== route){
+  const cur = location.hash.replace("#","").trim();
+  if (cur !== route){
     history.replaceState(null, "", `#${route}`);
   }
 
@@ -1252,58 +1317,37 @@ function initRouting(){
   });
 }
 
-// === AUTH GATE (FIXES FLICKER + BAD REDIRECTS) ===
-let authDecided = false;
+// === AUTH GUARD (anti flicker) ===
+let didRedirect = false;
 
-async function gateDashboard(){
-  if (authDecided) return;
-  authDecided = true;
+async function requireAuth(){
+  setBoot("auth");
 
-  const { data, error } = await sb.auth.getSession();
-  if (error) console.error(error);
+  // session restore can lag slightly on gh pages, so retry briefly
+  for (let i = 0; i < 4; i++){
+    const { data } = await sb.auth.getSession();
+    const session = data?.session;
 
-  const session = data?.session;
-  if (!session){
-    // no focus.html anywhere. always go to login.html
-    window.location.replace("login.html");
-    return;
+    if (session){
+      user = session.user;
+      document.getElementById("userEmail").textContent = user.email || "Signed in";
+
+      loadLocalSettings();
+      initGoalControls();
+      initSettingsControls();
+
+      return true;
+    }
+
+    await new Promise(r => setTimeout(r, 140));
   }
 
-  await initDashboard(session);
-}
-
-sb.auth.onAuthStateChange((_event, session) => {
-  // avoid loops: dashboard is the only place that reacts
-  if (!session){
-    window.location.replace("login.html");
-    return;
+  if (!didRedirect){
+    didRedirect = true;
+    // force ROOT paths so we never end up at /app/...
+    window.location.replace("/login.html");
   }
-
-  // if we were not initialized yet, init now
-  if (!user){
-    initDashboard(session);
-  }
-});
-
-async function initDashboard(session){
-  user = session.user;
-
-  // allow UI to show only after auth is confirmed
-  document.body.classList.add("appReady");
-
-  const emailEl = document.getElementById("userEmail");
-  if (emailEl) emailEl.textContent = user.email || "Signed in";
-
-  loadLocalSettings();
-  initGoalControls();
-  initSettingsControls();
-
-  const now = new Date();
-  calYear = now.getFullYear();
-  calMonth = now.getMonth();
-
-  await loadTrades();
-  setActiveRoute(location.hash.replace("#","") || "focus");
+  return false;
 }
 
 // === LOCAL SETTINGS ===
@@ -1409,6 +1453,8 @@ function confirmDialog({
 // === DATA LOAD ===
 async function loadTrades(){
   if (!user) return;
+
+  setBoot("loading trades");
 
   const { data, error } = await sb
     .from("trades")
@@ -1578,12 +1624,10 @@ function syncGoalDropdown(period, goalVal){
 
   if (optionValues.includes(asString)){
     sel.value = asString;
-    input.classList.remove("show");
     input.style.display = "none";
     input.value = String(goalVal);
   } else {
     sel.value = "custom";
-    input.classList.add("show");
     input.style.display = "block";
     input.value = String(goalVal);
   }
@@ -1723,13 +1767,11 @@ function renderFocus(){
   const winRate = decided ? (wins.length / decided) : null;
 
   const monthR = periodR("monthly");
-  const totalPnL = rToMoney(totalR);
-  const monthPnL = rToMoney(monthR);
 
-  document.getElementById("s_total_pnl").textContent = fmtMoney(totalPnL);
+  document.getElementById("s_total_pnl").textContent = fmtMoney(rToMoney(totalR));
   document.getElementById("s_total_pnl_hint").textContent = `All time (R: ${formatNumber(totalR)})`;
 
-  document.getElementById("s_month_pnl").textContent = fmtMoney(monthPnL);
+  document.getElementById("s_month_pnl").textContent = fmtMoney(rToMoney(monthR));
   document.getElementById("s_month_pnl_hint").textContent = `This month (R: ${formatNumber(monthR)})`;
 
   document.getElementById("s_pf").textContent = pf === null ? "—" : (pf === Infinity ? "∞" : formatNumber(pf));
@@ -1885,7 +1927,6 @@ function renderCalendar(){
   dowRow.innerHTML = dows.map(d=>`<div class="calDow">${d}</div>`).join("");
 
   const daily = buildDailyAgg(calYear, calMonth);
-
   const first = new Date(calYear, calMonth, 1);
   const last = new Date(calYear, calMonth + 1, 0);
 
@@ -2364,9 +2405,10 @@ function wireUI(){
 
   document.getElementById("logoutBtn").addEventListener("click", async ()=>{
     await sb.auth.signOut();
-    window.location.replace("login.html");
+    window.location.replace("/login.html");
   });
 
+  // calendar buttons
   document.getElementById("calPrevBtn").addEventListener("click", ()=>{
     const d = new Date(calYear, calMonth, 1);
     d.setMonth(d.getMonth()-1);
@@ -2470,7 +2512,20 @@ function clamp(v, a, b){ return Math.min(b, Math.max(a, v)); }
   initTheme();
   initRouting();
   wireUI();
-  await gateDashboard();
+
+  const ok = await requireAuth();
+  if (!ok) return;
+
+  const now = new Date();
+  calYear = now.getFullYear();
+  calMonth = now.getMonth();
+
+  await loadTrades();
+
+  // show app only after auth + initial load to stop flicker
+  showApp();
+
+  setActiveRoute(location.hash.replace("#","") || "focus");
 })();
 </script>
 </body>
