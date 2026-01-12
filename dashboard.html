@@ -8,10 +8,6 @@
 <style>
 /* =========================================================
    SESSIONLY CLEAN UI (trader-vue-ish cleanliness, not copied)
-   - flatter cards, subtle borders
-   - more whitespace
-   - calmer typography
-   - sidebar like a modern SaaS
    ========================================================= */
 
 :root{
@@ -78,6 +74,10 @@ body{
   background: linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
   overflow-x:hidden;
 }
+
+/* prevent any flash while auth decides */
+.app{ visibility:hidden; }
+body.appReady .app{ visibility:visible; }
 
 /* layout */
 .app{
@@ -531,7 +531,7 @@ tbody tr:hover td{
 .calValue.pos{color: color-mix(in srgb, var(--accent2) 85%, var(--text) 15%);}
 .calValue.neg{color: color-mix(in srgb, var(--danger) 85%, var(--text) 15%);}
 
-/* chart boxes (still minimal, but cleaner) */
+/* chart boxes */
 .gridCharts{
   margin-top:12px;
   display:grid;
@@ -743,7 +743,6 @@ textarea{min-height:96px; resize:vertical;}
   <main class="main">
     <div class="wrap">
 
-      <!-- TOP BAR (changes per page title via JS below) -->
       <div class="topbar">
         <div class="topbarLeft">
           <h2 class="h1" id="topTitle">Dashboard</h2>
@@ -760,7 +759,6 @@ textarea{min-height:96px; resize:vertical;}
         </div>
       </div>
 
-      <!-- FOCUS / DASHBOARD -->
       <section class="page" id="page-focus">
         <div class="card">
           <div class="cardInner">
@@ -904,7 +902,6 @@ textarea{min-height:96px; resize:vertical;}
         </div>
       </section>
 
-      <!-- ANALYTICS -->
       <section class="page" id="page-analytics">
         <div class="card">
           <div class="cardInner">
@@ -948,7 +945,6 @@ textarea{min-height:96px; resize:vertical;}
         </div>
       </section>
 
-      <!-- CALENDAR -->
       <section class="page" id="page-calendar">
         <div class="card">
           <div class="cardInner">
@@ -984,7 +980,6 @@ textarea{min-height:96px; resize:vertical;}
         </div>
       </section>
 
-      <!-- TRADES -->
       <section class="page" id="page-trades">
         <div class="card">
           <div class="cardInner">
@@ -1020,7 +1015,6 @@ textarea{min-height:96px; resize:vertical;}
         </div>
       </section>
 
-      <!-- JOURNAL -->
       <section class="page" id="page-journal">
         <div class="card">
           <div class="cardInner">
@@ -1156,7 +1150,6 @@ textarea{min-height:96px; resize:vertical;}
   </div>
 </div>
 
-<!-- supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
@@ -1194,7 +1187,7 @@ let settings = {
   goals: { daily: 100, weekly: 500, monthly: 2000 }
 };
 
-// date range UI (visual for now; you can wire it to filtering later)
+// date range UI (visual for now)
 let rangeDays = 30;
 
 // === THEME ===
@@ -1259,24 +1252,58 @@ function initRouting(){
   });
 }
 
-// === AUTH GUARD ===
-async function requireAuth(){
+// === AUTH GATE (FIXES FLICKER + BAD REDIRECTS) ===
+let authDecided = false;
+
+async function gateDashboard(){
+  if (authDecided) return;
+  authDecided = true;
+
   const { data, error } = await sb.auth.getSession();
   if (error) console.error(error);
 
   const session = data?.session;
   if (!session){
-    window.location.href = "login.html";
-    return false;
+    // no focus.html anywhere. always go to login.html
+    window.location.replace("login.html");
+    return;
   }
+
+  await initDashboard(session);
+}
+
+sb.auth.onAuthStateChange((_event, session) => {
+  // avoid loops: dashboard is the only place that reacts
+  if (!session){
+    window.location.replace("login.html");
+    return;
+  }
+
+  // if we were not initialized yet, init now
+  if (!user){
+    initDashboard(session);
+  }
+});
+
+async function initDashboard(session){
   user = session.user;
-  document.getElementById("userEmail").textContent = user.email || "Signed in";
+
+  // allow UI to show only after auth is confirmed
+  document.body.classList.add("appReady");
+
+  const emailEl = document.getElementById("userEmail");
+  if (emailEl) emailEl.textContent = user.email || "Signed in";
 
   loadLocalSettings();
   initGoalControls();
   initSettingsControls();
 
-  return true;
+  const now = new Date();
+  calYear = now.getFullYear();
+  calMonth = now.getMonth();
+
+  await loadTrades();
+  setActiveRoute(location.hash.replace("#","") || "focus");
 }
 
 // === LOCAL SETTINGS ===
@@ -1985,7 +2012,7 @@ function renderAnalytics(){
   drawCalendarCanvas();
 }
 
-// === CHARTS (unchanged logic, slightly cleaner drawing) ===
+// === CHARTS ===
 function prepCanvas(id){
   const c = document.getElementById(id);
   if (!c) return null;
@@ -2020,7 +2047,6 @@ function drawHourlyCanvas(byHour){
 
   ctx.save();
   ctx.strokeStyle = cssVar("--stroke2");
-  ctx.globalAlpha = 1;
   ctx.lineWidth = 1;
   ctx.beginPath();
   ctx.moveTo(pad, baseY);
@@ -2063,7 +2089,6 @@ function drawEquityCanvas(){
   if (sorted.length < 2){
     ctx.save();
     ctx.fillStyle = cssVar("--muted");
-    ctx.globalAlpha = 1;
     ctx.font = "800 12px ui-sans-serif, system-ui";
     ctx.fillText("Equity curve appears after 2+ trades.", pad, h/2);
     ctx.restore();
@@ -2307,7 +2332,6 @@ async function saveTrade(){
 
 // === UI WIRING ===
 function wireUI(){
-  // add trade buttons
   document.getElementById("addTradeBtn").addEventListener("click", openTradeModal);
   document.getElementById("addTradeBtnSide").addEventListener("click", openTradeModal);
 
@@ -2340,10 +2364,9 @@ function wireUI(){
 
   document.getElementById("logoutBtn").addEventListener("click", async ()=>{
     await sb.auth.signOut();
-    window.location.href = "login.html";
+    window.location.replace("login.html");
   });
 
-  // calendar buttons
   document.getElementById("calPrevBtn").addEventListener("click", ()=>{
     const d = new Date(calYear, calMonth, 1);
     d.setMonth(d.getMonth()-1);
@@ -2369,17 +2392,14 @@ function wireUI(){
     renderCalendar();
   });
 
-  // insight refresh
   document.getElementById("insightRefreshBtn").addEventListener("click", ()=> renderFocus());
 
-  // top range pills (visual only for now)
   document.querySelectorAll("#rangePills .pillChip").forEach(btn=>{
     btn.addEventListener("click", ()=>{
       document.querySelectorAll("#rangePills .pillChip").forEach(b=>b.classList.remove("active"));
       btn.classList.add("active");
       const v = btn.getAttribute("data-range");
       rangeDays = v === "custom" ? 30 : Number(v);
-      // later: filter trades by date range before rendering
       renderFocus();
       renderAnalytics();
       renderTradesTable();
@@ -2387,7 +2407,6 @@ function wireUI(){
     });
   });
 
-  // edit layout button (placeholder)
   document.getElementById("editLayoutBtn").addEventListener("click", ()=>{
     alert("Edit layout is a placeholder for now.");
   });
@@ -2451,16 +2470,7 @@ function clamp(v, a, b){ return Math.min(b, Math.max(a, v)); }
   initTheme();
   initRouting();
   wireUI();
-
-  const ok = await requireAuth();
-  if (!ok) return;
-
-  const now = new Date();
-  calYear = now.getFullYear();
-  calMonth = now.getMonth();
-
-  await loadTrades();
-  setActiveRoute(location.hash.replace("#","") || "focus");
+  await gateDashboard();
 })();
 </script>
 </body>
