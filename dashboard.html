@@ -567,13 +567,16 @@
     const SUPABASE_URL = "https://oucikdsngvdhimquclcz.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im91Y2lrZHNuZ3ZkaGltcXVjbGN6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc4NzI0MDcsImV4cCI6MjA4MzQ0ODQwN30.5OqS8vRIVMXC5jvVfPVbxgMSOtM_93-1YtclOLWeAws";
 
-    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-      auth: {
-        persistSession: true,
-        autoRefreshToken: true,
-        storageKey: "sessionly_auth"
-      }
-    });
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+    storageKey: "sessionly_auth",
+  },
+})
+
+window.supabase = sb
+
 
     const $ = (id) => document.getElementById(id);
 
