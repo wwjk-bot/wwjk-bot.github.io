@@ -574,8 +574,8 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
     storageKey: "sessionly_auth",
   },
 })
-
-window.supabase = sb
+    
+window.sb = sb
 
 
     const $ = (id) => document.getElementById(id);
