@@ -506,7 +506,8 @@
           <!-- AI COACH -->
           <div id="view-bot" class="view hidden">
             <div class="h1">ai coach</div>
-            <div class="p">ask for feedback on your trading performance and get a weekly action plan. this uses your trades and stats from the backend.</div>
+            <div class="p">this is your trading bot builder. answer questions and i will build your bot spec on the right.</div>
+
 
             <div class="grid2">
               <div class="panel">
@@ -681,200 +682,201 @@
       showTab(getHashTab());
     });
 
-    // ---------------- ai coach ----------------
-    const COACH_KEY = "sessionly_ai_coach_v1";
+// ---------------- ai coach (repurposed as bot builder) ----------------
+const COACH_KEY = "sessionly_ai_botbuilder_v1";
 
-    function loadCoachChat(){
-      try{
-        const raw = localStorage.getItem(COACH_KEY);
-        if (!raw) return [];
-        return JSON.parse(raw);
-      }catch(e){
-        return [];
-      }
-    }
+function loadCoachState(){
+  try{
+    const raw = localStorage.getItem(COACH_KEY);
+    if (!raw) return { chat: [], spec: {} };
+    return JSON.parse(raw);
+  }catch(e){
+    return { chat: [], spec: {} };
+  }
+}
 
-    function saveCoachChat(chat){
-      localStorage.setItem(COACH_KEY, JSON.stringify(chat));
-    }
+function saveCoachState(state){
+  localStorage.setItem(COACH_KEY, JSON.stringify(state));
+}
 
-    function pushCoach(role, text){
-      const chat = loadCoachChat();
-      chat.push({ role, text, ts: Date.now() });
-      saveCoachChat(chat);
-      renderCoachChat(chat);
-    }
+function pushCoach(role, text){
+  const state = loadCoachState();
+  state.chat.push({ role, text, ts: Date.now() });
+  saveCoachState(state);
+  renderCoachChat(state);
+}
 
-    function renderCoachChat(chat){
-      const log = $("coachLog");
-      if (!log) return;
-      log.innerHTML = "";
-      for (const m of chat){
-        const row = document.createElement("div");
-        row.className = "bubbleRow " + (m.role === "user" ? "user" : "ai");
-        const b = document.createElement("div");
-        b.className = "msgBubble";
-        b.textContent = m.text;
-        row.appendChild(b);
-        log.appendChild(row);
-      }
-      log.scrollTop = log.scrollHeight;
-    }
+function renderCoachChat(state){
+  const log = $("coachLog");
+  if (!log) return;
 
-    function setCoachStatus(text){
-      const el = $("coachStatus");
-      if (el) el.textContent = text || "";
-    }
+  log.innerHTML = "";
+  for (const m of (state.chat || [])){
+    const row = document.createElement("div");
+    row.className = "bubbleRow " + (m.role === "user" ? "user" : "ai");
 
-function renderCoachSide(data){
-  // helper: accept both snake_case and camelCase and weird formats
-  const s = data?.stats || {};
+    const b = document.createElement("div");
+    b.className = "msgBubble";
+    b.textContent = m.text;
 
-  const totalTrades =
-    s.total_trades ?? s.totalTrades ?? s.total ?? data?.total_trades ?? data?.totalTrades ?? "—";
+    row.appendChild(b);
+    log.appendChild(row);
+  }
+  log.scrollTop = log.scrollHeight;
+}
 
-  const winRateRaw =
-    s.win_rate ?? s.winRate ?? s.winrate ?? data?.win_rate ?? data?.winRate ?? data?.winrate;
+function setCoachStatus(text){
+  const el = $("coachStatus");
+  if (el) el.textContent = text || "";
+}
 
-  const profitFactor =
-    s.profit_factor ?? s.profitFactor ?? data?.profit_factor ?? data?.profitFactor ?? "—";
+function renderCoachSide(state){
+  const spec = state?.spec || {};
 
-  const avgRR =
-    s.avg_rr ?? s.avgRR ?? s.avg_r ?? s.avgR ?? data?.avg_rr ?? data?.avgRR ?? "—";
-
-  // format win rate
-  let winRate = "—";
-  if (typeof winRateRaw === "number") winRate = (Math.round(winRateRaw * 1000) / 10) + "%";
-  if (typeof winRateRaw === "string") winRate = winRateRaw.includes("%") ? winRateRaw : winRateRaw;
-
-  // KPIs
+  // show bot spec in the KPI panel
   const k = $("coachKpis");
   if (k){
     k.innerHTML = "";
     const rows = [
-      ["total trades", totalTrades],
-      ["win rate", winRate],
-      ["profit factor", profitFactor],
-      ["avg rr", avgRR],
+      ["goal", spec.goal],
+      ["market", spec.market],
+      ["timeframes", spec.timeframes],
+      ["strategy", spec.strategy],
+      ["sessions", spec.sessions],
+      ["risk", spec.risk],
+      ["filters", spec.filters],
     ];
+
     for (const [label, val] of rows){
       const line = document.createElement("div");
       line.className = "kpiLine";
       line.innerHTML = `
         <div><div class="kLabel">${escapeHtml(label)}</div></div>
-        <div class="kVal">${escapeHtml(String(val ?? "—"))}</div>
+        <div class="kVal" style="max-width: 220px; overflow:hidden; text-overflow: ellipsis; white-space:nowrap;" title="${escapeHtml(val || "")}">
+          ${escapeHtml(val || "—")}
+        </div>
       `;
       k.appendChild(line);
     }
   }
 
-  // normalize rules + questions to arrays
-  let rules = data?.rules_next_7_days ?? data?.rulesNext7Days ?? data?.rules ?? [];
-  if (typeof rules === "string") rules = rules.split("\n").map(x=>x.trim()).filter(Boolean);
-  if (!Array.isArray(rules)) rules = [];
-
-  let qs = data?.questions ?? data?.review_questions ?? data?.reviewQuestions ?? [];
-  if (typeof qs === "string") qs = qs.split("\n").map(x=>x.trim()).filter(Boolean);
-  if (!Array.isArray(qs)) qs = [];
-
-  // rules
+  // show missing fields as "next 7 days" (repurpose the box)
   const rulesEl = $("coachRules");
   if (rulesEl){
-    rulesEl.textContent = rules.length ? rules.map(r => "• " + r).join("\n") : "no rules returned";
+    const missing = state?.missing || [];
+    rulesEl.textContent = missing.length
+      ? missing.map(x => "• " + x).join("\n")
+      : "all required inputs collected";
   }
 
-  // questions
+  // show suggestions/questions
   const qEl = $("coachQuestions");
   if (qEl){
-    qEl.textContent = qs.length ? qs.map(q => "• " + q).join("\n") : "no questions returned";
+    const qs = state?.questions || [];
+    qEl.textContent = qs.length
+      ? qs.map(x => "• " + x).join("\n")
+      : "no follow up questions";
   }
 }
 
+async function callCoachEndpoint(userMessage, state){
+  const sessionRes = await sb.auth.getSession();
+  const session = sessionRes?.data?.session;
+  if (!session) throw new Error("no session");
 
-    async function callCoachEndpoint(userMessage){
-      const sessionRes = await sb.auth.getSession();
-      const session = sessionRes?.data?.session;
-      if (!session) throw new Error("no session");
+  const token = session.access_token;
 
-      const token = session.access_token;
+  const res = await fetch(`${SUPABASE_URL}/functions/v1/ai-coach`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      message: userMessage || "",
+      // send current state so the ai can continue the build
+      spec: state?.spec || {},
+      chat: (state?.chat || []).slice(-12), // keep it light
+    }),
+  });
 
-      const res = await fetch(`${SUPABASE_URL}/functions/v1/ai-coach`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          message: userMessage || "",
-        }),
-      });
+  const text = await res.text();
+  let data = null;
+  try{ data = JSON.parse(text); }catch(e){}
 
-      const text = await res.text();
-      let data = null;
-      try{ data = JSON.parse(text); }catch(e){}
+  if (!res.ok){
+    throw new Error(data?.detail || text || "request failed");
+  }
 
-      if (!res.ok){
-        const detail = data?.detail || text || "request failed";
-        throw new Error(detail);
-      }
+  return data;
+}
 
-      return data;
+function ensureCoachIntro(){
+  const state = loadCoachState();
+  if (state.chat?.length) return;
+
+  state.chat = [
+    {
+      role: "ai",
+      text: "tell me what you want to build and i will ask the right questions\nexample build me a gold bot with 4h bias 15m setup 1m entry",
+      ts: Date.now()
     }
+  ];
+  state.spec = state.spec || {};
+  saveCoachState(state);
+  renderCoachChat(state);
+  renderCoachSide(state);
+}
 
-    function ensureCoachIntro(){
-      const chat = loadCoachChat();
-      if (chat.length) return;
-      chat.push({
-        role: "ai",
-        text: "welcome to your ai coach\nask me about your performance or type\nanalyze my last 30 trades",
-        ts: Date.now()
-      });
-      saveCoachChat(chat);
-      renderCoachChat(chat);
-    }
+$("coachSendBtn").addEventListener("click", async ()=>{
+  const inp = $("coachInput");
+  const msg = (inp.value || "").trim();
+  if (!msg) return;
 
-    $("coachSendBtn").addEventListener("click", async ()=>{
-      const inp = $("coachInput");
-      const msg = (inp.value || "").trim();
-      if (!msg) return;
+  const state = loadCoachState();
+  inp.value = "";
 
-      inp.value = "";
-      pushCoach("user", msg);
+  pushCoach("user", msg);
+  setCoachStatus("building…");
 
-      setCoachStatus("thinking…");
-      try{
-        const data = await callCoachEndpoint(msg);
+  try{
+    const latest = loadCoachState(); // includes the user msg we just pushed
+    const data = await callCoachEndpoint(msg, latest);
 
-        // show coach main response in chat
-        const coachText = data?.coach_text || "no response";
-        pushCoach("ai", coachText);
+    // EXPECTED RESPONSE SHAPE:
+    // { reply: string, spec: {...}, missing: [...], questions: [...] }
+    const reply = data?.reply || data?.coach_text || "ok";
 
-        // update side panel
-        renderCoachSide(data);
+    const nextState = loadCoachState();
+    nextState.spec = data?.spec || nextState.spec || {};
+    nextState.missing = data?.missing || [];
+    nextState.questions = data?.questions || [];
+    saveCoachState(nextState);
 
-        setCoachStatus("");
-      }catch(err){
-        console.error(err);
-        pushCoach("ai", "i could not reach the coach right now please try again");
-        setCoachStatus("");
-      }
-    });
+    pushCoach("ai", reply);
+    renderCoachSide(nextState);
+    setCoachStatus("");
+  }catch(err){
+    console.error(err);
+    pushCoach("ai", "something failed please try again");
+    setCoachStatus("");
+  }
+});
 
-    $("coachInput").addEventListener("keydown", (e)=>{
-      if (e.key === "Enter"){
-        e.preventDefault();
-        $("coachSendBtn").click();
-      }
-    });
+$("coachInput").addEventListener("keydown", (e)=>{
+  if (e.key === "Enter"){
+    e.preventDefault();
+    $("coachSendBtn").click();
+  }
+});
 
-    $("coachResetBtn").addEventListener("click", ()=>{
-      localStorage.removeItem(COACH_KEY);
-      ensureCoachIntro();
-      renderCoachSide({});
-      setCoachStatus("");
-      const inp = $("coachInput");
-      if (inp) inp.focus();
-    });
+$("coachResetBtn").addEventListener("click", ()=>{
+  localStorage.removeItem(COACH_KEY);
+  ensureCoachIntro();
+  setCoachStatus("");
+  const inp = $("coachInput");
+  if (inp) inp.focus();
+});
 
     // ---------------- bot builder ----------------
     const BUILD_KEY = "sessionly_bot_builder_v1";
@@ -1096,9 +1098,11 @@ function renderCoachSide(data){
       const tab = getHashTab();
       showTab(tab);
 
-      // ai coach init
+      // ai coach (builder) init
       ensureCoachIntro();
-      renderCoachChat(loadCoachChat());
+      const coachState = loadCoachState();
+      renderCoachChat(coachState);
+      renderCoachSide(coachState);
 
       // builder init
       let build = loadBuild();
