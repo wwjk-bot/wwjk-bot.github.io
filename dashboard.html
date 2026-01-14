@@ -726,51 +726,70 @@
       if (el) el.textContent = text || "";
     }
 
-    function renderCoachSide(data){
-      // KPIs
-      const k = $("coachKpis");
-      if (k){
-        k.innerHTML = "";
+function renderCoachSide(data){
+  // helper: accept both snake_case and camelCase and weird formats
+  const s = data?.stats || {};
 
-        const totalTrades = data?.stats?.total_trades ?? "—";
-        const winRate = (data?.stats?.winrate != null) ? (Math.round(data.stats.winrate * 1000)/10 + "%") : "—";
-        const profitFactor = data?.stats?.profit_factor ?? "—";
-        const avgRR = data?.stats?.avg_rr ?? "—";
+  const totalTrades =
+    s.total_trades ?? s.totalTrades ?? s.total ?? data?.total_trades ?? data?.totalTrades ?? "—";
 
-        const rows = [
-          ["total trades", totalTrades],
-          ["win rate", winRate],
-          ["profit factor", profitFactor],
-          ["avg rr", avgRR],
-        ];
+  const winRateRaw =
+    s.win_rate ?? s.winRate ?? s.winrate ?? data?.win_rate ?? data?.winRate ?? data?.winrate;
 
-        for (const [label, val] of rows){
-          const line = document.createElement("div");
-          line.className = "kpiLine";
-          line.innerHTML = `
-            <div><div class="kLabel">${escapeHtml(label)}</div></div>
-            <div class="kVal">${escapeHtml(String(val))}</div>
-          `;
-          k.appendChild(line);
-        }
-      }
+  const profitFactor =
+    s.profit_factor ?? s.profitFactor ?? data?.profit_factor ?? data?.profitFactor ?? "—";
 
-      // rules
-      const rulesEl = $("coachRules");
-      if (rulesEl){
-        const rules = data?.rules_next_7_days || [];
-        if (!rules.length) rulesEl.textContent = "no rules returned";
-        else rulesEl.textContent = rules.map(r => "• " + r).join("\n");
-      }
+  const avgRR =
+    s.avg_rr ?? s.avgRR ?? s.avg_r ?? s.avgR ?? data?.avg_rr ?? data?.avgRR ?? "—";
 
-      // questions
-      const qEl = $("coachQuestions");
-      if (qEl){
-        const qs = data?.questions || [];
-        if (!qs.length) qEl.textContent = "no questions returned";
-        else qEl.textContent = qs.map(q => "• " + q).join("\n");
-      }
+  // format win rate
+  let winRate = "—";
+  if (typeof winRateRaw === "number") winRate = (Math.round(winRateRaw * 1000) / 10) + "%";
+  if (typeof winRateRaw === "string") winRate = winRateRaw.includes("%") ? winRateRaw : winRateRaw;
+
+  // KPIs
+  const k = $("coachKpis");
+  if (k){
+    k.innerHTML = "";
+    const rows = [
+      ["total trades", totalTrades],
+      ["win rate", winRate],
+      ["profit factor", profitFactor],
+      ["avg rr", avgRR],
+    ];
+    for (const [label, val] of rows){
+      const line = document.createElement("div");
+      line.className = "kpiLine";
+      line.innerHTML = `
+        <div><div class="kLabel">${escapeHtml(label)}</div></div>
+        <div class="kVal">${escapeHtml(String(val ?? "—"))}</div>
+      `;
+      k.appendChild(line);
     }
+  }
+
+  // normalize rules + questions to arrays
+  let rules = data?.rules_next_7_days ?? data?.rulesNext7Days ?? data?.rules ?? [];
+  if (typeof rules === "string") rules = rules.split("\n").map(x=>x.trim()).filter(Boolean);
+  if (!Array.isArray(rules)) rules = [];
+
+  let qs = data?.questions ?? data?.review_questions ?? data?.reviewQuestions ?? [];
+  if (typeof qs === "string") qs = qs.split("\n").map(x=>x.trim()).filter(Boolean);
+  if (!Array.isArray(qs)) qs = [];
+
+  // rules
+  const rulesEl = $("coachRules");
+  if (rulesEl){
+    rulesEl.textContent = rules.length ? rules.map(r => "• " + r).join("\n") : "no rules returned";
+  }
+
+  // questions
+  const qEl = $("coachQuestions");
+  if (qEl){
+    qEl.textContent = qs.length ? qs.map(q => "• " + q).join("\n") : "no questions returned";
+  }
+}
+
 
     async function callCoachEndpoint(userMessage){
       const sessionRes = await sb.auth.getSession();
