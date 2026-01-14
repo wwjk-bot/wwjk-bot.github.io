@@ -374,7 +374,6 @@
       color: rgba(255,255,255,.58);
       font-size: 12px;
       line-height:1.45;
-      white-space: pre-wrap;
     }
     .mono{
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
@@ -682,19 +681,40 @@
       showTab(getHashTab());
     });
 
+    function escapeHtml(s){
+      return String(s || "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
     // ---------------- ai coach (repurposed as bot builder) ----------------
     const COACH_KEY = "sessionly_ai_botbuilder_v1";
 
-    // IMPORTANT:
-    // - we store chat as {role, text}
-    // - but the edge function / model usually expects {role, content}
-    // so we convert right before sending, every time
-    function coachChatForApi(chat){
-      return (chat || []).map(m => ({
-        role: m.role === "user" ? "user" : "assistant",
-        content: m.text || ""
-      }));
+    // ✅ upgraded coach behavior
+    const COACH_CONVO_ID_KEY = "sessionly_ai_botbuilder_convo_id_v1";
+    function getCoachConversationId(){
+      let id = localStorage.getItem(COACH_CONVO_ID_KEY);
+      if (!id){
+        id = (crypto?.randomUUID ? crypto.randomUUID() : ("cid_" + Math.random().toString(16).slice(2) + Date.now()));
+        localStorage.setItem(COACH_CONVO_ID_KEY, id);
+      }
+      return id;
     }
+
+    const COACH_SYSTEM_INSTRUCTIONS = `
+you are sessionly ai coach, but your job is to build a trading bot specification through natural conversation
+act like chatgpt: acknowledge the user's last message clearly, then ask 1 to 3 direct follow-up questions
+do not restart with greetings or introductions unless the chat is empty
+avoid vague filler like "let's narrow it down" without immediately asking the next question
+each message should either confirm what you understood, or ask for missing details
+your goal is to fill these spec fields: goal, market, timeframes, strategy, sessions, risk, filters
+always return json with keys:
+reply (string), spec (object), missing (array of strings), questions (array of strings)
+spec must keep the same keys as above
+`.trim();
 
     function loadCoachState(){
       try{
@@ -702,10 +722,10 @@
         if (!raw) return { chat: [], spec: {}, missing: [], questions: [] };
         const parsed = JSON.parse(raw);
         return {
-          chat: parsed.chat || [],
+          chat: Array.isArray(parsed.chat) ? parsed.chat : [],
           spec: parsed.spec || {},
-          missing: parsed.missing || [],
-          questions: parsed.questions || [],
+          missing: Array.isArray(parsed.missing) ? parsed.missing : [],
+          questions: Array.isArray(parsed.questions) ? parsed.questions : [],
         };
       }catch(e){
         return { chat: [], spec: {}, missing: [], questions: [] };
@@ -721,7 +741,6 @@
       state.chat.push({ role, text, ts: Date.now() });
       saveCoachState(state);
       renderCoachChat(state);
-      renderCoachSide(state);
     }
 
     function renderCoachChat(state){
@@ -794,6 +813,20 @@
       }
     }
 
+    // ✅ upgraded coach behavior: strip "restarts" mid-convo
+    function normalizeCoachReply(reply, state){
+      let out = String(reply || "").trim();
+      const hasHistory = (state?.chat || []).length > 2;
+      if (hasHistory){
+        // remove generic re-greetings / intros that feel like a reset
+        out = out.replace(/^(hello|hey|hi)\b[^\n]*\n+/i, "");
+        out = out.replace(/^let['’]s get started[^\n]*\n+/i, "");
+        out = out.replace(/^i['’]m here to help you build a trading bot!\s*/i, "");
+        out = out.trim();
+      }
+      return out || "ok";
+    }
+
     async function callCoachEndpoint(userMessage, state){
       const sessionRes = await sb.auth.getSession();
       const session = sessionRes?.data?.session;
@@ -801,22 +834,24 @@
 
       const token = session.access_token;
 
-      // send MORE context so it won’t “forget”
-      const chatForApi = coachChatForApi(state?.chat || []);
-      const chatWindow = chatForApi.slice(-30);
-
       const res = await fetch(`${SUPABASE_URL}/functions/v1/ai-coach`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`,
-          // this helps a lot with edge function auth and removes random 401/500 edge weirdness
+          // harmless if not required by your function, but helps some setups
           "apikey": SUPABASE_ANON_KEY,
         },
         body: JSON.stringify({
           message: userMessage || "",
+          conversation_id: getCoachConversationId(),
+          instructions: COACH_SYSTEM_INSTRUCTIONS,
+
+          // keep these for your edge function
           spec: state?.spec || {},
-          chat: chatWindow,
+
+          // ✅ send more history so it stops acting "fresh" each message
+          chat: (state?.chat || []).slice(-30),
         }),
       });
 
@@ -831,6 +866,12 @@
       return data;
     }
 
+    function computeMissing(spec){
+      const s = spec || {};
+      const fields = ["goal","market","timeframes","strategy","sessions","risk","filters"];
+      return fields.filter(k => !(String(s[k] || "").trim().length));
+    }
+
     function ensureCoachIntro(){
       const state = loadCoachState();
       if (state.chat?.length) return;
@@ -838,12 +879,14 @@
       state.chat = [
         {
           role: "ai",
-          text: "hey! i’m your trading bot builder\ntell me what you want to build and i’ll ask the right questions\nexample: build me a gold bot with 4h bias 15m setup 1m entry",
+          text:
+`tell me what you want to build and i’ll ask the right questions
+example: build me a gold bot using the forever model with 1d bias, 15m fvg tap, 1m entry`,
           ts: Date.now()
         }
       ];
       state.spec = state.spec || {};
-      state.missing = state.missing || [];
+      state.missing = computeMissing(state.spec);
       state.questions = state.questions || [];
       saveCoachState(state);
       renderCoachChat(state);
@@ -857,26 +900,36 @@
 
       inp.value = "";
 
-      // 1) push user message locally
       pushCoach("user", msg);
       setCoachStatus("thinking…");
 
       try{
-        // 2) send the UPDATED state (with the new user message + spec)
         const latest = loadCoachState();
+
         const data = await callCoachEndpoint(msg, latest);
 
         // expected: { reply, spec, missing, questions }
-        const reply = (data?.reply || data?.text || data?.coach_text || "").trim() || "ok";
-
-        // 3) persist returned state FIRST (spec/missing/questions), then append assistant message
         const nextState = loadCoachState();
-        nextState.spec = data?.spec || nextState.spec || {};
-        nextState.missing = Array.isArray(data?.missing) ? data.missing : (nextState.missing || []);
-        nextState.questions = Array.isArray(data?.questions) ? data.questions : (nextState.questions || []);
+
+        // merge spec safely
+        const incomingSpec = data?.spec && typeof data.spec === "object" ? data.spec : {};
+        nextState.spec = { ...(nextState.spec || {}), ...incomingSpec };
+
+        // compute missing if backend didn't provide
+        nextState.missing = Array.isArray(data?.missing) ? data.missing : computeMissing(nextState.spec);
+        nextState.questions = Array.isArray(data?.questions) ? data.questions : [];
+
         saveCoachState(nextState);
 
+        const rawReply =
+          (typeof data?.reply === "string" && data.reply) ||
+          (typeof data?.coach_text === "string" && data.coach_text) ||
+          "";
+
+        const reply = normalizeCoachReply(rawReply, nextState);
+
         pushCoach("ai", reply);
+        renderCoachSide(nextState);
         setCoachStatus("");
       }catch(err){
         console.error(err);
@@ -894,6 +947,8 @@
 
     $("coachResetBtn").addEventListener("click", ()=>{
       localStorage.removeItem(COACH_KEY);
+      // also reset conversation id so the backend doesn't reuse old context
+      localStorage.removeItem(COACH_CONVO_ID_KEY);
       ensureCoachIntro();
       setCoachStatus("");
       const inp = $("coachInput");
@@ -1015,15 +1070,6 @@
       }
     }
 
-    function escapeHtml(s){
-      return String(s || "")
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
-    }
-
     function ensureBotIntro(build){
       if (build.chat.length > 0) return;
 
@@ -1120,7 +1166,7 @@
       const tab = getHashTab();
       showTab(tab);
 
-      // ai coach (builder) init
+      // ai coach init
       ensureCoachIntro();
       const coachState = loadCoachState();
       renderCoachChat(coachState);
@@ -1139,3 +1185,4 @@
   </script>
 </body>
 </html>
+
