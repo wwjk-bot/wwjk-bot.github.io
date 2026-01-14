@@ -439,8 +439,12 @@
               <span class="tabHint">log</span>
             </button>
             <button class="tabBtn" data-tab="bot">
-              <span>ai bot builder</span>
+              <span>ai coach</span>
               <span class="tabHint">new</span>
+            </button>
+            <button class="tabBtn" data-tab="builder">
+              <span>ai bot builder</span>
+              <span class="tabHint">spec</span>
             </button>
             <button class="tabBtn" data-tab="settings">
               <span>settings</span>
@@ -470,7 +474,8 @@
                 <div class="small">we can wire these to real pages later</div>
                 <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;">
                   <button class="btn primary" onclick="location.hash='#trades'">add trade</button>
-                  <button class="btn" onclick="location.hash='#bot'">build a bot</button>
+                  <button class="btn" onclick="location.hash='#builder'">build a bot</button>
+                  <button class="btn" onclick="location.hash='#bot'">ai coach</button>
                   <button class="btn subtle" onclick="alert('coming soon')">weekly report</button>
                 </div>
               </div>
@@ -489,7 +494,7 @@
           <!-- TRADES -->
           <div id="view-trades" class="view hidden">
             <div class="h1">trades</div>
-            <div class="p">placeholder for your trades table + add trade form. we will build this tab after the bot builder.</div>
+            <div class="p">placeholder for your trades table + add trade form. we will build this tab after the coach and builder.</div>
             <div class="panel">
               <div style="font-weight:1000;">next build here</div>
               <div class="small">
@@ -498,8 +503,45 @@
             </div>
           </div>
 
-          <!-- BOT BUILDER -->
+          <!-- AI COACH -->
           <div id="view-bot" class="view hidden">
+            <div class="h1">ai coach</div>
+            <div class="p">ask for feedback on your trading performance and get a weekly action plan. this uses your trades and stats from the backend.</div>
+
+            <div class="grid2">
+              <div class="panel">
+                <div class="chat">
+                  <div class="chatLog" id="coachLog" aria-live="polite"></div>
+
+                  <div class="chatInputRow">
+                    <input class="chatInput" id="coachInput" placeholder="ask the coach…" autocomplete="off" />
+                    <button class="btn primary" id="coachSendBtn">send</button>
+                    <button class="btn" id="coachResetBtn">reset</button>
+                  </div>
+
+                  <div class="small" id="coachStatus" style="margin-top:8px;"></div>
+                </div>
+              </div>
+
+              <div class="panel">
+                <div style="font-weight:1000; margin-bottom:8px;">coach insights</div>
+                <div class="kpi" id="coachKpis"></div>
+
+                <div class="divider"></div>
+
+                <div style="font-weight:1000; margin-bottom:6px;">next 7 days</div>
+                <div class="small" id="coachRules">run the coach to generate an action plan</div>
+
+                <div class="divider"></div>
+
+                <div style="font-weight:1000; margin-bottom:6px;">questions to review</div>
+                <div class="small" id="coachQuestions">run the coach to generate questions</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- BOT BUILDER -->
+          <div id="view-builder" class="view hidden">
             <div class="h1">ai bot builder</div>
             <div class="p">
               this is the selling point. the builder asks the right questions first, then generates a clean bot specification you can export.
@@ -567,24 +609,21 @@
     const SUPABASE_URL = "https://oucikdsngvdhimquclcz.supabase.co";
     const SUPABASE_ANON_KEY = "sb_publishable_gMETcAB_TRLGd8hqx48KRA_yXxE7U6v";
 
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-  auth: {
-    persistSession: true,
-    autoRefreshToken: true,
-    storageKey: "sessionly_auth",
-  },
-})
-    
-window.sb = sb
+    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        storageKey: "sessionly_auth",
+      },
+    });
 
+    window.sb = sb;
 
     const $ = (id) => document.getElementById(id);
 
     async function requireSession(){
       const { data, error } = await sb.auth.getSession();
-      if (error){
-        console.error(error);
-      }
+      if (error) console.error(error);
       const session = data?.session;
       if (!session){
         window.location.replace("./login.html");
@@ -602,14 +641,12 @@ window.sb = sb
     }
 
     $("logoutBtn").addEventListener("click", async ()=>{
-      try{
-        await sb.auth.signOut();
-      }catch(e){}
+      try{ await sb.auth.signOut(); }catch(e){}
       window.location.replace("./login.html");
     });
 
     // ---------------- tabs routing ----------------
-    const views = ["home","trades","bot","settings"];
+    const views = ["home","trades","bot","builder","settings"];
 
     function showTab(tab){
       if (!views.includes(tab)) tab = "home";
@@ -623,9 +660,8 @@ window.sb = sb
         btn.classList.toggle("active", btn.dataset.tab === tab);
       });
 
-      const routeLabel = tab;
       const kRoute = $("kRoute");
-      if (kRoute) kRoute.textContent = routeLabel;
+      if (kRoute) kRoute.textContent = tab;
     }
 
     function getHashTab(){
@@ -645,45 +681,193 @@ window.sb = sb
       showTab(getHashTab());
     });
 
+    // ---------------- ai coach ----------------
+    const COACH_KEY = "sessionly_ai_coach_v1";
+
+    function loadCoachChat(){
+      try{
+        const raw = localStorage.getItem(COACH_KEY);
+        if (!raw) return [];
+        return JSON.parse(raw);
+      }catch(e){
+        return [];
+      }
+    }
+
+    function saveCoachChat(chat){
+      localStorage.setItem(COACH_KEY, JSON.stringify(chat));
+    }
+
+    function pushCoach(role, text){
+      const chat = loadCoachChat();
+      chat.push({ role, text, ts: Date.now() });
+      saveCoachChat(chat);
+      renderCoachChat(chat);
+    }
+
+    function renderCoachChat(chat){
+      const log = $("coachLog");
+      if (!log) return;
+      log.innerHTML = "";
+      for (const m of chat){
+        const row = document.createElement("div");
+        row.className = "bubbleRow " + (m.role === "user" ? "user" : "ai");
+        const b = document.createElement("div");
+        b.className = "msgBubble";
+        b.textContent = m.text;
+        row.appendChild(b);
+        log.appendChild(row);
+      }
+      log.scrollTop = log.scrollHeight;
+    }
+
+    function setCoachStatus(text){
+      const el = $("coachStatus");
+      if (el) el.textContent = text || "";
+    }
+
+    function renderCoachSide(data){
+      // KPIs
+      const k = $("coachKpis");
+      if (k){
+        k.innerHTML = "";
+
+        const totalTrades = data?.stats?.total_trades ?? "—";
+        const winRate = (data?.stats?.winrate != null) ? (Math.round(data.stats.winrate * 1000)/10 + "%") : "—";
+        const profitFactor = data?.stats?.profit_factor ?? "—";
+        const avgRR = data?.stats?.avg_rr ?? "—";
+
+        const rows = [
+          ["total trades", totalTrades],
+          ["win rate", winRate],
+          ["profit factor", profitFactor],
+          ["avg rr", avgRR],
+        ];
+
+        for (const [label, val] of rows){
+          const line = document.createElement("div");
+          line.className = "kpiLine";
+          line.innerHTML = `
+            <div><div class="kLabel">${escapeHtml(label)}</div></div>
+            <div class="kVal">${escapeHtml(String(val))}</div>
+          `;
+          k.appendChild(line);
+        }
+      }
+
+      // rules
+      const rulesEl = $("coachRules");
+      if (rulesEl){
+        const rules = data?.rules_next_7_days || [];
+        if (!rules.length) rulesEl.textContent = "no rules returned";
+        else rulesEl.textContent = rules.map(r => "• " + r).join("\n");
+      }
+
+      // questions
+      const qEl = $("coachQuestions");
+      if (qEl){
+        const qs = data?.questions || [];
+        if (!qs.length) qEl.textContent = "no questions returned";
+        else qEl.textContent = qs.map(q => "• " + q).join("\n");
+      }
+    }
+
+    async function callCoachEndpoint(userMessage){
+      const sessionRes = await sb.auth.getSession();
+      const session = sessionRes?.data?.session;
+      if (!session) throw new Error("no session");
+
+      const token = session.access_token;
+
+      const res = await fetch(`${SUPABASE_URL}/functions/v1/ai-coach`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          message: userMessage || "",
+        }),
+      });
+
+      const text = await res.text();
+      let data = null;
+      try{ data = JSON.parse(text); }catch(e){}
+
+      if (!res.ok){
+        const detail = data?.detail || text || "request failed";
+        throw new Error(detail);
+      }
+
+      return data;
+    }
+
+    function ensureCoachIntro(){
+      const chat = loadCoachChat();
+      if (chat.length) return;
+      chat.push({
+        role: "ai",
+        text: "welcome to your ai coach\nask me about your performance or type\nanalyze my last 30 trades",
+        ts: Date.now()
+      });
+      saveCoachChat(chat);
+      renderCoachChat(chat);
+    }
+
+    $("coachSendBtn").addEventListener("click", async ()=>{
+      const inp = $("coachInput");
+      const msg = (inp.value || "").trim();
+      if (!msg) return;
+
+      inp.value = "";
+      pushCoach("user", msg);
+
+      setCoachStatus("thinking…");
+      try{
+        const data = await callCoachEndpoint(msg);
+
+        // show coach main response in chat
+        const coachText = data?.coach_text || "no response";
+        pushCoach("ai", coachText);
+
+        // update side panel
+        renderCoachSide(data);
+
+        setCoachStatus("");
+      }catch(err){
+        console.error(err);
+        pushCoach("ai", "i could not reach the coach right now please try again");
+        setCoachStatus("");
+      }
+    });
+
+    $("coachInput").addEventListener("keydown", (e)=>{
+      if (e.key === "Enter"){
+        e.preventDefault();
+        $("coachSendBtn").click();
+      }
+    });
+
+    $("coachResetBtn").addEventListener("click", ()=>{
+      localStorage.removeItem(COACH_KEY);
+      ensureCoachIntro();
+      renderCoachSide({});
+      setCoachStatus("");
+      const inp = $("coachInput");
+      if (inp) inp.focus();
+    });
+
     // ---------------- bot builder ----------------
     const BUILD_KEY = "sessionly_bot_builder_v1";
 
     const questions = [
-      {
-        id: "goal",
-        ask: "what is your main goal for this bot\nexamples consistency 3 to 5 good trades a day higher win rate less drawdown",
-        hint: "goal"
-      },
-      {
-        id: "market",
-        ask: "what do you trade\nexamples xauusd eurusd nasdaq crypto",
-        hint: "market"
-      },
-      {
-        id: "timeframe",
-        ask: "what timeframes do you want the bot to use\nexamples 4h bias 15m setup 1m entry",
-        hint: "timeframes"
-      },
-      {
-        id: "strategy",
-        ask: "describe your strategy in simple steps\nexample wait for fvg tap then cisd then target opposite liquidity",
-        hint: "strategy"
-      },
-      {
-        id: "sessions",
-        ask: "what sessions should it trade\nexamples london and new york skip first 30 minutes of ny open",
-        hint: "sessions"
-      },
-      {
-        id: "risk",
-        ask: "how should risk be handled\nexamples fixed 1 percent per trade or 100 dollars per trade",
-        hint: "risk"
-      },
-      {
-        id: "rules",
-        ask: "any strict rules or filters\nexamples avoid news avoid first 15 minutes of london only trade with ema bias",
-        hint: "filters"
-      }
+      { id: "goal", ask: "what is your main goal for this bot\nexamples consistency 3 to 5 good trades a day higher win rate less drawdown", hint: "goal" },
+      { id: "market", ask: "what do you trade\nexamples xauusd eurusd nasdaq crypto", hint: "market" },
+      { id: "timeframe", ask: "what timeframes do you want the bot to use\nexamples 4h bias 15m setup 1m entry", hint: "timeframes" },
+      { id: "strategy", ask: "describe your strategy in simple steps\nexample wait for fvg tap then cisd then target opposite liquidity", hint: "strategy" },
+      { id: "sessions", ask: "what sessions should it trade\nexamples london and new york skip first 30 minutes of ny open", hint: "sessions" },
+      { id: "risk", ask: "how should risk be handled\nexamples fixed 1 percent per trade or 100 dollars per trade", hint: "risk" },
+      { id: "rules", ask: "any strict rules or filters\nexamples avoid news avoid first 15 minutes of london only trade with ema bias", hint: "filters" }
     ];
 
     function loadBuild(){
@@ -893,7 +1077,11 @@ window.sb = sb
       const tab = getHashTab();
       showTab(tab);
 
-      // bot builder init
+      // ai coach init
+      ensureCoachIntro();
+      renderCoachChat(loadCoachChat());
+
+      // builder init
       let build = loadBuild();
       if (!build) build = newBuild();
       ensureBotIntro(build);
