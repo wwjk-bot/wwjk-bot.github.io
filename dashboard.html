@@ -506,7 +506,7 @@
           <!-- AI COACH -->
           <div id="view-bot" class="view hidden">
             <div class="h1">ai coach</div>
-            <div class="p">this is your trading bot builder. answer questions and i will build your bot spec on the right.</div>
+            <div class="p">this is your trading coach. ask questions and get insights on your performance.</div>
 
             <div class="grid2">
               <div class="panel">
@@ -544,8 +544,8 @@
           <div id="view-builder" class="view hidden">
             <div class="h1">ai bot builder</div>
             <div class="p">
-              this is the selling point. the builder asks the right questions first, then generates a clean bot specification you can export.
-              next step after this ui is: connect it to a real ai endpoint and save builds in supabase.
+              talk to the ai and it will build your bot specification through natural conversation. 
+              it will ask the right questions and fill in the details as you chat.
             </div>
 
             <div class="grid2">
@@ -576,15 +576,13 @@
                 </div>
 
                 <div class="small" style="margin-top:10px;">
-                  note this is the local builder only. it does not trade or connect to brokers yet.
+                  the ai will chat with you naturally to build this spec. once complete, you can export it.
                 </div>
 
                 <div class="divider"></div>
 
                 <div class="small">
-                  when you are ready we can add
-                  <span class="mono">bot_builds</span> table and save this per user
-                  then connect a real ai model to turn the spec into code.
+                  next step: save builds in supabase and connect a code generator to turn this spec into tradingview pine script.
                 </div>
               </div>
             </div>
@@ -609,7 +607,7 @@
   <script>
     // ---------------- supabase ----------------
     const SUPABASE_URL = "https://oucikdsngvdhimquclcz.supabase.co";
-    const SUPABASE_ANON_KEY = "sb_publishable_gMETcAB_TRLGd8hqx48KRA_yXxE7U6v";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im91Y2lrZHNuZ3ZkaGltcXVjbGN6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc4NzI0MDcsImV4cCI6MjA4MzQ0ODQwN30.5OqS8vRIVMXC5jvVfPVbxgMSOtM_93-1YtclOLWeAws";
 
     const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
       auth: {
@@ -693,9 +691,9 @@
     }
 
     // ---------------- ai coach ----------------
-    const COACH_KEY = "sessionly_ai_botbuilder_v1";
+    const COACH_KEY = "sessionly_ai_coach_v1";
+    const COACH_CONVO_ID_KEY = "sessionly_ai_coach_convo_id_v1";
 
-    const COACH_CONVO_ID_KEY = "sessionly_ai_botbuilder_convo_id_v1";
     function getCoachConversationId(){
       let id = localStorage.getItem(COACH_CONVO_ID_KEY);
       if (!id){
@@ -706,15 +704,19 @@
     }
 
     const COACH_SYSTEM_INSTRUCTIONS = `
-you are sessionly ai coach, but your job is to build a trading bot specification through natural conversation
-act like chatgpt: acknowledge the user's last message clearly, then ask 1 to 3 direct follow-up questions
-do not restart with greetings or introductions unless the chat is empty
-avoid vague filler like "let's narrow it down" without immediately asking the next question
-each message should either confirm what you understood, or ask for missing details
-your goal is to fill these spec fields: goal, market, timeframes, strategy, sessions, risk, filters
-always return json with keys:
-reply (string), spec (object), missing (array of strings), questions (array of strings)
-spec must keep the same keys as above
+you are sessionly ai coach
+your job is to help traders improve their performance through conversation
+
+be conversational, friendly, and helpful
+acknowledge what the user said before responding
+ask clarifying questions when needed
+provide actionable insights
+
+always return json with:
+reply (string - your response)
+spec (object - any relevant data)
+missing (array - what info you still need)
+questions (array - follow-up questions)
 `.trim();
 
     function loadCoachState(){
@@ -819,14 +821,13 @@ spec must keep the same keys as above
       const hasHistory = (state?.chat || []).length > 2;
       if (hasHistory){
         out = out.replace(/^(hello|hey|hi)\b[^\n]*\n+/i, "");
-        out = out.replace(/^let['’]s get started[^\n]*\n+/i, "");
-        out = out.replace(/^i['’]m here to help you build a trading bot!\s*/i, "");
+        out = out.replace(/^let['']s get started[^\n]*\n+/i, "");
+        out = out.replace(/^i['']m here to help you[^\n]*\n+/i, "");
         out = out.trim();
       }
       return out || "ok";
     }
 
-    // ✅ UPDATED: better error surfacing + better parsing
     async function callCoachEndpoint(userMessage, state){
       const sessionRes = await sb.auth.getSession();
       const session = sessionRes?.data?.session;
@@ -880,9 +881,7 @@ spec must keep the same keys as above
       state.chat = [
         {
           role: "ai",
-          text:
-`tell me what you want to build and i’ll ask the right questions
-example: build me a gold bot using the forever model with 1d bias, 15m fvg tap, 1m entry`,
+          text: "hey! i'm your trading coach. ask me anything about improving your performance, analyzing your trades, or building better habits.",
           ts: Date.now()
         }
       ];
@@ -931,8 +930,8 @@ example: build me a gold bot using the forever model with 1d bias, 15m fvg tap, 
       }catch(err){
         console.error(err);
         const msgText = String(err?.message || err || "unknown error");
-        pushCoach("ai", msgText);         // ✅ show real error in chat
-        setCoachStatus(msgText);          // ✅ and status line
+        pushCoach("ai", msgText);
+        setCoachStatus(msgText);
       }
     });
 
@@ -952,66 +951,76 @@ example: build me a gold bot using the forever model with 1d bias, 15m fvg tap, 
       if (inp) inp.focus();
     });
 
-    // ---------------- bot builder (local scripted) ----------------
-    const BUILD_KEY = "sessionly_bot_builder_v1";
+    // ---------------- ai bot builder (FIXED WITH REAL AI) ----------------
+    const BUILDER_KEY = "sessionly_bot_builder_v1";
+    const BUILDER_CONVO_ID_KEY = "sessionly_bot_builder_convo_id_v1";
 
-    const questions = [
-      { id: "goal", ask: "what is your main goal for this bot\nexamples consistency 3 to 5 good trades a day higher win rate less drawdown", hint: "goal" },
-      { id: "market", ask: "what do you trade\nexamples xauusd eurusd nasdaq crypto", hint: "market" },
-      { id: "timeframe", ask: "what timeframes do you want the bot to use\nexamples 4h bias 15m setup 1m entry", hint: "timeframes" },
-      { id: "strategy", ask: "describe your strategy in simple steps\nexample wait for fvg tap then cisd then target opposite liquidity", hint: "strategy" },
-      { id: "sessions", ask: "what sessions should it trade\nexamples london and new york skip first 30 minutes of ny open", hint: "sessions" },
-      { id: "risk", ask: "how should risk be handled\nexamples fixed 1 percent per trade or 100 dollars per trade", hint: "risk" },
-      { id: "rules", ask: "any strict rules or filters\nexamples avoid news avoid first 15 minutes of london only trade with ema bias", hint: "filters" }
-    ];
-
-    function setBuilderStatus(text){
-      const el = $("builderStatus");
-      if (el) el.textContent = text || "";
+    function getBuilderConversationId(){
+      let id = localStorage.getItem(BUILDER_CONVO_ID_KEY);
+      if (!id){
+        id = (crypto?.randomUUID ? crypto.randomUUID() : ("bid_" + Math.random().toString(16).slice(2) + Date.now()));
+        localStorage.setItem(BUILDER_CONVO_ID_KEY, id);
+      }
+      return id;
     }
 
-    function loadBuild(){
+    const BUILDER_SYSTEM_INSTRUCTIONS = `
+you are sessionly ai bot builder
+your job is to build a trading bot specification through natural conversation
+
+key rules:
+- be conversational and chatty, not robotic
+- acknowledge what the user just said before asking the next question
+- ask ONE clear question at a time
+- infer answers from casual responses (e.g., "gold" means XAUUSD)
+- if user gives vague answer, ask for clarification in a friendly way
+- never restart or repeat questions if you already have the answer
+
+your goal is to fill these fields:
+goal, market, timeframes, strategy, sessions, risk, filters
+
+always return json with:
+reply (string - your conversational response)
+spec (object with the 7 fields above)
+missing (array of field names still needed)
+questions (array of 1-2 follow-up questions if needed)
+
+be helpful and encouraging. make this feel like talking to a smart trading buddy.
+`.trim();
+
+    function loadBuilderState(){
       try{
-        const raw = localStorage.getItem(BUILD_KEY);
-        if (!raw) return null;
-        return JSON.parse(raw);
+        const raw = localStorage.getItem(BUILDER_KEY);
+        if (!raw) return { chat: [], spec: {}, missing: [], questions: [] };
+        const parsed = JSON.parse(raw);
+        return {
+          chat: Array.isArray(parsed.chat) ? parsed.chat : [],
+          spec: parsed.spec || {},
+          missing: Array.isArray(parsed.missing) ? parsed.missing : [],
+          questions: Array.isArray(parsed.questions) ? parsed.questions : [],
+        };
       }catch(e){
-        return null;
+        return { chat: [], spec: {}, missing: [], questions: [] };
       }
     }
 
-    function saveBuild(build){
-      localStorage.setItem(BUILD_KEY, JSON.stringify(build));
+    function saveBuilderState(state){
+      localStorage.setItem(BUILDER_KEY, JSON.stringify(state));
     }
 
-    function newBuild(){
-      const build = {
-        version: "1.0",
-        created_at: new Date().toISOString(),
-        answers: {},
-        chat: []
-      };
-      saveBuild(build);
-      return build;
+    function pushBuilder(role, text){
+      const state = loadBuilderState();
+      state.chat.push({ role, text, ts: Date.now() });
+      saveBuilderState(state);
+      renderBuilderChat(state);
     }
 
-    function getNextQuestion(build){
-      for (const q of questions){
-        if (!build.answers[q.id]) return q;
-      }
-      return null;
-    }
-
-    function pushChat(build, role, text){
-      build.chat.push({ role, text, ts: Date.now() });
-      saveBuild(build);
-    }
-
-    function renderChat(build){
+    function renderBuilderChat(state){
       const log = $("chatLog");
-      log.innerHTML = "";
+      if (!log) return;
 
-      for (const m of build.chat){
+      log.innerHTML = "";
+      for (const m of (state.chat || [])){
         const row = document.createElement("div");
         row.className = "bubbleRow " + (m.role === "user" ? "user" : "ai");
 
@@ -1022,109 +1031,140 @@ example: build me a gold bot using the forever model with 1d bias, 15m fvg tap, 
         row.appendChild(b);
         log.appendChild(row);
       }
-
       log.scrollTop = log.scrollHeight;
     }
 
-    function specFromBuild(build){
-      const a = build.answers || {};
-      return {
-        product: "sessionly_ai_bot_builder",
-        spec_version: "1.0",
-        goal: a.goal || "",
-        market: a.market || "",
-        timeframes: a.timeframe || "",
-        strategy_steps: a.strategy || "",
-        sessions: a.sessions || "",
-        risk_management: a.risk || "",
-        filters_and_rules: a.rules || "",
-        notes: "this is a generated spec. connect this to ai later to produce code and backtests."
-      };
+    function setBuilderStatus(text){
+      const el = $("builderStatus");
+      if (el) el.textContent = text || "";
     }
 
-    function renderSpec(build){
-      const spec = specFromBuild(build);
+    function renderBuilderSpec(state){
+      const spec = state?.spec || {};
+
       const k = $("specKpis");
-      k.innerHTML = "";
+      if (k){
+        k.innerHTML = "";
+        const rows = [
+          ["goal", spec.goal],
+          ["market", spec.market],
+          ["timeframes", spec.timeframes],
+          ["strategy", spec.strategy],
+          ["sessions", spec.sessions],
+          ["risk", spec.risk],
+          ["filters", spec.filters],
+        ];
 
-      const rows = [
-        ["goal", spec.goal],
-        ["market", spec.market],
-        ["timeframes", spec.timeframes],
-        ["strategy", spec.strategy_steps],
-        ["sessions", spec.sessions],
-        ["risk", spec.risk_management],
-        ["filters", spec.filters_and_rules]
+        for (const [label, val] of rows){
+          const line = document.createElement("div");
+          line.className = "kpiLine";
+          line.innerHTML = `
+            <div><div class="kLabel">${escapeHtml(label)}</div></div>
+            <div class="kVal" style="max-width: 220px; overflow:hidden; text-overflow: ellipsis; white-space:nowrap;" title="${escapeHtml(val || "")}">
+              ${escapeHtml(val || "—")}
+            </div>
+          `;
+          k.appendChild(line);
+        }
+      }
+    }
+
+    async function callBuilderEndpoint(userMessage, state){
+      const sessionRes = await sb.auth.getSession();
+      const session = sessionRes?.data?.session;
+      if (!session) throw new Error("no session (not logged in)");
+
+      const token = session.access_token;
+
+      const res = await fetch(`${SUPABASE_URL}/functions/v1/ai-coach`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+          "apikey": SUPABASE_ANON_KEY,
+        },
+        body: JSON.stringify({
+          message: userMessage || "",
+          conversation_id: getBuilderConversationId(),
+          instructions: BUILDER_SYSTEM_INSTRUCTIONS,
+          spec: state?.spec || {},
+          chat: (state?.chat || []).slice(-30),
+        }),
+      });
+
+      const raw = await res.text();
+      let data = null;
+      try{ data = JSON.parse(raw); }catch(e){}
+
+      if (!res.ok){
+        const msg =
+          data?.error ||
+          data?.detail ||
+          data?.message ||
+          (typeof raw === "string" ? raw.slice(0, 400) : "") ||
+          "request failed";
+        throw new Error(`ai-coach ${res.status}: ${msg}`);
+      }
+
+      return data || {};
+    }
+
+    function ensureBuilderIntro(){
+      const state = loadBuilderState();
+      if (state.chat?.length) return;
+
+      state.chat = [
+        {
+          role: "ai",
+          text: "hey! let's build your trading bot. tell me what you want to create and i'll ask the right questions.\n\nexample: build me a gold scalping bot using 15m setups",
+          ts: Date.now()
+        }
       ];
-
-      for (const [label, val] of rows){
-        const line = document.createElement("div");
-        line.className = "kpiLine";
-        line.innerHTML = `
-          <div>
-            <div class="kLabel">${label}</div>
-          </div>
-          <div class="kVal" style="max-width: 220px; overflow:hidden; text-overflow: ellipsis; white-space:nowrap;" title="${escapeHtml(val || "")}">
-            ${escapeHtml(val || "—")}
-          </div>
-        `;
-        k.appendChild(line);
-      }
+      state.spec = state.spec || {};
+      state.missing = computeMissing(state.spec);
+      state.questions = state.questions || [];
+      saveBuilderState(state);
+      renderBuilderChat(state);
+      renderBuilderSpec(state);
     }
 
-    function ensureBotIntro(build){
-      if (build.chat.length > 0) return;
+    $("sendBtn").addEventListener("click", async ()=>{
+      const inp = $("chatInput");
+      const msg = (inp.value || "").trim();
+      if (!msg) return;
 
-      pushChat(build, "ai",
-        "welcome to the sessionly ai bot builder\nanswer a few questions and I will generate a bot spec you can export"
-      );
+      inp.value = "";
 
-      const q = getNextQuestion(build);
-      if (q) pushChat(build, "ai", q.ask);
-    }
+      pushBuilder("user", msg);
+      setBuilderStatus("thinking…");
 
-    function handleUserAnswer(build, text){
-      const trimmed = (text || "").trim();
-      if (!trimmed) return;
-
-      pushChat(build, "user", trimmed);
-
-      const q = getNextQuestion(build);
-      if (!q){
-        pushChat(build, "ai", "your bot spec is already complete\nyou can reset to rebuild a new one");
-        return;
-      }
-
-      build.answers[q.id] = trimmed;
-      saveBuild(build);
-
-      const next = getNextQuestion(build);
-      if (next){
-        pushChat(build, "ai", next.ask);
-      }else{
-        pushChat(build, "ai",
-          "done\nI built your spec on the right\nnext we can connect this to real ai and generate code for mt5 or python"
-        );
-      }
-    }
-
-    $("sendBtn").addEventListener("click", ()=>{
       try{
+        const latest = loadBuilderState();
+        const data = await callBuilderEndpoint(msg, latest);
+
+        const nextState = loadBuilderState();
+
+        const incomingSpec = data?.spec && typeof data.spec === "object" ? data.spec : {};
+        nextState.spec = { ...(nextState.spec || {}), ...incomingSpec };
+
+        nextState.missing = Array.isArray(data?.missing) ? data.missing : computeMissing(nextState.spec);
+        nextState.questions = Array.isArray(data?.questions) ? data.questions : [];
+
+        saveBuilderState(nextState);
+
+        const reply =
+          (typeof data?.reply === "string" && data.reply) ||
+          (typeof data?.coach_text === "string" && data.coach_text) ||
+          "";
+
+        if (reply) pushBuilder("ai", reply);
+        renderBuilderSpec(nextState);
         setBuilderStatus("");
-        const inp = $("chatInput");
-        const build = loadBuild() || newBuild();
-        handleUserAnswer(build, inp.value);
-        inp.value = "";
-        renderChat(build);
-        renderSpec(build);
-        inp.focus();
       }catch(err){
         console.error(err);
-        const msg = String(err?.message || err || "unknown error");
-        setBuilderStatus(msg);
-        const build = loadBuild() || newBuild();
-        pushChat(build, "ai", msg);
-        renderChat(build);
+        const msgText = String(err?.message || err || "unknown error");
+        pushBuilder("ai", msgText);
+        setBuilderStatus(msgText);
       }
     });
 
@@ -1136,28 +1176,28 @@ example: build me a gold bot using the forever model with 1d bias, 15m fvg tap, 
     });
 
     $("resetBuildBtn").addEventListener("click", ()=>{
-      localStorage.removeItem(BUILD_KEY);
-      const build = newBuild();
-      ensureBotIntro(build);
-      renderChat(build);
-      renderSpec(build);
+      localStorage.removeItem(BUILDER_KEY);
+      localStorage.removeItem(BUILDER_CONVO_ID_KEY);
+      ensureBuilderIntro();
       setBuilderStatus("");
+      const inp = $("chatInput");
+      if (inp) inp.focus();
     });
 
     $("copySpecBtn").addEventListener("click", async ()=>{
-      const build = loadBuild() || newBuild();
-      const spec = specFromBuild(build);
+      const state = loadBuilderState();
+      const spec = state?.spec || {};
       try{
         await navigator.clipboard.writeText(JSON.stringify(spec, null, 2));
-        alert("copied");
+        alert("copied spec to clipboard");
       }catch(e){
         alert("could not copy");
       }
     });
 
     $("downloadSpecBtn").addEventListener("click", ()=>{
-      const build = loadBuild() || newBuild();
-      const spec = specFromBuild(build);
+      const state = loadBuilderState();
+      const spec = state?.spec || {};
       const blob = new Blob([JSON.stringify(spec, null, 2)], { type: "application/json" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -1186,11 +1226,10 @@ example: build me a gold bot using the forever model with 1d bias, 15m fvg tap, 
       renderCoachSide(coachState);
 
       // builder init
-      let build = loadBuild();
-      if (!build) build = newBuild();
-      ensureBotIntro(build);
-      renderChat(build);
-      renderSpec(build);
+      ensureBuilderIntro();
+      const builderState = loadBuilderState();
+      renderBuilderChat(builderState);
+      renderBuilderSpec(builderState);
 
       const kSession = $("kSession");
       if (kSession) kSession.textContent = "active";
