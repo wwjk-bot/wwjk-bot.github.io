@@ -900,12 +900,16 @@ async function callAiCoach({ message, conversation_id, spec, chat }){
         setCoachState(next);
         renderCoachChat();
         renderCoachSide();
-      }catch(err){
-        console.error(err);
-        const next = getCoachState();
-        next.chat.push({ role:"ai", text:"something failed. try again", ts: Date.now() });
-        setCoachState(next);
-        renderCoachChat();
+catch(err){
+      console.error(err);
+        const next = getBuilderState(); // or getCoachState() in the other tab
+        const msg = String(err?.message || err || "unknown error");
+        next.chat.push({ role:"ai", text: msg, ts: Date.now() });
+        setBuilderState(next); // or setCoachState(next)
+        renderBuilderChat(); // or renderCoachChat()
+        setBuilderStatus(msg); // or setCoachStatus(msg)
+  }
+
       }finally{
         setCoachStatus("");
       }
